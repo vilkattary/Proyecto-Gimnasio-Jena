@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="GimanasioJena.LogicaDeNegocio/GimanasioJena.LogicaDeNegocio.csproj" />
+  <Project Path="GimnasioJena.Abstracciones/GimnasioJena.Abstracciones.csproj" />
+  <Project Path="GimnasioJena.AccesoADatos/GimnasioJena.AccesoADatos.csproj" />
+  <Project Path="GimnasioJena/GimnasioJena.UI.csproj" />
+</Solution>
