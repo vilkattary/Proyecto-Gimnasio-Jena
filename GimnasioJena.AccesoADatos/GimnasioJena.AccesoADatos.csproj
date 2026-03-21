@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CBDB2984-122F-42A4-91D2-9FB5D3114BAD}</ProjectGuid>
+    <ProjectGuid>{9C561A0F-67B5-C105-6923-577435CF88EF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GimnasioJena.AccesoADatos</RootNamespace>

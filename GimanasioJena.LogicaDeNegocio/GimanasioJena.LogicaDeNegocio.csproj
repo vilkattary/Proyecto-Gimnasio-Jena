@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{89586780-BFA6-4A81-9E78-383539483F70}</ProjectGuid>
+    <ProjectGuid>{1CFB4C4C-E21F-7FC1-1471-66D0DDF361E8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GimanasioJena.LogicaDeNegocio</RootNamespace>

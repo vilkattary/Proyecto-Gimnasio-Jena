@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AC84636D-0F6A-4B46-8621-809B6311BBFC}</ProjectGuid>
+    <ProjectGuid>{B725CF6F-FC04-16E1-8A1C-77A74BEA8680}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GimnasioJena.Abstracciones</RootNamespace>
