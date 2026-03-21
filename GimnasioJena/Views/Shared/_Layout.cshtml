@@ -1,39 +1,159 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - Gimnasio Jena</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --gym-orange: #FF6600;
+            --gym-orange-dark: #cc5200;
+            --gym-black: #111111;
+            --gym-dark: #1a1a1a;
+            --gym-gray: #2c2c2c;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        h1, h2, h3, h4, h5, .display-1, .display-2, .display-3, .display-4, .display-5, .fw-bold {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        /* Navbar */
+        .navbar-gym {
+            background-color: var(--gym-black);
+            border-bottom: 3px solid var(--gym-orange);
+        }
+
+        .navbar-gym .navbar-brand {
+            color: var(--gym-orange) !important;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .navbar-gym .nav-link {
+            color: #ffffff !important;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+
+        .navbar-gym .nav-link:hover,
+        .navbar-gym .nav-link.active {
+            color: var(--gym-orange) !important;
+        }
+
+        /* Buttons */
+        .btn-gym {
+            background-color: var(--gym-orange);
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn-gym:hover {
+            background-color: var(--gym-orange-dark);
+            color: #fff;
+        }
+
+        .btn-outline-gym {
+            border: 2px solid var(--gym-orange);
+            color: var(--gym-orange);
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: transparent;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-gym:hover {
+            background-color: var(--gym-orange);
+            color: #fff;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--gym-black);
+            color: #aaa;
+            border-top: 3px solid var(--gym-orange);
+        }
+
+        footer a {
+            color: var(--gym-orange);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-gym sticky-top">
         <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <i class="bi bi-lightning-charge-fill me-1"></i>GIMNASIO JENA
+            </a>
+            <button type="button" class="navbar-toggler border-secondary" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto gap-1">
+                    <li class="nav-item">
+                        @Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Nosotros", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    <!-- Page Content -->
+    @RenderBody()
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <div class="row gy-3 align-items-center">
+                <div class="col-md-6">
+                    <span class="text-warning fw-bold" style="font-family:'Oswald',sans-serif; font-size:1.2rem;">
+                        <i class="bi bi-lightning-charge-fill me-1"></i>GIMNASIO JENA
+                    </span>
+                    <p class="mb-0 mt-1 small">&copy; @DateTime.Now.Year Gimnasio Jena. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="@Url.Action("Contact", "Home")" class="me-3"><i class="bi bi-envelope-fill me-1"></i>Contacto</a>
+                    <a href="@Url.Action("About", "Home")"><i class="bi bi-info-circle-fill me-1"></i>Nosotros</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
