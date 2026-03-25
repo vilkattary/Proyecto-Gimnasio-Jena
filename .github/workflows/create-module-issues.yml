@@ -1,0 +1,1396 @@
+name: Crear Issues - Módulos de User Stories
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_number:
+        description: "Número del proyecto GitHub V2 donde se vincularán los issues (ej: 3)"
+        required: false
+        default: "3"
+
+permissions:
+  issues: write
+  repository-projects: write
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    steps:
+
+      # ─────────────────────────────────────────────────────────────
+      # MÓDULO USUARIOS
+      # ─────────────────────────────────────────────────────────────
+      - name: Crear USR-001 - Registro de usuario
+        id: usr001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[USR-001] Registro de usuario',
+              body: [
+                '### Módulo',
+                'Usuarios',
+                '',
+                '### Descripción',
+                'Como visitante quiero registrarme en el sistema proporcionando mis datos personales para obtener acceso a los servicios del gimnasio.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El formulario de registro solicita: nombre completo, correo electrónico, contraseña y confirmación de contraseña.',
+                '- El sistema valida que el correo no esté registrado previamente.',
+                '- La contraseña debe cumplir requisitos mínimos de seguridad (mínimo 8 caracteres).',
+                '- Al registrarse exitosamente, el usuario recibe un correo de confirmación.',
+                '- El sistema asigna el rol de "Cliente" por defecto al nuevo usuario.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El visitante completa y envía el formulario con datos válidos | Se crea la cuenta y se redirige al dashboard del cliente |',
+                '| El correo ya existe en el sistema | Se muestra un mensaje de error indicando que el correo ya está registrado |',
+                '| La contraseña no cumple los requisitos | Se muestra un mensaje de validación descriptivo |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear USR-002 - Login de usuario
+        id: usr002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[USR-002] Login de usuario',
+              body: [
+                '### Módulo',
+                'Usuarios',
+                '',
+                '### Descripción',
+                'Como usuario registrado quiero iniciar sesión en el sistema con mis credenciales para acceder a las funciones de mi perfil.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El formulario de login solicita correo electrónico y contraseña.',
+                '- El sistema valida las credenciales contra la base de datos.',
+                '- Tras un login exitoso, el usuario es redirigido a la vista correspondiente según su rol.',
+                '- El sistema muestra un mensaje de error genérico si las credenciales son incorrectas.',
+                '- Se bloquea el acceso tras múltiples intentos fallidos consecutivos.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El usuario ingresa credenciales válidas | Se inicia sesión y se redirige según el rol asignado |',
+                '| El usuario ingresa credenciales incorrectas | Se muestra mensaje de error y se contabiliza el intento fallido |',
+                '| El usuario supera el límite de intentos | Se bloquea temporalmente el acceso a la cuenta |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear USR-003 - Recuperación de contraseña
+        id: usr003
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[USR-003] Recuperación de contraseña',
+              body: [
+                '### Módulo',
+                'Usuarios',
+                '',
+                '### Descripción',
+                'Como usuario registrado quiero recuperar el acceso a mi cuenta mediante mi correo electrónico cuando olvide mi contraseña.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El usuario puede solicitar el restablecimiento ingresando su correo electrónico registrado.',
+                '- El sistema envía un enlace de recuperación con expiración a la dirección de correo indicada.',
+                '- El enlace de recuperación permite al usuario definir una nueva contraseña.',
+                '- Una vez utilizado, el enlace queda inválido para evitar reutilización.',
+                '- Si el correo no está registrado, el sistema responde con un mensaje neutro (sin revelar si existe o no).',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El usuario solicita recuperación con correo válido | Se envía un enlace de restablecimiento al correo |',
+                '| El usuario accede al enlace y define nueva contraseña | La contraseña se actualiza y el enlace queda inválido |',
+                '| El enlace ha expirado | Se muestra mensaje de expiración y se ofrece solicitar uno nuevo |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear USR-004 - Gestión de roles
+        id: usr004
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[USR-004] Gestión de roles',
+              body: [
+                '### Módulo',
+                'Usuarios',
+                '',
+                '### Descripción',
+                'Como administrador quiero asignar y modificar roles a los usuarios del sistema para controlar sus niveles de acceso y permisos.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El administrador puede ver el listado de usuarios con sus roles actuales.',
+                '- El sistema soporta al menos los roles: Administrador, Recepcionista, Entrenador y Cliente.',
+                '- El administrador puede cambiar el rol de cualquier usuario desde el panel administrativo.',
+                '- Los cambios de rol surten efecto de forma inmediata en la siguiente sesión del usuario afectado.',
+                '- El sistema registra un historial de cambios de rol para auditoría.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador asigna un nuevo rol a un usuario | El rol se actualiza y el usuario tendrá los permisos del nuevo rol en su próxima sesión |',
+                '| El administrador intenta asignar un rol inválido | El sistema muestra un error de validación |',
+                '| El administrador consulta el historial de roles | Se muestra el registro de cambios con fecha, usuario afectado y administrador responsable |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear USR-005 - Actualización de perfil
+        id: usr005
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[USR-005] Actualización de perfil',
+              body: [
+                '### Módulo',
+                'Usuarios',
+                '',
+                '### Descripción',
+                'Como usuario autenticado quiero actualizar mi información personal en el perfil para mantener mis datos al día.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El usuario puede editar su nombre, teléfono, dirección y foto de perfil.',
+                '- El correo electrónico solo puede cambiarse con confirmación adicional.',
+                '- Los cambios se validan antes de guardarlos (campos obligatorios, formato de teléfono, etc.).',
+                '- El sistema muestra un mensaje de confirmación al guardar los cambios exitosamente.',
+                '- El usuario puede cancelar los cambios y revertir al estado anterior.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El usuario edita sus datos y guarda | Se actualiza el perfil y se muestra confirmación |',
+                '| El usuario intenta guardar con campos inválidos | Se muestran mensajes de error en los campos correspondientes |',
+                '| El usuario cancela la edición | Se descartan los cambios y se muestra el perfil original |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      # ─────────────────────────────────────────────────────────────
+      # MÓDULO CLIENTES
+      # ─────────────────────────────────────────────────────────────
+      - name: Crear CLI-001 - Consulta de perfil de cliente
+        id: cli001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[CLI-001] Consulta de perfil de cliente',
+              body: [
+                '### Módulo',
+                'Clientes',
+                '',
+                '### Descripción',
+                'Como cliente autenticado quiero consultar mi perfil completo para verificar mis datos personales y el estado de mi cuenta.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El cliente puede ver su información personal: nombre, correo, teléfono y foto de perfil.',
+                '- Se muestra el historial de membresías y el estado actual (activa/inactiva/vencida).',
+                '- Se presenta un resumen de las clases reservadas y asistencias registradas.',
+                '- La información se carga correctamente y de forma rápida.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El cliente accede a su perfil | Se muestra su información personal y resumen de actividad |',
+                '| La membresía está vencida | Se resalta el estado y se muestra una opción para renovar |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear CLI-002 - Consulta de membresía
+        id: cli002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[CLI-002] Consulta de membresía',
+              body: [
+                '### Módulo',
+                'Clientes',
+                '',
+                '### Descripción',
+                'Como cliente autenticado quiero consultar el detalle de mi membresía actual para conocer su vigencia, beneficios y próxima fecha de pago.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- Se muestra el tipo de plan, fecha de inicio, fecha de vencimiento y estado de la membresía.',
+                '- Se listan los beneficios incluidos en el plan actual.',
+                '- Se notifica cuando la membresía está próxima a vencer (menos de 7 días).',
+                '- El cliente puede ver el historial de pagos asociados a su membresía.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El cliente consulta su membresía vigente | Se muestran los detalles del plan y su vigencia |',
+                '| La membresía vence en menos de 7 días | Se muestra una alerta de renovación próxima |',
+                '| El cliente no tiene membresía activa | Se muestra un mensaje invitando a adquirir un plan |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear CLI-003 - Consulta de clases disponibles
+        id: cli003
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[CLI-003] Consulta de clases disponibles',
+              body: [
+                '### Módulo',
+                'Clientes',
+                '',
+                '### Descripción',
+                'Como cliente autenticado quiero consultar las clases disponibles para elegir y reservar las que se ajusten a mi horario.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- Se muestra un listado de clases con nombre, instructor, horario, duración y cupos disponibles.',
+                '- El cliente puede filtrar por día, tipo de clase o instructor.',
+                '- Las clases sin cupos disponibles se muestran como "Llenas" y no permiten reserva.',
+                '- Las clases ya reservadas por el cliente se marcan visualmente.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El cliente consulta las clases disponibles | Se muestra el listado con información completa y cupos restantes |',
+                '| El cliente aplica un filtro | La lista se actualiza mostrando solo las clases que cumplen el criterio |',
+                '| Una clase no tiene cupos | Se muestra como "Llena" y el botón de reserva está deshabilitado |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear CLI-004 - Confirmación por correo
+        id: cli004
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[CLI-004] Confirmación por correo',
+              body: [
+                '### Módulo',
+                'Clientes',
+                '',
+                '### Descripción',
+                'Como cliente quiero recibir correos de confirmación para las acciones relevantes (registro, reservas, cancelaciones) y tener un registro fuera del sistema.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- Se envía un correo de bienvenida al completar el registro.',
+                '- Se envía confirmación al realizar una reserva de clase con fecha, hora y nombre de la clase.',
+                '- Se envía notificación al cancelar una reserva.',
+                '- Los correos incluyen el logo del gimnasio y un diseño coherente con la marca.',
+                '- El correo se entrega dentro de los 2 minutos siguientes a la acción.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El cliente se registra exitosamente | Se envía correo de bienvenida con sus datos y próximos pasos |',
+                '| El cliente confirma una reserva | Se envía correo con el detalle de la clase reservada |',
+                '| El cliente cancela una reserva | Se envía correo notificando la cancelación |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      # ─────────────────────────────────────────────────────────────
+      # MÓDULO CLASES
+      # ─────────────────────────────────────────────────────────────
+      - name: Crear CLS-001 - Creación de clases
+        id: cls001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[CLS-001] Creación de clases',
+              body: [
+                '### Módulo',
+                'Clases',
+                '',
+                '### Descripción',
+                'Como administrador quiero crear nuevas clases en el sistema definiendo sus características para ofrecerlas a los clientes.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El formulario de creación solicita: nombre, descripción, instructor asignado, horario (día y hora), duración y cupos máximos.',
+                '- Todos los campos obligatorios deben estar completos para guardar la clase.',
+                '- El sistema valida que no existan conflictos de horario para el instructor asignado.',
+                '- La clase creada aparece inmediatamente disponible para consulta y reserva.',
+                '- Se notifica al instructor asignado sobre la nueva clase.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador completa y guarda el formulario con datos válidos | La clase se crea y queda disponible en el sistema |',
+                '| Existe un conflicto de horario para el instructor | Se muestra un error indicando el conflicto |',
+                '| Un campo obligatorio está vacío | Se resalta el campo faltante con mensaje de validación |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear CLS-002 - Edición de clases
+        id: cls002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[CLS-002] Edición de clases',
+              body: [
+                '### Módulo',
+                'Clases',
+                '',
+                '### Descripción',
+                'Como administrador quiero editar la información de una clase existente para corregir datos o actualizar horarios y asignaciones.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El administrador puede modificar cualquier campo de la clase (nombre, descripción, instructor, horario, duración).',
+                '- El sistema notifica a los clientes con reservas activas si el horario de la clase cambia.',
+                '- Se validan conflictos de horario del instructor al modificar el horario.',
+                '- Los cambios se guardan solo si todos los campos obligatorios son válidos.',
+                '- Se muestra un historial de cambios de la clase.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador edita y guarda cambios válidos | La clase se actualiza y se notifica a los afectados |',
+                '| Se cambia el horario con reservas activas | Se notifica a los clientes inscritos sobre el cambio |',
+                '| Hay conflicto de horario con el instructor | Se muestra error y no se guarda el cambio |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear CLS-003 - Definición de cupos
+        id: cls003
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[CLS-003] Definición de cupos',
+              body: [
+                '### Módulo',
+                'Clases',
+                '',
+                '### Descripción',
+                'Como administrador quiero definir y ajustar el número de cupos máximos de cada clase para controlar la capacidad y garantizar la calidad del servicio.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El administrador puede establecer el número máximo de cupos al crear o editar una clase.',
+                '- El sistema no permite reducir los cupos a un número menor al de reservas ya existentes.',
+                '- El número de cupos disponibles se actualiza en tiempo real al realizarse reservas o cancelaciones.',
+                '- El sistema muestra la ocupación actual (cupos usados / cupos totales) en el panel de administración.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador define los cupos al crear la clase | El límite de reservas queda configurado y se aplica automáticamente |',
+                '| El administrador intenta reducir cupos por debajo de las reservas activas | Se muestra error indicando la cantidad mínima permitida |',
+                '| Un cliente reserva un lugar | Los cupos disponibles disminuyen en uno en tiempo real |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      # ─────────────────────────────────────────────────────────────
+      # MÓDULO RESERVAS
+      # ─────────────────────────────────────────────────────────────
+      - name: Crear RSV-001 - Reserva de clase
+        id: rsv001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RSV-001] Reserva de clase',
+              body: [
+                '### Módulo',
+                'Reservas',
+                '',
+                '### Descripción',
+                'Como cliente autenticado quiero reservar un lugar en una clase disponible para asegurar mi participación.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El cliente puede reservar una clase desde el listado de clases disponibles.',
+                '- El sistema verifica que haya cupos disponibles antes de confirmar la reserva.',
+                '- El sistema verifica que el cliente tenga una membresía activa y vigente.',
+                '- Se permite solo una reserva por clase por cliente.',
+                '- Al confirmar la reserva, el cliente recibe una notificación por correo.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El cliente selecciona una clase con cupos y membresía vigente | Se confirma la reserva y se descuenta un cupo disponible |',
+                '| La clase no tiene cupos disponibles | Se muestra mensaje informativo y no se crea la reserva |',
+                '| El cliente ya tiene una reserva en esa clase | Se muestra mensaje indicando que ya está inscrito |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RSV-002 - Cancelación de reserva
+        id: rsv002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RSV-002] Cancelación de reserva',
+              body: [
+                '### Módulo',
+                'Reservas',
+                '',
+                '### Descripción',
+                'Como cliente autenticado quiero cancelar una reserva de clase cuando no pueda asistir para liberar el cupo a otros clientes.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El cliente puede cancelar una reserva desde su historial de reservas.',
+                '- La cancelación solo está disponible con una antelación mínima definida (ej: 2 horas antes de la clase).',
+                '- Al cancelar, el cupo se libera inmediatamente y queda disponible para otros clientes.',
+                '- El cliente recibe una notificación por correo confirmando la cancelación.',
+                '- Las cancelaciones tardías (fuera del plazo) requieren aprobación del administrador.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El cliente cancela dentro del plazo permitido | La reserva se cancela y el cupo se libera |',
+                '| El cliente intenta cancelar fuera del plazo | Se informa que la cancelación requiere aprobación del administrador |',
+                '| La cancelación se procesa exitosamente | Se envía correo de confirmación al cliente |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RSV-003 - Validación de cupos
+        id: rsv003
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RSV-003] Validación de cupos',
+              body: [
+                '### Módulo',
+                'Reservas',
+                '',
+                '### Descripción',
+                'Como sistema quiero validar automáticamente los cupos disponibles antes de confirmar cada reserva para evitar sobrecargas en las clases.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El sistema comprueba en tiempo real el número de cupos disponibles al intentar realizar una reserva.',
+                '- Si el cupo llega a cero, la clase se marca como "Llena" y no acepta nuevas reservas.',
+                '- Ante solicitudes simultáneas, el sistema garantiza que no se supere el límite de cupos (control de concurrencia).',
+                '- El conteo de cupos se actualiza inmediatamente tras cada reserva o cancelación.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| Un cliente intenta reservar la última plaza disponible | Si no hay reserva simultánea, se confirma la reserva |',
+                '| Dos clientes intentan reservar el último cupo al mismo tiempo | Solo uno obtiene la reserva; el otro recibe mensaje de clase llena |',
+                '| Se cancela una reserva en una clase llena | El cupo vuelve a estar disponible para nuevas reservas |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RSV-004 - Consulta de reservas (Admin)
+        id: rsv004
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RSV-004] Consulta de reservas (Admin)',
+              body: [
+                '### Módulo',
+                'Reservas',
+                '',
+                '### Descripción',
+                'Como administrador quiero consultar todas las reservas del sistema con filtros para gestionar la ocupación y tomar decisiones operativas.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El administrador puede ver todas las reservas con información del cliente, clase, fecha y estado.',
+                '- Se puede filtrar por fecha, clase, instructor y estado de la reserva (activa/cancelada).',
+                '- El administrador puede cancelar o modificar reservas desde el panel.',
+                '- Se muestra un resumen de ocupación por clase.',
+                '- Los datos se pueden exportar en formato CSV o Excel.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador accede al panel de reservas | Se muestra el listado completo con filtros disponibles |',
+                '| El administrador aplica filtros de búsqueda | La lista se actualiza mostrando solo las reservas que coinciden |',
+                '| El administrador cancela una reserva desde el panel | La reserva se cancela y el cliente recibe notificación |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RSV-005 - Validación de membresía en reserva
+        id: rsv005
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RSV-005] Validación de membresía en reserva',
+              body: [
+                '### Módulo',
+                'Reservas',
+                '',
+                '### Descripción',
+                'Como sistema quiero validar que el cliente tenga una membresía activa y vigente antes de permitir una reserva para garantizar el cumplimiento de las políticas del gimnasio.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El sistema verifica el estado de la membresía del cliente al intentar reservar.',
+                '- Si la membresía está vencida o inactiva, se bloquea la reserva con mensaje informativo.',
+                '- Si el plan del cliente no incluye el tipo de clase solicitada, se notifica la restricción.',
+                '- El sistema muestra un enlace o botón para renovar/adquirir membresía si aplica.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El cliente con membresía activa intenta reservar | Se permite la reserva si hay cupos disponibles |',
+                '| El cliente con membresía vencida intenta reservar | Se bloquea la acción y se muestra opción de renovar |',
+                '| El plan del cliente no cubre el tipo de clase | Se informa la restricción y se sugiere un plan adecuado |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      # ─────────────────────────────────────────────────────────────
+      # MÓDULO ASISTENCIA
+      # ─────────────────────────────────────────────────────────────
+      - name: Crear AST-001 - Registro de asistencia
+        id: ast001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[AST-001] Registro de asistencia',
+              body: [
+                '### Módulo',
+                'Asistencia',
+                '',
+                '### Descripción',
+                'Como recepcionista quiero registrar la asistencia de los clientes a las clases para llevar un control preciso de la participación.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El recepcionista puede marcar la asistencia de cada cliente inscrito en una clase.',
+                '- La asistencia solo puede registrarse para clases que están en curso o dentro de un margen de tiempo definido.',
+                '- Se puede marcar: presente, ausente o tardanza.',
+                '- El registro de asistencia es editable hasta el cierre de la sesión de clase.',
+                '- La asistencia registrada queda disponible para consulta por el administrador y el entrenador.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El recepcionista marca a un cliente como presente | La asistencia queda registrada con hora y estado |',
+                '| El recepcionista intenta registrar asistencia de una clase no iniciada | Se muestra un mensaje indicando que aún no es posible |',
+                '| Se intenta modificar la asistencia tras el cierre de sesión | Se requiere autorización del administrador para editar |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear AST-002 - Visualización de inscritos para Recepción
+        id: ast002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[AST-002] Visualización de inscritos para Recepción',
+              body: [
+                '### Módulo',
+                'Asistencia',
+                '',
+                '### Descripción',
+                'Como recepcionista quiero ver el listado de clientes inscritos en cada clase para gestionar el ingreso y registrar la asistencia.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El recepcionista puede consultar las clases del día y sus inscritos.',
+                '- El listado muestra: nombre del cliente, estado de membresía y estado de asistencia.',
+                '- Se puede buscar un cliente por nombre o número de identificación.',
+                '- La vista se actualiza automáticamente si hay cambios de reservas cercanos al inicio de la clase.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El recepcionista selecciona una clase del día | Se muestra el listado completo de inscritos con su estado |',
+                '| El recepcionista busca un cliente específico | El listado se filtra mostrando solo el cliente buscado |',
+                '| Un cliente cancela su reserva mientras el recepcionista consulta la lista | La lista se actualiza reflejando la cancelación |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear AST-003 - Visualización de inscritos para Entrenadores
+        id: ast003
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[AST-003] Visualización de inscritos para Entrenadores',
+              body: [
+                '### Módulo',
+                'Asistencia',
+                '',
+                '### Descripción',
+                'Como entrenador quiero ver el listado de clientes inscritos en mis clases para preparar la sesión y conocer el perfil de los participantes.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El entrenador puede ver solo las clases que tiene asignadas.',
+                '- El listado muestra el nombre del cliente y el estado de asistencia.',
+                '- El entrenador puede consultar el historial de asistencia por clase.',
+                '- La vista es de solo lectura; el entrenador no puede modificar registros de asistencia.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El entrenador accede a su panel de clases | Se muestran solo las clases que tiene asignadas |',
+                '| El entrenador selecciona una clase | Se muestra el listado de inscritos con estado de asistencia |',
+                '| El entrenador intenta modificar la asistencia | El sistema informa que no tiene permisos para esa acción |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      # ─────────────────────────────────────────────────────────────
+      # MÓDULO PANEL ADMINISTRATIVO
+      # ─────────────────────────────────────────────────────────────
+      - name: Crear ADM-001 - Control de acceso
+        id: adm001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[ADM-001] Control de acceso',
+              body: [
+                '### Módulo',
+                'Panel Administrativo',
+                '',
+                '### Descripción',
+                'Como administrador quiero controlar el acceso al panel administrativo por roles para garantizar que solo el personal autorizado pueda realizar operaciones sensibles.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- Solo los usuarios con rol Administrador tienen acceso completo al panel.',
+                '- Los recepcionistas acceden a las secciones de asistencia y reservas, pero no a reportes financieros.',
+                '- El sistema redirige a los usuarios sin permisos a una página de acceso denegado.',
+                '- Todos los accesos al panel quedan registrados en un log de auditoría.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| Un administrador accede al panel | Se muestra el panel completo con todas las opciones disponibles |',
+                '| Un recepcionista intenta acceder a reportes financieros | Se muestra la página de acceso denegado |',
+                '| Un cliente intenta acceder al panel administrativo | Se redirige a su dashboard de cliente |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear ADM-002 - Registro de entrenadores
+        id: adm002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[ADM-002] Registro de entrenadores',
+              body: [
+                '### Módulo',
+                'Panel Administrativo',
+                '',
+                '### Descripción',
+                'Como administrador quiero registrar y gestionar la información de los entrenadores del gimnasio para asignarlos a clases y controlar su actividad.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El formulario de registro del entrenador solicita: nombre, especialidad, horario de disponibilidad, correo y teléfono.',
+                '- El sistema crea una cuenta de usuario con rol Entrenador al registrarlo.',
+                '- El administrador puede editar o desactivar la cuenta de un entrenador.',
+                '- Se puede consultar el listado completo de entrenadores con su estado (activo/inactivo).',
+                '- Al registrar un entrenador, el sistema le envía sus credenciales de acceso por correo.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador registra un nuevo entrenador | Se crea la cuenta y se envían las credenciales por correo |',
+                '| El administrador desactiva a un entrenador | El entrenador pierde acceso al sistema y sus clases quedan sin asignación |',
+                '| El administrador edita los datos de un entrenador | La información se actualiza y se notifica al entrenador |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear ADM-003 - Consulta de clientes
+        id: adm003
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[ADM-003] Consulta de clientes',
+              body: [
+                '### Módulo',
+                'Panel Administrativo',
+                '',
+                '### Descripción',
+                'Como administrador quiero consultar el listado y perfil de todos los clientes del gimnasio para gestionar su información y membresías.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- Se muestra un listado de todos los clientes con nombre, correo, membresía activa y fecha de registro.',
+                '- El administrador puede buscar clientes por nombre, correo o número de identificación.',
+                '- Al seleccionar un cliente, se muestra su perfil completo con historial de membresías, reservas y asistencias.',
+                '- El administrador puede activar, desactivar o eliminar cuentas de clientes.',
+                '- Los datos se pueden exportar en formato CSV.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador accede al listado de clientes | Se muestra la tabla con todos los clientes y sus estados |',
+                '| El administrador busca a un cliente específico | Se filtra la lista y se muestra el cliente encontrado |',
+                '| El administrador desactiva un cliente | La cuenta se desactiva y el cliente no puede iniciar sesión |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear ADM-004 - Creación de planes
+        id: adm004
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[ADM-004] Creación de planes',
+              body: [
+                '### Módulo',
+                'Panel Administrativo',
+                '',
+                '### Descripción',
+                'Como administrador quiero crear y gestionar los planes de membresía del gimnasio para ofrecerlos a los clientes con precios y beneficios diferenciados.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El formulario de creación solicita: nombre del plan, precio, duración (días/meses), descripción y beneficios incluidos.',
+                '- El administrador puede definir restricciones del plan (ej: clases incluidas, horarios, número de accesos).',
+                '- El plan creado queda disponible inmediatamente para asignarse a clientes.',
+                '- El administrador puede editar o desactivar planes existentes sin afectar a los clientes con planes en curso.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador crea un nuevo plan con datos válidos | El plan queda disponible para ser asignado a clientes |',
+                '| El administrador desactiva un plan | El plan no aparece como opción para nuevas membresías, pero los contratos vigentes continúan |',
+                '| El administrador edita el precio de un plan | El nuevo precio aplica solo a las nuevas contrataciones |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      # ─────────────────────────────────────────────────────────────
+      # MÓDULO REPORTES
+      # ─────────────────────────────────────────────────────────────
+      - name: Crear RPT-001 - Reporte de clientes activos
+        id: rpt001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RPT-001] Reporte de clientes activos',
+              body: [
+                '### Módulo',
+                'Reportes',
+                '',
+                '### Descripción',
+                'Como administrador quiero generar un reporte de clientes activos para conocer la base actual de miembros con membresía vigente.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El reporte muestra el número total de clientes con membresía activa.',
+                '- Se puede filtrar por tipo de plan y rango de fechas.',
+                '- Se muestra la evolución mensual del número de clientes activos en un gráfico.',
+                '- El reporte se puede exportar en formato PDF o Excel.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador solicita el reporte de clientes activos | Se genera el reporte con los datos actualizados |',
+                '| El administrador aplica filtros | El reporte se recalcula con los criterios seleccionados |',
+                '| El administrador exporta el reporte | Se descarga el archivo en el formato seleccionado |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RPT-002 - Reporte de ventas
+        id: rpt002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RPT-002] Reporte de ventas',
+              body: [
+                '### Módulo',
+                'Reportes',
+                '',
+                '### Descripción',
+                'Como administrador quiero generar reportes de ventas de membresías y servicios para analizar los ingresos del gimnasio por periodo.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El reporte muestra el total de ingresos por ventas de membresías en un periodo seleccionado.',
+                '- Se desglosa por tipo de plan y método de pago.',
+                '- Se incluye una comparativa con el periodo anterior.',
+                '- El reporte incluye gráficos de barras o líneas para visualizar la tendencia.',
+                '- Exportable en PDF y Excel.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador selecciona un periodo y genera el reporte | Se muestra el resumen de ventas con gráficos y desglose |',
+                '| El administrador compara con el periodo anterior | Se muestra la variación porcentual de ingresos |',
+                '| El administrador exporta el reporte | Se descarga el archivo en el formato elegido |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RPT-003 - Reporte de servicios de entrenadores
+        id: rpt003
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RPT-003] Reporte de servicios de entrenadores',
+              body: [
+                '### Módulo',
+                'Reportes',
+                '',
+                '### Descripción',
+                'Como administrador quiero generar un reporte de la actividad de los entrenadores para evaluar su desempeño y carga de trabajo.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El reporte muestra el número de clases impartidas por entrenador en un periodo.',
+                '- Se incluye el promedio de asistencia por clase y entrenador.',
+                '- Se pueden comparar entrenadores entre sí.',
+                '- El reporte es exportable en PDF y Excel.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador genera el reporte de entrenadores | Se muestra el listado con métricas de actividad por entrenador |',
+                '| El administrador selecciona un entrenador específico | Se muestra el detalle de sus clases y estadísticas de asistencia |',
+                '| El administrador exporta el reporte | Se descarga el archivo en el formato seleccionado |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RPT-004 - Reporte de gastos
+        id: rpt004
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RPT-004] Reporte de gastos',
+              body: [
+                '### Módulo',
+                'Reportes',
+                '',
+                '### Descripción',
+                'Como administrador quiero registrar y consultar los gastos operativos del gimnasio para controlar el presupuesto y analizar la rentabilidad.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El administrador puede registrar gastos con: categoría, monto, fecha y descripción.',
+                '- El reporte muestra el total de gastos por categoría y periodo.',
+                '- Se incluye una comparativa de ingresos vs gastos para calcular el margen.',
+                '- Exportable en PDF y Excel.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador registra un gasto | El gasto queda registrado y se refleja en el reporte del periodo |',
+                '| El administrador consulta el reporte de gastos | Se muestra el desglose por categoría con totales y gráficos |',
+                '| El administrador exporta el reporte | Se descarga el archivo en el formato seleccionado |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RPT-005 - Reporte de clases más demandadas
+        id: rpt005
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RPT-005] Reporte de clases más demandadas',
+              body: [
+                '### Módulo',
+                'Reportes',
+                '',
+                '### Descripción',
+                'Como administrador quiero conocer cuáles son las clases con mayor demanda para optimizar la oferta y asignación de recursos.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El reporte rankea las clases según número de reservas en un periodo.',
+                '- Se muestra el porcentaje de ocupación promedio de cada clase.',
+                '- Se pueden filtrar los resultados por tipo de clase, entrenador o periodo.',
+                '- El reporte incluye gráfico de barras comparativo.',
+                '- Exportable en PDF y Excel.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador genera el reporte | Se muestra el ranking de clases por demanda con ocupación promedio |',
+                '| El administrador filtra por entrenador | El ranking se recalcula mostrando solo las clases del entrenador seleccionado |',
+                '| El administrador exporta el reporte | Se descarga el archivo en el formato seleccionado |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RPT-006 - Reporte de satisfacción
+        id: rpt006
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RPT-006] Reporte de satisfacción',
+              body: [
+                '### Módulo',
+                'Reportes',
+                '',
+                '### Descripción',
+                'Como administrador quiero consultar los resultados de satisfacción de los clientes para identificar áreas de mejora en el servicio.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- Los clientes pueden calificar las clases y el servicio general mediante encuestas.',
+                '- El reporte muestra el promedio de satisfacción por clase y entrenador.',
+                '- Se pueden ver comentarios y valoraciones individuales (anonimizadas).',
+                '- El administrador puede filtrar por periodo, clase o entrenador.',
+                '- Exportable en PDF y Excel.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El cliente completa una encuesta de satisfacción | La valoración queda registrada y se incluye en el reporte |',
+                '| El administrador consulta el reporte de satisfacción | Se muestra el promedio y comentarios del periodo seleccionado |',
+                '| El administrador filtra por entrenador | Se muestran las valoraciones específicas del entrenador seleccionado |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear RPT-007 - Reporte de nuevos clientes
+        id: rpt007
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[RPT-007] Reporte de nuevos clientes',
+              body: [
+                '### Módulo',
+                'Reportes',
+                '',
+                '### Descripción',
+                'Como administrador quiero consultar el reporte de nuevos clientes registrados por periodo para evaluar el crecimiento de la base de miembros.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El reporte muestra la cantidad de nuevos registros por día, semana o mes.',
+                '- Se incluye una comparativa con el periodo anterior.',
+                '- Se puede filtrar por tipo de plan adquirido al registrarse.',
+                '- El reporte incluye un gráfico de tendencia de nuevos clientes.',
+                '- Exportable en PDF y Excel.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El administrador selecciona un periodo y genera el reporte | Se muestra el gráfico y resumen de nuevos clientes |',
+                '| El administrador compara con el periodo anterior | Se muestra la variación porcentual de nuevos registros |',
+                '| El administrador exporta el reporte | Se descarga el archivo en el formato seleccionado |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      # ─────────────────────────────────────────────────────────────
+      # MÓDULO COMUNICACIÓN
+      # ─────────────────────────────────────────────────────────────
+      - name: Crear COM-001 - Formulario de contacto
+        id: com001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[COM-001] Formulario de contacto',
+              body: [
+                '### Módulo',
+                'Comunicación',
+                '',
+                '### Descripción',
+                'Como visitante o cliente quiero enviar un mensaje al gimnasio a través de un formulario de contacto para hacer consultas o solicitar información.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El formulario solicita: nombre, correo electrónico, asunto y mensaje.',
+                '- Todos los campos son obligatorios y se validan antes del envío.',
+                '- El sistema confirma el envío con un mensaje de éxito y envía una copia al correo del remitente.',
+                '- El mensaje se almacena en el sistema y es accesible para el administrador.',
+                '- Se implementa protección anti-spam (CAPTCHA o rate limiting).',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| El visitante completa y envía el formulario con datos válidos | Se registra el mensaje y se muestra confirmación de envío |',
+                '| Un campo obligatorio está vacío | Se resalta el campo faltante y se bloquea el envío |',
+                '| El sistema detecta comportamiento de spam | Se solicita verificación CAPTCHA o se bloquea temporalmente el envío |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear COM-002 - Seguimiento de mensajes
+        id: com002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[COM-002] Seguimiento de mensajes',
+              body: [
+                '### Módulo',
+                'Comunicación',
+                '',
+                '### Descripción',
+                'Como administrador quiero gestionar y dar seguimiento a los mensajes recibidos a través del formulario de contacto para responder oportunamente a los usuarios.',
+                '',
+                '### Escenarios y Criterios de Aceptación',
+                '',
+                '- El administrador puede ver el listado de mensajes recibidos con: remitente, asunto, fecha y estado (nuevo/en proceso/respondido).',
+                '- El administrador puede responder al remitente directamente desde el panel.',
+                '- Los mensajes pueden marcarse como leídos, en proceso o cerrados.',
+                '- El sistema muestra alertas de mensajes nuevos no leídos.',
+                '- El historial de conversaciones queda almacenado para referencia futura.',
+                '',
+                '### Flujo (Evento/Resultado)',
+                '',
+                '| Evento | Resultado |',
+                '|--------|-----------|',
+                '| Llega un nuevo mensaje de contacto | El administrador recibe una alerta y el mensaje aparece en el listado como "Nuevo" |',
+                '| El administrador responde a un mensaje | La respuesta se envía al remitente y el estado cambia a "Respondido" |',
+                '| El administrador cierra un mensaje | El mensaje se archiva y sale del listado activo |',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      # ─────────────────────────────────────────────────────────────
+      # VINCULACIÓN AL PROYECTO V2
+      # ─────────────────────────────────────────────────────────────
+      - name: Agregar todos los issues al Proyecto V2
+        uses: actions/github-script@v7
+        env:
+          PROJECT_NUMBER: ${{ github.event.inputs.project_number }}
+          NODE_ID_USR001: ${{ steps.usr001.outputs.node_id }}
+          NODE_ID_USR002: ${{ steps.usr002.outputs.node_id }}
+          NODE_ID_USR003: ${{ steps.usr003.outputs.node_id }}
+          NODE_ID_USR004: ${{ steps.usr004.outputs.node_id }}
+          NODE_ID_USR005: ${{ steps.usr005.outputs.node_id }}
+          NODE_ID_CLI001: ${{ steps.cli001.outputs.node_id }}
+          NODE_ID_CLI002: ${{ steps.cli002.outputs.node_id }}
+          NODE_ID_CLI003: ${{ steps.cli003.outputs.node_id }}
+          NODE_ID_CLI004: ${{ steps.cli004.outputs.node_id }}
+          NODE_ID_CLS001: ${{ steps.cls001.outputs.node_id }}
+          NODE_ID_CLS002: ${{ steps.cls002.outputs.node_id }}
+          NODE_ID_CLS003: ${{ steps.cls003.outputs.node_id }}
+          NODE_ID_RSV001: ${{ steps.rsv001.outputs.node_id }}
+          NODE_ID_RSV002: ${{ steps.rsv002.outputs.node_id }}
+          NODE_ID_RSV003: ${{ steps.rsv003.outputs.node_id }}
+          NODE_ID_RSV004: ${{ steps.rsv004.outputs.node_id }}
+          NODE_ID_RSV005: ${{ steps.rsv005.outputs.node_id }}
+          NODE_ID_AST001: ${{ steps.ast001.outputs.node_id }}
+          NODE_ID_AST002: ${{ steps.ast002.outputs.node_id }}
+          NODE_ID_AST003: ${{ steps.ast003.outputs.node_id }}
+          NODE_ID_ADM001: ${{ steps.adm001.outputs.node_id }}
+          NODE_ID_ADM002: ${{ steps.adm002.outputs.node_id }}
+          NODE_ID_ADM003: ${{ steps.adm003.outputs.node_id }}
+          NODE_ID_ADM004: ${{ steps.adm004.outputs.node_id }}
+          NODE_ID_RPT001: ${{ steps.rpt001.outputs.node_id }}
+          NODE_ID_RPT002: ${{ steps.rpt002.outputs.node_id }}
+          NODE_ID_RPT003: ${{ steps.rpt003.outputs.node_id }}
+          NODE_ID_RPT004: ${{ steps.rpt004.outputs.node_id }}
+          NODE_ID_RPT005: ${{ steps.rpt005.outputs.node_id }}
+          NODE_ID_RPT006: ${{ steps.rpt006.outputs.node_id }}
+          NODE_ID_RPT007: ${{ steps.rpt007.outputs.node_id }}
+          NODE_ID_COM001: ${{ steps.com001.outputs.node_id }}
+          NODE_ID_COM002: ${{ steps.com002.outputs.node_id }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const projectNumber = parseInt(process.env.PROJECT_NUMBER);
+            const owner = context.repo.owner;
+            const nodeIds = [
+              process.env.NODE_ID_USR001, process.env.NODE_ID_USR002,
+              process.env.NODE_ID_USR003, process.env.NODE_ID_USR004,
+              process.env.NODE_ID_USR005,
+              process.env.NODE_ID_CLI001, process.env.NODE_ID_CLI002,
+              process.env.NODE_ID_CLI003, process.env.NODE_ID_CLI004,
+              process.env.NODE_ID_CLS001, process.env.NODE_ID_CLS002,
+              process.env.NODE_ID_CLS003,
+              process.env.NODE_ID_RSV001, process.env.NODE_ID_RSV002,
+              process.env.NODE_ID_RSV003, process.env.NODE_ID_RSV004,
+              process.env.NODE_ID_RSV005,
+              process.env.NODE_ID_AST001, process.env.NODE_ID_AST002,
+              process.env.NODE_ID_AST003,
+              process.env.NODE_ID_ADM001, process.env.NODE_ID_ADM002,
+              process.env.NODE_ID_ADM003, process.env.NODE_ID_ADM004,
+              process.env.NODE_ID_RPT001, process.env.NODE_ID_RPT002,
+              process.env.NODE_ID_RPT003, process.env.NODE_ID_RPT004,
+              process.env.NODE_ID_RPT005, process.env.NODE_ID_RPT006,
+              process.env.NODE_ID_RPT007,
+              process.env.NODE_ID_COM001, process.env.NODE_ID_COM002,
+            ];
+
+            // Obtener el node ID del proyecto
+            let projectNodeId;
+            try {
+              const projectResult = await github.graphql(`
+                query($owner: String!, $number: Int!) {
+                  user(login: $owner) {
+                    projectV2(number: $number) {
+                      id
+                      title
+                    }
+                  }
+                }
+              `, { owner, number: projectNumber });
+              projectNodeId = projectResult.user.projectV2.id;
+              console.log(`📋 Proyecto encontrado: "${projectResult.user.projectV2.title}" (ID: ${projectNodeId})`);
+            } catch (e) {
+              console.log(`⚠️  No se pudo obtener el proyecto #${projectNumber}: ${e.message}`);
+              console.log('Para agregar los issues al proyecto manualmente:');
+              console.log(`   1. Ve a https://github.com/users/${owner}/projects/${projectNumber}`);
+              console.log('   2. Haz clic en "+" > "Add item from repository"');
+              console.log('   3. Busca y agrega los issues USR, CLI, CLS, RSV, AST, ADM, RPT y COM');
+              return;
+            }
+
+            // Agregar cada issue al proyecto
+            let linked = 0;
+            for (const nodeId of nodeIds) {
+              if (!nodeId) continue;
+              try {
+                const result = await github.graphql(`
+                  mutation($project: ID!, $item: ID!) {
+                    addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
+                      item { id }
+                    }
+                  }
+                `, { project: projectNodeId, item: nodeId });
+                console.log(`✅ Issue vinculado al proyecto (item ID: ${result.addProjectV2ItemById.item.id})`);
+                linked++;
+              } catch (e) {
+                console.log(`⚠️  No se pudo vincular issue al proyecto: ${e.message}`);
+              }
+            }
+
+            console.log('');
+            console.log(`🎉 Proceso completado. ${linked} issues vinculados al proyecto.`);
+            console.log(`   Proyecto: https://github.com/users/${owner}/projects/${projectNumber}`);
