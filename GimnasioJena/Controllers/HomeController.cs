@@ -15,16 +15,24 @@ namespace GimnasioJena.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Conoce más sobre Gimnasio Jena, nuestra misión y nuestros valores.";
 
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Ponte en contacto con nosotros. Estamos aquí para ayudarte.";
 
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Contact(FormCollection form)
+        {
+            TempData["MensajeExito"] = "¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.";
+            return RedirectToAction("Contact");
         }
     }
 }
