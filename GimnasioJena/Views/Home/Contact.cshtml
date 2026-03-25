@@ -1,19 +1,152 @@
 ﻿@{
-    ViewBag.Title = "Contact";
+    ViewBag.Title = "Contacto";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <address>
-        One Microsoft Way<br />
-        Redmond, WA 98052-6399<br />
-        <abbr title="Phone">P:</abbr>
-        425.555.0100
-    </address>
+<!-- Page Header -->
+<section style="background: linear-gradient(135deg, #111111 60%, #2c2c2c 100%); padding: 80px 0 60px;">
+    <div class="container text-center">
+        <p class="text-uppercase mb-2" style="color:#FF6600; font-family:'Oswald',sans-serif; letter-spacing:3px; font-size:1rem;">
+            <i class="bi bi-envelope-fill me-1"></i> Estamos aquí para ti
+        </p>
+        <h1 class="display-4 fw-bold text-white mb-3">PONTE EN <span style="color:#FF6600;">CONTACTO</span></h1>
+        <div class="mx-auto" style="width:60px; height:4px; background:#FF6600; border-radius:2px;"></div>
+    </div>
+</section>
 
-    <address>
-        <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-        <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-    </address>
-</main>
+<!-- Contact Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Contact Info -->
+            <div class="col-lg-5">
+                <p class="text-uppercase mb-1" style="color:#FF6600; font-family:'Oswald',sans-serif; letter-spacing:3px;">Información de contacto</p>
+                <h2 class="fw-bold mb-4" style="color:#111;">¿CÓMO LLEGAR A NOSOTROS?</h2>
+
+                <div class="d-flex mb-4">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-geo-alt-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">DIRECCIÓN</h6>
+                        <p class="text-muted mb-0">Gimnasio Jena<br />Tu ciudad, Tu país</p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-4">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-telephone-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">TELÉFONO</h6>
+                        <p class="text-muted mb-0">+000 000-0000</p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-4">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-envelope-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">CORREO ELECTRÓNICO</h6>
+                        <p class="text-muted mb-0">info@gimnasiojena.com</p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-4">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-clock-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">HORARIO</h6>
+                        <p class="text-muted mb-0">
+                            Lunes – Viernes: 5:00 AM – 10:00 PM<br />
+                            Sábado: 6:00 AM – 8:00 PM<br />
+                            Domingo: Cerrado
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm p-4 p-lg-5">
+                    <h4 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">ENVÍANOS UN MENSAJE</h4>
+                    <p class="text-muted mb-4">Completa el formulario y nos pondremos en contacto contigo a la brevedad posible.</p>
+
+                    @using (Html.BeginForm("Contact", "Home", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        if (TempData["MensajeExito"] != null)
+                        {
+                            <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                <span>@TempData["MensajeExito"]</span>
+                            </div>
+                        }
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Nombre</label>
+                                <input type="text" class="form-control" name="nombre" placeholder="Tu nombre" required />
+                                <div class="invalid-feedback">Por favor ingresa tu nombre.</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Apellido</label>
+                                <input type="text" class="form-control" name="apellido" placeholder="Tu apellido" required />
+                                <div class="invalid-feedback">Por favor ingresa tu apellido.</div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Correo electrónico</label>
+                                <input type="email" class="form-control" name="correo" placeholder="correo@ejemplo.com" required />
+                                <div class="invalid-feedback">Por favor ingresa un correo válido.</div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Teléfono (opcional)</label>
+                                <input type="tel" class="form-control" name="telefono" placeholder="+1 (000) 000-0000" />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Asunto</label>
+                                <select class="form-select" name="asunto" required>
+                                    <option value="" selected disabled>Selecciona un asunto...</option>
+                                    <option value="membresia">Información sobre membresías</option>
+                                    <option value="clases">Horario de clases</option>
+                                    <option value="entrenadores">Entrenamiento personalizado</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona un asunto.</div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Mensaje</label>
+                                <textarea class="form-control" name="mensaje" rows="4" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                                <div class="invalid-feedback">Por favor escribe tu mensaje.</div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-gym btn-lg w-100">
+                                    <i class="bi bi-send-fill me-2"></i>ENVIAR MENSAJE
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+<script>
+    // Bootstrap form validation
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+}
