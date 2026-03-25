@@ -1,0 +1,198 @@
+name: Crear Issues - User Stories Sitio Público
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_number:
+        description: "Número del proyecto GitHub V2 donde se vincularán los issues (ej: 3)"
+        required: false
+        default: "3"
+
+permissions:
+  issues: write
+  repository-projects: write
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crear WEB-001 - Visualización de información general
+        id: web001
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[WEB-001] Visualización de información general',
+              body: [
+                '## Módulo',
+                'Sitio Público',
+                '',
+                '## Descripción',
+                'Como visitante quiero visualizar la información general del gimnasio para conocer los servicios que ofrece.',
+                '',
+                '## Criterios de Aceptación',
+                '',
+                '- **Acceso sin autenticación:** El visitante puede acceder a la página de información general sin necesidad de iniciar sesión ni registrarse.',
+                '- **Contenido disponible/legible:** La información general del gimnasio (nombre, descripción, servicios, contacto, etc.) está visible y es legible desde cualquier dispositivo.',
+                '- El contenido se presenta de forma organizada y clara.',
+                '- La página carga correctamente y no requiere permisos especiales.',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear WEB-002 - Acceso a metodología
+        id: web002
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[WEB-002] Acceso a metodología',
+              body: [
+                '## Módulo',
+                'Sitio Público',
+                '',
+                '## Descripción',
+                'Como visitante quiero visualizar la metodología de entrenamiento para comprender el enfoque del gimnasio.',
+                '',
+                '## Criterios de Aceptación',
+                '',
+                '- **Información estructurada:** La metodología de entrenamiento se presenta de forma clara, con secciones bien definidas que explican el enfoque y filosofía del gimnasio.',
+                '- **Consulta pública:** El visitante puede acceder a esta información sin necesidad de autenticarse ni registrarse.',
+                '- El contenido incluye detalles sobre los métodos, técnicas o filosofías de entrenamiento utilizados.',
+                '- La información es legible y está bien organizada visualmente.',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear WEB-003 - Visualización de planes
+        id: web003
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[WEB-003] Visualización de planes',
+              body: [
+                '## Módulo',
+                'Sitio Público',
+                '',
+                '## Descripción',
+                'Como visitante quiero visualizar los planes o membresías disponibles del gimnasio.',
+                '',
+                '## Criterios de Aceptación',
+                '',
+                '- **Información de cada plan:** Se muestra el detalle de cada plan o membresía disponible, incluyendo nombre, precio, duración y beneficios.',
+                '- **Consulta pública de membresías:** El visitante puede consultar todos los planes disponibles sin necesidad de autenticarse ni registrarse.',
+                '- Los planes se presentan de forma comparativa y fácil de entender.',
+                '- La información de precios y condiciones es clara y actualizada.',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Crear WEB-004 - Visualización de horarios
+        id: web004
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[WEB-004] Visualización de horarios',
+              body: [
+                '## Módulo',
+                'Sitio Público',
+                '',
+                '## Descripción',
+                'Como visitante quiero visualizar el horario de clases disponible del gimnasio.',
+                '',
+                '## Criterios de Aceptación',
+                '',
+                '- **Consulta pública de clases:** El visitante puede ver el horario de clases disponibles sin necesidad de autenticarse ni registrarse.',
+                '- **Información legible:** El horario se presenta de forma clara, indicando nombre de la clase, horario, instructor y disponibilidad.',
+                '- El horario está organizado por días de la semana o de forma que facilite la consulta.',
+                '- La información se actualiza correctamente y refleja el estado actual de las clases.',
+              ].join('\n')
+            });
+            console.log(`✅ Issue creado: #${issue.number} - ${issue.title}`);
+            console.log(`   URL: ${issue.html_url}`);
+            core.setOutput('number', String(issue.number));
+            core.setOutput('node_id', issue.node_id);
+
+      - name: Agregar issues al Proyecto V2
+        uses: actions/github-script@v7
+        env:
+          PROJECT_NUMBER: ${{ github.event.inputs.project_number }}
+          NODE_ID_001: ${{ steps.web001.outputs.node_id }}
+          NODE_ID_002: ${{ steps.web002.outputs.node_id }}
+          NODE_ID_003: ${{ steps.web003.outputs.node_id }}
+          NODE_ID_004: ${{ steps.web004.outputs.node_id }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const projectNumber = parseInt(process.env.PROJECT_NUMBER);
+            const owner = context.repo.owner;
+            const nodeIds = [
+              process.env.NODE_ID_001,
+              process.env.NODE_ID_002,
+              process.env.NODE_ID_003,
+              process.env.NODE_ID_004,
+            ];
+
+            // Obtener el node ID del proyecto
+            let projectNodeId;
+            try {
+              const projectResult = await github.graphql(`
+                query($owner: String!, $number: Int!) {
+                  user(login: $owner) {
+                    projectV2(number: $number) {
+                      id
+                      title
+                    }
+                  }
+                }
+              `, { owner, number: projectNumber });
+              projectNodeId = projectResult.user.projectV2.id;
+              console.log(`📋 Proyecto encontrado: "${projectResult.user.projectV2.title}" (ID: ${projectNodeId})`);
+            } catch (e) {
+              console.log(`⚠️  No se pudo obtener el proyecto #${projectNumber}: ${e.message}`);
+              console.log('Para agregar los issues al proyecto manualmente:');
+              console.log(`   1. Ve a https://github.com/users/${owner}/projects/${projectNumber}`);
+              console.log('   2. Haz clic en "+" > "Add item from repository"');
+              console.log('   3. Busca y agrega los issues WEB-001 al WEB-004');
+              return;
+            }
+
+            // Agregar cada issue al proyecto
+            for (const nodeId of nodeIds) {
+              if (!nodeId) continue;
+              try {
+                const result = await github.graphql(`
+                  mutation($project: ID!, $item: ID!) {
+                    addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
+                      item { id }
+                    }
+                  }
+                `, { project: projectNodeId, item: nodeId });
+                console.log(`✅ Issue vinculado al proyecto (item ID: ${result.addProjectV2ItemById.item.id})`);
+              } catch (e) {
+                console.log(`⚠️  No se pudo vincular issue al proyecto: ${e.message}`);
+              }
+            }
+
+            console.log('');
+            console.log('🎉 Proceso completado.');
+            console.log(`   Proyecto: https://github.com/users/${owner}/projects/${projectNumber}`);
