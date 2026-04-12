@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+
+<section class="register-wrapper">
+    <div class="register-card">
+        <div class="card-body">
+            <span class="register-brand">
+                <i class="bi bi-lightning-charge-fill me-1"></i> GIMNASIO JENA
+            </span>
+            <h3 class="register-title">Crea tu cuenta</h3>
+
+            @using (Html.BeginForm("Index", "Register", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger mb-2" })
+
+                <div class="mb-3">
+                    <label for="FullName" class="form-label small">Nombre completo</label>
+                    <input type="text" id="FullName" name="FullName" class="form-control" placeholder="Tu nombre" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="Email" class="form-label small">Correo electrónico</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                        <input type="email" id="Email" name="Email" class="form-control" placeholder="tu@correo.com" required />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Password" class="form-label small">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                        <input type="password" id="Password" name="Password" class="form-control" placeholder="********" required minlength="6" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ConfirmPassword" class="form-label small">Confirmar contraseña</label>
+                    <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" placeholder="********" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="Phone" class="form-label small">Teléfono (opcional)</label>
+                    <input type="tel" id="Phone" name="Phone" class="form-control" placeholder="+506 8xxxxxxx" />
+                    <div class="form-text form-text-muted">Usaremos este número solo para notificaciones importantes.</div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="Terms" name="Terms" required />
+                    <label class="form-check-label small" for="Terms">Acepto los términos y condiciones</label>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-register">Crear cuenta</button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <span class="small text-muted">¿Ya tienes cuenta?</span>
+                    <a href="@Url.Action("Login","Account")" class="ms-2">Inicia sesión</a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
