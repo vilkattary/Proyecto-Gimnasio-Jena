@@ -12,6 +12,10 @@ namespace GimnasioJena.Controllers
         {
             return View();
         }
+        public ActionResult Planes()
+        {
+            return View();
+        }
 
         public ActionResult About()
         {
