@@ -108,6 +108,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OperacionController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -177,6 +178,10 @@
     <Content Include="Views\Clientes\MiPerfil.cshtml" />
     <Content Include="Views\Clientes\MisReservas.cshtml" />
     <Content Include="Views\Clientes\ReservarClases.cshtml" />
+    <Content Include="Views\Operacion\Operaciones.cshtml" />
+    <Content Include="Views\Operacion\ListaAsistencia.cshtml" />
+    <Content Include="Views\Operacion\PanelMensajes.cshtml" />
+    <Content Include="Views\Operacion\MisClases.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
