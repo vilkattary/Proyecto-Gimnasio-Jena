@@ -415,4 +415,6 @@ FodyWeavers.xsd
 *.msi
 *.msix
 *.msm
+# NuGet bootstrapper
+.nuget/nuget.exe
 *.msp

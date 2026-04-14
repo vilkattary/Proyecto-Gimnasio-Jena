@@ -1,0 +1,340 @@
+﻿@{
+    ViewBag.Title = "Planes";
+}
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+
+<section class="py-5">
+    <div class="container">
+        <!-- Hero -->
+        <div class="text-center mb-5 plans-hero">
+            <h1 style="font-family:'Audiowide',sans-serif; color:var(--primary);">Planes y Membresías</h1>
+            <p class="lead text-muted">Elige el plan que mejor se adapte a tus objetivos. Contenido temporal (estático) hasta integración con la base de datos.</p>
+        </div>
+
+        <!-- Plan Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-sm-6 col-md-4">
+                <div class="card h-100 shadow-sm" style="border-top:4px solid var(--primary);">
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="card-title fw-bold">Plan Básico</h4>
+                        <p class="text-muted mb-2">Ideal para comenzar</p>
+                        <div class="mb-3">
+                            <span class="h3 text-dark">$19</span>
+                            <span class="text-muted">/ mes</span>
+                        </div>
+                        <ul class="mb-3">
+                            <li>Acceso a gimnasio en horario limitado</li>
+                            <li>Máquinas básicas</li>
+                            <li>1 clase grupal a la semana</li>
+                        </ul>
+
+                        <div class="mt-auto">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-gym w-100" data-bs-toggle="modal" data-bs-target="#detailBasic">Ver detalle</button>
+                                <a class="btn btn-gym w-100" href="@Url.Action("Register","Account")">Reservar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="card h-100 shadow-sm" style="border-top:4px solid var(--primary);">
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="card-title fw-bold">Plan Estándar</h4>
+                        <p class="text-muted mb-2">Para quienes entrenan con frecuencia</p>
+                        <div class="mb-3">
+                            <span class="h3 text-dark">$39</span>
+                            <span class="text-muted">/ mes</span>
+                        </div>
+                        <ul class="mb-3">
+                            <li>Acceso completo al gimnasio</li>
+                            <li>Clases ilimitadas</li>
+                            <li>1 sesión mensual con entrenador</li>
+                        </ul>
+
+                        <div class="mt-auto">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-gym w-100" data-bs-toggle="modal" data-bs-target="#detailStandard">Ver detalle</button>
+                                <a class="btn btn-gym w-100" href="@Url.Action("Register","Account")">Reservar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="card h-100 shadow-sm" style="border-top:4px solid var(--primary);">
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="card-title fw-bold">Plan Premium</h4>
+                        <p class="text-muted mb-2">Máxima experiencia y beneficios</p>
+                        <div class="mb-3">
+                            <span class="h3 text-dark">$69</span>
+                            <span class="text-muted">/ mes</span>
+                        </div>
+                        <ul class="mb-3">
+                            <li>Acceso VIP 24/7</li>
+                            <li>Entrenador personal semanal</li>
+                            <li>Descuentos en suplementos y tienda</li>
+                        </ul>
+
+                        <div class="mt-auto">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-gym w-100" data-bs-toggle="modal" data-bs-target="#detailPremium">Ver detalle</button>
+                                <a class="btn btn-gym w-100" href="@Url.Action("Register","Account")">Reservar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memberships & Tariffs -->
+        <div class="row mb-5">
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold">Membresías</h5>
+                        <p class="text-muted">Opciones con diferentes compromisos y descuentos por duración.</p>
+                        <ul>
+                            <li><strong>Mensual:</strong> sin compromiso, precio estándar.</li>
+                            <li><strong>Trimestral:</strong> 5% de descuento sobre mensualidad.</li>
+                            <li><strong>Anual:</strong> 15% de descuento + regalo de bienvenida.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold">Tarifas rápidas</h5>
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Duración</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1 mes</td>
+                                        <td>$19</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3 meses</td>
+                                        <td>$54 (ahorro $3)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12 meses</td>
+                                        <td>$688 (ahorro $220)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="mb-5">
+            <h4 class="fw-bold">Beneficios incluidos</h4>
+            <div class="row g-3 mt-3">
+                <div class="col-sm-6 col-md-3">
+                    <div class="p-3 border rounded text-center benefit-box">
+                        <i class="bi bi-droplet-fill"></i>
+                        <p class="mb-0 mt-2 small">Acceso a vestidores</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="p-3 border rounded text-center benefit-box">
+                        <i class="bi bi-heart-pulse-fill"></i>
+                        <p class="mb-0 mt-2 small">Rutinas personalizadas</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="p-3 border rounded text-center benefit-box">
+                        <i class="bi bi-basket-fill"></i>
+                        <p class="mb-0 mt-2 small">Descuentos en suplementos</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="p-3 border rounded text-center benefit-box">
+                        <i class="bi bi-shield-lock-fill"></i>
+                        <p class="mb-0 mt-2 small">Acceso 24/7 (Premium)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Classes -->
+        <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold mb-0">Clases grupales</h4>
+                <small class="text-muted">Reserva tu plaza</small>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Clase</th>
+                            <th>Día</th>
+                            <th>Hora</th>
+                            <th>Instructor</th>
+                            <th>Disponibles</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>HIIT</td>
+                            <td>Lunes</td>
+                            <td>06:30 - 07:15</td>
+                            <td>María</td>
+                            <td>8 / 20</td>
+                            <td><button class="btn btn-gym btn-sm" data-bs-toggle="modal" data-bs-target="#reserveModal" data-class="HIIT">Reservar</button></td>
+                        </tr>
+                        <tr>
+                            <td>Yoga</td>
+                            <td>Martes</td>
+                            <td>18:00 - 19:00</td>
+                            <td>Carlos</td>
+                            <td>5 / 18</td>
+                            <td><button class="btn btn-gym btn-sm" data-bs-toggle="modal" data-bs-target="#reserveModal" data-class="Yoga">Reservar</button></td>
+                        </tr>
+                        <tr>
+                            <td>Spinning</td>
+                            <td>Miércoles</td>
+                            <td>07:30 - 08:15</td>
+                            <td>Lucía</td>
+                            <td>12 / 20</td>
+                            <td><button class="btn btn-gym btn-sm" data-bs-toggle="modal" data-bs-target="#reserveModal" data-class="Spinning">Reservar</button></td>
+                        </tr>
+                        <tr>
+                            <td>Box</td>
+                            <td>Viernes</td>
+                            <td>19:00 - 20:00</td>
+                            <td>Rafael</td>
+                            <td>2 / 16</td>
+                            <td><button class="btn btn-gym btn-sm" data-bs-toggle="modal" data-bs-target="#reserveModal" data-class="Box">Reservar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <p class="text-muted small">Nota: Los horarios y cupos son datos de ejemplo. Se integrará la lógica y la base de datos posteriormente.</p>
+    </div>
+</section>
+
+<!-- Plan Details Modals -->
+<div class="modal fade" id="detailBasic" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-top:4px solid var(--primary);">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalle - Plan Básico</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Incluye:</strong></p>
+                <ul>
+                    <li>Acceso al gimnasio en horario restringido (06:00 - 22:00)</li>
+                    <li>Uso de máquinas cardiovasculares y pesas libres</li>
+                    <li>1 clase grupal por semana</li>
+                    <li>Soporte vía correo electrónico</li>
+                </ul>
+                <p class="mb-0"><strong>Condiciones:</strong> Contrato renovable mes a mes.</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-outline-gym" href="@Url.Action("Register","Account")">Reservar</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detailStandard" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-top:4px solid var(--primary);">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalle - Plan Estándar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Incluye:</strong></p>
+                <ul>
+                    <li>Acceso completo en horarios de apertura</li>
+                    <li>Clases ilimitadas</li>
+                    <li>1 sesión mensual con entrenador</li>
+                    <li>Acceso a eventos y talleres</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-outline-gym" href="@Url.Action("Register","Account")">Reservar</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detailPremium" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-top:4px solid var(--primary);">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalle - Plan Premium</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Incluye:</strong></p>
+                <ul>
+                    <li>Acceso 24/7</li>
+                    <li>Entrenador personal semanal</li>
+                    <li>Consultas nutricionales</li>
+                    <li>Prioridad en reservas de clases y descuentos especiales</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-outline-gym" href="@Url.Action("Register","Account")">Reservar</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reservation modal (example for client-side flow) -->
+<div class="modal fade" id="reserveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-top:4px solid var(--primary);">
+            <div class="modal-header">
+                <h5 class="modal-title">Reservar clase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="reserveText">Datos de la clase seleccionada.</p>
+                <p class="small text-muted">Funcionalidad de reserva no implementada (datos estáticos).</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-gym" href="@Url.Action("Register","Account")">Crear cuenta / Reservar</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // Llenado dinámico mínimo para el modal de reserva (cliente)
+        var reserveModal = document.getElementById('reserveModal');
+        if (reserveModal) {
+            reserveModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var className = button.getAttribute('data-class') || 'Clase';
+                var text = 'Vas a reservar: ' + className + '. (Demo estático)';
+                document.getElementById('reserveText').textContent = text;
+            });
+        }
+    </script>
+}
