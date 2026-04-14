@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "MisReservas";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+
+<style>
+    #calendar {
+        max-width: 750px;
+        margin: 0 auto;
+        font-size: 1rem;
+    }
+
+    .fc-daygrid-day-number {
+        color: #FF6600 !important;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .fc-toolbar-title {
+        color: #fff !important;
+        font-weight: bold;
+        font-size: 1.4rem;
+    }
+
+    .fc-col-header-cell-cushion {
+        color: #fff !important;
+        font-weight: bold;
+    }
+
+    .fc-event-title {
+        font-size: 0.75rem !important;
+        color: #fff !important;
+    }
+
+    .card-body p, .card-body h4 {
+        color: #FF6600 !important;
+    }
+</style>
+
+<section style="background:#111; font-family:'Oswald', sans-serif; min-height:80vh;" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold" style="font-size:2.5rem; letter-spacing:2px; color:#FF6600;">
+                MIS RESERVAS
+            </h1>
+            <div class="mx-auto mt-2" style="width:80px; height:4px; background:#FF6600; border-radius:2px;"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div id="calendar"></div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm mb-4" style="background:#1a1a1a; border-left:4px solid #FF6600;">
+                    <div class="card-body">
+                        <h4 class="fw-bold">Clase de Spinning</h4>
+                        <p>Profesor: Diego Pérez</p>
+                        <p>Fecha: 30/04/2026</p>
+                        <p>Hora: 10:00 AM</p>
+                        <p>Lugar: Costa Rica 🇨🇷</p>
+                        <a href="@Url.Action("EliminarReserva", "Clientes", new { id = 1 })"
+                           class="btn btn-dark fw-semibold" style="color:#FF6600;">Eliminar reserva</a>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mb-4" style="background:#1a1a1a; border-left:4px solid #FF6600;">
+                    <div class="card-body">
+                        <h4 class="fw-bold">Clase de Yoga</h4>
+                        <p>Profesor: María Gómez</p>
+                        <p>Fecha: 29/04/2026</p>
+                        <p>Hora: 5:00 PM</p>
+                        <p>Lugar: Costa Rica 🇨🇷</p>
+                        <a href="@Url.Action("EliminarReserva", "Clientes", new { id = 2 })"
+                           class="btn btn-dark fw-semibold" style="color:#FF6600;">Eliminar reserva</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            themeSystem: 'bootstrap5',
+            events: [
+                {
+                    title: 'Yoga',
+                    start: '2026-04-29',
+                    color: '#FF6600'
+                },
+                {
+                    title: 'Spinning',
+                    start: '2026-04-30',
+                    color: '#FF6600'
+                }
+            ]
+        });
+        calendar.render();
+    });
+</script>
