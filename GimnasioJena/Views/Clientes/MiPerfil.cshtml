@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "MiPerfil";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+
+<section style="background:#111 url('/images/gym-background.jpg') center/cover no-repeat; font-family:'Oswald', sans-serif; min-height:80vh; position:relative;" class="py-5">
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75);"></div>
+    <div class="container position-relative">
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-white" style="font-size:3rem; letter-spacing:2px;">
+                MI PERFIL
+            </h1>
+            <div class="mx-auto mt-2" style="width:80px; height:4px; background:#FF6600; border-radius:2px;"></div>
+        </div>
+
+        <div class="row align-items-start">
+            <div class="col-md-6">
+                <div class="d-flex align-items-start mb-4">
+                    <img src="https://share.google/snfokBnq8hElY1WJ0" alt="Foto de perfil"
+                         class="rounded-circle border shadow me-4"
+                         style="border:3px solid #FF6600; width:200px; height:200px; object-fit:cover;">
+                    <div style="margin-left:20px;">
+                        <h6 class="text-white mb-1">Usuario</h6>
+                        <p class="text-light mb-3">Jonás Martínez <span style="color:#FF6600;">✔</span></p>
+
+                        <h6 class="text-white mb-1">Correo</h6>
+                        <p class="text-light mb-3" style="color:#FF6600;">jonas@example.com</p>
+
+                        <h6 class="text-white mb-1">Teléfono</h6>
+                        <p class="text-light mb-3" style="color:#FF6600;">+506 8888-8888</p>
+
+                        <h6 class="text-white mb-1">Dirección</h6>
+                        <p class="text-light mb-0" style="color:#FF6600;">San José, Costa Rica</p>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h5 class="fw-bold" style="color:#FF6600;">Descripción</h5>
+                    <p class="text-light">
+                        Apasionado por el fitness y el bienestar. Disfruto ayudando a otros a alcanzar sus metas.
+                        Me especializo en entrenamiento de fuerza y resistencia.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="d-grid gap-3 mx-auto" style="max-width:400px;">
+                    <a href="@Url.Action("MiMembresia", "Clientes")" class="btn fw-semibold"
+                       style="background:#FF6600; color:#fff; border:none; transition:0.3s;">
+                        Mi Membresía
+                    </a>
+                    <a href="@Url.Action("ReservarClases", "Clientes")" class="btn fw-semibold"
+                       style="background:#FF6600; color:#fff; border:none; transition:0.3s;">
+                        Reservar Clase
+                    </a>
+                    <a href="@Url.Action("MisReservas", "Clientes")" class="btn fw-semibold"
+                       style="background:#FF6600; color:#fff; border:none; transition:0.3s;">
+                        Mis Reservas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
