@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "ReservarClases";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+
+<section class="py-5" style="background:#111; font-family:'Oswald',sans-serif; min-height:80vh;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <div>
+                <label class="fw-bold me-2 text-white">Tipo de clase:</label>
+                <select class="form-select d-inline-block" style="width:auto; border-color:#FF6600; background:#000; color:#fff;">
+                    <option selected>Spinning</option>
+                    <option>Yoga</option>
+                    <option>Boxing</option>
+                    <option>CrossFit</option>
+                    <option>Todas</option>
+                </select>
+            </div>
+            <div>
+                <label class="fw-bold me-2 text-white">Ordenar por:</label>
+                <select class="form-select d-inline-block" style="width:auto; border-color:#FF6600; background:#000; color:#fff;">
+                    <option selected>Elegir una opción</option>
+                    <option>Fecha</option>
+                    <option>Hora</option>
+                    <option>Profesor</option>
+                </select>
+            </div>
+        </div>
+
+        <h2 class="fw-bold mb-4" style="color:#FF6600;">Clases disponibles</h2>
+
+        <div class="card mb-4 border-0 shadow-sm" style="background:#222; color:#fff;">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-3">
+                    <img src="https://share.google/VJzHXBMDLpvB04dEn" class="img-fluid rounded-start" alt="Spinning">
+                </div>
+                <div class="col-md-7 p-4">
+                    <span class="badge bg-warning text-dark mb-2 fw-bold">Mi Membresía</span>
+                    <h4 class="fw-bold" style="color:#FF6600;">Clases de Spinning</h4>
+                    <p class="mb-1">Profesor: <strong>Diego Pérez</strong></p>
+                    <p class="mb-1">Hora: <strong>10:00 AM</strong></p>
+                    <p class="mb-1">Fecha: <strong>30/05/2026</strong></p>
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="#" class="btn fw-semibold mt-3" style="background:#FF6600; color:#fff; border:none;">Reservar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4 border-0 shadow-sm" style="background:#222; color:#fff;">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-3">
+                    <img src="https://cdn.pixabay.com/photo/2016/11/29/09/08/yoga-1866559_1280.jpg" class="img-fluid rounded-start" alt="Yoga">
+                </div>
+                <div class="col-md-7 p-4">
+                    <h4 class="fw-bold" style="color:#FF6600;">Clases de Yoga</h4>
+                    <p class="mb-1">Profesor: <strong>María Gómez</strong></p>
+                    <p class="mb-1">Hora: <strong>5:00 PM</strong></p>
+                    <p class="mb-1">Fecha: <strong>29/05/2026</strong></p>
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="#" class="btn fw-semibold mt-3" style="background:#FF6600; color:#fff; border:none;">Reservar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4 border-0 shadow-sm" style="background:#222; color:#fff;">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-3">
+                    <img src="https://cdn.pixabay.com/photo/2016/03/27/22/22/boxing-1282241_1280.jpg" class="img-fluid rounded-start" alt="Boxeo">
+                </div>
+                <div class="col-md-7 p-4">
+                    <h4 class="fw-bold" style="color:#FF6600;">Clases de Boxeo</h4>
+                    <p class="mb-1">Profesor: <strong>Carlos Ramírez</strong></p>
+                    <p class="mb-1">Hora: <strong>7:00 PM</strong></p>
+                    <p class="mb-1">Fecha: <strong>28/05/2026</strong></p>
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="#" class="btn fw-semibold mt-3" style="background:#FF6600; color:#fff; border:none;">Reservar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
