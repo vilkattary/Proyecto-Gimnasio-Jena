@@ -1,0 +1,637 @@
+@{
+    ViewBag.Title = "Dashboard Administrador";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<style>
+    /* ============================================
+       SISTEMA DE DISEÑO - GIMNASIO JENA
+       ============================================ */
+    :root {
+        /* Colores Core */
+        --jena-navy: #2C3E50;
+        --jena-dark-navy: #1A2332;
+
+        /* Colores de Acento */
+        --jena-orange: #FF6B35;
+        --jena-dark-orange: #D95F31;
+
+        /* Colores de Soporte */
+        --jena-light-blue: #6C8EA4;
+        --jena-white: #FFFFFF;
+        --jena-light-gray: #F8F9FA;
+
+        /* Tipografía */
+        --font-primary: 'Montserrat', sans-serif;
+    }
+
+    body {
+        font-family: var(--font-primary);
+        background: linear-gradient(180deg, var(--jena-white) 0%, var(--jena-light-gray) 100%);
+        color: var(--jena-navy);
+        min-height: 100vh;
+    }
+
+    /* ============================================
+       SECCIÓN DE BIENVENIDA CON LOGO
+       ============================================ */
+    .welcome-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: var(--jena-white);
+        border-radius: 20px;
+        border: 2px solid var(--jena-light-blue);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .logo-circular {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background-color: var(--jena-orange);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        flex-shrink: 0;
+    }
+
+        .logo-circular i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.3);
+            position: absolute;
+        }
+
+        .logo-circular .letter-j {
+            font-size: 5rem;
+            color: var(--jena-dark-navy);
+            font-weight: 800;
+            font-family: var(--font-primary);
+            position: relative;
+            z-index: 1;
+        }
+
+    .welcome-text h3 {
+        color: var(--jena-navy);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+    }
+
+    .welcome-text p {
+        color: var(--jena-light-blue);
+        font-weight: 400;
+        margin: 0;
+    }
+
+    /* ============================================
+       TÍTULO PRINCIPAL
+       ============================================ */
+    .page-title {
+        color: var(--jena-navy);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 8px;
+        position: relative;
+        display: inline-block;
+        font-size: 2.5rem;
+    }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 5px;
+            background-color: var(--jena-orange);
+        }
+
+    /* ============================================
+       ESTADÍSTICAS (STATS CARDS)
+       ============================================ */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background-color: var(--jena-white);
+        border: 2px solid var(--jena-light-blue);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background-color: var(--jena-orange);
+            transition: height 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--jena-orange);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.25);
+        }
+
+            .stat-card:hover::before {
+                height: 5px;
+            }
+
+        .stat-card i {
+            font-size: 3.5rem;
+            color: var(--jena-orange);
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            color: var(--jena-navy);
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: var(--jena-light-blue);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    /* ============================================
+       CARDS DE GESTIÓN (MÓDULOS PRINCIPALES)
+       ============================================ */
+    .management-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .management-card {
+        background-color: var(--jena-white);
+        border: 2px solid var(--jena-light-blue);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: block;
+    }
+
+        .management-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background-color: var(--jena-orange);
+            transition: height 0.3s ease;
+        }
+
+        .management-card:hover {
+            border-color: var(--jena-orange);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.25);
+            text-decoration: none;
+        }
+
+            .management-card:hover::before {
+                height: 5px;
+            }
+
+        .management-card .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--jena-orange) 0%, var(--jena-dark-orange) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+            .management-card .card-icon i {
+                font-size: 2.5rem;
+                color: var(--jena-white);
+            }
+
+        .management-card h4 {
+            color: var(--jena-navy);
+            font-weight: 800;
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .management-card p {
+            color: var(--jena-light-blue);
+            text-align: center;
+            font-weight: 500;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+    /* ============================================
+       ACTIVIDAD RECIENTE
+       ============================================ */
+    .activity-section {
+        background-color: var(--jena-white);
+        border: 2px solid var(--jena-light-blue);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+        .activity-section h5 {
+            color: var(--jena-navy);
+            font-weight: 800;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+            .activity-section h5::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 60px;
+                height: 3px;
+                background-color: var(--jena-orange);
+            }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--jena-light-gray);
+        transition: background-color 0.2s ease;
+    }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background-color: rgba(255, 107, 53, 0.05);
+        }
+
+        .activity-item .activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 107, 53, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+            .activity-item .activity-icon i {
+                font-size: 1.5rem;
+                color: var(--jena-orange);
+            }
+
+        .activity-item .activity-content {
+            flex-grow: 1;
+        }
+
+            .activity-item .activity-content h6 {
+                color: var(--jena-navy);
+                font-weight: 700;
+                font-size: 1rem;
+                margin-bottom: 5px;
+            }
+
+            .activity-item .activity-content p {
+                color: var(--jena-light-blue);
+                font-size: 0.85rem;
+                margin: 0;
+            }
+
+        .activity-item .activity-time {
+            color: var(--jena-light-blue);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+    /* ============================================
+       RESPONSIVE (MÓVILES < 768px)
+       ============================================ */
+    @@media (max-width: 768px) {
+        .logo-circular {
+            width: 120px;
+            height: 120px;
+        }
+
+            .logo-circular i {
+                font-size: 3rem;
+            }
+
+            .logo-circular .letter-j {
+                font-size: 4rem;
+            }
+
+        .welcome-section {
+            flex-direction: column;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            text-align: center;
+            display: block;
+        }
+
+        .stats-grid,
+        .management-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-card,
+        .management-card {
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
+
+<div class="container-fluid p-4">
+    <!-- Sección de Bienvenida con Logo -->
+    <div class="welcome-section">
+        <div class="logo-circular">
+            <i class="bi bi-tree"></i>
+            <span class="letter-j">J</span>
+        </div>
+        <div class="welcome-text">
+            <h3>Panel de Administracion</h3>
+            <p>Gestiona todos los aspectos del gimnasio desde un solo lugar</p>
+        </div>
+    </div>
+
+    <!-- Título Principal -->
+    <div class="text-center mb-5">
+        <h2 class="page-title">Dashboard</h2>
+    </div>
+
+    <!-- Estadísticas Principales -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="bi bi-people-fill"></i>
+            <h3>342</h3>
+            <p>Clientes Activos</p>
+        </div>
+        <div class="stat-card">
+            <i class="bi bi-person-badge"></i>
+            <h3>12</h3>
+            <p>Entrenadores</p>
+        </div>
+        <div class="stat-card">
+            <i class="bi bi-calendar-check"></i>
+            <h3>28</h3>
+            <p>Clases Hoy</p>
+        </div>
+        <div class="stat-card">
+            <i class="bi bi-currency-dollar"></i>
+            <h3>$45,230</h3>
+            <p>Ingresos del Mes</p>
+        </div>
+    </div>
+
+    <!-- Módulos de Gestión -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="text-center mb-4" style="color: var(--jena-navy); font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">
+                MODULOS DE GESTION
+            </h5>
+        </div>
+    </div>
+
+    <div class="management-grid">
+        <!-- Gestión de Clientes -->
+        <a href="@Url.Action("Clientes", "Admin")" class="management-card">
+            <div class="card-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <h4>Clientes</h4>
+            <p>Gestionar registro, membresías y perfil de clientes</p>
+        </a>
+
+        <!-- Gestión de Entrenadores -->
+        <a href="@Url.Action("Entrenadores", "Admin")" class="management-card">
+            <div class="card-icon">
+                <i class="bi bi-person-badge-fill"></i>
+            </div>
+            <h4>Entrenadores</h4>
+            <p>Administrar personal de entrenamiento y especialidades</p>
+        </a>
+
+        <!-- Gestión de Membresías -->
+        <a href="@Url.Action("Membresias", "Admin")" class="management-card">
+            <div class="card-icon">
+                <i class="bi bi-credit-card"></i>
+            </div>
+            <h4>Membresias</h4>
+            <p>Configurar planes, precios y beneficios</p>
+        </a>
+
+        <!-- Gestión de Clases -->
+        <a href="@Url.Action("Clases", "Admin")" class="management-card">
+            <div class="card-icon">
+                <i class="bi bi-calendar3"></i>
+            </div>
+            <h4>Clases</h4>
+            <p>Programar y gestionar horarios de clases</p>
+        </a>
+
+        <!-- Configuración del Homepage -->
+        <a href="@Url.Action("ConfigurarHomepage", "Admin")" class="management-card">
+            <div class="card-icon">
+                <i class="bi bi-house-gear"></i>
+            </div>
+            <h4>Homepage</h4>
+            <p>Editar contenido y configuración del sitio web</p>
+        </a>
+
+        <!-- Reportes -->
+        <a href="@Url.Action("Reportes", "Admin")" class="management-card">
+            <div class="card-icon">
+                <i class="bi bi-graph-up"></i>
+            </div>
+            <h4>Reportes</h4>
+            <p>Estadísticas, métricas y análisis financiero</p>
+        </a>
+    </div>
+
+    <!-- Actividad Reciente -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="activity-section">
+                <h5><i class="bi bi-clock-history me-2"></i>Actividad Reciente</h5>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="bi bi-person-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Nuevo Cliente Registrado</h6>
+                        <p>María González se inscribió en Plan Premium</p>
+                    </div>
+                    <div class="activity-time">Hace 10 min</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Clase Completada</h6>
+                        <p>Spinning - 15 asistentes - Diego Pérez</p>
+                    </div>
+                    <div class="activity-time">Hace 1 hora</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Pago Procesado</h6>
+                        <p>Carlos Ramírez - Membresía Mensual $39</p>
+                    </div>
+                    <div class="activity-time">Hace 2 horas</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Nueva Consulta</h6>
+                        <p>Laura Sánchez pregunta sobre clases de Yoga</p>
+                    </div>
+                    <div class="activity-time">Hace 3 horas</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Logro Alcanzado</h6>
+                        <p>Juan Pérez completó 50 clases este mes</p>
+                    </div>
+                    <div class="activity-time">Hace 5 horas</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="activity-section">
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>Alertas y Notificaciones</h5>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background-color: rgba(220, 53, 69, 0.1);">
+                        <i class="bi bi-exclamation-circle" style="color: #dc3545;"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Membresías por Vencer</h6>
+                        <p>8 membresías vencen en los próximos 7 días</p>
+                    </div>
+                    <div class="activity-time">Urgente</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background-color: rgba(255, 193, 7, 0.1);">
+                        <i class="bi bi-people" style="color: #ffc107;"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Clase con Alta Demanda</h6>
+                        <p>Spinning (6:00 PM) - 18/20 plazas ocupadas</p>
+                    </div>
+                    <div class="activity-time">Hoy</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background-color: rgba(40, 167, 69, 0.1);">
+                        <i class="bi bi-graph-up-arrow" style="color: #28a745;"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Objetivo Cumplido</h6>
+                        <p>Meta de inscripciones mensuales alcanzada (50+)</p>
+                    </div>
+                    <div class="activity-time">Esta semana</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background-color: rgba(255, 193, 7, 0.1);">
+                        <i class="bi bi-calendar-x" style="color: #ffc107;"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Clase sin Instructor</h6>
+                        <p>Boxeo - Mañana 7:00 PM necesita asignación</p>
+                    </div>
+                    <div class="activity-time">Mañana</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background-color: rgba(23, 162, 184, 0.1);">
+                        <i class="bi bi-gear" style="color: #17a2b8;"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Mantenimiento Programado</h6>
+                        <p>Revisión de equipos - Sábado 10:00 AM</p>
+                    </div>
+                    <div class="activity-time">En 3 días</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Actualizar estadísticas en tiempo real (simulación)
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Dashboard de Administrador cargado correctamente');
+        
+        // Aquí podrías agregar llamadas AJAX para actualizar estadísticas
+        // setInterval(actualizarEstadisticas, 60000); // Cada minuto
+    });
+</script>
