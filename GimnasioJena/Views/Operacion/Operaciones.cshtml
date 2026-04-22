@@ -46,6 +46,86 @@
         border-radius: 3px;
         margin: 0 auto 3rem;
     }
+    /* ============================================
+BOTONES DE ACCIÓN
+============================================ */
+    .action-buttons-card {
+        background-color: var(--jena-white);
+        border: 2px solid var(--jena-light-blue);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+        .action-buttons-card h5 {
+            color: var(--jena-navy);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+            .action-buttons-card h5::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background-color: var(--jena-orange);
+            }
+
+    .btn-action {
+        background-color: var(--jena-white);
+        color: var(--jena-navy); 
+        border: 2px solid var(--jena-orange);
+        border-radius: 50px;
+        padding: 14px 30px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.15);
+        width: 100%;
+        margin-bottom: 15px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .btn-action:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-action:hover {
+            background-color: var(--jena-orange);
+            color: var(--jena-white); 
+            border-color: var(--jena-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-action:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-action i {
+            font-size: 1.2rem;
+            color: var(--jena-orange);
+            transition: color 0.3s ease;
+        }
+
+        .btn-action:hover i {
+            color: var(--jena-white);
+        }
 
     /* Sección de Saludo con Logo Jéna */
     .welcome-section {
@@ -271,7 +351,7 @@
                         <i class="bi bi-clipboard-check"></i>
                     </div>
                     <p>Busca la clase y marca quién asistió.</p>
-                    <a href="@Url.Action("ListaAsistencia", "Operacion")" class="btn-jena">Ver detalles</a>
+                    <a href="@Url.Action("ListaAsistencia", "Operacion")" class="btn-action">Ver detalles</a>
                 </div>
             </div>
 
@@ -283,7 +363,7 @@
                         <i class="bi bi-chat-dots"></i>
                     </div>
                     <p>Tienes 8 mensajes nuevos por revisar.</p>
-                    <a href="@Url.Action("PanelMensajes", "Operacion")" class="btn-jena">Abrir bandeja</a>
+                    <a href="@Url.Action("PanelMensajes", "Operacion")" class="btn-action">Abrir bandeja</a>
                 </div>
             </div>
 
@@ -295,7 +375,7 @@
                         <i class="bi bi-calendar-check"></i>
                     </div>
                     <p>Tienes 4 clases próximas agendadas.</p>
-                    <a href="@Url.Action("MisClases", "Operacion")" class="btn-jena">Ver calendario</a>
+                    <a href="@Url.Action("MisClases", "Operacion")" class="btn-action">Ver calendario</a>
                 </div>
             </div>
         </div>

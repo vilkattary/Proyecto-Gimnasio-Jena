@@ -354,6 +354,88 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
+    
+    /* ============================================
+BOTONES DE ACCIÓN
+============================================ */
+    .action-buttons-card {
+        background-color: var(--jena-white);
+        border: 2px solid var(--jena-light-blue);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+        .action-buttons-card h5 {
+            color: var(--jena-navy);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+            .action-buttons-card h5::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background-color: var(--jena-orange);
+            }
+
+    .btn-action {
+        background-color: var(--jena-white);
+        color: var(--jena-navy);
+        border: 2px solid var(--jena-orange);
+        border-radius: 50px;
+        padding: 14px 30px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.15);
+        width: 100%;
+        margin-bottom: 15px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .btn-action:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-action:hover {
+            background-color: var(--jena-orange);
+            color: var(--jena-white);
+            border-color: var(--jena-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-action:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-action i {
+            font-size: 1.2rem;
+            color: var(--jena-orange);
+            transition: color 0.3s ease;
+        }
+
+        .btn-action:hover i {
+            color: var(--jena-white);
+        }
+
 
     /* ============================================
        ESTADÍSTICAS
@@ -528,7 +610,7 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-filter w-100">
+                <button class="btn btn-action w-100">
                     <i class="bi bi-search me-2"></i>Buscar
                 </button>
             </div>
@@ -580,7 +662,7 @@
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
-                        <a href="#" class="btn btn-reserve">
+                        <a href="#" class="btn btn-action">
                             <i class="bi bi-bookmark-plus"></i>
                             <span>Reservar</span>
                         </a>
@@ -629,7 +711,7 @@
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
-                        <a href="#" class="btn btn-reserve">
+                        <a href="#" class="btn btn-action">
                             <i class="bi bi-bookmark-plus"></i>
                             <span>Reservar</span>
                         </a>
@@ -678,7 +760,7 @@
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
-                        <a href="#" class="btn btn-reserve">
+                        <a href="#" class="btn btn-action">
                             <i class="bi bi-bookmark-plus"></i>
                             <span>Reservar</span>
                         </a>
@@ -727,7 +809,7 @@
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
-                        <a href="#" class="btn btn-reserve">
+                        <a href="#" class="btn btn-action">
                             <i class="bi bi-bookmark-plus"></i>
                             <span>Reservar</span>
                         </a>
@@ -779,7 +861,7 @@
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
-                        <a href="#" class="btn btn-reserve">
+                        <a href="#" class="btn btn-action">
                             <i class="bi bi-bookmark-plus"></i>
                             <span>Reservar</span>
                         </a>
