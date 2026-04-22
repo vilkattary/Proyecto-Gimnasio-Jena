@@ -3,6 +3,20 @@
 }
 
 <style>
+    :root {
+        /* Colores Core */
+        --jena-navy: #2C3E50;
+        --jena-dark-navy: #1A2332;
+        /* Colores de Acento */
+        --jena-orange: #FF6B35;
+        --jena-dark-orange: #D95F31;
+        /* Colores de Soporte */
+        --jena-light-blue: #6C8EA4;
+        --jena-white: #FFFFFF;
+        --jena-light-gray: #F8F9FA;
+        /* Tipografía */
+        --font-primary: 'Montserrat', sans-serif;
+    }
     /* Hero Section con imagen de fondo */
     .hero-apex {
         background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920') center/cover no-repeat;
@@ -189,6 +203,89 @@
             margin-bottom: 2rem;
         }
     }
+    /* ============================================
+BOTONES DE ACCIÓN
+============================================ */
+    .action-buttons-card {
+        background-color: var(--jena-white);
+        border: 2px solid var(--jena-light-blue);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+        .action-buttons-card h5 {
+            color: var(--jena-navy);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+            .action-buttons-card h5::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background-color: var(--jena-orange);
+            }
+
+    .btn-action {
+        background-color: var(--jena-white);
+        color: var(--jena-navy); /* texto navy sobre blanco */
+        border: 2px solid var(--jena-orange);
+        border-radius: 50px;
+        padding: 14px 30px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.15);
+        width: 100%;
+        margin-bottom: 15px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .btn-action:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-action:hover {
+            background-color: var(--jena-orange);
+            color: var(--jena-white); /* texto blanco sobre naranja */
+            border-color: var(--jena-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-action:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-action i {
+            font-size: 1.2rem;
+            color: var(--jena-orange);
+            transition: color 0.3s ease;
+        }
+
+        .btn-action:hover i {
+            color: var(--jena-white);
+        }
+
+
+
 </style>
 
 <!-- Hero Section -->
@@ -227,7 +324,7 @@
                         Desarrolla músculo y potencia con nuestro programa de entrenamiento de fuerza especializado.
                         Barras olímpicas, mancuernas y máquinas de última generación te esperan.
                     </p>
-                    <a href="@Url.Action("About", "Home")" class="btn-class">Empezar Hoy</a>
+                    <a href="@Url.Action("About", "Home")" class="btn-action">Empezar Hoy</a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
@@ -240,7 +337,7 @@
                         Encuentra tu equilibrio interior y mejora tu flexibilidad con sesiones de yoga guiadas
                         por instructores certificados en un ambiente relajante y motivador.
                     </p>
-                    <a href="@Url.Action("About", "Home")" class="btn-class">Empezar Hoy</a>
+                    <a href="@Url.Action("About", "Home")" class="btn btn-action">Empezar Hoy</a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
@@ -253,7 +350,7 @@
                         Quema calorías y mejora tu resistencia cardiovascular con sesiones intensas de cardio.
                         Elípticas, cintas y bicicletas de spinning a tu disposición.
                     </p>
-                    <a href="@Url.Action("About", "Home")" class="btn-class">Empezar Hoy</a>
+                    <a href="@Url.Action("About", "Home")" class=" btn btn-action">Empezar Hoy</a>
                 </div>
             </div>
         </div>
