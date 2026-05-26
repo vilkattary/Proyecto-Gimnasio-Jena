@@ -157,7 +157,7 @@ namespace GimnasioJena.UI.Controllers
                 if (result.Succeeded)
                 {
                     //await UserManager.AddToRoleAsync(user.Id, "INVENTARIO");
-                    await UserManager.AddToRoleAsync(user.Id, "CLIENTES");
+                    await UserManager.AddToRoleAsync(user.Id, "CLIENTE");
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771

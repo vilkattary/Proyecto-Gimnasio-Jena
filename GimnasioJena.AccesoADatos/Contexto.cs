@@ -10,7 +10,10 @@ namespace GimnasioJena.AccesoADatos
     public class Contexto : DbContext
     {
 
-        public Contexto() { }
+        public Contexto() : base("name=Contexto")
+        {
+
+        }
         
         
     }
