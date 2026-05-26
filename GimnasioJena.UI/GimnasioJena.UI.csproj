@@ -168,12 +168,17 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AsistenciasController.cs" />
+    <Compile Include="Controllers\ClasesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\ComunicacionController.cs" />
     <Compile Include="Controllers\EntrenadoresController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembresiasController.cs" />
     <Compile Include="Controllers\RecepcionistasController.cs" />
+    <Compile Include="Controllers\ReportesController.cs" />
+    <Compile Include="Controllers\ReservasController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Global.asax.cs">
@@ -203,6 +208,8 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\DataTable\dataTables.dataTables.min.css" />
+    <Content Include="Content\estilo\estilo.css" />
+    <Content Include="Content\script\script.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -269,12 +276,18 @@
     <Content Include="Views\Operacion\Operaciones.cshtml" />
     <Content Include="Views\Operacion\PanelMensajes.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Home\Planes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Asistencias\" />
+    <Folder Include="Views\Clases\" />
+    <Folder Include="Views\Comunicacion\" />
     <Folder Include="Views\Entrenador\" />
     <Folder Include="Views\Membresias\" />
     <Folder Include="Views\Recepcionistas\" />
+    <Folder Include="Views\Reportes\" />
+    <Folder Include="Views\Reservas\" />
     <Folder Include="Views\Roles\" />
     <Folder Include="Views\Usuarios\" />
   </ItemGroup>

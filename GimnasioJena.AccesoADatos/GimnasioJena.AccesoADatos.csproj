@@ -10,12 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GimnasioJena.AccesoADatos</RootNamespace>
     <AssemblyName>GimnasioJena.AccesoADatos</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -73,16 +72,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asistencias\CambiarEstadoAsistencia\CambiarEstadoAsistenciaAD.cs" />
+    <Compile Include="Asistencias\EditarAsistencia\EditarAsistenciaAD.cs" />
+    <Compile Include="Asistencias\ObtenerAsistenciaPorId\ObtenerAsistenciaPorIdAD.cs" />
+    <Compile Include="Asistencias\ObtenerAsistenciasPorClase\ObtenerAsistenciasPorClaseAD.cs" />
+    <Compile Include="Asistencias\ObtenerAsistenciasPorCliente\ObtenerAsistenciasPorClienteAD.cs" />
+    <Compile Include="Asistencias\ObtenerTodasLasAsistencias\ObtenerTodasLasAsistenciasAD.cs" />
+    <Compile Include="Asistencias\RegistrarAsistencia\RegistrarAsistenciaAD.cs" />
+    <Compile Include="Clases\CambiarEstadoClase\CambiarEstadoClaseAD.cs" />
+    <Compile Include="Clases\EditarClase\EditarClaseAD.cs" />
+    <Compile Include="Clases\ObtenerClasePorId\ObtenerClasePorIdAD.cs" />
+    <Compile Include="Clases\ObtenerClasesDisponibles\ObtenerClasesDisponiblesAD.cs" />
+    <Compile Include="Clases\ObtenerClasesPorEntrenador\ObtenerClasesPorEntrenadorAD.cs" />
+    <Compile Include="Clases\ObtenerTodasLasClases\ObtenerTodasLasClasesAD.cs" />
+    <Compile Include="Clases\RegistrarClase\RegistrarClaseAD.cs" />
     <Compile Include="Clientes\CambiarEstadoCliente\CambiarEstadoClienteAD.cs" />
     <Compile Include="Clientes\EditarCliente\EditarClienteAD.cs" />
     <Compile Include="Clientes\ObtenerClientePorId\ObtenerClientePorIdAD.cs" />
     <Compile Include="Clientes\ObtenerClientePorUsuario\ObtenerClientePorUsuarioAD.cs" />
     <Compile Include="Clientes\ObtenerTodosLosClientes\ObtenerTodosLosClientesAD.cs" />
     <Compile Include="Clientes\RegistrarCliente\RegistrarClienteAD.cs" />
+    <Compile Include="Comunicacion\CambiarEstadoMensaje\CambiarEstadoMensajeAD.cs" />
+    <Compile Include="Comunicacion\ObtenerMensajePorId\ObtenerMensajePorIdAD.cs" />
+    <Compile Include="Comunicacion\ObtenerMensajesPorUsuario\ObtenerMensajesPorUsuarioAD.cs" />
+    <Compile Include="Comunicacion\ObtenerTodosLosMensajes\ObtenerTodosLosMensajesAD.cs" />
+    <Compile Include="Comunicacion\RegistrarMensaje\RegistrarMensajeAD.cs" />
+    <Compile Include="Comunicacion\ResponderMensaje\ResponderMensajeAD.cs" />
     <Compile Include="Contexto.cs" />
+    <Compile Include="Entidades\Asistencias\AsistenciaEntidad.cs" />
+    <Compile Include="Entidades\Clases\ClaseEntidad.cs" />
     <Compile Include="Entidades\Clientes\ClienteEntidad.cs" />
+    <Compile Include="Entidades\Comunicacion\MensajeEntidad.cs" />
     <Compile Include="Entidades\Entrenadores\EntrenadorEntidad.cs" />
     <Compile Include="Entidades\Membresias\MembresiaEntidad.cs" />
+    <Compile Include="Entidades\Recepcionistas\RecepcionistaEntidad.cs" />
+    <Compile Include="Entidades\Reportes\ReporteEntidad.cs" />
+    <Compile Include="Entidades\Reservas\ReservaEntidad.cs" />
     <Compile Include="Entidades\Roles\RolEntidad.cs" />
     <Compile Include="Entidades\Usuarios\UsuarioEntidad.cs" />
     <Compile Include="Entrenadores\CambiarEstadoEntrenador\CambiarEstadoEntrenadorAD.cs" />
@@ -105,6 +130,20 @@
     <Compile Include="Recepcionistas\ObtenerRecepcionistaPorUsuario\ObtenerRecepcionistaPorUsuarioAD.cs" />
     <Compile Include="Recepcionistas\ObtenerTodosLosRecepcionistas\ObtenerTodosLosRecepcionistasAD.cs" />
     <Compile Include="Recepcionistas\RegistrarRecepcionista\RegistrarRecepcionistaAD.cs" />
+    <Compile Include="Reportes\ObtenerDashboardGeneral\ObtenerDashboardGeneralAD.cs" />
+    <Compile Include="Reportes\ObtenerReporteAsistencias\ObtenerReporteAsistenciasAD.cs" />
+    <Compile Include="Reportes\ObtenerReporteClases\ObtenerReporteClasesAD.cs" />
+    <Compile Include="Reportes\ObtenerReporteClientes\ObtenerReporteClientesAD.cs" />
+    <Compile Include="Reportes\ObtenerReporteIngresos\ObtenerReporteIngresosAD.cs" />
+    <Compile Include="Reportes\ObtenerReporteMembresias\ObtenerReporteMembresiasAD.cs" />
+    <Compile Include="Reportes\ObtenerReporteReservas\ObtenerReporteReservasAD.cs" />
+    <Compile Include="Reservas\CambiarEstadoReserva\CambiarEstadoReservaAD.cs" />
+    <Compile Include="Reservas\CancelarReserva\CancelarReservaAD.cs" />
+    <Compile Include="Reservas\ObtenerReservaPorId\ObtenerReservaPorIdAD.cs" />
+    <Compile Include="Reservas\ObtenerReservasPorClase\ObtenerReservasPorClaseAD.cs" />
+    <Compile Include="Reservas\ObtenerReservasPorCliente\ObtenerReservasPorClienteAD.cs" />
+    <Compile Include="Reservas\ObtenerTodasLasReservas\ObtenerTodasLasReservasAD.cs" />
+    <Compile Include="Reservas\RegistrarReserva\RegistrarReservaAD.cs" />
     <Compile Include="Roles\CambiarEstadoRol\CambiarEstadoRolAD.cs" />
     <Compile Include="Roles\EditarRol\EditarRolAD.cs" />
     <Compile Include="Roles\ObtenerRolPorId\ObtenerRolPorIdAD.cs" />
@@ -130,17 +169,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Asistencias\" />
-    <Folder Include="Clases\" />
-    <Folder Include="Comunicacion\" />
-    <Folder Include="Entidades\Asistencias\" />
-    <Folder Include="Entidades\Clases\" />
-    <Folder Include="Entidades\Comunicacion\" />
     <Folder Include="Entidades\Generales\" />
-    <Folder Include="Entidades\Recepcionistas\" />
-    <Folder Include="Entidades\Reservas\" />
-    <Folder Include="Reportes\" />
-    <Folder Include="Reservas\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
