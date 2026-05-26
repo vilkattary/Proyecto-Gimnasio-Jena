@@ -1,0 +1,421 @@
+﻿@{
+    ViewBag.Title = "Inicio";
+}
+
+<style>
+    :root {
+        /* Colores Core */
+        --jena-navy: #2C3E50;
+        --jena-dark-navy: #1A2332;
+        /* Colores de Acento */
+        --jena-orange: #FF6B35;
+        --jena-dark-orange: #D95F31;
+        /* Colores de Soporte */
+        --jena-light-blue: #6C8EA4;
+        --jena-white: #FFFFFF;
+        --jena-light-gray: #F8F9FA;
+        /* Tipografía */
+        --font-primary: 'Montserrat', sans-serif;
+    }
+    /* Hero Section con imagen de fondo */
+    .hero-apex {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920') center/cover no-repeat;
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+        .hero-apex h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-apex p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            max-width: 600px;
+            margin-bottom: 2rem;
+            color: #e0e0e0;
+        }
+
+    /* Sección de Clases con fondo claro */
+    .classes-section {
+        background-color: #F5F5F5;
+        padding: 5rem 0;
+    }
+
+        .classes-section h2 {
+            color: #0F0F0F;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+    .class-card {
+        background-color: #FFFFFF;
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 2px solid transparent;
+    }
+
+        .class-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 102, 0, 0.2);
+            border-color: #FF6600;
+        }
+
+        .class-card .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background-color: #FF6600;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+            .class-card .icon-wrapper i {
+                font-size: 2.5rem;
+                color: #FFFFFF;
+            }
+
+        .class-card h3 {
+            color: #0F0F0F;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-family: 'Audiowide', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .class-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+    .btn-class {
+        background-color: #FF6600;
+        color: #FFFFFF;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-class:hover {
+            background-color: #cc5200;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.4);
+        }
+
+    /* Galería/Testimonios */
+    .testimonials-section {
+        background-color: #293039;
+        padding: 5rem 0;
+    }
+
+        .testimonials-section h2 {
+            color: #FFFFFF;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+    .testimonial-card {
+        background-color: #1F252B;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        height: 100%;
+        border-left: 4px solid #FF6600;
+    }
+
+        .testimonial-card .quote-icon {
+            color: #FF6600;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-card p {
+            color: #e0e0e0;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .testimonial-card .client-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-card .client-avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #FF6600;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #FFFFFF;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-card .client-name {
+            color: #FF6600;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-card .client-role {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .hero-apex {
+            min-height: 70vh;
+            padding: 3rem 1rem;
+        }
+
+        .classes-section,
+        .testimonials-section {
+            padding: 3rem 0;
+        }
+
+        .class-card {
+            margin-bottom: 2rem;
+        }
+    }
+    /* ============================================
+BOTONES DE ACCIÓN
+============================================ */
+    .action-buttons-card {
+        background-color: var(--jena-white);
+        border: 2px solid var(--jena-light-blue);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+        .action-buttons-card h5 {
+            color: var(--jena-navy);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+            .action-buttons-card h5::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background-color: var(--jena-orange);
+            }
+
+    .btn-action {
+        background-color: var(--jena-white);
+        color: var(--jena-navy); /* texto navy sobre blanco */
+        border: 2px solid var(--jena-orange);
+        border-radius: 50px;
+        padding: 14px 30px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.15);
+        width: 100%;
+        margin-bottom: 15px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .btn-action:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-action:hover {
+            background-color: var(--jena-orange);
+            color: var(--jena-white); /* texto blanco sobre naranja */
+            border-color: var(--jena-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-action:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-action i {
+            font-size: 1.2rem;
+            color: var(--jena-orange);
+            transition: color 0.3s ease;
+        }
+
+        .btn-action:hover i {
+            color: var(--jena-white);
+        }
+
+
+
+</style>
+
+<!-- Hero Section -->
+<section class="hero-apex">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto text-center text-lg-start">
+                <h1 class="text-white text-uppercase">
+                    Entrena Con El<br>
+                    <span style="color: #FF6600;">Poder De Jena</span>
+                </h1>
+                <p class="text-white">
+                    Desbloquea tu máximo potencial con entrenamientos de alta intensidad, equipos de última generación
+                    y una comunidad que te impulsa a superar tus límites cada día.
+                </p>
+                <a href="@Url.Action("Register", "Account")" class="btn btn-apex-primary">
+                    <i class="bi bi-lightning-charge-fill me-2"></i>Empezar Hoy
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nuestras Clases Section -->
+<section class="classes-section">
+    <div class="container">
+        <h2 class="text-uppercase">Nuestras Clases</h2>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="class-card">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <h3>Fuerza Intensa</h3>
+                    <p>
+                        Desarrolla músculo y potencia con nuestro programa de entrenamiento de fuerza especializado.
+                        Barras olímpicas, mancuernas y máquinas de última generación te esperan.
+                    </p>
+                    <a href="@Url.Action("About", "Home")" class="btn-action">Empezar Hoy</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="class-card">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-heart-pulse-fill"></i>
+                    </div>
+                    <h3>Yoga Flow</h3>
+                    <p>
+                        Encuentra tu equilibrio interior y mejora tu flexibilidad con sesiones de yoga guiadas
+                        por instructores certificados en un ambiente relajante y motivador.
+                    </p>
+                    <a href="@Url.Action("About", "Home")" class="btn btn-action">Empezar Hoy</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="class-card">
+                    <div class="icon-wrapper">
+                        <i class="bi bi-fire"></i>
+                    </div>
+                    <h3>Cardio Boost</h3>
+                    <p>
+                        Quema calorías y mejora tu resistencia cardiovascular con sesiones intensas de cardio.
+                        Elípticas, cintas y bicicletas de spinning a tu disposición.
+                    </p>
+                    <a href="@Url.Action("About", "Home")" class=" btn btn-action">Empezar Hoy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonios Section -->
+<section class="testimonials-section">
+    <div class="container">
+        <h2 class="text-uppercase">Lo Que Dicen Nuestros Clientes</h2>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="quote-icon">
+                        <i class="bi bi-quote"></i>
+                    </div>
+                    <p>
+                        "Gimnasio Jena cambió mi vida completamente. Los entrenadores son increíbles y el ambiente
+                        te motiva a dar el 100% en cada sesión. ¡Recomendado al 200%!"
+                    </p>
+                    <div class="client-info">
+                        <div class="client-avatar">MR</div>
+                        <div>
+                            <div class="client-name">María Rodríguez</div>
+                            <div class="client-role">Miembro desde 2024</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="quote-icon">
+                        <i class="bi bi-quote"></i>
+                    </div>
+                    <p>
+                        "La mejor inversión que he hecho en mi salud. Las instalaciones son de primer nivel
+                        y las clases grupales son súper dinámicas. ¡Me encanta!"
+                    </p>
+                    <div class="client-info">
+                        <div class="client-avatar">CG</div>
+                        <div>
+                            <div class="client-name">Carlos Gómez</div>
+                            <div class="client-role">Miembro desde 2023</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="quote-icon">
+                        <i class="bi bi-quote"></i>
+                    </div>
+                    <p>
+                        "Nunca pensé que entrenar podría ser tan divertido. El equipo de JENA es como una familia
+                        que te apoya en cada paso. ¡Resultados garantizados!"
+                    </p>
+                    <div class="client-info">
+                        <div class="client-avatar">LP</div>
+                        <div>
+                            <div class="client-name">Laura Pérez</div>
+                            <div class="client-role">Miembro desde 2025</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
