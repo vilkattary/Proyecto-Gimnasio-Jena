@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Usuarios
+﻿namespace GimnasioJena.Abstracciones.Modelos.Usuarios
 {
     public class UsuarioCambiarEstadoDto
     {
+        public int idUsuario { get; set; }
+        public bool estado { get; set; }
     }
 }

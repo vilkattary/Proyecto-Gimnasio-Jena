@@ -1,12 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.Modelos.Clases
 {
     public class ClaseCrearDto
     {
+        public int idTipoClase { get; set; }
+        public int idUsuarioEntrenador { get; set; }
+        public int idEstadoClase { get; set; }
+        public DateTime fechaClase { get; set; }
+        public TimeSpan horaInicio { get; set; }
+        public TimeSpan horaFin { get; set; }
+        public int cupoMaximo { get; set; }
+        public string ubicacion { get; set; }
+        public string observaciones { get; set; }
     }
 }

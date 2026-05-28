@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Usuarios
+﻿namespace GimnasioJena.Abstracciones.Modelos.Usuarios
 {
     public class UsuarioCambiarRolDto
     {
+        public int idUsuario { get; set; }
+        public string identityUserId { get; set; }
+        public string rolActual { get; set; }
+        public string rolNuevo { get; set; }
     }
 }

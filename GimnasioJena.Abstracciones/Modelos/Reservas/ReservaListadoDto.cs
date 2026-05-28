@@ -1,12 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.Modelos.Reservas
 {
     public class ReservaListadoDto
     {
+        public int idReserva { get; set; }
+        public string nombreCliente { get; set; }
+        public string nombreClase { get; set; }
+        public string estadoReserva { get; set; }
+        public DateTime fechaClase { get; set; }
+        public TimeSpan horaInicio { get; set; }
+        public TimeSpan horaFin { get; set; }
+        public DateTime fechaReserva { get; set; }
+        public string ubicacion { get; set; }
     }
 }

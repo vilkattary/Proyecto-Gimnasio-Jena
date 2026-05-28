@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Comunicacion
+﻿namespace GimnasioJena.Abstracciones.Modelos.Comunicacion
 {
     public class MensajeCambiarEstadoDto
     {
+        public int idMensaje { get; set; }
+        public string estado { get; set; }
     }
 }
