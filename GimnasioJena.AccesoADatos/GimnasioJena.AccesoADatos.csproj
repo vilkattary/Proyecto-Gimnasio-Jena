@@ -100,12 +100,11 @@
     <Compile Include="Comunicacion\ResponderMensaje\ResponderMensajeAD.cs" />
     <Compile Include="Contexto.cs" />
     <Compile Include="Entidades\Asistencias\AsistenciaEntidad.cs" />
+    <Compile Include="Entidades\Bitacora\BitacoraEntidad.cs" />
     <Compile Include="Entidades\Clases\ClaseEntidad.cs" />
-    <Compile Include="Entidades\Clientes\ClienteEntidad.cs" />
     <Compile Include="Entidades\Comunicacion\MensajeEntidad.cs" />
     <Compile Include="Entidades\Entrenadores\EntrenadorEntidad.cs" />
     <Compile Include="Entidades\Membresias\MembresiaEntidad.cs" />
-    <Compile Include="Entidades\Recepcionistas\RecepcionistaEntidad.cs" />
     <Compile Include="Entidades\Reportes\ReporteEntidad.cs" />
     <Compile Include="Entidades\Reservas\ReservaEntidad.cs" />
     <Compile Include="Entidades\Roles\RolEntidad.cs" />
