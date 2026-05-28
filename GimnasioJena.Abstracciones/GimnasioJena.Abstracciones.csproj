@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.2\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B725CF6F-FC04-16E1-8A1C-77A74BEA8680}</ProjectGuid>
+    <ProjectGuid>{FA211BF5-E851-4A2F-AC28-71749D105844}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GimnasioJena.Abstracciones</RootNamespace>
@@ -12,8 +13,9 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,36 +35,275 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.3\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.3\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.2.3\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.2.3\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccesoADatos\Asistencias\CambiarEstadoAsistencia\ICambiarEstadoAsistenciaAD.cs" />
+    <Compile Include="AccesoADatos\Asistencias\EditarAsistencia\IEditarAsistenciaAD.cs" />
+    <Compile Include="AccesoADatos\Asistencias\ObtenerAsistenciaPorId\IObtenerAsistenciaPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Asistencias\ObtenerAsistenciasPorClase\IObtenerAsistenciasPorClaseAD.cs" />
+    <Compile Include="AccesoADatos\Asistencias\ObtenerAsistenciasPorCliente\IObtenerAsistenciasPorClienteAD.cs" />
+    <Compile Include="AccesoADatos\Asistencias\ObtenerTodasLasAsistencias\IObtenerTodasLasAsistenciasAD.cs" />
+    <Compile Include="AccesoADatos\Asistencias\RegistrarAsistencia\IRegistrarAsistenciaAD.cs" />
+    <Compile Include="AccesoADatos\Clases\CambiarEstadoClase\ICambiarEstadoClaseAD.cs" />
+    <Compile Include="AccesoADatos\Clases\EditarClase\IEditarClaseAD.cs" />
+    <Compile Include="AccesoADatos\Clases\ObtenerClasePorId\IObtenerClasePorIdAD.cs" />
+    <Compile Include="AccesoADatos\Clases\ObtenerClasesDisponibles\IObtenerClasesDisponiblesAD.cs" />
+    <Compile Include="AccesoADatos\Clases\ObtenerClasesPorEntrenador\IObtenerClasesPorEntrenadorAD.cs" />
+    <Compile Include="AccesoADatos\Clases\ObtenerTodasLasClases\IObtenerTodasLasClasesAD.cs" />
+    <Compile Include="AccesoADatos\Clases\RegistrarClase\IRegistrarClaseAD.cs" />
+    <Compile Include="AccesoADatos\Clientes\CambiarEstadoCliente\ICambiarEstadoClienteAD.cs" />
+    <Compile Include="AccesoADatos\Clientes\EditarCliente\IEditarClienteAD.cs" />
+    <Compile Include="AccesoADatos\Clientes\ObtenerClientePorId\IObtenerClientePorIdAD.cs" />
+    <Compile Include="AccesoADatos\Clientes\ObtenerClientePorUsuario\IObtenerClientePorUsuarioAD.cs" />
+    <Compile Include="AccesoADatos\Clientes\ObtenerTodosLosClientes\IObtenerTodosLosClientesAD.cs" />
+    <Compile Include="AccesoADatos\Clientes\RegistrarCliente\IRegistrarClienteAD.cs" />
+    <Compile Include="AccesoADatos\Comunicacion\CambiarEstadoMensaje\ICambiarEstadoMensajeAD.cs" />
+    <Compile Include="AccesoADatos\Comunicacion\ObtenerMensajePorId\IObtenerMensajePorIdAD.cs" />
+    <Compile Include="AccesoADatos\Comunicacion\ObtenerMensajesPorUsuario\IObtenerMensajesPorUsuarioAD.cs" />
+    <Compile Include="AccesoADatos\Comunicacion\ObtenerTodosLosMensajes\IObtenerTodosLosMensajesAD.cs" />
+    <Compile Include="AccesoADatos\Comunicacion\RegistrarMensaje\IRegistrarMensajeAD.cs" />
+    <Compile Include="AccesoADatos\Comunicacion\ResponderMensaje\IResponderMensajeAD.cs" />
+    <Compile Include="AccesoADatos\Entrenadores\CambiarEstadoEntrenador\ICambiarEstadoEntrenadorAD.cs" />
+    <Compile Include="AccesoADatos\Entrenadores\EditarEntrenador\IEditarEntrenadorAD.cs" />
+    <Compile Include="AccesoADatos\Entrenadores\ObtenerEntrenadorPorId\IObtenerEntrenadorPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioAD.cs" />
+    <Compile Include="AccesoADatos\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresAD.cs" />
+    <Compile Include="AccesoADatos\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\EditarMembresia\IEditarMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\ObtenerMembresiaPorId\IObtenerMembresiaPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\ObtenerTodasLasMembresias\IObtenerTodasLasMembresiasAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\RegistrarMembresia\IRegistrarMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\RenovarMembresia\IRenovarMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaAD.cs" />
+    <Compile Include="AccesoADatos\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaAD.cs" />
+    <Compile Include="AccesoADatos\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Recepcionistas\ObtenerRecepcionistaPorUsuario\IObtenerRecepcionistaPorUsuarioAD.cs" />
+    <Compile Include="AccesoADatos\Recepcionistas\ObtenerTodosLosRecepcionistas\IObtenerTodosLosRecepcionistasAD.cs" />
+    <Compile Include="AccesoADatos\Recepcionistas\RegistrarRecepcionista\IRegistrarRecepcionistaAD.cs" />
+    <Compile Include="AccesoADatos\Reportes\ObtenerDashboardGeneral\IObtenerDashboardGeneralAD.cs" />
+    <Compile Include="AccesoADatos\Reportes\ObtenerReporteAsistencias\IObtenerReporteAsistenciasAD.cs" />
+    <Compile Include="AccesoADatos\Reportes\ObtenerReporteClases\IObtenerReporteClasesAD.cs" />
+    <Compile Include="AccesoADatos\Reportes\ObtenerReporteClientes\IObtenerReporteClientesAD.cs" />
+    <Compile Include="AccesoADatos\Reportes\ObtenerReporteIngresos\IObtenerReporteIngresosAD.cs" />
+    <Compile Include="AccesoADatos\Reportes\ObtenerReporteMembresias\IObtenerReporteMembresiasAD.cs" />
+    <Compile Include="AccesoADatos\Reportes\ObtenerReporteReservas\IObtenerReporteReservasAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\CambiarEstadoReserva\ICambiarEstadoReservaAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\CancelarReserva\ICancelarReservaAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\ObtenerReservaPorId\IObtenerReservaPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorClase\IObtenerReservasPorClaseAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorCliente\IObtenerReservasPorClienteAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\RegistrarReserva\IRegistrarReservaAD.cs" />
+    <Compile Include="AccesoADatos\Roles\CambiarEstadoRol\ICambiarEstadoRolAD.cs" />
+    <Compile Include="AccesoADatos\Roles\EditarRol\IEditarRolAD.cs" />
+    <Compile Include="AccesoADatos\Roles\ObtenerRolPorId\IObtenerRolPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Roles\ObtenerTodosLosRoles\IObtenerTodosLosRolesAD.cs" />
+    <Compile Include="AccesoADatos\Roles\RegistrarRol\IRegistrarRolAD.cs" />
+    <Compile Include="AccesoADatos\Usuarios\CambiarEstadoUsuario\ICambiarEstadoUsuarioAD.cs" />
+    <Compile Include="AccesoADatos\Usuarios\CambiarRolUsuario\ICambiarRolUsuarioAD.cs" />
+    <Compile Include="AccesoADatos\Usuarios\EditarUsuario\IEditarUsuarioAD.cs" />
+    <Compile Include="AccesoADatos\Usuarios\ObtenerTodosLosUsuarios\IObtenerTodosLosUsuariosAD.cs" />
+    <Compile Include="AccesoADatos\Usuarios\ObtenerUsuarioPorCorreo\IObtenerUsuarioPorCorreoAD.cs" />
+    <Compile Include="AccesoADatos\Usuarios\ObtenerUsuarioPorId\IObtenerUsuarioPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Usuarios\RecuperarContrasena\IRecuperarContrasenaAD.cs" />
+    <Compile Include="AccesoADatos\Usuarios\RegistrarUsuario\IRegistrarUsuarioAD.cs" />
+    <Compile Include="General\Fechas\IFechasLN.cs" />
+    <Compile Include="LogicaDeNegocio\Asistencias\CambiarEstadoAsistencia\ICambiarEstadoAsistenciaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Asistencias\EditarAsistencia\IEditarAsistenciaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Asistencias\ObtenerAsistenciaPorId\IObtenerAsistenciaPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Asistencias\ObtenerAsistenciasPorClase\IObtenerAsistenciasPorClaseLN.cs" />
+    <Compile Include="LogicaDeNegocio\Asistencias\ObtenerAsistenciasPorCliente\IObtenerAsistenciasPorClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Asistencias\ObtenerTodasLasAsistencias\IObtenerTodasLasAsistenciasLN.cs" />
+    <Compile Include="LogicaDeNegocio\Asistencias\RegistrarAsistencia\IRegistrarAsistenciaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clases\CambiarEstadoClase\ICambiarEstadoClaseLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clases\EditarClase\IEditarClaseLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clases\ObtenerClasePorId\IObtenerClasePorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clases\ObtenerClasesDisponibles\IObtenerClasesDisponiblesLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clases\ObtenerClasesPorEntrenador\IObtenerClasesPorEntrenadorLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clases\ObtenerTodasLasClases\IObtenerTodasLasClasesLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clases\RegistrarClase\IRegistrarClaseLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clientes\CambiarEstadoCliente\ICambiarEstadoClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clientes\EditarCliente\IEditarClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clientes\ObtenerClientePorId\IObtenerClientePorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clientes\ObtenerClientePorUsuario\IObtenerClientePorUsuarioLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clientes\ObtenerTodosLosClientes\IObtenerTodosLosClientesLN.cs" />
+    <Compile Include="LogicaDeNegocio\Clientes\RegistrarCliente\IRegistrarClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Comunicacion\CambiarEstadoMensaje\ICambiarEstadoMensajeLN.cs" />
+    <Compile Include="LogicaDeNegocio\Comunicacion\ObtenerMensajePorId\IObtenerMensajePorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Comunicacion\ObtenerMensajesPorUsuario\IObtenerMensajesPorUsuarioLN.cs" />
+    <Compile Include="LogicaDeNegocio\Comunicacion\ObtenerTodosLosMensajes\IObtenerTodosLosMensajesLN.cs" />
+    <Compile Include="LogicaDeNegocio\Comunicacion\RegistrarMensaje\IRegistrarMensajeLN.cs" />
+    <Compile Include="LogicaDeNegocio\Comunicacion\ResponderMensaje\IResponderMensajeLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenadores\CambiarEstadoEntrenador\ICambiarEstadoEntrenadorLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenadores\EditarEntrenador\IEditarEntrenadorLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerEntrenadorPorId\IObtenerEntrenadorPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\EditarMembresia\IEditarMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\ObtenerMembresiaPorId\IObtenerMembresiaPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\ObtenerTodasLasMembresias\IObtenerTodasLasMembresiasLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\RegistrarMembresia\IRegistrarMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\RenovarMembresia\IRenovarMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Recepcionistas\ObtenerRecepcionistaPorUsuario\IObtenerRecepcionistaPorUsuarioLN.cs" />
+    <Compile Include="LogicaDeNegocio\Recepcionistas\ObtenerTodosLosRecepcionistas\IObtenerTodosLosRecepcionistasLN.cs" />
+    <Compile Include="LogicaDeNegocio\Recepcionistas\RegistrarRecepcionista\IRegistrarRecepcionistaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reportes\ObtenerDashboardGeneral\IObtenerDashboardGeneralLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reportes\ObtenerReporteAsistencias\IObtenerReporteAsistenciasLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reportes\ObtenerReporteClases\IObtenerReporteClasesLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reportes\ObtenerReporteClientes\IObtenerReporteClientesLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reportes\ObtenerReporteIngresos\IObtenerReporteIngresosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reportes\ObtenerReporteMembresias\IObtenerReporteMembresiasLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reportes\ObtenerReporteReservas\IObtenerReporteReservasLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\CambiarEstadoReserva\ICambiarEstadoReservaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\CancelarReserva\ICancelarReservaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservaPorId\IObtenerReservaPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorClase\IObtenerReservasPorClaseLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorCliente\IObtenerReservasPorClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\RegistrarReserva\IRegistrarReservaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Roles\CambiarEstadoRol\ICambiarEstadoRolLN.cs" />
+    <Compile Include="LogicaDeNegocio\Roles\EditarRol\IEditarRolLN.cs" />
+    <Compile Include="LogicaDeNegocio\Roles\ObtenerRolPorId\IObtenerRolPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Roles\ObtenerTodosLosRoles\IObtenerTodosLosRolesLN.cs" />
+    <Compile Include="LogicaDeNegocio\Roles\RegistrarRol\IRegistrarRolLN.cs" />
+    <Compile Include="LogicaDeNegocio\Usuarios\CambiarEstadoUsuario\ICambiarEstadoUsuarioLN.cs" />
+    <Compile Include="LogicaDeNegocio\Usuarios\CambiarRolUsuario\ICambiarRolUsuarioLN.cs" />
+    <Compile Include="LogicaDeNegocio\Usuarios\EditarUsuario\IEditarUsuarioLN.cs" />
+    <Compile Include="LogicaDeNegocio\Usuarios\ObtenerTodosLosUsuarios\IObtenerTodosLosUsuariosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Usuarios\ObtenerUsuarioPorCorreo\IObtenerUsuarioPorCorreoLN.cs" />
+    <Compile Include="LogicaDeNegocio\Usuarios\ObtenerUsuarioPorId\IObtenerUsuarioPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Usuarios\RecuperarContrasena\IRecuperarContrasenaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Usuarios\RegistrarUsuario\IRegistrarUsuarioLN.cs" />
+    <Compile Include="Modelos\Asistencias\AsistenciaCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Asistencias\AsistenciaClaseDto.cs" />
+    <Compile Include="Modelos\Asistencias\AsistenciaClienteDto.cs" />
+    <Compile Include="Modelos\Asistencias\AsistenciaCrearDto.cs" />
+    <Compile Include="Modelos\Asistencias\AsistenciaDto.cs" />
+    <Compile Include="Modelos\Asistencias\AsistenciaEditarDto.cs" />
+    <Compile Include="Modelos\Asistencias\AsistenciaListadoDto.cs" />
+    <Compile Include="Modelos\Clases\ClaseCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Clases\ClaseCrearDto.cs" />
+    <Compile Include="Modelos\Clases\ClaseDisponibleDto.cs" />
+    <Compile Include="Modelos\Clases\ClaseDto.cs" />
+    <Compile Include="Modelos\Clases\ClaseEditarDto.cs" />
+    <Compile Include="Modelos\Clases\ClaseEntrenadorDto.cs" />
+    <Compile Include="Modelos\Clases\ClaseListadoDto.cs" />
+    <Compile Include="Modelos\Clientes\ClienteCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Clientes\ClienteCrearDto.cs" />
+    <Compile Include="Modelos\Clientes\ClienteDto.cs" />
+    <Compile Include="Modelos\Clientes\ClienteEditarDto.cs" />
+    <Compile Include="Modelos\Clientes\ClienteListadoDto.cs" />
+    <Compile Include="Modelos\Clientes\ClientePerfilDto.cs" />
+    <Compile Include="Modelos\Comunicacion\MensajeCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Comunicacion\MensajeCrearDto.cs" />
+    <Compile Include="Modelos\Comunicacion\MensajeDto.cs" />
+    <Compile Include="Modelos\Comunicacion\MensajeListadoDto.cs" />
+    <Compile Include="Modelos\Comunicacion\MensajeResponderDto.cs" />
+    <Compile Include="Modelos\Comunicacion\MensajeUsuarioDto.cs" />
+    <Compile Include="Modelos\Entrenadores\EntrenadorCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Entrenadores\EntrenadorCrearDto.cs" />
+    <Compile Include="Modelos\Entrenadores\EntrenadorDto.cs" />
+    <Compile Include="Modelos\Entrenadores\EntrenadorEditarDto.cs" />
+    <Compile Include="Modelos\Entrenadores\EntrenadorListadoDto.cs" />
+    <Compile Include="Modelos\Entrenadores\EntrenadorPerfilDto.cs" />
+    <Compile Include="Modelos\Membresias\MembresiaClienteDto.cs" />
+    <Compile Include="Modelos\Membresias\MembresiaCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Membresias\MembresiaCrearDto.cs" />
+    <Compile Include="Modelos\Membresias\MembresiaDto.cs" />
+    <Compile Include="Modelos\Membresias\MembresiaEditarDto.cs" />
+    <Compile Include="Modelos\Membresias\MembresiaListadoDto.cs" />
+    <Compile Include="Modelos\Membresias\MembresiaRenovarDto.cs" />
+    <Compile Include="Modelos\Recepcionistas\RecepcionistaCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Recepcionistas\RecepcionistaCrearDto.cs" />
+    <Compile Include="Modelos\Recepcionistas\RecepcionistaDto.cs" />
+    <Compile Include="Modelos\Recepcionistas\RecepcionistaEditarDto.cs" />
+    <Compile Include="Modelos\Recepcionistas\RecepcionistaListadoDto.cs" />
+    <Compile Include="Modelos\Recepcionistas\RecepcionistaPerfilDto.cs" />
+    <Compile Include="Modelos\Reportes\DashboardGeneralDto.cs" />
+    <Compile Include="Modelos\Reportes\ReporteAsistenciaDto.cs" />
+    <Compile Include="Modelos\Reportes\ReporteClaseDto.cs" />
+    <Compile Include="Modelos\Reportes\ReporteClienteDto.cs" />
+    <Compile Include="Modelos\Reportes\ReporteIngresosDto.cs" />
+    <Compile Include="Modelos\Reportes\ReporteMembresiaDto.cs" />
+    <Compile Include="Modelos\Reportes\ReporteReservaDto.cs" />
+    <Compile Include="Modelos\Reservas\ReservaCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Reservas\ReservaCancelarDto.cs" />
+    <Compile Include="Modelos\Reservas\ReservaClaseDto.cs" />
+    <Compile Include="Modelos\Reservas\ReservaClienteDto.cs" />
+    <Compile Include="Modelos\Reservas\ReservaCrearDto.cs" />
+    <Compile Include="Modelos\Reservas\ReservaDto.cs" />
+    <Compile Include="Modelos\Reservas\ReservaListadoDto.cs" />
+    <Compile Include="Modelos\Roles\RolCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Roles\RolCrearDto.cs" />
+    <Compile Include="Modelos\Roles\RolDto.cs" />
+    <Compile Include="Modelos\Roles\RolEditarDto.cs" />
+    <Compile Include="Modelos\Roles\RolListadoDto.cs" />
+    <Compile Include="Modelos\Usuarios\LoginDto.cs" />
+    <Compile Include="Modelos\Usuarios\RecuperarContrasenaDto.cs" />
+    <Compile Include="Modelos\Usuarios\UsuarioCambiarEstadoDto.cs" />
+    <Compile Include="Modelos\Usuarios\UsuarioCambiarRolDto.cs" />
+    <Compile Include="Modelos\Usuarios\UsuarioCrearDto.cs" />
+    <Compile Include="Modelos\Usuarios\UsuarioDto.cs" />
+    <Compile Include="Modelos\Usuarios\UsuarioEditarDto.cs" />
+    <Compile Include="Modelos\Usuarios\UsuarioListadoDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.5.2\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" />
 </Project>
