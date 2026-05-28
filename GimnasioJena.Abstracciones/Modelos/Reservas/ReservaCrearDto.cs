@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Reservas
+﻿namespace GimnasioJena.Abstracciones.Modelos.Reservas
 {
-    internal class ReservaCrearDto
+    public class ReservaCrearDto
     {
+        public int idUsuario { get; set; }
+        public int idClaseProgramada { get; set; }
+        public int idEstadoReserva { get; set; }
+        public string observaciones { get; set; }
     }
 }

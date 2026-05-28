@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Reservas
+﻿namespace GimnasioJena.Abstracciones.Modelos.Reservas
 {
     public class ReservaCancelarDto
     {
+        public int idReserva { get; set; }
+        public string motivoCancelacion { get; set; }
     }
 }

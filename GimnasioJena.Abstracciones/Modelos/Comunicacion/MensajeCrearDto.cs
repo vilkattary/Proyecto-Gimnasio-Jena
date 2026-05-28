@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Comunicacion
+﻿namespace GimnasioJena.Abstracciones.Modelos.Comunicacion
 {
     public class MensajeCrearDto
     {
+        public int? idUsuario { get; set; }
+        public string nombre { get; set; }
+        public string correo { get; set; }
+        public string telefono { get; set; }
+        public string asunto { get; set; }
+        public string mensaje { get; set; }
     }
 }

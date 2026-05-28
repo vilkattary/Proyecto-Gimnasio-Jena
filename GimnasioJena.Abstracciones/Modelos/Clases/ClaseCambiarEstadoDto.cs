@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Clases
+﻿namespace GimnasioJena.Abstracciones.Modelos.Clases
 {
     public class ClaseCambiarEstadoDto
     {
+        public int idClaseProgramada { get; set; }
+        public int idEstadoClase { get; set; }
     }
 }

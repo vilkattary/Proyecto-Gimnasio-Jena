@@ -1,12 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.Modelos.Entrenadores
 {
     public class EntrenadorPerfilDto
     {
+        public int idEntrenador { get; set; }
+        public int idUsuario { get; set; }
+        public string nombreCompleto { get; set; }
+        public string correo { get; set; }
+        public string telefono { get; set; }
+        public string especialidad { get; set; }
+        public string descripcion { get; set; }
+        public DateTime fechaContratacion { get; set; }
+        public bool estado { get; set; }
     }
 }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Membresias
+﻿namespace GimnasioJena.Abstracciones.Modelos.Membresias
 {
     public class MembresiaCambiarEstadoDto
     {
+        public int idMembresiaCliente { get; set; }
+        public int idEstadoMembresia { get; set; }
     }
 }

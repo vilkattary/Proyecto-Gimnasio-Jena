@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.Modelos.Membresias
 {
     public class MembresiaRenovarDto
     {
+        public int idMembresiaCliente { get; set; }
+        public DateTime nuevaFechaInicio { get; set; }
+        public DateTime nuevaFechaFin { get; set; }
+        public int? nuevasClasesDisponibles { get; set; }
+        public string observaciones { get; set; }
     }
 }
