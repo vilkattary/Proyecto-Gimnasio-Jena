@@ -73,12 +73,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asistencias\CambiarEstadoAsistencia\CambiarEstadoAsistenciaLN.cs" />
+    <Compile Include="Asistencias\EditarAsistencia\EditarAsistenciaLN.cs" />
+    <Compile Include="Asistencias\ObtenerAsistenciaPorId\ObtenerAsistenciaPorIdLN.cs" />
+    <Compile Include="Asistencias\ObtenerAsistenciasPorClase\ObtenerAsistenciasPorClaseLN.cs" />
+    <Compile Include="Asistencias\ObtenerAsistenciasPorCliente\ObtenerAsistenciasPorClienteLN.cs" />
+    <Compile Include="Asistencias\ObtenerTodasLasAsistencias\ObtenerTodasLasAsistenciasLN.cs" />
+    <Compile Include="Asistencias\RegistrarAsistencia\RegistrarAsistenciaLN.cs" />
+    <Compile Include="Clases\CambiarEstadoClase\CambiarEstadoClaseLN.cs" />
+    <Compile Include="Clases\EditarClase\EditarClaseLN.cs" />
+    <Compile Include="Clases\ObtenerClasePorId\ObtenerClasePorIdLN.cs" />
+    <Compile Include="Clases\ObtenerClasesDisponibles\ObtenerClasesDisponiblesLN.cs" />
+    <Compile Include="Clases\ObtenerClasesPorEntrenador\ObtenerClasesPorEntrenadorLN.cs" />
+    <Compile Include="Clases\ObtenerTodasLasClases\ObtenerTodasLasClasesLN.cs" />
+    <Compile Include="Clases\RegistrarClase\RegistrarClaseLN.cs" />
     <Compile Include="Clientes\CambiarEstadoCliente\CambiarEstadoClienteLN.cs" />
     <Compile Include="Clientes\EditarCliente\EditarClienteLN.cs" />
     <Compile Include="Clientes\ObtenerClientePorId\ObtenerClientePorIdLN.cs" />
     <Compile Include="Clientes\ObtenerClientePorUsuario\ObtenerClientePorUsuarioLN.cs" />
     <Compile Include="Clientes\ObtenerTodosLosClientes\ObtenerTodosLosClientesLN.cs" />
     <Compile Include="Clientes\RegistrarCliente\RegistrarClienteLN.cs" />
+    <Compile Include="Comunicacion\CambiarEstadoMensaje\CambiarEstadoMensajeLN.cs" />
+    <Compile Include="Comunicacion\ObtenerMensajePorId\ObtenerMensajePorIdLN.cs" />
+    <Compile Include="Comunicacion\ObtenerMensajesPorUsuario\ObtenerMensajesPorUsuarioLN.cs" />
+    <Compile Include="Comunicacion\ObtenerTodosLosMensajes\ObtenerTodosLosMensajesLN.cs" />
+    <Compile Include="Comunicacion\RegistrarMensaje\RegistrarMensajeLN.cs" />
+    <Compile Include="Comunicacion\ResponderMensaje\ResponderMensajeLN.cs" />
     <Compile Include="Entrenadores\CambiarEstadoEntrenador\CambiarEstadoEntrenadorLN.cs" />
     <Compile Include="Entrenadores\EditarEntrenador\EditarEntrenadorLN.cs" />
     <Compile Include="Entrenadores\ObtenerEntrenadorPorId\ObtenerEntrenadorPorIdLN.cs" />
@@ -100,6 +120,20 @@
     <Compile Include="Recepcionistas\ObtenerRecepcionistaPorUsuario\ObtenerRecepcionistaPorUsuarioLN.cs" />
     <Compile Include="Recepcionistas\ObtenerTodosLosRecepcionistas\ObtenerTodosLosRecepcionistasLN.cs" />
     <Compile Include="Recepcionistas\RegistrarRecepcionista\RegistrarRecepcionistaLN.cs" />
+    <Compile Include="Reportes\ObtenerDashboardGeneral\ObtenerDashboardGeneralLN.cs" />
+    <Compile Include="Reportes\ObtenerReporteAsistencias\ObtenerReporteAsistenciasLN.cs" />
+    <Compile Include="Reportes\ObtenerReporteClases\ObtenerReporteClasesLN.cs" />
+    <Compile Include="Reportes\ObtenerReporteClientes\ObtenerReporteClientesLN.cs" />
+    <Compile Include="Reportes\ObtenerReporteIngresos\ObtenerReporteIngresosLN.cs" />
+    <Compile Include="Reportes\ObtenerReporteMembresias\ObtenerReporteMembresiasLN.cs" />
+    <Compile Include="Reportes\ObtenerReporteReservas\ObtenerReporteReservasLN.cs" />
+    <Compile Include="Reservas\CambiarEstadoReserva\CambiarEstadoReservaLN.cs" />
+    <Compile Include="Reservas\CancelarReserva\CancelarReservaLN.cs" />
+    <Compile Include="Reservas\ObtenerReservaPorId\ObtenerReservaPorIdLN.cs" />
+    <Compile Include="Reservas\ObtenerReservasPorClase\ObtenerReservasPorClaseLN.cs" />
+    <Compile Include="Reservas\ObtenerReservasPorCliente\ObtenerReservasPorClienteLN.cs" />
+    <Compile Include="Reservas\ObtenerTodasLasReservas\ObtenerTodasLasReservasLN.cs" />
+    <Compile Include="Reservas\RegistrarReserva\RegistrarReservaLN.cs" />
     <Compile Include="Roles\CambiarEstadoRol\CambiarEstadoRolLN.cs" />
     <Compile Include="Roles\EditarRol\EditarRolLN.cs" />
     <Compile Include="Roles\ObtenerRolPorId\ObtenerRolPorIdLN.cs" />
@@ -128,13 +162,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Asistencias\" />
-    <Folder Include="Clases\" />
-    <Folder Include="Comunicacion\" />
-    <Folder Include="Reportes\" />
-    <Folder Include="Reservas\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

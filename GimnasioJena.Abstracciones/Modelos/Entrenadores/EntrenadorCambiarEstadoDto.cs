@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimnasioJena.Abstracciones.Modelos.Entrenadores
+﻿namespace GimnasioJena.Abstracciones.Modelos.Entrenadores
 {
     public class EntrenadorCambiarEstadoDto
     {
+        public int idEntrenador { get; set; }
+        public bool estado { get; set; }
     }
 }

@@ -1,12 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.Modelos.Membresias
 {
     public class MembresiaClienteDto
     {
+        public int idMembresiaCliente { get; set; }
+        public int idUsuario { get; set; }
+        public string nombreCliente { get; set; }
+        public string nombrePlan { get; set; }
+        public string estadoMembresia { get; set; }
+        public DateTime fechaInicio { get; set; }
+        public DateTime fechaFin { get; set; }
+        public int? clasesDisponibles { get; set; }
+        public string observaciones { get; set; }
     }
 }

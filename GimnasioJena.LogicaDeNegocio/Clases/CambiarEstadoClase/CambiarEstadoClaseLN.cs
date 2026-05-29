@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GimnasioJena.AccesoADatos.Entidades.Clientes
+namespace GimnasioJena.LogicaDeNegocio.Clases.CambiarEstadoClase
 {
-    public class ClienteEntidad
+    public class CambiarEstadoClaseLN
     {
     }
 }
