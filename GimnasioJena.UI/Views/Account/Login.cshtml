@@ -1,8 +1,9 @@
-﻿@model GimnasioJena.UI.Models.LoginViewModel 
+﻿@model GimnasioJena.UI.Models.LoginViewModel
 
 @{
     ViewBag.Title = "Iniciar sesión";
 }
+
 <link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
 
 <section class="container py-5">
@@ -10,6 +11,7 @@
         <div class="col-sm-10 col-md-8 col-lg-5">
             <div class="card shadow-sm rounded-4" style="border-top:4px solid var(--gym-orange);">
                 <div class="card-body p-4">
+
                     <div class="text-center mb-3">
                         <span class="d-inline-block fs-3 fst-italic" style="color:var(--gym-orange); font-family:'Oswald',sans-serif;">
                             <i class="bi bi-lightning-charge-fill me-1"></i>GIMNASIO JENA
@@ -23,44 +25,79 @@
                         @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
 
                         <div class="mb-3">
-                            <label for="Email" class="form-label fw-600">Correo electrónico</label>
+                            @Html.LabelFor(m => m.Email, "Correo electrónico", new { @class = "form-label fw-600" })
+
                             <div class="input-group">
                                 <span class="input-group-text bg-transparent border-end-0" style="color:var(--gym-orange);">
                                     <i class="bi bi-person-fill"></i>
                                 </span>
-                                <input type="email" name="Email" id="Email" class="form-control border-start-0" placeholder="tu@correo.com" required />
+
+                                @Html.TextBoxFor(m => m.Email, new
+                                {
+                                    @class = "form-control border-start-0",
+                                    type = "email",
+                                    placeholder = "tu@correo.com",
+                                    required = "required"
+                                })
                             </div>
+
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
                         </div>
 
                         <div class="mb-3">
-                            <label for="Password" class="form-label fw-600">Contraseña</label>
+                            @Html.LabelFor(m => m.Password, "Contraseña", new { @class = "form-label fw-600" })
+
                             <div class="input-group">
                                 <span class="input-group-text bg-transparent border-end-0" style="color:var(--gym-orange);">
                                     <i class="bi bi-lock-fill"></i>
                                 </span>
-                                <input type="password" name="Password" id="Password" class="form-control border-start-0" placeholder="********" required />
+
+                                @Html.PasswordFor(m => m.Password, new
+                                {
+                                    @class = "form-control border-start-0",
+                                    placeholder = "********",
+                                    required = "required"
+                                })
                             </div>
+
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="true" name="RememberMe" id="RememberMe" />
-                                <label class="form-check-label small" for="RememberMe">Recuérdame</label>
+                                @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
+                                @Html.LabelFor(m => m.RememberMe, "Recuérdame", new { @class = "form-check-label small" })
                             </div>
-                            <a href="@Url.Action("ForgotPassword", "Account")" class="small" style="color:var(--gym-orange); text-decoration:none;">¿Olvidaste la contraseña?</a>
+
+                            <a href="@Url.Action("ForgotPassword", "Account")"
+                               class="small"
+                               style="color:var(--gym-orange); text-decoration:none;">
+                                ¿Olvidaste la contraseña?
+                            </a>
                         </div>
 
-                        <button type="submit" class="btn btn-action w-100 py-2">Entrar</button>
+                        <button type="submit" class="btn btn-action w-100 py-2">
+                            Entrar
+                        </button>
 
                         <div class="text-center mt-3">
                             <span class="small text-muted">¿No tienes cuenta?</span>
-                            <a href="@Url.Action("Register", "Account")" class="btn btn-outline-gym btn-sm ms-2">Regístrate</a>
+                            <a href="@Url.Action("Register", "Account")" class="btn btn-outline-gym btn-sm ms-2">
+                                Regístrate
+                            </a>
                         </div>
                     }
+
                 </div>
             </div>
 
-            <p class="text-center text-muted small mt-3">Al iniciar sesión aceptas las condiciones del gimnasio.</p>
+            <p class="text-center text-muted small mt-3">
+                Al iniciar sesión aceptas las condiciones del gimnasio.
+            </p>
         </div>
     </div>
 </section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
