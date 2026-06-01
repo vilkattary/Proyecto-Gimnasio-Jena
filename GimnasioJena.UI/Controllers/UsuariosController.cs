@@ -3,16 +3,8 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuario
 using GimnasioJena.Abstracciones.Modelos.Usuarios;
 using GimnasioJena.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
 using GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
+using Microsoft.AspNet.Identity;
 using System.Linq;
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
-using GimnasioJena.Abstracciones.Modelos.Usuarios;
-using GimnasioJena.UI.Models;
-using Microsoft.AspNet.Identity.Owin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace GimnasioJena.UI.Controllers
@@ -89,6 +81,16 @@ namespace GimnasioJena.UI.Controllers
             {
                 CargarRoles(modelo.rolNuevo);
                 return View(modelo);
+            }
+
+            var usuarios = _obtenerTodosLosUsuariosLN.ObtenerTodosLosUsuarios();
+
+            var administradorActual = usuarios
+                .FirstOrDefault(u => u.identityUserId == User.Identity.GetUserId());
+
+            if (administradorActual != null)
+            {
+                modelo.idUsuarioAdministrador = administradorActual.idUsuario;
             }
 
             bool resultado = _cambiarRolUsuarioLN.CambiarRolUsuario(modelo);
