@@ -9,7 +9,6 @@ using GimnasioJena.AccesoADatos.Usuarios.ObtenerUsuarioPorId;
 using GimnasioJena.AccesoADatos.Usuarios.RegistrarUsuario;
 using GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
 using GimnasioJena.LogicaDeNegocio.Usuarios.RegistrarUsuario;
-using GimnasioJena.UI.Models;
 using Microsoft.AspNet.Identity.Owin;
 using Ninject;
 using Ninject.Web.Common;

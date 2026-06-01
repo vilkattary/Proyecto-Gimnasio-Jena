@@ -25,10 +25,5 @@ namespace GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId
 
             return await _repositorio.ObtenerUsuarioPorId(identityUserId);
         }
-
-        Task<UsuarioPerfilDto> IObtenerUsuarioPorIdLN.ObtenerUsuarioPorId(string identityUserId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

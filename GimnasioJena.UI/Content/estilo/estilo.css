@@ -1,17 +1,26 @@
 ﻿/* Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
 
-:root{
+:root {
     --primary: #ff6600;
     --black: #0F0F0F;
     --dark: #293039;
     --white: #FFFFFF;
+    --jena-navy: #2C3E50;
+    --jena-dark-navy: #1A2332;
+    --jena-orange: #FF6B35;
+    --jena-dark-orange: #D95F31;
+    --jena-light-blue: #6C8EA4;
+    --jena-white: #FFFFFF;
+    --jena-light-gray: #F8F9FA;
+    --font-primary: 'Montserrat', sans-serif;
 }
 
-/* Base */
 body {
-    
-    background: #f7f7f7;
+    font-family: var(--font-primary);
+    background: linear-gradient(180deg, var(--jena-white) 0%, var(--jena-light-gray) 100%);
+    color: var(--jena-navy);
+    min-height: 100vh;
     color: var(--dark);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -591,7 +600,7 @@ footer {
 
 /* ============================================
        DESCRIPCIÓN
-       ============================================ */
+============================================ */
 .description-card {
     background-color: var(--jena-white);
     border: 2px solid var(--jena-light-blue);
@@ -630,7 +639,7 @@ footer {
 
 /* ============================================
        BOTONES DE ACCIÓN
-       ============================================ */
+============================================ */
 .action-buttons-card {
     background-color: var(--jena-white);
     border: 2px solid var(--jena-light-blue);
@@ -711,7 +720,7 @@ footer {
 
 /* ============================================
        ESTADÍSTICAS RÁPIDAS
-       ============================================ */
+============================================ */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -729,37 +738,38 @@ footer {
     transition: all 0.3s ease;
 }
 
-    .stat-card:hover {
+.stat-card:hover {
         border-color: var(--jena-orange);
         transform: translateY(-5px);
-    }
+}
 
-    .stat-card i {
+.stat-card i {
         font-size: 3rem;
         color: var(--jena-orange);
         margin-bottom: 15px;
-    }
+}
 
-    .stat-card h3 {
-        color: var(--jena-navy);
+.stat-card h3 {
+       color: var(--jena-navy);
         font-weight: 800;
         font-size: 2rem;
         margin-bottom: 8px;
-    }
+}
 
-    .stat-card p {
+.stat-card p {
         color: var(--jena-light-blue);
         font-weight: 600;
         font-size: 0.9rem;
         margin: 0;
         text-transform: uppercase;
         letter-spacing: 1px;
-    }
+}
 
 /* ============================================
        RESPONSIVE (MÓVILES < 768px)
-       ============================================ */
-@@media (max-width: 768px) {
+============================================ */
+
+@media (max-width: 768px) {
     .logo-circular {
         width: 120px;
         height: 120px;
@@ -819,7 +829,7 @@ footer {
 
 /* ============================================
        SECCIÓN DE BIENVENIDA CON LOGO
-       ============================================ */
+============================================ */
 .welcome-section {
     display: flex;
     align-items: center;
@@ -876,7 +886,7 @@ footer {
 
 /* ============================================
        TÍTULO PRINCIPAL
-       ============================================ */
+============================================ */
 .page-title {
     color: var(--jena-navy);
     font-weight: 800;
@@ -888,7 +898,7 @@ footer {
     font-size: 2.5rem;
 }
 
-    .page-title::after {
+.page-title::after {
         content: '';
         position: absolute;
         bottom: -8px;
@@ -897,11 +907,11 @@ footer {
         width: 80px;
         height: 5px;
         background-color: var(--jena-orange);
-    }
+}
 
 /* ============================================
        CARD DE MEMBRESÍA ACTUAL (DESTACADA)
-       ============================================ */
+============================================ */
 .current-membership-card {
     background: linear-gradient(135deg, var(--jena-navy) 0%, var(--jena-dark-navy) 100%);
     border: 3px solid var(--jena-orange);
@@ -924,7 +934,7 @@ footer {
         animation: pulse 3s ease-in-out infinite;
     }
 
-@@keyframes pulse {
+@keyframes pulse {
     0%, 100% {
         transform: scale(1);
         opacity: 0.5;
@@ -1034,7 +1044,7 @@ footer {
 
 /* ============================================
        CARDS DE OTROS PLANES
-       ============================================ */
+============================================ */
 .plan-card {
     background-color: var(--jena-white);
     border: 2px solid var(--jena-light-blue);
@@ -1202,7 +1212,7 @@ footer {
 
 /* ============================================
        SECCIÓN DE TÍTULO
-       ============================================ */
+============================================ */
 .section-header {
     text-align: center;
     margin-bottom: 50px;
@@ -1242,7 +1252,7 @@ footer {
 /* ============================================
        RESPONSIVE (MÓVILES < 768px)
        ============================================ */
-@@media (max-width: 768px) {
+@media (max-width: 768px) {
     .logo-circular {
         width: 120px;
         height: 120px;
@@ -1288,3 +1298,50 @@ footer {
         font-size: 1.8rem;
     }
 }
+
+.btn-action {
+    background-color: var(--jena-white);
+    color: var(--jena-navy);
+    border: 2px solid var(--jena-dark-orange);
+    border-radius: 50px;
+    padding: 14px 30px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(217, 95, 49, 0.15);
+    width: 100%;
+    margin-bottom: 15px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-action:last-child {
+    margin-bottom: 0;
+}
+
+.btn-action:hover {
+        background-color: var(--jena-dark-orange);
+        color: var(--jena-white);
+        border-color: var(--jena-dark-orange);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(217, 95, 49, 0.4);
+}
+
+.btn-action:active {
+        transform: translateY(-1px);
+}
+
+    .btn-action i {
+        font-size: 1.2rem;
+        color: var(--jena-dark-orange);
+        transition: color 0.3s ease;
+    }
+
+    .btn-action:hover i {
+        color: var(--jena-white);
+    }

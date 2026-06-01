@@ -1,4 +1,5 @@
 ﻿@model GimnasioJena.Abstracciones.Modelos.Usuarios.UsuarioPerfilDto
+
 @{
     ViewBag.Title = "MiPerfil";
 }
@@ -14,10 +15,13 @@
     <div class="welcome-section">
         <div class="logo-circular">
             <i class="bi bi-tree"></i>
-            <span class="letter-j">J</span>
+            <span class="initials">
+                @Model.nombre.Substring(0, 1)@Model.apellido1.Substring(0, 1)
+            </span>
         </div>
         <div class="welcome-text">
             <h3>Mi Perfil Personal</h3>
+            <div class="info-value">@Model.nombre @Model.apellido1 @Model.apellido2</div>
             <p>Gestiona tu información y preferencias del gimnasio</p>
         </div>
     </div>

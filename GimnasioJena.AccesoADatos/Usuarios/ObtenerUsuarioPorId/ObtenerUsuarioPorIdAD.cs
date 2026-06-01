@@ -46,7 +46,7 @@ namespace GimnasioJena.AccesoADatos.Usuarios.ObtenerUsuarioPorId
                     fechaFin = membresia.fechaFin,
                     clasesDisponibles = membresia.clasesDisponibles,
                     observaciones = membresia.observaciones,
-                    precio = membresia.PlanMembresia.precio,
+                    precio = membresia.PlanMembresia.precio
                 };
             }
 
@@ -62,11 +62,6 @@ namespace GimnasioJena.AccesoADatos.Usuarios.ObtenerUsuarioPorId
                 estado = usuario.estado,
                 Membresia = membresiaDto
             };
-        }
-
-        Task<UsuarioPerfilDto> IObtenerUsuarioPorIdAD.ObtenerUsuarioPorId(string identityUserId)
-        {
-            throw new NotImplementedException();
         }
     }
 }
