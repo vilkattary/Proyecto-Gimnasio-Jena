@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GimnasioJena.UI.Models;
+using GimnasioJena.AccesoADatos;
 
 namespace GimnasioJena.UI.Controllers
 {
@@ -55,26 +56,109 @@ namespace GimnasioJena.UI.Controllers
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Su contraseña se ha cambiado."
-                : message == ManageMessageId.SetPasswordSuccess ? "Su contraseña se ha establecido."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Su proveedor de autenticación de dos factores se ha establecido."
+                message == ManageMessageId.ChangePasswordSuccess ? "Su contraseña se ha cambiado correctamente."
                 : message == ManageMessageId.Error ? "Se ha producido un error."
-                : message == ManageMessageId.AddPhoneSuccess ? "Se ha agregado su número de teléfono."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Se ha quitado su número de teléfono."
                 : "";
 
-            var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+            var identityUserId = User.Identity.GetUserId();
+
+            using (var contexto = new Contexto())
             {
-                HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
-            return View(model);
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                if (usuario == null)
+                {
+                    return View("Error");
+                }
+
+                var roles = await UserManager.GetRolesAsync(identityUserId);
+                var rolActual = roles.FirstOrDefault() ?? "SIN ROL";
+
+                var modelo = new PerfilUsuarioViewModel
+                {
+                    idUsuario = usuario.idUsuario,
+                    identityUserId = usuario.identityUserId,
+                    nombre = usuario.nombre,
+                    apellido1 = usuario.apellido1,
+                    apellido2 = usuario.apellido2,
+                    nombreCompleto = (usuario.nombre + " " + usuario.apellido1 + " " + usuario.apellido2).Trim(),
+                    identificacion = usuario.identificacion,
+                    correo = usuario.correo,
+                    telefono = usuario.telefono,
+                    rol = rolActual,
+                    estado = usuario.estado,
+                    fechaRegistro = usuario.fechaRegistro
+                };
+
+                return View(modelo);
+            }
         }
 
+        [HttpGet]
+        public ActionResult EditarPerfil()
+        {
+            var identityUserId = User.Identity.GetUserId();
+
+            using (var contexto = new Contexto())
+            {
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                if (usuario == null)
+                {
+                    return View("Error");
+                }
+
+                var modelo = new EditarPerfilViewModel
+                {
+                    idUsuario = usuario.idUsuario,
+                    identityUserId = usuario.identityUserId,
+                    nombre = usuario.nombre,
+                    apellido1 = usuario.apellido1,
+                    apellido2 = usuario.apellido2,
+                    telefono = usuario.telefono,
+                    correo = usuario.correo,
+                    identificacion = usuario.identificacion
+                };
+
+                return View(modelo);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditarPerfil(EditarPerfilViewModel modelo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
+            var identityUserId = User.Identity.GetUserId();
+
+            using (var contexto = new Contexto())
+            {
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                if (usuario == null)
+                {
+                    return View("Error");
+                }
+
+                usuario.nombre = modelo.nombre;
+                usuario.apellido1 = modelo.apellido1;
+                usuario.apellido2 = modelo.apellido2;
+                usuario.telefono = modelo.telefono;
+                usuario.fechaModificacion = DateTime.Now;
+
+                contexto.SaveChanges();
+            }
+
+            TempData["MensajeExito"] = "Tu información personal se actualizó correctamente.";
+            return RedirectToAction("Index");
+        }
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]

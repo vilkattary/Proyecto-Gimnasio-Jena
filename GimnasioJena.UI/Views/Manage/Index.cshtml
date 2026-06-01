@@ -1,89 +1,109 @@
-﻿@model GimnasioJena.UI.Models.IndexViewModel
+﻿@model GimnasioJena.UI.Models.PerfilUsuarioViewModel
+
 @{
-    ViewBag.Title = "Administrar";
+    ViewBag.Title = "Mi perfil";
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
 
-    <p class="text-success">@ViewBag.StatusMessage</p>
-    <div>
-        <h4>Cambiar la configuración de la cuenta</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>Contraseña:</dt>
-            <dd>
-                [
-                @if (Model.HasPassword)
-                {
-                    @Html.ActionLink("Cambiar la contraseña", "ChangePassword")
-                }
-                else
-                {
-                    @Html.ActionLink("Crear", "SetPassword")
-                }
-                ]
-            </dd>
-            <dt>Inicios de sesión externos:</dt>
-            <dd>
-                @Model.Logins.Count [
-                @Html.ActionLink("Manage", "ManageLogins") ]
-            </dd>
-            @*
-                Los números de teléfono se pueden usar como una segunda fase de comprobación en un sistema de autenticación en dos fases.
-                
-                Consulte <a href="https://go.microsoft.com/fwlink/?LinkId=403804">este artículo</a>
-                    para obtener detalles sobre cómo configurar esta aplicación ASP.NET para que sea compatible con la autenticación en dos fases mediante SMS.
-                
-                Quite la marca de comentario del bloque siguiente después de configurar la autenticación en dos fases
-            *@
-            @*  
-                <dt>Número de teléfono:</dt>
-                <dd>
-                    @(Model.PhoneNumber ?? "None")
-                    @if (Model.PhoneNumber != null)
-                    {
-                        <br />
-                        <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                        using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>[<input type="submit" value="Quitar" class="btn-link" />]</text>
-                        }
-                    }
-                    else
-                    {
-                        <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
-                    }
-                </dd>
-            *@
-            <dt>Autenticación de dos factores:</dt>
-            <dd>
-                <p>
-                    No hay ningún proveedor de autenticación en dos fases configurado. Consulte <a href="https://go.microsoft.com/fwlink/?LinkId=403804">este artículo</a>
-                    para obtener detalles sobre cómo configurar esta aplicación ASP.NET para que sea compatible con la autenticación en dos fases.
-                </p>
-                @*@if (Model.TwoFactor)
-                    {
-                        using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>Habilitado
-                            <input type="submit" value="Deshabilitar" class="btn btn-link" />
-                            </text>
-                        }
-                    }
-                    else
-                    {
-                        using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>Deshabilitada
-                            <input type="submit" value="Habilitar" class="btn btn-link" />
-                            </text>
-                        }
-                    }*@
-            </dd>
-        </dl>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            @if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+            {
+                <div class="alert alert-success">
+                    @ViewBag.StatusMessage
+                </div>
+            }
+
+            <div class="card shadow-sm rounded-4" style="border-top:4px solid var(--gym-orange);">
+                <div class="card-body p-4">
+
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-4 mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center"
+                             style="width:100px; height:100px; background:var(--gym-orange); color:white; font-size:2.5rem;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+
+                        <div class="text-center text-md-start">
+                            <h2 class="fw-bold mb-1" style="color:var(--gym-dark);">
+                                @Model.nombreCompleto
+                            </h2>
+
+                            <p class="text-muted mb-2">
+                                @Model.correo
+                            </p>
+
+                            <span class="badge bg-primary">
+                                @Model.rol
+                            </span>
+
+                            @if (Model.estado)
+                            {
+                                <span class="badge bg-success ms-1">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary ms-1">Inactivo</span>
+                            }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <h4 class="fw-bold mb-3" style="color:var(--gym-dark);">
+                        Información personal
+                    </h4>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Nombre completo</label>
+                            <input type="text" class="form-control" value="@Model.nombreCompleto" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Identificación</label>
+                            <input type="text" class="form-control" value="@Model.identificacion" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Correo electrónico</label>
+                            <input type="text" class="form-control" value="@Model.correo" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Teléfono</label>
+                            <input type="text" class="form-control" value="@Model.telefono" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Fecha de registro</label>
+                            <input type="text" class="form-control" value="@Model.fechaRegistro.ToString("dd/MM/yyyy")" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Estado de cuenta</label>
+                            <input type="text" class="form-control" value="@(Model.estado ? "Activo" : "Inactivo")" readonly />
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
+                            Cambiar contraseña
+                        </a>
+                        <a href="@Url.Action("EditarPerfil", "Manage")" class="btn btn-action">
+                            Editar perfil
+                        </a>
+
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-gym">
+                            Volver al inicio
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-</main>
+</section>
