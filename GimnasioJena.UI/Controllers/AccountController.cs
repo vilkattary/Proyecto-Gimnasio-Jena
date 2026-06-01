@@ -9,23 +9,27 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GimnasioJena.UI.Models;
+using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
+
 
 namespace GimnasioJena.UI.Controllers
-{
+{ 
+
     [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly IRegistrarUsuarioLN _registrarUsuarioServicio;
 
-        public AccountController()
-        {
-        }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager,
+                          ApplicationSignInManager signInManager,
+                          IRegistrarUsuarioLN registrarUsuarioServicio)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _registrarUsuarioServicio = registrarUsuarioServicio;
         }
 
         public ApplicationSignInManager SignInManager
@@ -156,22 +160,25 @@ namespace GimnasioJena.UI.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    //await UserManager.AddToRoleAsync(user.Id, "INVENTARIO");
                     await UserManager.AddToRoleAsync(user.Id, "CLIENTE");
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Enviar un correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar la cuenta", "Para confirmar su cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
 
+                    var dto = new UsuarioCrearDto
+                    {
+                        identityUserId = user.Id,
+                        nombre = model.Nombre,
+                        apellido1 = model.Apellido1,
+                        apellido2 = model.Apellido2,
+                        identificacion = model.Identificacion,
+                        correo = model.Email,
+                        telefono = model.Telefono
+                    };
+                    await _registrarUsuarioServicio.RegistrarUsuario(dto);
+
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
-
-            // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
             return View(model);
         }
 

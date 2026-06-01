@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GimnasioJena.AccesoADatos.Entidades.Catalogos;
+using GimnasioJena.AccesoADatos.Entidades.Usuarios;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,5 +29,14 @@ namespace GimnasioJena.AccesoADatos.Entidades.Membresias
         public string observaciones { get; set; }
 
         public DateTime fechaCreacion { get; set; }
+
+        [ForeignKey("idEstadoMembresia")]
+        public virtual EstadoMembresiaEntidad EstadoMembresia { get; set; }
+
+        [ForeignKey("idPlanMembresia")]
+        public virtual PlanMembresiaEntidad PlanMembresia { get; set; }
+
+        [ForeignKey("idUsuario")]
+        public virtual UsuarioEntidad Usuario { get; set; }
     }
 }

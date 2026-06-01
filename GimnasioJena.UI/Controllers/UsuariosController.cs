@@ -1,6 +1,11 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
+using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using GimnasioJena.UI.Models;
+using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,82 +13,51 @@ namespace GimnasioJena.UI.Controllers
 {
     public class UsuariosController : Controller
     {
-        // GET: Usuarios
+        private readonly IRegistrarUsuarioLN _servicio;
+        public UsuariosController(IRegistrarUsuarioLN servicio)
+        {
+            _servicio = servicio;
+        }
+        /* -------------------------------------------------------
+         * ----------Registro de Usuarios
+           ------------------------------------------------------- */
+        // GET: /Registro
+        [HttpGet]
         public ActionResult Index()
         {
             return View();
         }
-
-        // GET: Usuarios/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Usuarios/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Usuarios/Create
+        // POST: /Registro
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(RegisterViewModel model)
         {
-            try
+            if (!ModelState.IsValid)
+                return View(model);
+            var userManager = HttpContext.GetOwinContext()
+                                         .GetUserManager<ApplicationUserManager>();
+            // 1. Crear usuario en Identity (AspNetUsers)
+            var identityUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var resultado = await userManager.CreateAsync(identityUser, model.Password);
+            if (!resultado.Succeeded)
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                foreach (var error in resultado.Errors)
+                    ModelState.AddModelError("", error);
+                return View(model);
             }
-            catch
+            // 2. Guardar datos extra en tu tabla Usuario
+            var dto = new UsuarioCrearDto
             {
-                return View();
-            }
-        }
-
-        // GET: Usuarios/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Usuarios/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Usuarios/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Usuarios/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+                identityUserId = identityUser.Id,
+                nombre = model.Nombre,
+                apellido1 = model.Apellido1,
+                apellido2 = model.Apellido2,
+                identificacion = model.Identificacion,
+                correo = model.Email,
+                telefono = model.Telefono
+            };
+            await _servicio.RegistrarUsuario(dto);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

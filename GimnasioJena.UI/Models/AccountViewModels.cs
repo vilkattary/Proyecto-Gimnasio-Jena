@@ -65,6 +65,29 @@ namespace GimnasioJena.UI.Models
     public class RegisterViewModel
     {
         [Required]
+        [StringLength(50)]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "Primer apellido")]
+        public string Apellido1 { get; set; }
+
+        [StringLength(50)]
+        [Display(Name = "Segundo apellido")]
+        public string Apellido2 { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "Identificación")]
+        public string Identificacion { get; set; }
+
+        [StringLength(20)]
+        [Display(Name = "Teléfono")]
+        public string Telefono { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
