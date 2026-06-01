@@ -1,0 +1,97 @@
+﻿@model GimnasioJena.UI.Models.EditarPerfilViewModel
+
+@{
+    ViewBag.Title = "Editar perfil";
+}
+
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm rounded-4"
+                 style="border-top:4px solid var(--gym-orange);">
+
+                <div class="card-body p-4">
+
+                    <h2 class="fw-bold mb-4"
+                        style="color:var(--gym-dark);">
+                        Editar perfil
+                    </h2>
+
+                    @using (Html.BeginForm("EditarPerfil", "Manage", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(m => m.idUsuario)
+                        @Html.HiddenFor(m => m.identityUserId)
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                @Html.LabelFor(m => m.nombre, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.nombre, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.nombre, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-6">
+                                @Html.LabelFor(m => m.apellido1, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.apellido1, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.apellido1, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-6">
+                                @Html.LabelFor(m => m.apellido2, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.apellido2, new { @class = "form-control" })
+                            </div>
+
+                            <div class="col-md-6">
+                                @Html.LabelFor(m => m.telefono, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.telefono, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.telefono, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Correo electrónico</label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="@Model.correo"
+                                       readonly />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Identificación</label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="@Model.identificacion"
+                                       readonly />
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+
+                            <button type="submit"
+                                    class="btn btn-action">
+                                Guardar cambios
+                            </button>
+
+                            <a href="@Url.Action("Index", "Manage")"
+                               class="btn btn-outline-gym">
+                                Cancelar
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}
