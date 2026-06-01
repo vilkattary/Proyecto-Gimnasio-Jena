@@ -13,5 +13,7 @@ namespace GimnasioJena.Abstracciones.Modelos.Membresias
         public int? clasesDisponibles { get; set; }
         public string observaciones { get; set; }
         public DateTime fechaCreacion { get; set; }
+
+        public decimal precio { get; set; }
     }
 }

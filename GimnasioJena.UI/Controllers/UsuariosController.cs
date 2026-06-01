@@ -4,6 +4,15 @@ using GimnasioJena.Abstracciones.Modelos.Usuarios;
 using GimnasioJena.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
 using GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
 using System.Linq;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
+using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using GimnasioJena.UI.Models;
+using Microsoft.AspNet.Identity.Owin;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace GimnasioJena.UI.Controllers

@@ -11,24 +11,27 @@ using Microsoft.Owin.Security;
 using GimnasioJena.UI.Models;
 using GimnasioJena.AccesoADatos;
 using GimnasioJena.AccesoADatos.Entidades.Usuarios;
+using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
 
 
 namespace GimnasioJena.UI.Controllers
-{
+{ 
+
     [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly IRegistrarUsuarioLN _registrarUsuarioServicio;
 
-        public AccountController()
-        {
-        }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager,
+                          ApplicationSignInManager signInManager,
+                          IRegistrarUsuarioLN registrarUsuarioServicio)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _registrarUsuarioServicio = registrarUsuarioServicio;
         }
 
         public ApplicationSignInManager SignInManager
