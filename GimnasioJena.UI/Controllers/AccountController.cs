@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GimnasioJena.UI.Models;
+using GimnasioJena.AccesoADatos;
+using GimnasioJena.AccesoADatos.Entidades.Usuarios;
 using GimnasioJena.Abstracciones.Modelos.Usuarios;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
 
@@ -156,29 +158,54 @@ namespace GimnasioJena.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email
+                };
+
                 var result = await UserManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
-                    await UserManager.AddToRoleAsync(user.Id, "CLIENTE");
-
-                    var dto = new UsuarioCrearDto
+                    try
                     {
-                        identityUserId = user.Id,
-                        nombre = model.Nombre,
-                        apellido1 = model.Apellido1,
-                        apellido2 = model.Apellido2,
-                        identificacion = model.Identificacion,
-                        correo = model.Email,
-                        telefono = model.Telefono
-                    };
-                    await _registrarUsuarioServicio.RegistrarUsuario(dto);
+                        await UserManager.AddToRoleAsync(user.Id, "CLIENTE");
 
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToAction("Index", "Home");
+                        using (var contexto = new Contexto())
+                        {
+                            var usuario = new UsuarioEntidad
+                            {
+                                identityUserId = user.Id,
+                                nombre = model.Nombre,
+                                apellido1 = model.Apellido1,
+                                apellido2 = model.Apellido2,
+                                identificacion = model.Identificacion,
+                                correo = model.Email,
+                                telefono = model.Telefono,
+                                fechaRegistro = DateTime.Now,
+                                fechaModificacion = null,
+                                estado = true
+                            };
+
+                            contexto.Usuarios.Add(usuario);
+                            contexto.SaveChanges();
+                        }
+
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    catch
+                    {
+                        ModelState.AddModelError("", "La cuenta fue creada, pero ocurrió un error al guardar los datos del perfil.");
+                        return View(model);
+                    }
                 }
+
                 AddErrors(result);
             }
+
             return View(model);
         }
 

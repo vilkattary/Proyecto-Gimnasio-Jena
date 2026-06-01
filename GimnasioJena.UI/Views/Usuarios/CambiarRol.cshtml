@@ -1,0 +1,59 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Usuarios.UsuarioCambiarRolDto
+
+@{
+    ViewBag.Title = "Cambiar rol";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Cambiar rol de usuario</h2>
+
+    @if (TempData["MensajeError"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["MensajeError"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @using (Html.BeginForm("CambiarRol", "Usuarios", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(m => m.idUsuario)
+                @Html.HiddenFor(m => m.identityUserId)
+                @Html.HiddenFor(m => m.rolActual)
+
+                <div class="mb-3">
+                    <label class="form-label">Rol actual</label>
+                    <input type="text" class="form-control" value="@Model.rolActual" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nuevo rol</label>
+                    @Html.DropDownListFor(
+                        m => m.rolNuevo,
+                        (SelectList)ViewBag.Roles,
+                        "Seleccione un rol",
+                        new { @class = "form-select" }
+                    )
+                    @Html.ValidationMessageFor(m => m.rolNuevo, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Guardar cambio
+                    </button>
+
+                    @Html.ActionLink(
+                        "Cancelar",
+                        "Index",
+                        "Usuarios",
+                        null,
+                        new { @class = "btn btn-secondary" }
+                    )
+                </div>
+            }
+        </div>
+    </div>
+</div>

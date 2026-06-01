@@ -1,3 +1,9 @@
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
+using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using GimnasioJena.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
+using GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
+using System.Linq;
 ﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
 using GimnasioJena.Abstracciones.Modelos.Usuarios;
 using GimnasioJena.UI.Models;
@@ -11,53 +17,104 @@ using System.Web.Mvc;
 
 namespace GimnasioJena.UI.Controllers
 {
+    [Authorize(Roles = "ADMINISTRADOR")]
     public class UsuariosController : Controller
     {
-        private readonly IRegistrarUsuarioLN _servicio;
-        public UsuariosController(IRegistrarUsuarioLN servicio)
+        private readonly IObtenerTodosLosUsuariosLN _obtenerTodosLosUsuariosLN;
+        private readonly ICambiarRolUsuarioLN _cambiarRolUsuarioLN;
+
+        public UsuariosController()
         {
-            _servicio = servicio;
+            _obtenerTodosLosUsuariosLN = new ObtenerTodosLosUsuariosLN();
+            _cambiarRolUsuarioLN = new CambiarRolUsuarioLN();
         }
-        /* -------------------------------------------------------
-         * ----------Registro de Usuarios
-           ------------------------------------------------------- */
-        // GET: /Registro
-        [HttpGet]
+
         public ActionResult Index()
         {
-            return View();
+            var usuarios = _obtenerTodosLosUsuariosLN.ObtenerTodosLosUsuarios();
+            return View(usuarios);
         }
-        // POST: /Registro
+
+        [HttpGet]
+        public ActionResult CambiarRol(string identityUserId)
+        {
+            if (string.IsNullOrWhiteSpace(identityUserId))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var usuarios = _obtenerTodosLosUsuariosLN.ObtenerTodosLosUsuarios();
+            var usuario = usuarios.FirstOrDefault(u => u.identityUserId == identityUserId);
+
+            if (usuario == null)
+            {
+                TempData["MensajeError"] = "No se encontró el usuario solicitado.";
+                return RedirectToAction("Index");
+            }
+
+            var modelo = new UsuarioCambiarRolDto
+            {
+                idUsuario = usuario.idUsuario,
+                identityUserId = usuario.identityUserId,
+                rolActual = usuario.rol,
+                rolNuevo = usuario.rol
+            };
+
+            CargarRoles(modelo.rolNuevo);
+
+            return View(modelo);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(RegisterViewModel model)
+        public ActionResult CambiarRol(UsuarioCambiarRolDto modelo)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-            var userManager = HttpContext.GetOwinContext()
-                                         .GetUserManager<ApplicationUserManager>();
-            // 1. Crear usuario en Identity (AspNetUsers)
-            var identityUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            var resultado = await userManager.CreateAsync(identityUser, model.Password);
-            if (!resultado.Succeeded)
+            if (modelo == null)
             {
-                foreach (var error in resultado.Errors)
-                    ModelState.AddModelError("", error);
-                return View(model);
+                TempData["MensajeError"] = "No se recibió información válida.";
+                return RedirectToAction("Index");
             }
-            // 2. Guardar datos extra en tu tabla Usuario
-            var dto = new UsuarioCrearDto
+
+            if (string.IsNullOrWhiteSpace(modelo.identityUserId))
             {
-                identityUserId = identityUser.Id,
-                nombre = model.Nombre,
-                apellido1 = model.Apellido1,
-                apellido2 = model.Apellido2,
-                identificacion = model.Identificacion,
-                correo = model.Email,
-                telefono = model.Telefono
+                ModelState.AddModelError("", "El identificador del usuario es obligatorio.");
+            }
+
+            if (string.IsNullOrWhiteSpace(modelo.rolNuevo))
+            {
+                ModelState.AddModelError("rolNuevo", "Debe seleccionar un rol.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                CargarRoles(modelo.rolNuevo);
+                return View(modelo);
+            }
+
+            bool resultado = _cambiarRolUsuarioLN.CambiarRolUsuario(modelo);
+
+            if (resultado)
+            {
+                TempData["MensajeExito"] = "El rol del usuario se actualizó correctamente.";
+                return RedirectToAction("Index");
+            }
+
+            TempData["MensajeError"] = "No se pudo actualizar el rol del usuario.";
+            CargarRoles(modelo.rolNuevo);
+            return View(modelo);
+        }
+
+        private void CargarRoles(string rolSeleccionado = null)
+        {
+            var roles = new[]
+            {
+                "ADMINISTRADOR",
+                "CLIENTE",
+                "ENTRENADOR",
+                "RECEPCIONISTA"
             };
-            await _servicio.RegistrarUsuario(dto);
-            return RedirectToAction("Index", "Home");
+
+            ViewBag.Roles = new SelectList(roles, rolSeleccionado);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.CambiarRolUsuario
 {
     public interface ICambiarRolUsuarioLN
     {
+        bool CambiarRolUsuario(UsuarioCambiarRolDto usuarioCambiarRol);
     }
 }
