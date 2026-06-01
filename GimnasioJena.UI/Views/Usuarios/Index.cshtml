@@ -1,0 +1,74 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Usuarios.UsuarioListadoDto>
+
+@{
+    ViewBag.Title = "Gestión de usuarios";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Gestión de usuarios</h2>
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["MensajeExito"]
+        </div>
+    }
+
+    @if (TempData["MensajeError"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["MensajeError"]
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Identificación</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Rol actual</th>
+                    <th>Estado</th>
+                    <th>Fecha registro</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in Model)
+                {
+                    <tr>
+                        <td>@usuario.nombreCompleto</td>
+                        <td>@usuario.identificacion</td>
+                        <td>@usuario.correo</td>
+                        <td>@usuario.telefono</td>
+                        <td>
+                            <span class="badge bg-primary">@usuario.rol</span>
+                        </td>
+                        <td>
+                            @if (usuario.estado)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </td>
+                        <td>@usuario.fechaRegistro.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @Html.ActionLink(
+                                "Cambiar rol",
+                                "CambiarRol",
+                                "Usuarios",
+                                new { identityUserId = usuario.identityUserId },
+                                new { @class = "btn btn-warning btn-sm" }
+                            )
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

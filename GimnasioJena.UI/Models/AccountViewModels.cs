@@ -65,19 +65,37 @@ namespace GimnasioJena.UI.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required]
+        [Display(Name = "Primer apellido")]
+        public string Apellido1 { get; set; }
+
+        [Display(Name = "Segundo apellido")]
+        public string Apellido2 { get; set; }
+
+        [Required]
+        [Display(Name = "Identificación")]
+        public string Identificacion { get; set; }
+
+        [Display(Name = "Teléfono")]
+        public string Telefono { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La contraseña debe tener al menos {2} caracteres.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
+        [Compare("Password", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
     }
 

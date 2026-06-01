@@ -9,6 +9,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GimnasioJena.UI.Models;
+using GimnasioJena.AccesoADatos;
+using GimnasioJena.AccesoADatos.Entidades.Usuarios;
+
 
 namespace GimnasioJena.UI.Controllers
 {
@@ -152,26 +155,54 @@ namespace GimnasioJena.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email
+                };
+
                 var result = await UserManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
-                    //await UserManager.AddToRoleAsync(user.Id, "INVENTARIO");
-                    await UserManager.AddToRoleAsync(user.Id, "CLIENTE");
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Enviar un correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar la cuenta", "Para confirmar su cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                    try
+                    {
+                        await UserManager.AddToRoleAsync(user.Id, "CLIENTE");
 
-                    return RedirectToAction("Index", "Home");
+                        using (var contexto = new Contexto())
+                        {
+                            var usuario = new UsuarioEntidad
+                            {
+                                identityUserId = user.Id,
+                                nombre = model.Nombre,
+                                apellido1 = model.Apellido1,
+                                apellido2 = model.Apellido2,
+                                identificacion = model.Identificacion,
+                                correo = model.Email,
+                                telefono = model.Telefono,
+                                fechaRegistro = DateTime.Now,
+                                fechaModificacion = null,
+                                estado = true
+                            };
+
+                            contexto.Usuarios.Add(usuario);
+                            contexto.SaveChanges();
+                        }
+
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    catch
+                    {
+                        ModelState.AddModelError("", "La cuenta fue creada, pero ocurrió un error al guardar los datos del perfil.");
+                        return View(model);
+                    }
                 }
+
                 AddErrors(result);
             }
 
-            // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
             return View(model);
         }
 

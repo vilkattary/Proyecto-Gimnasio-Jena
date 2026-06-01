@@ -1,89 +1,111 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
+using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using GimnasioJena.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
+using GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace GimnasioJena.UI.Controllers
 {
+    [Authorize(Roles = "ADMINISTRADOR")]
     public class UsuariosController : Controller
     {
-        // GET: Usuarios
+        private readonly IObtenerTodosLosUsuariosLN _obtenerTodosLosUsuariosLN;
+        private readonly ICambiarRolUsuarioLN _cambiarRolUsuarioLN;
+
+        public UsuariosController()
+        {
+            _obtenerTodosLosUsuariosLN = new ObtenerTodosLosUsuariosLN();
+            _cambiarRolUsuarioLN = new CambiarRolUsuarioLN();
+        }
+
         public ActionResult Index()
         {
-            return View();
+            var usuarios = _obtenerTodosLosUsuariosLN.ObtenerTodosLosUsuarios();
+            return View(usuarios);
         }
 
-        // GET: Usuarios/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public ActionResult CambiarRol(string identityUserId)
         {
-            return View();
-        }
-
-        // GET: Usuarios/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Usuarios/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
+            if (string.IsNullOrWhiteSpace(identityUserId))
             {
-                // TODO: Add insert logic here
-
                 return RedirectToAction("Index");
             }
-            catch
+
+            var usuarios = _obtenerTodosLosUsuariosLN.ObtenerTodosLosUsuarios();
+            var usuario = usuarios.FirstOrDefault(u => u.identityUserId == identityUserId);
+
+            if (usuario == null)
             {
-                return View();
-            }
-        }
-
-        // GET: Usuarios/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Usuarios/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
+                TempData["MensajeError"] = "No se encontró el usuario solicitado.";
                 return RedirectToAction("Index");
             }
-            catch
+
+            var modelo = new UsuarioCambiarRolDto
             {
-                return View();
-            }
+                idUsuario = usuario.idUsuario,
+                identityUserId = usuario.identityUserId,
+                rolActual = usuario.rol,
+                rolNuevo = usuario.rol
+            };
+
+            CargarRoles(modelo.rolNuevo);
+
+            return View(modelo);
         }
 
-        // GET: Usuarios/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Usuarios/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult CambiarRol(UsuarioCambiarRolDto modelo)
         {
-            try
+            if (modelo == null)
             {
-                // TODO: Add delete logic here
-
+                TempData["MensajeError"] = "No se recibió información válida.";
                 return RedirectToAction("Index");
             }
-            catch
+
+            if (string.IsNullOrWhiteSpace(modelo.identityUserId))
             {
-                return View();
+                ModelState.AddModelError("", "El identificador del usuario es obligatorio.");
             }
+
+            if (string.IsNullOrWhiteSpace(modelo.rolNuevo))
+            {
+                ModelState.AddModelError("rolNuevo", "Debe seleccionar un rol.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                CargarRoles(modelo.rolNuevo);
+                return View(modelo);
+            }
+
+            bool resultado = _cambiarRolUsuarioLN.CambiarRolUsuario(modelo);
+
+            if (resultado)
+            {
+                TempData["MensajeExito"] = "El rol del usuario se actualizó correctamente.";
+                return RedirectToAction("Index");
+            }
+
+            TempData["MensajeError"] = "No se pudo actualizar el rol del usuario.";
+            CargarRoles(modelo.rolNuevo);
+            return View(modelo);
+        }
+
+        private void CargarRoles(string rolSeleccionado = null)
+        {
+            var roles = new[]
+            {
+                "ADMINISTRADOR",
+                "CLIENTE",
+                "ENTRENADOR",
+                "RECEPCIONISTA"
+            };
+
+            ViewBag.Roles = new SelectList(roles, rolSeleccionado);
         }
     }
 }
