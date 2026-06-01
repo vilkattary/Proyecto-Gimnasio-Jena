@@ -1,25 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
+﻿using GimnasioJena.UI.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using GimnasioJena.UI.Models;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace GimnasioJena.UI
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Conecte el servicio de correo electrónico aquí para enviar un correo electrónico.
-            return Task.FromResult(0);
+            var smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
+            var smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+            var smtpUser = ConfigurationManager.AppSettings["SmtpUser"];
+            var smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"];
+            var smtpFrom = ConfigurationManager.AppSettings["SmtpFrom"];
+
+            using (var client = new SmtpClient(smtpHost, smtpPort))
+            {
+                client.EnableSsl = true;
+                client.Credentials = new NetworkCredential(smtpUser, smtpPassword);
+
+                var mail = new MailMessage
+                {
+                    From = new MailAddress(smtpFrom, "Gimnasio Jena"),
+                    Subject = message.Subject,
+                    Body = message.Body,
+                    IsBodyHtml = true
+                };
+
+                mail.To.Add(message.Destination);
+
+                await client.SendMailAsync(mail);
+            }
         }
     }
 
@@ -53,7 +77,7 @@ namespace GimnasioJena.UI
             // Configure la lógica de validación de contraseñas
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 6,
+                RequiredLength = 8,
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
