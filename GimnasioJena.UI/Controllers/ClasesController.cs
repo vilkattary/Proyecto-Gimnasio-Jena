@@ -1,89 +1,151 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerClasePorId;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.RegistrarClase;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.EditarClase;
+using GimnasioJena.Abstracciones.Modelos.Clases;
+using GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
+using GimnasioJena.LogicaDeNegocio.Clases.ObtenerClasePorId;
+using GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase;
+using GimnasioJena.LogicaDeNegocio.Clases.EditarClase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace GimnasioJena.UI.Controllers
 {
     public class ClasesController : Controller
     {
-        // GET: Clases
-        public ActionResult Index()
+        private IObtenerTodasLasClasesLN _obtenerTodasLasClases;
+        private IObtenerClasePorIdLN _obtenerClasePorId;
+        private IRegistrarClaseLN _registrarClase;
+        private IEditarClaseLN _editarClase;
+
+        public ClasesController()
+        {
+            _obtenerTodasLasClases = new ObtenerTodasLasClasesLN();
+            _obtenerClasePorId = new ObtenerClasePorIdLN();
+            _registrarClase = new RegistrarClaseLN();
+            _editarClase = new EditarClaseLN();
+        }
+
+        // GET: OBTENER TODAS LAS CLASES
+        public ActionResult ObtenerTodasLasClases()
+        {
+            List<ClaseListadoDto> listaDeClases = _obtenerTodasLasClases.ObtenerTodasLasClases();
+            return View(listaDeClases);
+        }
+
+        // GET: DETALLE DE UNA CLASE
+        public ActionResult DetalleDeLaClase(int id)
+        {
+            ClaseListadoDto laClase = _obtenerClasePorId.ObtenerClasePorId(id);
+            return View(laClase);
+        }
+
+        // GET: CREAR UNA CLASE
+        public ActionResult RegistrarClase()
         {
             return View();
         }
 
-        // GET: Clases/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Clases/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Clases/Create
+        // POST: CREAR UNA CLASE
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult RegistrarClase(string nombreClase, ClaseCrearDto claseAGuardar)
         {
             try
             {
-                // TODO: Add insert logic here
+                List<ClaseListadoDto> todasLasClases = _obtenerTodasLasClases.ObtenerTodasLasClases();
+                bool existeClase = todasLasClases.Any(c => c.nombreClase == nombreClase);
 
-                return RedirectToAction("Index");
+                if (existeClase)
+                {
+                    ModelState.AddModelError("nombreClase", "Ya existe una clase con este nombre.");
+                    return View(claseAGuardar);
+                }
+
+                if (ModelState.IsValid)
+                {
+                    // Forzar que se cree activa y con fecha de creación
+                    claseAGuardar.estadoClase = true;
+                    claseAGuardar.fechaCreacion = DateTime.Now;
+
+                    bool seAgrego = _registrarClase.RegistrarClase(claseAGuardar);
+                    if (seAgrego)
+                    {
+                        return RedirectToAction("ObtenerTodasLasClases");
+                    }
+                }
+
+                return View(claseAGuardar);
             }
             catch
             {
-                return View();
+                return View(claseAGuardar);
             }
         }
 
-        // GET: Clases/Edit/5
-        public ActionResult Edit(int id)
+        // GET: EDITAR UNA CLASE
+        public ActionResult EditarClase(int id)
         {
-            return View();
+            ClaseListadoDto claseListado = _obtenerClasePorId.ObtenerClasePorId(id);
+
+            ClaseEditarDto laClase = new ClaseEditarDto
+            {
+                idClaseProgramada = claseListado.idClaseProgramada, 
+                nombreClase = claseListado.nombreClase,
+                tipoClase = claseListado.TipoClase,
+                nombreEntrenador = claseListado.nombreEntrenador,
+                fechaClase = claseListado.fechaClase,
+                horaInicio = claseListado.horaInicio,
+                horaFin = claseListado.horaFin,
+                cupoMaximo = claseListado.cupoMaximo,
+                ubicacion = claseListado.ubicacion,
+                estadoClase = claseListado.estadoClase
+            };
+
+            return View(laClase);
         }
 
-        // POST: Clases/Edit/5
+        // POST: EDITAR UNA CLASE
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult EditarClase(int id, ClaseEditarDto claseAEditar)
         {
             try
             {
-                // TODO: Add update logic here
+                if (ModelState.IsValid)
+                {
+                    
+                    claseAEditar.fechaModificacion = DateTime.Now;
 
-                return RedirectToAction("Index");
+                    bool seActualizo = _editarClase.EditarClase(claseAEditar);
+
+                    if (seActualizo)
+                    {
+                        return RedirectToAction("ObtenerTodasLasClases");
+                    }
+                }
+
+                return View(claseAEditar);
             }
             catch
             {
-                return View();
+                return View(claseAEditar);
             }
         }
 
-        // GET: Clases/Delete/5
-        public ActionResult Delete(int id)
+        // GET: OBTENER CLASES DISPONIBLES
+        public ActionResult ObtenerClasesDisponibles()
         {
-            return View();
-        }
+            List<ClaseListadoDto> todasLasClases = _obtenerTodasLasClases.ObtenerTodasLasClases();
 
-        // POST: Clases/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
+            List<ClaseListadoDto> disponibles = todasLasClases
+                .Where(c => c.estadoClase == true && c.cuposDisponibles > 0)
+                .OrderBy(c => c.fechaClase)
+                .ThenBy(c => c.horaInicio)
+                .ToList();
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            return View(disponibles);
         }
     }
 }
