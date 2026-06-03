@@ -1,0 +1,280 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Clases.ClaseCrearDto
+
+@{
+    ViewBag.Title = "Registrar Clase";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/estilo/estilo.css" />
+
+<div class="container py-5">
+
+    @* TÍTULO PRINCIPAL *@
+    <div class="text-center mb-5">
+        <div class="d-flex justify-content-center align-items-center mb-3">
+            <div style="width:60px;height:60px;border-radius:50%;
+                        background-color:var(--jena-orange);
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        margin-right:20px;
+                        box-shadow:0 4px 15px rgba(255,107,53,0.4);">
+
+                <i class="bi bi-calendar3" style="font-size:1.8rem;color:#fff;"></i>
+            </div>
+
+            <h1 class="page-title mb-0">Registrar Clase</h1>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("RegistrarClase", "Clases", FormMethod.Post,
+        new { @class = "needs-validation", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row g-4">
+
+            <div class="col-lg-7">
+                <div class="info-card">
+
+                    <h5 class="mb-4">
+                        <i class="bi bi-list-check me-2"
+                           style="color:var(--jena-orange);"></i>
+                        Datos de la Clase
+                    </h5>
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                    @* Nombre y Tipo *@
+                    <div class="row mb-4">
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.nombreClase,
+                                "Nombre de la clase",
+                                new { @class = "info-label" })
+
+                            @Html.TextBoxFor(m => m.nombreClase,
+                                new
+                                {
+                                    @class = "form-control mt-1",
+                                    placeholder = "Ej. Fuerza Intensa"
+                                })
+
+                            @Html.ValidationMessageFor(m => m.nombreClase,
+                                "",
+                                new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.tipoClase,
+                                "Tipo de clase",
+                                new { @class = "info-label" })
+
+                            @Html.DropDownListFor(m => m.tipoClase,
+                                new SelectList(new[]
+                                {
+                                    new { Value = "", Text = "Selecciona el tipo de clase" },
+                                    new { Value = "Cardio", Text = "Cardio" },
+                                    new { Value = "Fuerza", Text = "Fuerza" },
+                                    new { Value = "Yoga", Text = "Yoga" },
+                                    new { Value = "Pilates", Text = "Pilates" },
+                                    new { Value = "CrossFit", Text = "CrossFit" },
+                                    new { Value = "Spinning", Text = "Spinning" },
+                                    new { Value = "Zumba", Text = "Zumba" },
+                                    new { Value = "Otro", Text = "Otro" }
+                                }, "Value", "Text"),
+                                new { @class = "form-control mt-1" })
+
+                            @Html.ValidationMessageFor(m => m.tipoClase,
+                                "",
+                                new { @class = "text-danger small" })
+                        </div>
+
+                    </div>
+
+                    @* Entrenador *@
+                    <div class="mb-4">
+
+                        @Html.LabelFor(m => m.nombreEntrenador,
+                            "Nombre del entrenador",
+                            new { @class = "info-label" })
+
+                        @Html.TextBoxFor(m => m.nombreEntrenador,
+                            new
+                            {
+                                @class = "form-control mt-1",
+                                placeholder = "Ej. Juan Pérez"
+                            })
+
+                        @Html.ValidationMessageFor(m => m.nombreEntrenador,
+                            "",
+                            new { @class = "text-danger small" })
+                    </div>
+
+                    @* Fecha *@
+                    <div class="mb-4">
+
+                        @Html.LabelFor(m => m.fechaClase,
+                            "Fecha de la clase",
+                            new { @class = "info-label" })
+
+                        @Html.TextBoxFor(m => m.fechaClase,
+                            new
+                            {
+                                @class = "form-control mt-1",
+                                type = "date"
+                            })
+
+                        @Html.ValidationMessageFor(m => m.fechaClase,
+                            "",
+                            new { @class = "text-danger small" })
+                    </div>
+
+                    @* Horas *@
+                    <div class="row mb-4">
+
+                        <div class="col-md-6">
+
+                            @Html.LabelFor(m => m.horaInicio,
+                                "Hora de inicio",
+                                new { @class = "info-label" })
+
+                            @Html.TextBoxFor(m => m.horaInicio,
+                                new
+                                {
+                                    @class = "form-control mt-1",
+                                    type = "time"
+                                })
+
+                            @Html.ValidationMessageFor(m => m.horaInicio,
+                                "",
+                                new { @class = "text-danger small" })
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            @Html.LabelFor(m => m.horaFin,
+                                "Hora de finalización",
+                                new { @class = "info-label" })
+
+                            @Html.TextBoxFor(m => m.horaFin,
+                                new
+                                {
+                                    @class = "form-control mt-1",
+                                    type = "time"
+                                })
+
+                            @Html.ValidationMessageFor(m => m.horaFin,
+                                "",
+                                new { @class = "text-danger small" })
+
+                        </div>
+
+                    </div>
+
+                    @* Cupo y Ubicación *@
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            @Html.LabelFor(m => m.cupoMaximo,
+                                "Cupo máximo",
+                                new { @class = "info-label" })
+
+                            @Html.TextBoxFor(m => m.cupoMaximo,
+                                new
+                                {
+                                    @class = "form-control mt-1",
+                                    type = "number",
+                                    min = "1",
+                                    placeholder = "20"
+                                })
+
+                            @Html.ValidationMessageFor(m => m.cupoMaximo,
+                                "",
+                                new { @class = "text-danger small" })
+
+                        </div>
+
+                        <div class="col-md-8">
+
+                            @Html.LabelFor(m => m.ubicacion,
+                                "Ubicación",
+                                new { @class = "info-label" })
+
+                            @Html.TextBoxFor(m => m.ubicacion,
+                                new
+                                {
+                                    @class = "form-control mt-1",
+                                    placeholder = "Sala 1 - Piso 2"
+                                })
+
+                            @Html.ValidationMessageFor(m => m.ubicacion,
+                                "",
+                                new { @class = "text-danger small" })
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+
+                <div class="description-card mb-4">
+
+                    <h5>Información Adicional</h5>
+
+                    <div class="mt-3">
+
+                        @Html.LabelFor(m => m.observaciones,
+                            "Observaciones (opcional)",
+                            new { @class = "info-label mb-2 d-block" })
+
+                        @Html.TextAreaFor(m => m.observaciones,
+                            new
+                            {
+                                @class = "form-control",
+                                rows = "10",
+                                placeholder = "Escribe alguna observación o detalle adicional sobre la clase...",
+                                style = "resize:vertical;border-radius:12px;"
+                            })
+
+                        @Html.ValidationMessageFor(m => m.observaciones,
+                            "",
+                            new { @class = "text-danger small" })
+
+                    </div>
+
+                </div>
+
+                <button type="submit"
+                        class="btn-orange w-100"
+                        style="font-size:1rem;
+                               letter-spacing:1px;
+                               padding:16px 30px;
+                               border-radius:50px;">
+
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Registrar Clase
+
+                </button>
+
+                <div class="text-center mt-4">
+
+                    <a href="@Url.Action("ObtenerTodasLasClases")"
+                       class="text-muted text-decoration-none">
+
+                        ← Volver al listado
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+</div>
