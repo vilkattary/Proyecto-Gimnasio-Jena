@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.Modelos.Clases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.RegistrarClase
 {
     public interface IRegistrarClaseLN
     {
+        bool RegistrarClase(ClaseCrearDto RegistrarClaseAGuardar);
     }
 }
