@@ -158,6 +158,27 @@ namespace GimnasioJena.UI.Controllers
         {
             if (ModelState.IsValid)
             {
+                using (var contexto = new Contexto())
+                {
+                    bool identificacionExiste = contexto.Usuarios
+                        .Any(u => u.identificacion == model.Identificacion);
+
+                    if (identificacionExiste)
+                    {
+                        ModelState.AddModelError("Identificacion", "Ya existe un usuario registrado con esta identificación.");
+                        return View(model);
+                    }
+
+                    bool correoPerfilExiste = contexto.Usuarios
+                        .Any(u => u.correo == model.Email);
+
+                    if (correoPerfilExiste)
+                    {
+                        ModelState.AddModelError("Email", "Ya existe un usuario registrado con este correo electrónico.");
+                        return View(model);
+                    }
+                }
+
                 var user = new ApplicationUser
                 {
                     UserName = model.Email,
@@ -198,7 +219,9 @@ namespace GimnasioJena.UI.Controllers
                     }
                     catch
                     {
-                        ModelState.AddModelError("", "La cuenta fue creada, pero ocurrió un error al guardar los datos del perfil.");
+                        await UserManager.DeleteAsync(user);
+
+                        ModelState.AddModelError("", "Ocurrió un error al guardar los datos del perfil. Intente registrarse nuevamente.");
                         return View(model);
                     }
                 }
