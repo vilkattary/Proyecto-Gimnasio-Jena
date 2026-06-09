@@ -80,7 +80,6 @@
     <Compile Include="Asistencias\ObtenerAsistenciasPorCliente\ObtenerAsistenciasPorClienteAD.cs" />
     <Compile Include="Asistencias\ObtenerTodasLasAsistencias\ObtenerTodasLasAsistenciasAD.cs" />
     <Compile Include="Asistencias\RegistrarAsistencia\RegistrarAsistenciaAD.cs" />
-    <Compile Include="Clases\Base de datos Clases.cs" />
     <Compile Include="Clases\CambiarEstadoClase\CambiarEstadoClaseAD.cs" />
     <Compile Include="Clases\EditarClase\EditarClaseAD.cs" />
     <Compile Include="Clases\ObtenerClasePorId\ObtenerClasePorIdAD.cs" />
