@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GimnasioJena.Abstracciones.Modelos.Clases;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Clases.ObtenerClasePorId
 {
     public interface IObtenerClasePorIdAD
     {
+        ClaseListadoDto ObtenerClasePorId(int id);
     }
 }
