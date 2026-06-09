@@ -1,7 +1,6 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Clases.RegistrarClase;
 using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.AccesoADatos.Entidades.Clases;
-using System;
 
 namespace GimnasioJena.AccesoADatos.Clases.RegistrarClase
 {
@@ -18,19 +17,16 @@ namespace GimnasioJena.AccesoADatos.Clases.RegistrarClase
         {
             ClaseEntidad laClaseAGuardar = ConvertirObjetoEntidad(laClase);
             _elContexto.Clases.Add(laClaseAGuardar);
-            int cantidadDeRegistrosAlmacenados = _elContexto.SaveChanges();
-            return cantidadDeRegistrosAlmacenados;
+            return _elContexto.SaveChanges();
         }
 
         private ClaseEntidad ConvertirObjetoEntidad(ClaseCrearDto laClase)
         {
             return new ClaseEntidad
             {
-               
-                nombreClase = laClase.nombreClase,
-                tipoClase = laClase.tipoClase,
-                nombreEntrenador = laClase.nombreEntrenador,
-                estadoClase = laClase.estadoClase,
+                idTipoClase = laClase.idTipoClase,
+                idUsuarioEntrenador = laClase.idUsuarioEntrenador,
+                idEstadoClase = laClase.idEstadoClase,
                 fechaClase = laClase.fechaClase,
                 horaInicio = laClase.horaInicio,
                 horaFin = laClase.horaFin,

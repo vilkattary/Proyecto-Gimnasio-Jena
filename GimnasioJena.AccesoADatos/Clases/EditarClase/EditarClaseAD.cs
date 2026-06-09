@@ -1,7 +1,6 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Clases.EditarClase;
 using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.AccesoADatos.Entidades.Clases;
-using System;
 using System.Linq;
 
 namespace GimnasioJena.AccesoADatos.Clases.EditarClase
@@ -15,31 +14,28 @@ namespace GimnasioJena.AccesoADatos.Clases.EditarClase
             _elContexto = new Contexto();
         }
 
-        public int EditarClases(ClaseEditarDto ClaseAEditar)
+        public int EditarClases(ClaseEditarDto claseAEditar)
         {
             ClaseEntidad claseEnBaseDeDatos = _elContexto.Clases
-                .Where(c => c.idClaseProgramada == ClaseAEditar.idClaseProgramada)
-                .FirstOrDefault();
+                .FirstOrDefault(c => c.idClaseProgramada == claseAEditar.idClaseProgramada);
 
-            if (claseEnBaseDeDatos != null)
-            {
-                claseEnBaseDeDatos.nombreClase = ClaseAEditar.nombreClase;
-                claseEnBaseDeDatos.tipoClase = ClaseAEditar.tipoClase;
-                claseEnBaseDeDatos.nombreEntrenador = ClaseAEditar.nombreEntrenador;
-                claseEnBaseDeDatos.estadoClase = ClaseAEditar.estadoClase;
-                claseEnBaseDeDatos.fechaClase = ClaseAEditar.fechaClase;
-                claseEnBaseDeDatos.horaInicio = ClaseAEditar.horaInicio;
-                claseEnBaseDeDatos.horaFin = ClaseAEditar.horaFin;
-                claseEnBaseDeDatos.cupoMaximo = ClaseAEditar.cupoMaximo;
-                claseEnBaseDeDatos.ubicacion = ClaseAEditar.ubicacion;
-                claseEnBaseDeDatos.fechaModificacion = DateTime.Now;
-
-                return _elContexto.SaveChanges();
-            }
-            else
+            if (claseEnBaseDeDatos == null)
             {
                 return 0;
             }
+
+            claseEnBaseDeDatos.idTipoClase = claseAEditar.idTipoClase;
+            claseEnBaseDeDatos.idUsuarioEntrenador = claseAEditar.idUsuarioEntrenador;
+            claseEnBaseDeDatos.idEstadoClase = claseAEditar.idEstadoClase;
+            claseEnBaseDeDatos.fechaClase = claseAEditar.fechaClase;
+            claseEnBaseDeDatos.horaInicio = claseAEditar.horaInicio;
+            claseEnBaseDeDatos.horaFin = claseAEditar.horaFin;
+            claseEnBaseDeDatos.cupoMaximo = claseAEditar.cupoMaximo;
+            claseEnBaseDeDatos.ubicacion = claseAEditar.ubicacion;
+            claseEnBaseDeDatos.observaciones = claseAEditar.observaciones;
+            claseEnBaseDeDatos.fechaModificacion = claseAEditar.fechaModificacion;
+
+            return _elContexto.SaveChanges();
         }
     }
 }
