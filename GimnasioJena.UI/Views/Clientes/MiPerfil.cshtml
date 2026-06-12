@@ -9,16 +9,25 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
 
-
 <div class="container-fluid p-4">
-    <!-- Sección de Bienvenida con Logo -->
+
     <div class="welcome-section">
-        <div class="logo-circular">
-            <i class="bi bi-tree"></i>
-            <span class="initials">
-                @Model.nombre.Substring(0, 1)@Model.apellido1.Substring(0, 1)
-            </span>
-        </div>
+        @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
+        {
+            <img src="@Url.Content(Model.fotoPerfil)"
+                 class="rounded-circle"
+                 style="width:90px;height:90px;object-fit:cover;border:3px solid var(--jena-orange);" />
+        }
+        else
+        {
+            <div class="logo-circular">
+                <i class="bi bi-tree"></i>
+                <span class="initials">
+                    @Model.nombre.Substring(0, 1)@Model.apellido1.Substring(0, 1)
+                </span>
+            </div>
+        }
+
         <div class="welcome-text">
             <h3>Mi Perfil Personal</h3>
             <div class="info-value">@Model.nombre @Model.apellido1 @Model.apellido2</div>
@@ -26,23 +35,23 @@
         </div>
     </div>
 
-    <!-- Título Principal -->
     <div class="text-center mb-5">
         <h2 class="page-title">Mi Perfil</h2>
     </div>
 
-    <!-- Estadísticas del Usuario -->
     <div class="stats-grid">
         <div class="stat-card">
             <i class="bi bi-calendar-check"></i>
             <h3>15</h3>
             <p>Clases Tomadas</p>
         </div>
+
         <div class="stat-card">
             <i class="bi bi-trophy"></i>
             <h3>3</h3>
             <p>Logros</p>
         </div>
+
         <div class="stat-card">
             <i class="bi bi-star-fill"></i>
             <h3>Gold</h3>
@@ -51,21 +60,29 @@
     </div>
 
     <div class="row">
-        <!-- Columna Izquierda: Avatar e Información -->
         <div class="col-lg-7 mb-4">
-            <!-- Avatar y Datos Principales -->
             <div class="info-card">
                 <div class="row">
                     <div class="col-md-4 profile-section mb-3 mb-md-0">
-                        <div class="profile-avatar mx-auto">
-                            <span class="initials">
-                                @Model.nombre.Substring(0, 1)@Model.apellido1.Substring(0, 1)
-                            </span>
-                            <div class="verified-badge">
-                                <i class="bi bi-check-lg"></i>
+                        @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
+                        {
+                            <img src="@Url.Content(Model.fotoPerfil)"
+                                 class="profile-avatar mx-auto"
+                                 style="object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <div class="profile-avatar mx-auto">
+                                <span class="initials">
+                                    @Model.nombre.Substring(0, 1)@Model.apellido1.Substring(0, 1)
+                                </span>
+                                <div class="verified-badge">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
+
                     <div class="col-md-8">
                         <div class="info-item">
                             <i class="bi bi-person-circle"></i>
@@ -95,14 +112,15 @@
                             <i class="bi bi-geo-alt"></i>
                             <div class="info-content">
                                 <div class="info-label">Dirección</div>
-                                <div class="info-value">San José, Costa Rica</div>
+                                <div class="info-value">
+                                    @(string.IsNullOrWhiteSpace(Model.direccion) ? "Sin dirección registrada" : Model.direccion)
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Descripción -->
             <div class="description-card">
                 <h5><i class="bi bi-info-circle me-2"></i>Sobre Mí</h5>
                 <p>
@@ -113,7 +131,6 @@
             </div>
         </div>
 
-        <!-- Columna Derecha: Acciones Rápidas -->
         <div class="col-lg-5">
             <div class="action-buttons-card">
                 <h5><i class="bi bi-lightning-charge me-2"></i>Acciones Rápidas</h5>
@@ -133,24 +150,18 @@
                     <span>Mis Reservas</span>
                 </a>
 
-                <a href="@Url.Action("EditarPerfil", "Clientes")" class="btn btn-action">
+                <a href="@Url.Action("EditarPerfil", "Manage")" class="btn btn-action">
                     <i class="bi bi-pencil-square"></i>
                     <span>Editar Perfil</span>
                 </a>
-
-                <a href="@Url.Action("Configuracion", "Clientes")" class="btn btn-action">
-                    <i class="bi bi-gear"></i>
-                    <span>Configuración</span>
-                </a>
             </div>
 
-            <!-- Card de Membresía Activa -->
-            <!-- Card de Membresía Activa -->
             <div class="info-card">
                 <h5 class="text-center mb-3" style="color: var(--jena-navy); font-weight: 800;">
                     <i class="bi bi-star-fill" style="color: var(--jena-orange);"></i>
                     Membresía Activa
                 </h5>
+
                 @if (Model.Membresia != null)
                 {
                     <div class="text-center">
@@ -159,6 +170,7 @@
                                 @Model.Membresia.nombrePlan
                             </span>
                         </div>
+
                         <div class="info-item justify-content-center" style="border: none; padding: 0;">
                             <i class="bi bi-calendar-event"></i>
                             <div class="info-content" style="text-align: center;">
@@ -166,6 +178,7 @@
                                 <div class="info-value">@Model.Membresia.estadoMembresia</div>
                             </div>
                         </div>
+
                         <div class="info-item justify-content-center" style="border: none; padding: 0;">
                             <i class="bi bi-calendar-check"></i>
                             <div class="info-content" style="text-align: center;">
@@ -173,6 +186,7 @@
                                 <div class="info-value">@Model.Membresia.fechaFin.ToString("dd/MM/yyyy")</div>
                             </div>
                         </div>
+
                         @if (Model.Membresia.clasesDisponibles.HasValue)
                         {
                             <div class="info-item justify-content-center" style="border: none; padding: 0;">
@@ -190,6 +204,7 @@
                     <div class="text-center">
                         <i class="bi bi-x-circle" style="font-size: 2rem; color: #ccc;"></i>
                         <p class="mt-2" style="color: #999;">No tienes una membresía activa.</p>
+
                         <a href="@Url.Action("Planes", "Home")" class="btn btn-action mt-2">
                             <i class="bi bi-plus-circle"></i>
                             <span>Ver Planes</span>

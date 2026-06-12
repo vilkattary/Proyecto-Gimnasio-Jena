@@ -11,6 +11,8 @@ namespace GimnasioJena.Abstracciones.Modelos.Usuarios
         public string identificacion { get; set; }
         public string correo { get; set; }
         public string telefono { get; set; }
+        public string direccion { get; set; }
+        public string fotoPerfil { get; set; }
         public bool estado { get; set; }
         public MembresiaClienteDto Membresia { get; set; }
     }
