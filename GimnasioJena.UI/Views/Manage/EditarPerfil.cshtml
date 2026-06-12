@@ -10,22 +10,22 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
 
-            <div class="card shadow-sm rounded-4"
-                 style="border-top:4px solid var(--gym-orange);">
-
+            <div class="card shadow-sm rounded-4" style="border-top:4px solid var(--gym-orange);">
                 <div class="card-body p-4">
 
-                    <h2 class="fw-bold mb-4"
-                        style="color:var(--gym-dark);">
+                    <h2 class="fw-bold mb-4" style="color:var(--gym-dark);">
                         Editar perfil
                     </h2>
 
-                    @using (Html.BeginForm("EditarPerfil", "Manage", FormMethod.Post))
+                    @using (Html.BeginForm("EditarPerfil", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
 
                         @Html.HiddenFor(m => m.idUsuario)
                         @Html.HiddenFor(m => m.identityUserId)
+                        @Html.HiddenFor(m => m.fotoPerfil)
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
 
                         <div class="row g-3">
 
@@ -44,12 +44,48 @@
                             <div class="col-md-6">
                                 @Html.LabelFor(m => m.apellido2, new { @class = "form-label" })
                                 @Html.TextBoxFor(m => m.apellido2, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.apellido2, "", new { @class = "text-danger" })
                             </div>
 
                             <div class="col-md-6">
                                 @Html.LabelFor(m => m.telefono, new { @class = "form-label" })
                                 @Html.TextBoxFor(m => m.telefono, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.telefono, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                @Html.LabelFor(m => m.direccion, new { @class = "form-label" })
+                                @Html.TextAreaFor(m => m.direccion, new
+                                {
+                                    @class = "form-control",
+                                    rows = "3",
+                                    placeholder = "Ingrese su dirección"
+                                })
+                                @Html.ValidationMessageFor(m => m.direccion, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                @Html.LabelFor(m => m.archivoFotoPerfil, new { @class = "form-label" })
+
+                                @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
+                                {
+                                    <div class="mb-2">
+                                        <img src="@Url.Content(Model.fotoPerfil)"
+                                             class="rounded-circle"
+                                             style="width:90px;height:90px;object-fit:cover;" />
+                                    </div>
+                                }
+
+                                <input type="file"
+                                       name="archivoFotoPerfil"
+                                       class="form-control"
+                                       accept=".jpg,.jpeg,.png,.webp" />
+
+                                <small class="text-muted">
+                                    Formatos permitidos: JPG, JPEG, PNG o WEBP.
+                                </small>
+
+                                @Html.ValidationMessageFor(m => m.archivoFotoPerfil, "", new { @class = "text-danger d-block" })
                             </div>
 
                             <div class="col-md-6">
@@ -71,17 +107,13 @@
                         </div>
 
                         <div class="d-flex gap-2 mt-4">
-
-                            <button type="submit"
-                                    class="btn btn-action">
+                            <button type="submit" class="btn btn-action">
                                 Guardar cambios
                             </button>
 
-                            <a href="@Url.Action("Index", "Manage")"
-                               class="btn btn-outline-gym">
+                            <a href="@Url.Action("Index", "Manage")" class="btn btn-outline-gym">
                                 Cancelar
                             </a>
-
                         </div>
                     }
 
@@ -92,6 +124,6 @@
     </div>
 </section>
 
-@section Scripts{
+@section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

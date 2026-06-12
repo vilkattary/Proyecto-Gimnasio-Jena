@@ -59,6 +59,8 @@ namespace GimnasioJena.AccesoADatos.Usuarios.ObtenerUsuarioPorId
                 identificacion = usuario.identificacion,
                 correo = usuario.correo,
                 telefono = usuario.telefono,
+                direccion = usuario.direccion,
+                fotoPerfil = usuario.fotoPerfil,
                 estado = usuario.estado,
                 Membresia = membresiaDto
             };
