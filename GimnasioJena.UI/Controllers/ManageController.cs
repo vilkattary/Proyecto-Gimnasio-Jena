@@ -1,13 +1,14 @@
-﻿using System;
+﻿using GimnasioJena.AccesoADatos;
+using GimnasioJena.UI.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using GimnasioJena.UI.Models;
-using GimnasioJena.AccesoADatos;
 
 namespace GimnasioJena.UI.Controllers
 {
@@ -86,6 +87,8 @@ namespace GimnasioJena.UI.Controllers
                     identificacion = usuario.identificacion,
                     correo = usuario.correo,
                     telefono = usuario.telefono,
+                    direccion = usuario.direccion,
+                    fotoPerfil = usuario.fotoPerfil,
                     rol = rolActual,
                     estado = usuario.estado,
                     fechaRegistro = usuario.fechaRegistro
@@ -118,6 +121,8 @@ namespace GimnasioJena.UI.Controllers
                     apellido1 = usuario.apellido1,
                     apellido2 = usuario.apellido2,
                     telefono = usuario.telefono,
+                    direccion = usuario.direccion,
+                    fotoPerfil = usuario.fotoPerfil,
                     correo = usuario.correo,
                     identificacion = usuario.identificacion
                 };
@@ -151,6 +156,36 @@ namespace GimnasioJena.UI.Controllers
                 usuario.apellido1 = modelo.apellido1;
                 usuario.apellido2 = modelo.apellido2;
                 usuario.telefono = modelo.telefono;
+                usuario.direccion = modelo.direccion;
+
+                if (modelo.archivoFotoPerfil != null && modelo.archivoFotoPerfil.ContentLength > 0)
+                {
+                    string extension = Path.GetExtension(modelo.archivoFotoPerfil.FileName).ToLower();
+
+                    string[] extensionesPermitidas = { ".jpg", ".jpeg", ".png", ".webp" };
+
+                    if (!extensionesPermitidas.Contains(extension))
+                    {
+                        ModelState.AddModelError("archivoFotoPerfil", "Solo se permiten imágenes JPG, JPEG, PNG o WEBP.");
+                        modelo.fotoPerfil = usuario.fotoPerfil;
+                        return View(modelo);
+                    }
+
+                    string carpeta = Server.MapPath("~/Content/imagenes/perfiles/");
+
+                    if (!Directory.Exists(carpeta))
+                    {
+                        Directory.CreateDirectory(carpeta);
+                    }
+
+                    string nombreArchivo = "usuario_" + usuario.idUsuario + "_" + DateTime.Now.ToString("yyyyMMddHHmmss") + extension;
+                    string rutaFisica = Path.Combine(carpeta, nombreArchivo);
+
+                    modelo.archivoFotoPerfil.SaveAs(rutaFisica);
+
+                    usuario.fotoPerfil = "/Content/imagenes/perfiles/" + nombreArchivo;
+                }
+
                 usuario.fechaModificacion = DateTime.Now;
 
                 contexto.SaveChanges();
