@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.AccesoADatos.Entidades.Usuarios
 {
@@ -38,6 +34,12 @@ namespace GimnasioJena.AccesoADatos.Entidades.Usuarios
 
         [StringLength(20)]
         public string telefono { get; set; }
+
+        [StringLength(300)]
+        public string direccion { get; set; }
+
+        [StringLength(300)]
+        public string fotoPerfil { get; set; }
 
         public DateTime fechaRegistro { get; set; }
 

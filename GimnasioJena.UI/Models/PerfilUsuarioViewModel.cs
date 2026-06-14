@@ -28,6 +28,11 @@ namespace GimnasioJena.UI.Models
         [Display(Name = "Teléfono")]
         public string telefono { get; set; }
 
+        [Display(Name = "Dirección")]
+        public string direccion { get; set; }
+
+        public string fotoPerfil { get; set; }
+
         public string rol { get; set; }
         public bool estado { get; set; }
         public DateTime fechaRegistro { get; set; }

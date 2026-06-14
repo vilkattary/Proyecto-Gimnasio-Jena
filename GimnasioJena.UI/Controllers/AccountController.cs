@@ -230,7 +230,7 @@ namespace GimnasioJena.UI.Controllers
             }
 
             return View(model);
-        }
+        }  
 
         //
         // GET: /Account/ConfirmEmail
