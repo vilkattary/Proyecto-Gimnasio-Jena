@@ -14,6 +14,10 @@
     --jena-white: #FFFFFF;
     --jena-light-gray: #F8F9FA;
     --font-primary: 'Montserrat', sans-serif;
+    /* Navbar */
+    --gym-header-bg: #FFFFFF;
+    --gym-accent: var(--jena-orange);
+    --gym-text: var(--jena-navy);
 }
 
 body {
@@ -22,6 +26,7 @@ body {
     color: var(--jena-navy);
     min-height: 100vh;
     color: var(--dark);
+    padding-top: 76px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -224,9 +229,14 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
 
 /* Navbar Apex Gym */
 .navbar-apex {
-    background-color: var(--gym-header-bg);
+    background-color: #FFFFFF !important;
     border-bottom: 2px solid var(--gym-accent);
     padding: 1rem 0;
+    transition: box-shadow 0.35s ease;
+}
+
+.navbar-apex.navbar-scrolled {
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.10);
 }
 
     .navbar-apex .navbar-brand {
