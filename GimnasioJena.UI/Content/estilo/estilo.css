@@ -14,6 +14,10 @@
     --jena-white: #FFFFFF;
     --jena-light-gray: #F8F9FA;
     --font-primary: 'Montserrat', sans-serif;
+    /* Navbar */
+    --gym-header-bg: #FFFFFF;
+    --gym-accent: var(--jena-orange);
+    --gym-text: var(--jena-navy);
 }
 
 body {
@@ -22,6 +26,7 @@ body {
     color: var(--jena-navy);
     min-height: 100vh;
     color: var(--dark);
+    padding-top: 90px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -224,19 +229,37 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
 
 /* Navbar Apex Gym */
 .navbar-apex {
-    background-color: var(--gym-header-bg);
+    background-color: #FFFFFF !important;
     border-bottom: 2px solid var(--gym-accent);
     padding: 1rem 0;
+    transition: box-shadow 0.35s ease;
+}
+
+.navbar-apex.navbar-scrolled {
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.10);
 }
 
     .navbar-apex .navbar-brand {
-        color: var(--gym-accent) !important;
-        font-family: 'Audiowide', sans-serif;
-        font-size: 1.8rem;
-        font-weight: 400;
-        letter-spacing: 2px;
-        text-transform: uppercase;
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 1;
+        display: flex;
+        align-items: center;
     }
+
+    .navbar-apex .navbar-brand .navbar-logo {
+        display: inline-block;
+        height: 58px;
+        width: auto;
+        max-height: 58px;
+        max-width: 240px;
+        vertical-align: middle;
+        transition: opacity 0.3s ease;
+    }
+
+        .navbar-apex .navbar-brand .navbar-logo:hover {
+            opacity: 0.85;
+        }
 
     .navbar-apex .nav-link {
         color: var(--gym-text) !important;
@@ -262,25 +285,28 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
 }
 
 /* Botón Unirse Ahora */
-.btn-join-now {
-    background-color: var(--gym-accent);
-    color: var(--gym-text);
+a.btn.btn-join-now,
+button.btn.btn-join-now {
+    background-color: var(--jena-white, #FFFFFF) !important;
+    color: var(--jena-orange, #FF4500) !important;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     font-size: 0.9rem;
     letter-spacing: 1px;
     text-transform: uppercase;
-    border: none;
+    border: 2px solid var(--jena-orange, #FF4500) !important;
     padding: 0.75rem 2rem;
     border-radius: 50px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+    box-shadow: none !important;
 }
 
-    .btn-join-now:hover {
-        background-color: #cc5200;
-        color: var(--gym-text);
-        box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5);
+    a.btn.btn-join-now:hover,
+    button.btn.btn-join-now:hover {
+        background-color: var(--jena-orange, #FF4500) !important;
+        color: #FFFFFF !important;
+        border-color: var(--jena-orange, #FF4500) !important;
+        box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5) !important;
         transform: translateY(-2px);
     }
 
@@ -305,6 +331,22 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
         box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5);
         transform: translateY(-2px);
     }
+
+/* Hero: override Bootstrap para btn-apex-primary */
+section.hero-apex a.btn.btn-apex-primary {
+    background-color: var(--jena-white, #FFFFFF) !important;
+    color: var(--jena-orange, #FF4500) !important;
+    border: 2px solid var(--jena-orange, #FF4500) !important;
+    box-shadow: none !important;
+}
+
+section.hero-apex a.btn.btn-apex-primary:hover {
+    background-color: var(--jena-orange, #FF4500) !important;
+    color: #FFFFFF !important;
+    border-color: var(--jena-orange, #FF4500) !important;
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5) !important;
+    transform: translateY(-2px);
+}
 
 /* Footer */
 footer {
@@ -371,11 +413,18 @@ footer {
 
 /* Responsive */
 @@media (max-width: 768px) {
-    .navbar-apex .navbar-brand {
-        font-size: 1.4rem;
+    body {
+        padding-top: 67px;
     }
 
-    .btn-join-now {
+    .navbar-apex .navbar-brand .navbar-logo {
+        height: 35px;
+        max-height: 35px;
+        max-width: 144px;
+    }
+
+    a.btn.btn-join-now,
+    button.btn.btn-join-now {
         padding: 0.6rem 1.5rem;
         font-size: 0.85rem;
     }
