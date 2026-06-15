@@ -317,6 +317,22 @@ a.btn.btn-join-now {
         transform: translateY(-2px);
     }
 
+/* Hero: override Bootstrap para btn-apex-primary */
+section.hero-apex a.btn.btn-apex-primary {
+    background-color: var(--jena-white, #FFFFFF) !important;
+    color: var(--jena-orange, #FF4500) !important;
+    border: 2px solid var(--jena-orange, #FF4500) !important;
+    box-shadow: none !important;
+}
+
+section.hero-apex a.btn.btn-apex-primary:hover {
+    background-color: var(--jena-orange, #FF4500) !important;
+    color: #FFFFFF !important;
+    border-color: var(--jena-orange, #FF4500) !important;
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5) !important;
+    transform: translateY(-2px);
+}
+
 /* Footer */
 footer {
     background-color: var(--gym-header-bg);

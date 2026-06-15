@@ -301,9 +301,12 @@ BOTONES DE ACCIÓN
                     Desbloquea tu máximo potencial con entrenamientos de alta intensidad, equipos de última generación
                     y una comunidad que te impulsa a superar tus límites cada día.
                 </p>
-                <a href="@Url.Action("Register", "Account")" class="btn btn-apex-primary">
-                    <i class="bi bi-lightning-charge-fill me-2"></i>Empezar Hoy
-                </a>
+                @if (!Request.IsAuthenticated)
+                {
+                    <a href="@Url.Action("Register", "Account")" class="btn btn-apex-primary">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>Empezar Hoy
+                    </a>
+                }
             </div>
         </div>
     </div>
