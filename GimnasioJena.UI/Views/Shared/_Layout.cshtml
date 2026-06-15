@@ -88,6 +88,9 @@
                             @Html.ActionLink("Precios", "Planes", "Home", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
+                            @Html.ActionLink("Sobre Nosotros", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
                             @Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
                         </li>
                         @if (Request.IsAuthenticated)
