@@ -285,7 +285,8 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
 }
 
 /* Botón Unirse Ahora */
-a.btn.btn-join-now {
+a.btn.btn-join-now,
+button.btn.btn-join-now {
     background-color: var(--jena-white, #FFFFFF) !important;
     color: var(--jena-orange, #FF4500) !important;
     font-family: 'Montserrat', sans-serif;
@@ -300,7 +301,8 @@ a.btn.btn-join-now {
     box-shadow: none !important;
 }
 
-    a.btn.btn-join-now:hover {
+    a.btn.btn-join-now:hover,
+    button.btn.btn-join-now:hover {
         background-color: var(--jena-orange, #FF4500) !important;
         color: #FFFFFF !important;
         border-color: var(--jena-orange, #FF4500) !important;
@@ -421,7 +423,8 @@ footer {
         max-width: 144px;
     }
 
-    a.btn.btn-join-now {
+    a.btn.btn-join-now,
+    button.btn.btn-join-now {
         padding: 0.6rem 1.5rem;
         font-size: 0.85rem;
     }

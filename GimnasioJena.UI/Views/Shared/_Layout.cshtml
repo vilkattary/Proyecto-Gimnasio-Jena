@@ -1,4 +1,26 @@
-﻿<!DOCTYPE html>
+﻿@using GimnasioJena.AccesoADatos
+@using Microsoft.AspNet.Identity
+@{
+    var nombreMostrar = (User != null && User.Identity != null) ? User.Identity.Name : string.Empty;
+
+    if (Request.IsAuthenticated)
+    {
+        var identityUserId = User.Identity.GetUserId();
+        using (var contexto = new Contexto())
+        {
+            var nombreUsuario = contexto.Usuarios
+                .Where(u => u.identityUserId == identityUserId)
+                .Select(u => u.nombre)
+                .FirstOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(nombreUsuario))
+            {
+                nombreMostrar = nombreUsuario;
+            }
+        }
+    }
+}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -70,21 +92,18 @@
                         </li>
                         @if (Request.IsAuthenticated)
                         {
-                            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <li class="nav-item">
-                                    @Html.ActionLink("Hola, " + User.Identity.Name, "Index", "Manage",
-                                        routeValues: null,
-                                        htmlAttributes: new { @class = "nav-link" })
-                                </li>
-                                <li class="nav-item ms-lg-2">
-                                    <a href="javascript:document.getElementById('logoutForm').submit()"
-                                       class="btn btn-join-now">
-                                        Cerrar sesión
-                                    </a>
-                                </li>
-                            }
+                            <li class="nav-item">
+                                @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
+                                    routeValues: null,
+                                    htmlAttributes: new { @class = "nav-link", style = "color: var(--jena-orange) !important;" })
+                            </li>
+                            <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "d-inline" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-join-now">Cerrar sesión</button>
+                                }
+                            </li>
                         }
                         else
                         {
