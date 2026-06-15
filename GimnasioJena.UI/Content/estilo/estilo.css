@@ -26,7 +26,7 @@ body {
     color: var(--jena-navy);
     min-height: 100vh;
     color: var(--dark);
-    padding-top: 76px;
+    padding-top: 90px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -240,13 +240,26 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
 }
 
     .navbar-apex .navbar-brand {
-        color: var(--gym-accent) !important;
-        font-family: 'Audiowide', sans-serif;
-        font-size: 1.8rem;
-        font-weight: 400;
-        letter-spacing: 2px;
-        text-transform: uppercase;
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 1;
+        display: flex;
+        align-items: center;
     }
+
+    .navbar-apex .navbar-brand .navbar-logo {
+        display: inline-block;
+        height: 58px;
+        width: auto;
+        max-height: 58px;
+        max-width: 240px;
+        vertical-align: middle;
+        transition: opacity 0.3s ease;
+    }
+
+        .navbar-apex .navbar-brand .navbar-logo:hover {
+            opacity: 0.85;
+        }
 
     .navbar-apex .nav-link {
         color: var(--gym-text) !important;
@@ -398,8 +411,14 @@ footer {
 
 /* Responsive */
 @@media (max-width: 768px) {
-    .navbar-apex .navbar-brand {
-        font-size: 1.4rem;
+    body {
+        padding-top: 67px;
+    }
+
+    .navbar-apex .navbar-brand .navbar-logo {
+        height: 35px;
+        max-height: 35px;
+        max-width: 144px;
     }
 
     a.btn.btn-join-now {
