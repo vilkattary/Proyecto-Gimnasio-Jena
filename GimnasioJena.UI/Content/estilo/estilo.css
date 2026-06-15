@@ -272,25 +272,26 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
 }
 
 /* Botón Unirse Ahora */
-.btn-join-now {
-    background-color: var(--gym-accent);
-    color: var(--gym-text);
+a.btn.btn-join-now {
+    background-color: var(--jena-white, #FFFFFF) !important;
+    color: var(--jena-orange, #FF4500) !important;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     font-size: 0.9rem;
     letter-spacing: 1px;
     text-transform: uppercase;
-    border: none;
+    border: 2px solid var(--jena-orange, #FF4500) !important;
     padding: 0.75rem 2rem;
     border-radius: 50px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+    box-shadow: none !important;
 }
 
-    .btn-join-now:hover {
-        background-color: #cc5200;
-        color: var(--gym-text);
-        box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5);
+    a.btn.btn-join-now:hover {
+        background-color: var(--jena-orange, #FF4500) !important;
+        color: #FFFFFF !important;
+        border-color: var(--jena-orange, #FF4500) !important;
+        box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5) !important;
         transform: translateY(-2px);
     }
 
@@ -385,7 +386,7 @@ footer {
         font-size: 1.4rem;
     }
 
-    .btn-join-now {
+    a.btn.btn-join-now {
         padding: 0.6rem 1.5rem;
         font-size: 0.85rem;
     }
