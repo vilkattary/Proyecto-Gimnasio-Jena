@@ -1,7 +1,7 @@
-﻿@model GimnasioJena.UI.Models.PerfilUsuarioViewModel
+﻿@model GimnasioJena.Abstracciones.Modelos.Entrenadores.EntrenadorDto
 
 @{
-    ViewBag.Title = "Mi perfil";
+    ViewBag.Title = "Perfil del Entrenador";
 }
 
 <link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
@@ -28,23 +28,11 @@
                 <div class="card-body p-4">
 
                     <div class="d-flex flex-column flex-md-row align-items-center gap-4 mb-4">
-                        @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
-                        {
-                            <img src="@Url.Content(Model.fotoPerfil)"
-                                 class="rounded-circle"
-                                 style="width:100px;height:100px;object-fit:cover;border:3px solid var(--gym-orange);" />
-                        }
-                        else
-                        {
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:100px; height:100px; background:var(--gym-orange); color:white; font-size:2.5rem;">
-                                <i class="bi bi-person-fill"></i>
-                            </div>
-                        }
+                       
 
                         <div class="text-center text-md-start">
-                            <h2 class="fw-bold mb-1" style="color:var(--gym-dark);">
-                                @Model.nombreCompleto
+                            <h2 class="fw-bold mb-1" style="color:var(--gym-dark);"> 
+                               Entrenadora:  @Model.nombreCompleto
                             </h2>
 
                             <p class="text-muted mb-2">
@@ -52,7 +40,8 @@
                             </p>
 
                             <span class="badge bg-primary">
-                                @Model.rol
+                                @Model.especialidad
+
                             </span>
 
                             @if (Model.estado)
@@ -79,8 +68,8 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-600">Identificación</label>
-                            <input type="text" class="form-control" value="@Model.identificacion" readonly />
+                            <label class="form-label fw-600">Descripcion</label>
+                            <input type="text" class="form-control" value="@Model.descripcion" readonly />
                         </div>
 
                         <div class="col-md-6">
@@ -89,33 +78,14 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-600">Teléfono</label>
-                            <input type="text" class="form-control" value="@Model.telefono" readonly />
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label fw-600">Dirección</label>
-                            <textarea class="form-control" rows="3" readonly>@Model.direccion</textarea>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-600">Fecha de registro</label>
-                            <input type="text" class="form-control" value="@Model.fechaRegistro.ToString("dd/MM/yyyy")" readonly />
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-600">Estado de cuenta</label>
-                            <input type="text" class="form-control" value="@(Model.estado ? "Activo" : "Inactivo")" readonly />
+                            <label class="form-label fw-600">Fecha de Contratacion</label>
+                            <input type="text" class="form-control" value="@Model.fechaContratacion" readonly />
                         </div>
                     </div>
 
                     <div class="d-flex flex-wrap gap-2 mt-4">
                         <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
                             Cambiar contraseña
-                        </a>
-
-                        <a href="@Url.Action("EditarPerfil", "Manage")" class="btn btn-action">
-                            Editar perfil
                         </a>
 
                         <a href="@Url.Action("Index", "Home")" class="btn btn-outline-gym">
