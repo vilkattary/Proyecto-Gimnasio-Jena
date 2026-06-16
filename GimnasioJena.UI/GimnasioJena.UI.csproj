@@ -307,13 +307,13 @@
     <Content Include="Views\Clases\ObtenerTodasLasClases.cshtml" />
     <Content Include="Views\Clases\RegistrarClase.cshtml" />
     <Content Include="Views\Reservas\ReservarClase.cshtml" />
+    <Content Include="Views\Entrenador\Index.cshtml" />
     <Content Include="Views\Home\AdminIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Asistencias\" />
     <Folder Include="Views\Comunicacion\" />
-    <Folder Include="Views\Entrenador\" />
     <Folder Include="Views\Membresias\" />
     <Folder Include="Views\PerfilUsuarioViewModel\" />
     <Folder Include="Views\Recepcionistas\" />

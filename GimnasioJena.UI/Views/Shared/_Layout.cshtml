@@ -35,6 +35,8 @@
  
 </head>
 <body>
+    
+    <nav class="navbar navbar-expand-lg navbar-apex sticky-top">
     <!-- Navbar Apex -->
     <nav class="navbar navbar-expand-lg navbar-apex fixed-top" id="mainNavbar">
         <div class="container">
@@ -61,7 +63,7 @@
                         @if (User.IsInRole("ENTRENADOR"))
                         {
                             <li class="nav-item">
-                                @Html.ActionLink("Entrenador", "Operaciones", "Operacion",
+                                @Html.ActionLink("Entrenador", "Index", "Entrenador",
                                     new { area = "" }, new { @class = "nav-link" })
                             </li>
                         }
