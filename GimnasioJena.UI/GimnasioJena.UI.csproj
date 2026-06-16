@@ -307,8 +307,9 @@
     <Content Include="Views\Clases\ObtenerTodasLasClases.cshtml" />
     <Content Include="Views\Clases\RegistrarClase.cshtml" />
     <Content Include="Views\Reservas\ReservarClase.cshtml" />
-    <Content Include="Views\Entrenador\Index.cshtml" />
+    <Content Include="Views\Entrenadores\Index.cshtml" />
     <Content Include="Views\Home\AdminIndex.cshtml" />
+    <Content Include="Views\Entrenadores\RegistrarAsistencia.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,69 +1,54 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId;
 using GimnasioJena.Abstracciones.Modelos.Entrenadores;
-using GimnasioJena.Abstracciones.Modelos.Membresias;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GimnasioJena.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId
 {
     public class ObtenerEntrenadorPorIdAD : IObtenerEntrenadorPorIdAD
     {
-        private readonly Contexto _contexto;
+        private Contexto _elContexto;
 
-        public ObtenerEntrenadorPorIdAD(Contexto contexto)
+        public ObtenerEntrenadorPorIdAD()
         {
-            _contexto = contexto;
+            _elContexto = new Contexto();
         }
 
-        public async Task<EntrenadorPerfilDto> ObtenerEntrenadorPorId   (string identityUserId)
+        public async Task<EntrenadorDto> ObtenerEntrenadorPorId(string identityUserId)
         {
-            var usuario = await _contexto.Usuarios
-                .FirstOrDefaultAsync(u => u.identityUserId == identityUserId);
 
-            if (usuario == null) return null;
-
-            var membresia = await _contexto.Membresias
-                .Include(m => m.EstadoMembresia)
-                .Include(m => m.PlanMembresia)
-                .FirstOrDefaultAsync(m => m.idUsuario == usuario.idUsuario);
-
-            MembresiaClienteDto membresiaDto = null;
-
-            if (membresia != null)
-            {
-                membresiaDto = new MembresiaClienteDto
+            var entrenador = await _elContexto.Entrenadores
+                .Include(e => e.Usuario)
+                .Where(e => e.Usuario.identityUserId == identityUserId)
+                .Select(e => new EntrenadorDto
                 {
-                    idMembresiaCliente = membresia.idMembresiaCliente,
-                    idUsuario = membresia.idUsuario,
-                    nombreCliente = usuario.nombre + " " + usuario.apellido1,
-                    nombrePlan = membresia.PlanMembresia.nombrePlan,
-                    estadoMembresia = membresia.EstadoMembresia.nombreEstado,
-                    fechaInicio = membresia.fechaInicio,
-                    fechaFin = membresia.fechaFin,
-                    clasesDisponibles = membresia.clasesDisponibles,
-                    observaciones = membresia.observaciones,
-                    precio = membresia.PlanMembresia.precio
-                };
-            }
 
-            return new EntrenadorPerfilDto
-            {
-                idUsuario = usuario.idUsuario,
-                nombre = usuario.nombre,
-                apellido1 = usuario.apellido1,
-                apellido2 = usuario.apellido2,
-                identificacion = usuario.identificacion,
-                correo = usuario.correo,
-                telefono = usuario.telefono,
-                direccion = usuario.direccion,
-                fotoPerfil = usuario.fotoPerfil,
-                estado = usuario.estado,
-                Membresia = membresiaDto
-            };
+                    idEntrenador = e.idEntrenador,
+
+                    idUsuario = e.idUsuario,
+
+                    nombreCompleto =
+                    e.Usuario.nombre + " " +
+                    e.Usuario.apellido1 + " " +
+                    e.Usuario.apellido2,
+
+                    correo = e.Usuario.correo,
+
+                    especialidad = e.especialidad,
+
+                    descripcion = e.descripcion,
+
+                    fechaContratacion = e.fechaContratacion,
+
+                    estado = e.estado
+
+                })
+                .FirstOrDefaultAsync();
+
+
+            return entrenador;
+
         }
     }
 }
