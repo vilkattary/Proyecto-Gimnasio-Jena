@@ -1,0 +1,101 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Entrenadores.EntrenadorDto
+
+@{
+    ViewBag.Title = "Perfil del Entrenador";
+}
+
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            @if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+            {
+                <div class="alert alert-success">
+                    @ViewBag.StatusMessage
+                </div>
+            }
+
+            @if (TempData["MensajeExito"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["MensajeExito"]
+                </div>
+            }
+
+            <div class="card shadow-sm rounded-4" style="border-top:4px solid var(--gym-orange);">
+                <div class="card-body p-4">
+
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-4 mb-4">
+                       
+
+                        <div class="text-center text-md-start">
+                            <h2 class="fw-bold mb-1" style="color:var(--gym-dark);"> 
+                               Entrenadora:  @Model.nombreCompleto
+                            </h2>
+
+                            <p class="text-muted mb-2">
+                                @Model.correo
+                            </p>
+
+                            <span class="badge bg-primary">
+                                @Model.especialidad
+
+                            </span>
+
+                            @if (Model.estado)
+                            {
+                                <span class="badge bg-success ms-1">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary ms-1">Inactivo</span>
+                            }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <h4 class="fw-bold mb-3" style="color:var(--gym-dark);">
+                        Información personal
+                    </h4>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Nombre completo</label>
+                            <input type="text" class="form-control" value="@Model.nombreCompleto" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Descripcion</label>
+                            <input type="text" class="form-control" value="@Model.descripcion" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Correo electrónico</label>
+                            <input type="text" class="form-control" value="@Model.correo" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Fecha de Contratacion</label>
+                            <input type="text" class="form-control" value="@Model.fechaContratacion" readonly />
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
+                            Cambiar contraseña
+                        </a>
+
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-gym">
+                            Volver al inicio
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

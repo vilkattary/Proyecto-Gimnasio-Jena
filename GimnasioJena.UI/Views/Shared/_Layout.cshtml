@@ -35,6 +35,7 @@
  
 </head>
 <body>
+   
     <!-- Navbar Apex -->
     <nav class="navbar navbar-expand-lg navbar-apex fixed-top" id="mainNavbar">
         <div class="container">
@@ -57,71 +58,80 @@
                             @Html.ActionLink("Clases", "ObtenerTodasLasClases", "Clases", new { area = "" }, new { @class = "nav-link" })
                         </li>
                     }
-                        @* Solo Entrenador *@
-                        @if (User.IsInRole("ENTRENADOR"))
-                        {
-                            <li class="nav-item">
-                                @Html.ActionLink("Entrenador", "Operaciones", "Operacion",
-                                    new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                        }
-                        @* Solo Cliente *@
-                        @if (User.IsInRole("CLIENTE"))
-                        {
-                            <li class="nav-item">
-                                @Html.ActionLink("Cliente", "MiPerfil", "Clientes",
-                                    new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                        }
-                        @if (User.IsInRole("ADMINISTRADOR"))
-                        {
-                            <li class="nav-item">
-                                @Html.ActionLink("Usuarios", "Index", "Usuarios",
-                                    new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item">
-                                @Html.ActionLink("Admin Home", "AdminIndex", "Home",
-                                    new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                        }
+                    @* Solo Entrenador *@
+                    @if (User.IsInRole("ENTRENADOR"))
+                    {
                         <li class="nav-item">
-                            @Html.ActionLink("Precios", "Planes", "Home", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink("Entrenador", "Index", "Entrenadores",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                    @* Solo Entrenador *@
+                    @if (User.IsInRole("ENTRENADOR"))
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Registrar asistencia", "Index", "Entrenadores",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+
+                    @* Solo Cliente *@
+                    @if (User.IsInRole("CLIENTE"))
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Cliente", "MiPerfil", "Clientes",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                    @if (User.IsInRole("ADMINISTRADOR"))
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Usuarios", "Index", "Usuarios",
+                                new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Sobre Nosotros", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink("Admin Home", "AdminIndex", "Home",
+                                new { area = "" }, new { @class = "nav-link" })
                         </li>
+                    }
+                    <li class="nav-item">
+                        @Html.ActionLink("Precios", "Planes", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Sobre Nosotros", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    @if (Request.IsAuthenticated)
+                    {
                         <li class="nav-item">
-                            @Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
+                                routeValues: null,
+                                htmlAttributes: new { @class = "nav-link", style = "color: var(--jena-orange) !important;" })
                         </li>
-                        @if (Request.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
-                                    routeValues: null,
-                                    htmlAttributes: new { @class = "nav-link", style = "color: var(--jena-orange) !important;" })
-                            </li>
-                            <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "d-inline" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-join-now">Cerrar sesión</button>
-                                }
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                @Html.ActionLink("Iniciar sesión", "Login", "Account",
-                                    routeValues: null,
-                                    htmlAttributes: new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item ms-lg-2">
-                                <a href="@Url.Action("Register", "Account")" class="btn btn-join-now">
-                                    Unirse Ahora
-                                </a>
-                            </li>
-                        }
-                    </ul>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "d-inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-join-now">Cerrar sesión</button>
+                            }
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Iniciar sesión", "Login", "Account",
+                                routeValues: null,
+                                htmlAttributes: new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a href="@Url.Action("Register", "Account")" class="btn btn-join-now">
+                                Unirse Ahora
+                            </a>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </nav>
