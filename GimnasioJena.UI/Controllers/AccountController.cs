@@ -213,6 +213,16 @@ namespace GimnasioJena.UI.Controllers
                             contexto.SaveChanges();
                         }
 
+                        await UserManager.SendEmailAsync(
+                            user.Id,
+                            "Bienvenido a Gimnasio Jéna",
+                            "Hola " + model.Nombre + ",<br/><br/>" +
+                            "Tu cuenta en <strong>Gimnasio Jéna Training Methodology</strong> ha sido creada correctamente.<br/><br/>" +
+                            "Desde ahora puedes ingresar al sistema para consultar tu perfil, actualizar tus datos personales y acceder a los servicios disponibles del gimnasio.<br/><br/>" +
+                            "Gracias por formar parte de nuestra comunidad.<br/><br/>" +
+                            "<strong>Gimnasio Jéna Training Methodology</strong>"
+                        );
+
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                         return RedirectToAction("Index", "Home");
@@ -230,7 +240,7 @@ namespace GimnasioJena.UI.Controllers
             }
 
             return View(model);
-        }  
+        }
 
         //
         // GET: /Account/ConfirmEmail
