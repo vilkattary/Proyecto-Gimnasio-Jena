@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\EntityFramework.6.5.2\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -105,6 +105,8 @@
     <Compile Include="AccesoADatos\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorAD.cs" />
+    <Compile Include="AccesoADatos\Home\AgregarSeccionHome\IAgregarSeccionHomeAD.cs" />
+    <Compile Include="AccesoADatos\Home\EliminarSeccionHome\IEliminarSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\EditarMembresia\IEditarMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteAD.cs" />
@@ -178,6 +180,8 @@
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorLN.cs" />
+    <Compile Include="LogicaDeNegocio\Home\AgregarSeccionHome\IAgregarSeccionHomeLN.cs" />
+    <Compile Include="LogicaDeNegocio\Home\EliminarSeccionHome\IEliminarSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\EditarMembresia\IEditarMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteLN.cs" />
@@ -250,6 +254,7 @@
     <Compile Include="Modelos\Entrenadores\EntrenadorEditarDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorListadoDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorPerfilDto.cs" />
+    <Compile Include="Modelos\Home\AgregarSeccionHomeDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaClienteDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCrearDto.cs" />
@@ -292,6 +297,12 @@
     <Compile Include="Modelos\Usuarios\UsuarioListadoDto.cs" />
     <Compile Include="Modelos\Usuarios\UsuarioPerfilDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Entidades\Home\SeccionesHome.cs" />
+    <Compile Include="Modelos\Home\ModificarSeccionHomeDto.cs" />
+    <Compile Include="AccesoADatos\Home\ObtenerSeccionesHome\IObtenerSeccionesHomeAD.cs" />
+    <Compile Include="AccesoADatos\Home\ModificarSeccionHome\IModificarSeccionHomeAD.cs" />
+    <Compile Include="LogicaDeNegocio\Home\ObtenerSeccionesHome\IObtenerSeccionesHomeLN.cs" />
+    <Compile Include="LogicaDeNegocio\Home\ModificarSeccionHome\IModificarSeccionHomeLN.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -301,7 +312,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauraciÃ³n de paquetes NuGet para descargarlos. Para obtener mÃ¡s informaciÃ³n, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.targets'))" />

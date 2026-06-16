@@ -1,5 +1,15 @@
-﻿@{
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Entidades.Home.SeccionesHome>
+@using System.Linq
+@{
     ViewBag.Title = "Inicio";
+
+    var hero        = Model.FirstOrDefault(x => x.Seccion == "Hero");
+    var clases      = Model.Where(x => x.Seccion == "Clases").OrderBy(x => x.Orden).ToList();
+    var testimonios = Model.Where(x => x.Seccion == "Testimonios").OrderBy(x => x.Orden).ToList();
+
+    var heroImagen = hero != null && !string.IsNullOrEmpty(hero.UrlImagen)
+        ? hero.UrlImagen
+        : "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920";
 }
 
 <style>
@@ -19,7 +29,7 @@
     }
     /* Hero Section con imagen de fondo */
     .hero-apex {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920') center/cover no-repeat;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('@heroImagen') center/cover no-repeat;
         min-height: 85vh;
         display: flex;
         align-items: center;
@@ -294,16 +304,17 @@ BOTONES DE ACCIÓN
         <div class="row">
             <div class="col-lg-10 mx-auto text-center text-lg-start">
                 <h1 class="text-white text-uppercase">
-                    Entrena Con El<br>
-                    <span style="color: #FF6600;">Poder De Jena</span>
+                    @(hero != null ? hero.TextoPrincipal : "Entrena En Jéna Training Methodology")
                 </h1>
                 <p class="text-white">
-                    Desbloquea tu máximo potencial con entrenamientos de alta intensidad, equipos de última generación
-                    y una comunidad que te impulsa a superar tus límites cada día.
+                    @(hero != null ? hero.TextoSecundario : "Desbloquea tu máximo potencial con entrenamientos de alta intensidad y una comunidad que te impulsa a superar tus límites cada día.")
                 </p>
-                <a href="@Url.Action("Register", "Account")" class="btn btn-apex-primary">
-                    <i class="bi bi-lightning-charge-fill me-2"></i>Empezar Hoy
-                </a>
+                @if (!Request.IsAuthenticated)
+                {
+                    <a href="@Url.Action("Register", "Account")" class="btn btn-apex-primary">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>Contáctanos
+                    </a>
+                }
             </div>
         </div>
     </div>
@@ -314,45 +325,34 @@ BOTONES DE ACCIÓN
     <div class="container">
         <h2 class="text-uppercase">Nuestras Clases</h2>
         <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="class-card">
-                    <div class="icon-wrapper">
-                        <i class="bi bi-lightning-charge-fill"></i>
+            @foreach (var item in clases)
+            {
+                string iconClass = (!string.IsNullOrEmpty(item.UrlImagen) && item.UrlImagen.StartsWith("bi-"))
+                                 ? item.UrlImagen
+                                 : item.Clave == "clase-fuerza" ? "bi-lightning-charge-fill"
+                                 : item.Clave == "clase-yoga"   ? "bi-heart-pulse-fill"
+                                 : item.Clave == "clase-cardio" ? "bi-fire"
+                                 : "bi-star-fill";
+                bool esImagenUrl = !string.IsNullOrEmpty(item.UrlImagen) && !item.UrlImagen.StartsWith("bi-");
+                <div class="col-lg-4 col-md-6">
+                    <div class="class-card">
+                        <div class="icon-wrapper">
+                            @if (esImagenUrl)
+                            {
+                                <img src="@item.UrlImagen" alt="@item.TextoPrincipal"
+                                     style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />
+                            }
+                            else
+                            {
+                                <i class="bi @iconClass"></i>
+                            }
+                        </div>
+                        <h3>@item.TextoPrincipal</h3>
+                        <p>@item.TextoSecundario</p>
+                        <a href="@Url.Action("About", "Home")" class="btn-action">Agenda tu clase de prueba</a>
                     </div>
-                    <h3>Fuerza Intensa</h3>
-                    <p>
-                        Desarrolla músculo y potencia con nuestro programa de entrenamiento de fuerza especializado.
-                        Barras olímpicas, mancuernas y máquinas de última generación te esperan.
-                    </p>
-                    <a href="@Url.Action("About", "Home")" class="btn-action">Empezar Hoy</a>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="class-card">
-                    <div class="icon-wrapper">
-                        <i class="bi bi-heart-pulse-fill"></i>
-                    </div>
-                    <h3>Yoga Flow</h3>
-                    <p>
-                        Encuentra tu equilibrio interior y mejora tu flexibilidad con sesiones de yoga guiadas
-                        por instructores certificados en un ambiente relajante y motivador.
-                    </p>
-                    <a href="@Url.Action("About", "Home")" class="btn btn-action">Empezar Hoy</a>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="class-card">
-                    <div class="icon-wrapper">
-                        <i class="bi bi-fire"></i>
-                    </div>
-                    <h3>Cardio Boost</h3>
-                    <p>
-                        Quema calorías y mejora tu resistencia cardiovascular con sesiones intensas de cardio.
-                        Elípticas, cintas y bicicletas de spinning a tu disposición.
-                    </p>
-                    <a href="@Url.Action("About", "Home")" class=" btn btn-action">Empezar Hoy</a>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>
@@ -362,60 +362,43 @@ BOTONES DE ACCIÓN
     <div class="container">
         <h2 class="text-uppercase">Lo Que Dicen Nuestros Clientes</h2>
         <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="quote-icon">
-                        <i class="bi bi-quote"></i>
-                    </div>
-                    <p>
-                        "Gimnasio Jena cambió mi vida completamente. Los entrenadores son increíbles y el ambiente
-                        te motiva a dar el 100% en cada sesión. ¡Recomendado al 200%!"
-                    </p>
-                    <div class="client-info">
-                        <div class="client-avatar">MR</div>
-                        <div>
-                            <div class="client-name">María Rodríguez</div>
-                            <div class="client-role">Miembro desde 2024</div>
+            @foreach (var item in testimonios)
+            {
+                string iniciales = "?";
+                if (item.TextoPrincipal != null && item.TextoPrincipal.Length >= 1)
+                {
+                    iniciales = item.TextoPrincipal.Substring(0, 1).ToUpper();
+                    int ultimoEspacio = item.TextoPrincipal.LastIndexOf(' ');
+                    if (ultimoEspacio > 0)
+                    {
+                        iniciales += item.TextoPrincipal.Substring(ultimoEspacio + 1, 1).ToUpper();
+                    }
+                }
+                <div class="col-lg-4 col-md-6">
+                    <div class="testimonial-card">
+                        <div class="quote-icon">
+                            <i class="bi bi-quote"></i>
+                        </div>
+                        <p>@item.TextoSecundario</p>
+                        <div class="client-info">
+                            <div class="client-avatar">
+                                @if (!string.IsNullOrEmpty(item.UrlImagen))
+                                {
+                                    <img src="@item.UrlImagen" alt="@item.TextoPrincipal"
+                                         style="width:50px; height:50px; object-fit:cover; border-radius:50%;" />
+                                }
+                                else
+                                {
+                                    @iniciales
+                                }
+                            </div>
+                            <div>
+                                <div class="client-name">@item.TextoPrincipal</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="quote-icon">
-                        <i class="bi bi-quote"></i>
-                    </div>
-                    <p>
-                        "La mejor inversión que he hecho en mi salud. Las instalaciones son de primer nivel
-                        y las clases grupales son súper dinámicas. ¡Me encanta!"
-                    </p>
-                    <div class="client-info">
-                        <div class="client-avatar">CG</div>
-                        <div>
-                            <div class="client-name">Carlos Gómez</div>
-                            <div class="client-role">Miembro desde 2023</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="quote-icon">
-                        <i class="bi bi-quote"></i>
-                    </div>
-                    <p>
-                        "Nunca pensé que entrenar podría ser tan divertido. El equipo de JENA es como una familia
-                        que te apoya en cada paso. ¡Resultados garantizados!"
-                    </p>
-                    <div class="client-info">
-                        <div class="client-avatar">LP</div>
-                        <div>
-                            <div class="client-name">Laura Pérez</div>
-                            <div class="client-role">Miembro desde 2025</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>

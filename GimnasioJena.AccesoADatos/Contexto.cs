@@ -1,4 +1,5 @@
-﻿using GimnasioJena.AccesoADatos.Entidades.Asistencias;
+﻿using GimnasioJena.Abstracciones.Entidades.Home;
+using GimnasioJena.AccesoADatos.Entidades.Asistencias;
 using GimnasioJena.AccesoADatos.Entidades.Bitacora;
 using GimnasioJena.AccesoADatos.Entidades.Catalogos;
 using GimnasioJena.AccesoADatos.Entidades.Clases;
@@ -37,5 +38,6 @@ namespace GimnasioJena.AccesoADatos
         public DbSet<TipoClaseEntidad> TiposClase { get; set; }
         public DbSet<PlanMembresiaEntidad> PlanesMembresia { get; set; }
         public DbSet<PagoEntidad> Pagos { get; set; }
+        public DbSet<SeccionesHome> SeccionesHome { get; set; }
     }
 }

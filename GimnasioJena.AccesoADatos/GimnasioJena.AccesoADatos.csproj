@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\EntityFramework.6.5.2\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -124,6 +124,8 @@
     <Compile Include="Entrenadores\ObtenerEntrenadorPorUsuario\ObtenerEntrenadorPorUsuarioAD.cs" />
     <Compile Include="Entrenadores\ObtenerTodosLosEntrenadores\ObtenerTodosLosEntrenadoresAD.cs" />
     <Compile Include="Entrenadores\RegistrarEntrenador\RegistrarEntrenadorAD.cs" />
+    <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeAD.cs" />
+    <Compile Include="Home\EliminarSeccionHome\EliminarSeccionHomeAD.cs" />
     <Compile Include="Membresias\CambiarEstadoMembresia\CambiarEstadoMembresiaAD.cs" />
     <Compile Include="Membresias\EditarMembresia\EditarMembresiaAD.cs" />
     <Compile Include="Membresias\ObtenerMembresiaPorCliente\ObtenerMembresiaPorClienteAD.cs" />
@@ -165,6 +167,8 @@
     <Compile Include="Usuarios\ObtenerUsuarioPorId\ObtenerUsuarioPorIdAD.cs" />
     <Compile Include="Usuarios\RecuperarContrasena\RecuperarContrasenaAD.cs" />
     <Compile Include="Usuarios\RegistrarUsuario\RegistrarUsuarioAD.cs" />
+    <Compile Include="Home\ObtenerSeccionesHome\ObtenerSeccionesHomeAD.cs" />
+    <Compile Include="Home\ModificarSeccionHome\ModificarSeccionHomeAD.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -182,7 +186,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauraciÃ³n de paquetes NuGet para descargarlos. Para obtener mÃ¡s informaciÃ³n, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.targets'))" />
