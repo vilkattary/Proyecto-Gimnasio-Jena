@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,12 +8,21 @@ using System.Web.Mvc;
 
 namespace GimnasioJena.UI.Controllers
 {
+    [Authorize(Roles = "ENTRENADOR")]
     public class EntrenadoresController : Controller
     {
+        private readonly IObtenerUsuarioPorIdLN _obtenerUsuarioServicio;
+
+        public EntrenadoresController(IObtenerUsuarioPorIdLN obtenerUsuarioServicio)
+        {
+            _obtenerUsuarioServicio = obtenerUsuarioServicio;
+        }
         // GET: Entrenador
         public ActionResult Index()
         {
-            return View();
+            var identityUserId = User.Identity.GetUserId();
+            var perfil = await _obtenerUsuarioServicio.ObtenerEntrenadorPorId(identityUserId);
+            return View(perfil);
         }
 
         // GET: Entrenador/Details/5

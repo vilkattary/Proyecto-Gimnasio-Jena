@@ -39,7 +39,7 @@
                         @if (User.IsInRole("ENTRENADOR"))
                         {
                             <li class="nav-item">
-                                @Html.ActionLink("Entrenador", "Operaciones", "Operacion",
+                                @Html.ActionLink("Entrenador", "Index", "Entrenador",
                                     new { area = "" }, new { @class = "nav-link" })
                             </li>
                         }
