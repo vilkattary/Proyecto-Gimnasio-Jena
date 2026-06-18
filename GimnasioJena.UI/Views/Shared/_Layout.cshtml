@@ -1,26 +1,4 @@
-﻿@using GimnasioJena.AccesoADatos
-@using Microsoft.AspNet.Identity
-@{
-    var nombreMostrar = (User != null && User.Identity != null) ? User.Identity.Name : string.Empty;
-
-    if (Request.IsAuthenticated)
-    {
-        var identityUserId = User.Identity.GetUserId();
-        using (var contexto = new Contexto())
-        {
-            var nombreUsuario = contexto.Usuarios
-                .Where(u => u.identityUserId == identityUserId)
-                .Select(u => u.nombre)
-                .FirstOrDefault();
-
-            if (!string.IsNullOrWhiteSpace(nombreUsuario))
-            {
-                nombreMostrar = nombreUsuario;
-            }
-        }
-    }
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -106,7 +84,7 @@
                     @if (Request.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
+                            @Html.ActionLink("Hola, " + User.Identity.Name, "Index", "Manage",
                                 routeValues: null,
                                 htmlAttributes: new { @class = "nav-link", style = "color: var(--jena-orange) !important;" })
                         </li>
