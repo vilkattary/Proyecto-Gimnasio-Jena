@@ -311,7 +311,7 @@ BOTONES DE ACCIÓN
                 </p>
                 @if (!Request.IsAuthenticated)
                 {
-                    <a href="@Url.Action("Register", "Account")" class="btn btn-apex-primary">
+                    <a href="@Url.Action("Contact", "Home")" class="btn btn-apex-primary">
                         <i class="bi bi-lightning-charge-fill me-2"></i>Contáctanos
                     </a>
                 }
@@ -349,7 +349,7 @@ BOTONES DE ACCIÓN
                         </div>
                         <h3>@item.TextoPrincipal</h3>
                         <p>@item.TextoSecundario</p>
-                        <a href="@Url.Action("About", "Home")" class="btn-action">Agenda tu clase de prueba</a>
+                        <a href="@Url.Action("Contact", "Home")" class="btn-action">Agenda tu clase de prueba</a>
                     </div>
                 </div>
             }
