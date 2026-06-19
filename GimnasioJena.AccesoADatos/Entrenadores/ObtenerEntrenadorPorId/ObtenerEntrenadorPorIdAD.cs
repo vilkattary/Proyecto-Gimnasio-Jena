@@ -50,5 +50,29 @@ namespace GimnasioJena.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId
             return entrenador;
 
         }
+        public EntrenadorDto ObtenerEntrenadorPorId(int idEntrenador)
+        {
+            var entrenador = _elContexto.Entrenadores
+                .Include(e => e.Usuario)
+                .Where(e => e.idEntrenador == idEntrenador)
+                .Select(e => new EntrenadorDto
+                {
+                    idEntrenador = e.idEntrenador,
+                    idUsuario = e.idUsuario,
+                    nombreCompleto =
+                        e.Usuario.nombre + " " +
+                        e.Usuario.apellido1 + " " +
+                        e.Usuario.apellido2,
+                    correo = e.Usuario.correo,
+                    especialidad = e.especialidad,
+                    descripcion = e.descripcion,
+                    fechaContratacion = e.fechaContratacion,
+                    estado = e.estado
+                })
+                .FirstOrDefault();
+
+            return entrenador;
+        }
+
     }
 }
