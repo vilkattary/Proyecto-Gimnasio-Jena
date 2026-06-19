@@ -45,7 +45,12 @@
                         </li>
 
                         <li class="nav-item">
-                            @Html.ActionLink("Registrar asistencia", "Index", "Entrenadores",
+                            @Html.ActionLink("Mis clases", "MisClases", "Entrenadores",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
+
+                        <li class="nav-item">
+                            @Html.ActionLink("Registrar asistencia", "MisClases", "Entrenadores",
                                 new { area = "" }, new { @class = "nav-link" })
                         </li>
                     }
