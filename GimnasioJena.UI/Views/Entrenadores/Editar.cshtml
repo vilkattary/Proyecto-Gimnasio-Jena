@@ -1,0 +1,66 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Entrenadores.EntrenadorEditarDto
+
+@{
+    ViewBag.Title = "Editar entrenador";
+}
+
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm rounded-4" style="border-top:4px solid var(--gym-orange);">
+                <div class="card-body p-4">
+
+                    <h2 class="fw-bold mb-4" style="color:var(--gym-dark);">
+                        Editar información profesional
+                    </h2>
+
+                    @using (Html.BeginForm("Editar", "Entrenadores", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(m => m.idEntrenador)
+                        @Html.HiddenFor(m => m.idUsuario)
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.especialidad, "Especialidad", new { @class = "form-label fw-600" })
+                            @Html.TextBoxFor(m => m.especialidad, new { @class = "form-control", maxlength = "100" })
+                            @Html.ValidationMessageFor(m => m.especialidad, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.descripcion, "Descripción", new { @class = "form-label fw-600" })
+                            @Html.TextAreaFor(m => m.descripcion, new { @class = "form-control", rows = "4", maxlength = "500" })
+                            @Html.ValidationMessageFor(m => m.descripcion, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.fechaContratacion, "Fecha de contratación", new { @class = "form-label fw-600" })
+                            @Html.TextBoxFor(m => m.fechaContratacion, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                            @Html.ValidationMessageFor(m => m.fechaContratacion, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-check mb-4">
+                            @Html.CheckBoxFor(m => m.estado, new { @class = "form-check-input" })
+                            @Html.LabelFor(m => m.estado, "Entrenador activo", new { @class = "form-check-label" })
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-action">
+                                Guardar cambios
+                            </button>
+
+                            <a href="@Url.Action("Administrar", "Entrenadores")" class="btn btn-outline-gym">
+                                Volver
+                            </a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

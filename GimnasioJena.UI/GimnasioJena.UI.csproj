@@ -310,6 +310,8 @@
     <Content Include="Views\Entrenadores\Index.cshtml" />
     <Content Include="Views\Home\AdminIndex.cshtml" />
     <Content Include="Views\Entrenadores\RegistrarAsistencia.cshtml" />
+    <Content Include="Views\Entrenadores\Administrar.cshtml" />
+    <Content Include="Views\Entrenadores\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

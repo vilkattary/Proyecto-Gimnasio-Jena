@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GimnasioJena.Abstracciones.AccesoADatos.Entrenadores.EditarEntrenador;
+using GimnasioJena.Abstracciones.Modelos.Entrenadores;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.AccesoADatos.Entrenadores.EditarEntrenador
 {
-    public class EditarEntrenadorAD
+    public class EditarEntrenadorAD : IEditarEntrenadorAD
     {
+        public bool EditarEntrenador(EntrenadorEditarDto entrenador)
+        {
+            using (var contexto = new Contexto())
+            {
+                var entidad = contexto.Entrenadores
+                    .FirstOrDefault(e => e.idEntrenador == entrenador.idEntrenador);
+
+                if (entidad == null)
+                    return false;
+
+                entidad.especialidad = entrenador.especialidad;
+                entidad.descripcion = entrenador.descripcion;
+                entidad.fechaContratacion = entrenador.fechaContratacion;
+                entidad.estado = entrenador.estado;
+
+                return contexto.SaveChanges() > 0;
+            }
+        }
     }
 }
