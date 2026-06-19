@@ -1,6 +1,5 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Clases.ObtenerClasePorId;
 using GimnasioJena.Abstracciones.Modelos.Clases;
-using System;
 using System.Linq;
 
 namespace GimnasioJena.AccesoADatos.Clases.ObtenerClasePorId
@@ -28,16 +27,28 @@ namespace GimnasioJena.AccesoADatos.Clases.ObtenerClasePorId
                  select new ClaseListadoDto
                  {
                      idClaseProgramada = clase.idClaseProgramada,
+
+                     idTipoClase = clase.idTipoClase,
+                     idUsuarioEntrenador = clase.idUsuarioEntrenador,
+                     idEstadoClase = clase.idEstadoClase,
+
                      nombreClase = tipo.nombreClase,
                      nombreEntrenador = entrenadorUsuario.nombre + " " + entrenadorUsuario.apellido1 + " " + entrenadorUsuario.apellido2,
                      estadoClase = estado.nombreEstado,
+
                      fechaClase = clase.fechaClase,
                      horaInicio = clase.horaInicio,
                      horaFin = clase.horaFin,
+
                      cupoMaximo = clase.cupoMaximo,
                      cuposReservados = _elContexto.Reservas.Count(r => r.idClaseProgramada == clase.idClaseProgramada),
                      cuposDisponibles = clase.cupoMaximo - _elContexto.Reservas.Count(r => r.idClaseProgramada == clase.idClaseProgramada),
-                     ubicacion = clase.ubicacion
+
+                     ubicacion = clase.ubicacion,
+                     observaciones = clase.observaciones,
+
+                     fechaCreacion = clase.fechaCreacion,
+                     fechaModificacion = clase.fechaModificacion
                  }).FirstOrDefault();
 
             return laClaseEnBaseDeDatos;
