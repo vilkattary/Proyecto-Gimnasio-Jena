@@ -1,12 +1,10 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.Modelos.Clases;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerClasesPorEntrenador
 {
     public interface IObtenerClasesPorEntrenadorLN
     {
+        List<ClaseEntrenadorDto> ObtenerClasesPorEntrenador(string identityUserId);
     }
 }

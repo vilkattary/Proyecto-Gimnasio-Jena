@@ -1,0 +1,63 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Clases.ClaseEntrenadorDto>
+
+@{
+    ViewBag.Title = "Mis Clases";
+}
+
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+
+<section class="container py-5">
+    <h2 class="fw-bold mb-4" style="color:var(--gym-dark);">
+        Mis clases asignadas
+    </h2>
+
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body p-4">
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info mb-0">
+                    Aún no tienes clases asignadas.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Clase</th>
+                                <th>Fecha</th>
+                                <th>Horario</th>
+                                <th>Cupo</th>
+                                <th>Inscritos</th>
+                                <th>Ubicación</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.nombreClase</td>
+                                    <td>@item.fechaClase.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.horaInicio.ToString(@"hh\:mm") - @item.horaFin.ToString(@"hh\:mm")</td>
+                                    <td>@item.cupoMaximo</td>
+                                    <td>@item.inscritos</td>
+                                    <td>@item.ubicacion</td>
+                                    <td class="text-end">
+                                        <a href="@Url.Action("InscritosClase", "Entrenadores", new { id = item.idClaseProgramada })"
+                                           class="btn btn-sm btn-action">
+                                            Ver inscritos
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
