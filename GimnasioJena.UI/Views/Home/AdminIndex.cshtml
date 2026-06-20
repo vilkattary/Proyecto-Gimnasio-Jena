@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GimnasioJena.Abstracciones.Entidades.Home.SeccionesHome>
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Home.ContenidoWebDto>
 @using System.Linq
 @{
     ViewBag.Title = "Administrar Inicio";
@@ -155,7 +155,7 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-1">
                                 <small class="text-muted" style="font-family: var(--font-primary); font-size: 0.78rem;">
                                     <i class="bi bi-clock me-1"></i>
-                                    Última modificación: @item.FechaModificacion.ToString("dd/MM/yyyy HH:mm")
+                                    Última modificación: @(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yyyy HH:mm") : "-")
                                 </small>
                                 <button type="submit" class="btn-action" style="width: auto; padding: 10px 28px;">
                                     <i class="bi bi-save-fill"></i>Guardar Hero
@@ -287,7 +287,7 @@
 
                                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
                                         <small class="text-muted" style="font-size: 0.75rem;">
-                                            <i class="bi bi-clock me-1"></i>@item.FechaModificacion.ToString("dd/MM/yy HH:mm")
+                                            <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
                                         </small>
                                         <button type="submit" class="btn-action" style="width: auto; padding: 8px 20px; font-size: 0.85rem; margin-bottom: 0;">
                                             <i class="bi bi-save-fill"></i>Guardar
@@ -411,7 +411,7 @@
 
                                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
                                         <small class="text-muted" style="font-size: 0.75rem;">
-                                            <i class="bi bi-clock me-1"></i>@item.FechaModificacion.ToString("dd/MM/yy HH:mm")
+                                            <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
                                         </small>
                                         <button type="submit" class="btn-action" style="width: auto; padding: 8px 20px; font-size: 0.85rem; margin-bottom: 0;">
                                             <i class="bi bi-save-fill"></i>Guardar
