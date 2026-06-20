@@ -1,12 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GimnasioJena.Abstracciones.AccesoADatos.Asistencias.RegistrarAsistencia;
+using GimnasioJena.Abstracciones.Modelos.Asistencias;
+using GimnasioJena.AccesoADatos.Entidades.Asistencias;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.AccesoADatos.Asistencias.RegistrarAsistencia
 {
-    public class RegistrarAsistenciaAD
+    public class RegistrarAsistenciaAD : IRegistrarAsistenciaAD
     {
+        private readonly Contexto _elContexto;
+
+        public RegistrarAsistenciaAD()
+        {
+            _elContexto = new Contexto();
+        }
+
+        public int RegistrarAsistencia(AsistenciaCrearDto asistencia)
+        {
+            var asistenciaExistente = _elContexto.Asistencias
+                .FirstOrDefault(a => a.idReserva == asistencia.idReserva);
+
+            if (asistenciaExistente != null)
+            {
+                asistenciaExistente.asistio = asistencia.asistio;
+                asistenciaExistente.observaciones = asistencia.observaciones;
+                asistenciaExistente.fechaRegistro = DateTime.Now;
+                asistenciaExistente.idUsuarioRecepcionista = asistencia.idUsuarioRecepcionista;
+
+                return _elContexto.SaveChanges();
+            }
+
+            var asistenciaNueva = new AsistenciaEntidad
+            {
+                idReserva = asistencia.idReserva,
+                idUsuarioRecepcionista = asistencia.idUsuarioRecepcionista,
+                fechaRegistro = DateTime.Now,
+                asistio = asistencia.asistio,
+                observaciones = asistencia.observaciones
+            };
+
+            _elContexto.Asistencias.Add(asistenciaNueva);
+            return _elContexto.SaveChanges();
+        }
     }
 }

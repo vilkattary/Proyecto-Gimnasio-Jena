@@ -1,12 +1,10 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.Modelos.Asistencias;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Asistencias.ObtenerAsistenciasPorClase
 {
     public interface IObtenerAsistenciasPorClaseAD
     {
+        List<AsistenciaClaseDto> ObtenerAsistenciasPorClase(int idClaseProgramada);
     }
 }

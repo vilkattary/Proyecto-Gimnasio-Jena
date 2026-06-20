@@ -1,12 +1,23 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.AccesoADatos.Entrenadores.ObtenerTodosLosEntrenadores;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEntrenadores;
+using GimnasioJena.Abstracciones.Modelos.Entrenadores;
+using GimnasioJena.AccesoADatos.Entrenadores.ObtenerTodosLosEntrenadores;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEntrenadores
 {
-    public class ObtenerTodosLosEntrenadoresLN
+    public class ObtenerTodosLosEntrenadoresLN : IObtenerTodosLosEntrenadoresLN
     {
+        private readonly IObtenerTodosLosEntrenadoresAD _obtenerTodosLosEntrenadoresAD;
+
+        public ObtenerTodosLosEntrenadoresLN()
+        {
+            _obtenerTodosLosEntrenadoresAD = new ObtenerTodosLosEntrenadoresAD();
+        }
+
+        public List<EntrenadorListadoDto> ObtenerTodosLosEntrenadores()
+        {
+            return _obtenerTodosLosEntrenadoresAD.ObtenerTodosLosEntrenadores();
+        }
     }
 }

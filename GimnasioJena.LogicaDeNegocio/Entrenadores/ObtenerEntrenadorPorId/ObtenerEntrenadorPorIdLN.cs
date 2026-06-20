@@ -1,12 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using GimnasioJena.Abstracciones.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId;
+using GimnasioJena.Abstracciones.Modelos.Entrenadores;
 using System.Threading.Tasks;
 
 namespace GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId
 {
-    public class ObtenerEntrenadorPorIdLN
+    public class ObtenerEntrenadorPorIdLN : IObtenerEntrenadorPorIdLN
     {
+
+        private readonly IObtenerEntrenadorPorIdAD _repositorio;
+
+        public ObtenerEntrenadorPorIdLN(IObtenerEntrenadorPorIdAD repositorio)
+        {
+            _repositorio = repositorio;
+        }
+
+        public async Task<EntrenadorDto> ObtenerEntrenadorPorId(string identityUserId)
+        {
+
+            if (string.IsNullOrWhiteSpace(identityUserId))
+                return null;
+
+            return await _repositorio.ObtenerEntrenadorPorId(identityUserId);
+
+        }
+
+        public EntrenadorDto ObtenerEntrenadorPorId(int idEntrenador)
+        {
+            if (idEntrenador <= 0)
+                return null;
+
+            return _repositorio.ObtenerEntrenadorPorId(idEntrenador);
+        }
+
     }
 }

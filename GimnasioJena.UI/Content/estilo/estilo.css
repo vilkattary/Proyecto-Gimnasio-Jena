@@ -412,7 +412,7 @@ footer {
     }
 
 /* Responsive */
-@@media (max-width: 768px) {
+@media (max-width: 768px) {
     body {
         padding-top: 67px;
     }

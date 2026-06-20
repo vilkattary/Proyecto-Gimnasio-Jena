@@ -60,6 +60,40 @@ namespace GimnasioJena.AccesoADatos.Usuarios.CambiarRolUsuario
                         new SqlParameter("@rolNuevo", usuarioCambiarRol.rolNuevo)
                     );
 
+                    if (usuarioCambiarRol.rolNuevo == "ENTRENADOR")
+                    {
+                        string insertarEntrenadorSiNoExiste = @"
+                            IF NOT EXISTS (
+                                SELECT 1
+                                FROM Entrenador
+                                WHERE idUsuario = @idUsuario
+                            )
+                            BEGIN
+                                INSERT INTO Entrenador
+                                (
+                                    idUsuario,
+                                    especialidad,
+                                    descripcion,
+                                    fechaContratacion,
+                                    estado
+                                )
+                                VALUES
+                                (
+                                    @idUsuario,
+                                    'Pendiente de completar',
+                                    'Pendiente de completar',
+                                    GETDATE(),
+                                    1
+                                );
+                            END;
+                        ";
+
+                        _contexto.Database.ExecuteSqlCommand(
+                            insertarEntrenadorSiNoExiste,
+                            new SqlParameter("@idUsuario", usuarioCambiarRol.idUsuario)
+                        );
+                    }
+
                     string insertarBitacora = @"
                         INSERT INTO Bitacora
                         (

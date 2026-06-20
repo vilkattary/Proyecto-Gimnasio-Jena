@@ -1,0 +1,62 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Reservas.ReservaClaseDto>
+
+@{
+    ViewBag.Title = "Inscritos de la Clase";
+}
+
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+
+<section class="container py-5">
+    <h2 class="fw-bold mb-4" style="color:var(--gym-dark);">
+        Inscritos de la clase
+    </h2>
+
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body p-4">
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info mb-0">
+                    Esta clase todavía no tiene clientes inscritos.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Estado reserva</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.nombreCliente</td>
+                                    <td>@item.correoCliente</td>
+                                    <td>@item.telefonoCliente</td>
+                                    <td>
+                                        <span class="badge bg-primary">
+                                            @item.estadoReserva
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <div class="mt-4">
+                <a href="@Url.Action("MisClases", "Entrenadores")" class="btn btn-outline-gym">
+                    Volver a mis clases
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>

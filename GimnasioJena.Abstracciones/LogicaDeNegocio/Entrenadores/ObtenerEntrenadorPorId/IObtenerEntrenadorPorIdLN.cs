@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.Modelos.Entrenadores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerEntrena
 {
     public interface IObtenerEntrenadorPorIdLN
     {
+        Task<EntrenadorDto> ObtenerEntrenadorPorId(string identityUserId);
+        EntrenadorDto ObtenerEntrenadorPorId(int idEntrenador);
     }
 }

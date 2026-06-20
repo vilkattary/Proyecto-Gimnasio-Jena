@@ -1,88 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.RegistrarReserva;
+using GimnasioJena.Abstracciones.Modelos.Reservas;
+using GimnasioJena.AccesoADatos;
+using GimnasioJena.LogicaDeNegocio.Reservas.RegistrarReserva;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace GimnasioJena.UI.Controllers
 {
+    [Authorize]
     public class ReservasController : Controller
     {
-        // GET: Reservas
-        public ActionResult Index()
+        private readonly IRegistrarReservaLN _registrarReservaServicio;
+
+        public ReservasController()
         {
-            return View();
+            _registrarReservaServicio = new RegistrarReservaLN();
         }
 
-        // GET: Reservas/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        [Authorize(Roles = "CLIENTE")]
+        public ActionResult ReservarClase(int id)
         {
-            return View();
+            using (var contexto = new Contexto())
+            {
+                var clase = contexto.Clases.FirstOrDefault(c => c.idClaseProgramada == id);
+
+                if (clase == null)
+                {
+                    TempData["MensajeError"] = "No se encontró la clase seleccionada.";
+                    return RedirectToAction("ObtenerTodasLasClases", "Clases");
+                }
+
+                var modelo = new ReservaCrearDto
+                {
+                    idClaseProgramada = id,
+                    idEstadoReserva = 1
+                };
+
+                return View(modelo);
+            }
         }
 
-        // GET: Reservas/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Reservas/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "CLIENTE")]
+        public ActionResult ReservarClase(ReservaCrearDto modelo)
         {
-            try
+            if (modelo == null || modelo.idClaseProgramada <= 0)
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                TempData["MensajeError"] = "No se recibió información válida para reservar.";
+                return RedirectToAction("ObtenerTodasLasClases", "Clases");
             }
-            catch
+
+            using (var contexto = new Contexto())
             {
-                return View();
-            }
-        }
+                var identityUserId = User.Identity.GetUserId();
 
-        // GET: Reservas/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
 
-        // POST: Reservas/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
+                if (usuario == null)
+                {
+                    TempData["MensajeError"] = "No se encontró el usuario actual.";
+                    return RedirectToAction("ObtenerTodasLasClases", "Clases");
+                }
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                modelo.idUsuario = usuario.idUsuario;
+                modelo.idEstadoReserva = 1;
 
-        // GET: Reservas/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+                bool resultado = _registrarReservaServicio.RegistrarReserva(modelo);
 
-        // POST: Reservas/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
+                if (resultado)
+                {
+                    TempData["MensajeExito"] = "La reserva se registró correctamente.";
+                    return RedirectToAction("ObtenerTodasLasClases", "Clases");
+                }
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
+                TempData["MensajeError"] = "No se pudo registrar la reserva.";
+                return View(modelo);
             }
         }
     }

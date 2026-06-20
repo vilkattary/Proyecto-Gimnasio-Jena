@@ -10,8 +10,8 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase
 {
     public class RegistrarClaseLN : IRegistrarClaseLN
     {
-        private  IRegistrarClaseAD _registrarClaseAD;
-        private  IFechasLN _fechasLN;
+        private IRegistrarClaseAD _registrarClaseAD;
+        private IFechasLN _fechasLN;
 
         public RegistrarClaseLN()
         {
@@ -19,22 +19,16 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase
             _fechasLN = new FechasLN();
         }
 
-        public bool RegistrarClase(ClaseCrearDto RegistrarClaseAGuardar)
+        public bool RegistrarClase(ClaseCrearDto registrarClaseAGuardar)
         {
-            try
-            {
+            if (registrarClaseAGuardar == null)
+                return false;
 
-                RegistrarClaseAGuardar.fechaCreacion = RegistrarClaseAGuardar.fechaCreacion; _fechasLN.ObtenerFechaActual();
+            registrarClaseAGuardar.fechaCreacion = _fechasLN.ObtenerFechaActual();
 
-                int cantidadDeDatosAlmacenados = _registrarClaseAD.RegistrarClase(RegistrarClaseAGuardar);
+            int cantidadDeDatosAlmacenados = _registrarClaseAD.RegistrarClase(registrarClaseAGuardar);
 
-                return cantidadDeDatosAlmacenados > 0;
-            }
-            catch (Exception)
-            {
-               
-                throw;
-            }
+            return cantidadDeDatosAlmacenados > 0;
         }
     }
 }

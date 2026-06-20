@@ -6,7 +6,7 @@ namespace GimnasioJena.Abstracciones.Modelos.Asistencias
     {
         public int idAsistencia { get; set; }
         public int idReserva { get; set; }
-        public int? idUsuarioRecepcionista { get; set; }
+        public int? idUsuarioEntrenador { get; set; }
         public DateTime fechaRegistro { get; set; }
         public bool asistio { get; set; }
         public string observaciones { get; set; }

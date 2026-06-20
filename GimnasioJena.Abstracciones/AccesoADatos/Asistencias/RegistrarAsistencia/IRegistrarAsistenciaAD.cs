@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GimnasioJena.Abstracciones.Modelos.Asistencias;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Asistencias.RegistrarAsistencia
 {
     public interface IRegistrarAsistenciaAD
     {
+        int RegistrarAsistencia(AsistenciaCrearDto asistencia);
     }
 }
