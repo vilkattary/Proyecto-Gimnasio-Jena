@@ -1,5 +1,6 @@
 using GimnasioJena.Abstracciones.AccesoADatos.Home.ObtenerSeccionesHome;
-using GimnasioJena.Abstracciones.Entidades.Home;
+using GimnasioJena.Abstracciones.Modelos.Home;
+using GimnasioJena.AccesoADatos.Entidades.Home;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,29 +9,47 @@ using System.Threading.Tasks;
 
 namespace GimnasioJena.AccesoADatos.Home.ObtenerSeccionesHome
 {
-    public class ObtenerSeccionesHomeAD : IObtenerSeccionesHomeAD
+    public class ObtenerContenidoWebAD : IObtenerContenidoWebAD
     {
-        public async Task<List<SeccionesHome>> ObtenerSeccionesHome()
+        public async Task<IEnumerable<ContenidoWebDto>> ObtenerPorPaginaAsync(string pagina)
         {
             using (var contexto = new Contexto())
             {
-                bool tablaVacia = !await contexto.SeccionesHome.AnyAsync();
+                bool tablaVacia = !await contexto.ContenidoWeb.AnyAsync(x => x.Pagina == pagina);
 
                 if (tablaVacia)
-                    await SembrarSeccionesIniciales(contexto);
+                    await SembrarContenidoInicial(contexto, pagina);
 
-                return await contexto.SeccionesHome
+                var entidades = await contexto.ContenidoWeb
+                    .Where(x => x.Pagina == pagina)
                     .OrderBy(s => s.Orden)
                     .ToListAsync();
+
+                return entidades.Select(s => new ContenidoWebDto
+                {
+                    Id                = s.Id,
+                    Pagina            = s.Pagina,
+                    Seccion           = s.Seccion,
+                    Clave             = s.Clave,
+                    TextoPrincipal    = s.TextoPrincipal,
+                    TextoSecundario   = s.TextoSecundario,
+                    UrlImagen         = s.UrlImagen,
+                    Orden             = s.Orden,
+                    FechaModificacion = s.FechaModificacion
+                });
             }
         }
 
-        private async Task SembrarSeccionesIniciales(Contexto contexto)
+        private async Task SembrarContenidoInicial(Contexto contexto, string pagina)
         {
-            var secciones = new List<SeccionesHome>
+            if (pagina != "Home")
+                return;
+
+            var secciones = new List<ContenidoWeb>
             {
-                new SeccionesHome
+                new ContenidoWeb
                 {
+                    Pagina           = "Home",
                     Seccion          = "Hero",
                     Clave            = "hero-principal",
                     TextoPrincipal   = "Entrena En Jéna Training Methodology",
@@ -39,8 +58,9 @@ namespace GimnasioJena.AccesoADatos.Home.ObtenerSeccionesHome
                     Orden            = 1,
                     FechaModificacion = DateTime.Now
                 },
-                new SeccionesHome
+                new ContenidoWeb
                 {
+                    Pagina           = "Home",
                     Seccion          = "Clases",
                     Clave            = "clase-fuerza",
                     TextoPrincipal   = "Fuerza Intensa",
@@ -49,8 +69,9 @@ namespace GimnasioJena.AccesoADatos.Home.ObtenerSeccionesHome
                     Orden            = 2,
                     FechaModificacion = DateTime.Now
                 },
-                new SeccionesHome
+                new ContenidoWeb
                 {
+                    Pagina           = "Home",
                     Seccion          = "Clases",
                     Clave            = "clase-yoga",
                     TextoPrincipal   = "Yoga Flow",
@@ -59,8 +80,9 @@ namespace GimnasioJena.AccesoADatos.Home.ObtenerSeccionesHome
                     Orden            = 3,
                     FechaModificacion = DateTime.Now
                 },
-                new SeccionesHome
+                new ContenidoWeb
                 {
+                    Pagina           = "Home",
                     Seccion          = "Clases",
                     Clave            = "clase-cardio",
                     TextoPrincipal   = "Cardio Boost",
@@ -69,8 +91,9 @@ namespace GimnasioJena.AccesoADatos.Home.ObtenerSeccionesHome
                     Orden            = 4,
                     FechaModificacion = DateTime.Now
                 },
-                new SeccionesHome
+                new ContenidoWeb
                 {
+                    Pagina           = "Home",
                     Seccion          = "Testimonios",
                     Clave            = "testimonio-maria",
                     TextoPrincipal   = "María Rodríguez",
@@ -79,8 +102,9 @@ namespace GimnasioJena.AccesoADatos.Home.ObtenerSeccionesHome
                     Orden            = 5,
                     FechaModificacion = DateTime.Now
                 },
-                new SeccionesHome
+                new ContenidoWeb
                 {
+                    Pagina           = "Home",
                     Seccion          = "Testimonios",
                     Clave            = "testimonio-carlos",
                     TextoPrincipal   = "Carlos Gómez",
@@ -89,8 +113,9 @@ namespace GimnasioJena.AccesoADatos.Home.ObtenerSeccionesHome
                     Orden            = 6,
                     FechaModificacion = DateTime.Now
                 },
-                new SeccionesHome
+                new ContenidoWeb
                 {
+                    Pagina           = "Home",
                     Seccion          = "Testimonios",
                     Clave            = "testimonio-laura",
                     TextoPrincipal   = "Laura Pérez",
@@ -101,7 +126,7 @@ namespace GimnasioJena.AccesoADatos.Home.ObtenerSeccionesHome
                 }
             };
 
-            contexto.SeccionesHome.AddRange(secciones);
+            contexto.ContenidoWeb.AddRange(secciones);
             await contexto.SaveChangesAsync();
         }
     }

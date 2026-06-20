@@ -10,13 +10,13 @@ namespace GimnasioJena.AccesoADatos.Home.EliminarSeccionHome
         {
             using (var contexto = new Contexto())
             {
-                var seccion = await contexto.SeccionesHome
+                var seccion = await contexto.ContenidoWeb
                     .FirstOrDefaultAsync(s => s.Id == id);
 
                 if (seccion == null)
                     return false;
 
-                contexto.SeccionesHome.Remove(seccion);
+                contexto.ContenidoWeb.Remove(seccion);
                 int filasAfectadas = await contexto.SaveChangesAsync();
                 return filasAfectadas > 0;
             }

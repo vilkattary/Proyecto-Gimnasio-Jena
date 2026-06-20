@@ -112,6 +112,7 @@
     <Compile Include="Entidades\Comunicacion\MensajeEntidad.cs" />
     <Compile Include="Entidades\Entrenadores\EntrenadorEntidad.cs" />
     <Compile Include="Entidades\EstadoReservas\EstadoReservaEntidad.cs" />
+    <Compile Include="Entidades\Home\SeccionesHome.cs" />
     <Compile Include="Entidades\Membresias\MembresiaEntidad.cs" />
     <Compile Include="Entidades\Membresias\PlanMembresiaEntidad.cs" />
     <Compile Include="Entidades\Pagos\PagoEntidad.cs" />

@@ -9,16 +9,16 @@ using System.Web.Hosting;
 
 namespace GimnasioJena.LogicaDeNegocio.Home.ModificarSeccionHome
 {
-    public class ModificarSeccionHomeLN : IModificarSeccionHomeLN
+    public class ModificarContenidoWebLN : IModificarContenidoWebLN
     {
-        private readonly IModificarSeccionHomeAD _repositorio;
+        private readonly IModificarContenidoWebAD _repositorio;
 
-        public ModificarSeccionHomeLN()
+        public ModificarContenidoWebLN()
         {
-            _repositorio = new ModificarSeccionHomeAD();
+            _repositorio = new ModificarContenidoWebAD();
         }
 
-        public async Task<bool> ModificarSeccionHome(ModificarSeccionHomeDto dto)
+        public async Task<bool> EjecutarAsync(ModificarContenidoWebDto dto)
         {
             if (dto.ArchivoImagen != null && dto.ArchivoImagen.ContentLength > 0)
             {
@@ -27,7 +27,7 @@ namespace GimnasioJena.LogicaDeNegocio.Home.ModificarSeccionHome
                 if (!Directory.Exists(carpeta))
                     Directory.CreateDirectory(carpeta);
 
-                string extension    = Path.GetExtension(dto.ArchivoImagen.FileName);
+                string extension     = Path.GetExtension(dto.ArchivoImagen.FileName);
                 string nombreArchivo = Guid.NewGuid().ToString() + extension;
                 string rutaCompleta  = Path.Combine(carpeta, nombreArchivo);
 
@@ -40,7 +40,7 @@ namespace GimnasioJena.LogicaDeNegocio.Home.ModificarSeccionHome
                 dto.UrlImagen = "/images/uploads/" + nombreArchivo;
             }
 
-            return await _repositorio.ModificarSeccionHome(dto);
+            return await _repositorio.ModificarContenidoWeb(dto);
         }
     }
 }
