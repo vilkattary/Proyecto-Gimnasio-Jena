@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Reservas.ReservaClaseDto>
+﻿﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Reservas.ReservaClaseDto>
 
 @{
     ViewBag.Title = "Inscritos de la Clase";
@@ -30,6 +30,7 @@
                                 <th>Correo</th>
                                 <th>Teléfono</th>
                                 <th>Estado reserva</th>
+                                <th> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,6 +44,12 @@
                                         <span class="badge bg-primary">
                                             @item.estadoReserva
                                         </span>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("CambiarEstadoReserva", "Entrenadores", new { id = item.idReserva })"
+                                           class="btn btn-sm btn-action">
+                                            Cambiar Estado
+                                        </a>
                                     </td>
                                 </tr>
                             }
