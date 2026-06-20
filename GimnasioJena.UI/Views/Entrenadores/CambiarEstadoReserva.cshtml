@@ -1,0 +1,43 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Reservas.ReservaClaseDto
+
+@{
+    ViewBag.Title = "Cambiar estado de reserva";
+}
+<section class="container py-5"container py-5">
+    <h2>Cambiar estado de reserva</h2>
+
+    <div class="card p-3">
+        <dl class="row">
+            <dt class="col-sm-3">Cliente</dt>
+            <dd class="col-sm-9">@Model.nombreCliente</dd>
+
+            <dt class="col-sm-3">Correo</dt>
+            <dd class="col-sm-9">@Model.correoCliente</dd>
+
+            <dt class="col-sm-3">Teléfono</dt>
+            <dd class="col-sm-9">@Model.telefonoCliente</dd>
+        </dl>
+
+        @using (Html.BeginForm("CambiarEstadoReserva", "Entrenadores", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("idReserva", Model.idReserva)
+            @Html.Hidden("idClaseProgramada", Model.idClaseProgramada)
+
+            <div class="mb-3">
+                <label class="form-label">Estado de la reserva</label>
+                <select name="idEstadoReserva" class="form-control">
+                    @foreach (SelectListItem estado in (SelectList)ViewBag.EstadosReserva)
+                    {
+                        var selected = (estado.Value == Model.idEstadoReserva.ToString()) ? "selected" : "";
+                        <option value="@estado.Value" @Html.Raw(selected)>@estado.Text</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="@Url.Action("InscritosClase", "Entrenadores", new { id = Model.idClaseProgramada })" class="btn btn-secondary ms-2">Cancelar</a>
+        }
+    </div>
+</section>
+

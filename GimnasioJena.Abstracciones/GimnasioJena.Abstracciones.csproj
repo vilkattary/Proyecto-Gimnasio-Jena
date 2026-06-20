@@ -105,6 +105,7 @@
     <Compile Include="AccesoADatos\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorAD.cs" />
+    <Compile Include="AccesoADatos\EstadoReservas\ObtenerEstadoReservas\IObtenerEstadoReservaAD.cs" />
     <Compile Include="AccesoADatos\Home\AgregarSeccionHome\IAgregarSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Home\EliminarSeccionHome\IEliminarSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaAD.cs" />
@@ -131,9 +132,11 @@
     <Compile Include="AccesoADatos\Reportes\ObtenerReporteReservas\IObtenerReporteReservasAD.cs" />
     <Compile Include="AccesoADatos\Reservas\CambiarEstadoReserva\ICambiarEstadoReservaAD.cs" />
     <Compile Include="AccesoADatos\Reservas\CancelarReserva\ICancelarReservaAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\EditarReserva\IEditarReservaAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerReservaPorId\IObtenerReservaPorIdAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorClase\IObtenerReservasPorClaseAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorCliente\IObtenerReservasPorClienteAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorUsuario\IObtenerReservasPorUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasAD.cs" />
     <Compile Include="AccesoADatos\Reservas\RegistrarReserva\IRegistrarReservaAD.cs" />
     <Compile Include="AccesoADatos\Roles\CambiarEstadoRol\ICambiarEstadoRolAD.cs" />
@@ -182,6 +185,7 @@
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorLN.cs" />
+    <Compile Include="LogicaDeNegocio\EstadoReservas\ObtenerEstadoReservas\IObtenerEstadoReservasLN.CS" />
     <Compile Include="LogicaDeNegocio\Home\AgregarSeccionHome\IAgregarSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Home\EliminarSeccionHome\IEliminarSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaLN.cs" />
@@ -208,9 +212,11 @@
     <Compile Include="LogicaDeNegocio\Reportes\ObtenerReporteReservas\IObtenerReporteReservasLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\CambiarEstadoReserva\ICambiarEstadoReservaLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\CancelarReserva\ICancelarReservaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\EditarReserva\IEditarReservaLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservaPorId\IObtenerReservaPorIdLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorClase\IObtenerReservasPorClaseLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorCliente\IObtenerReservasPorClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorUsuario\IObtenerReservasPorUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\RegistrarReserva\IRegistrarReservaLN.cs" />
     <Compile Include="LogicaDeNegocio\Roles\CambiarEstadoRol\ICambiarEstadoRolLN.cs" />
@@ -280,6 +286,7 @@
     <Compile Include="Modelos\Reportes\ReporteIngresosDto.cs" />
     <Compile Include="Modelos\Reportes\ReporteMembresiaDto.cs" />
     <Compile Include="Modelos\Reportes\ReporteReservaDto.cs" />
+    <Compile Include="Modelos\EstadoReserva\EstadoReservasDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaCancelarDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaClaseDto.cs" />
