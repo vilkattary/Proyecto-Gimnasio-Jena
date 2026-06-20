@@ -134,6 +134,7 @@
     <Compile Include="AccesoADatos\Reservas\ObtenerReservaPorId\IObtenerReservaPorIdAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorClase\IObtenerReservasPorClaseAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorCliente\IObtenerReservasPorClienteAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorUsuario\IObtenerReservasPorUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasAD.cs" />
     <Compile Include="AccesoADatos\Reservas\RegistrarReserva\IRegistrarReservaAD.cs" />
     <Compile Include="AccesoADatos\Roles\CambiarEstadoRol\ICambiarEstadoRolAD.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservaPorId\IObtenerReservaPorIdLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorClase\IObtenerReservasPorClaseLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorCliente\IObtenerReservasPorClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorUsuario\IObtenerReservasPorUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\RegistrarReserva\IRegistrarReservaLN.cs" />
     <Compile Include="LogicaDeNegocio\Roles\CambiarEstadoRol\ICambiarEstadoRolLN.cs" />

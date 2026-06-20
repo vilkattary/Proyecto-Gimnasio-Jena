@@ -155,6 +155,7 @@
     <Compile Include="Reservas\ObtenerReservaPorId\ObtenerReservaPorIdAD.cs" />
     <Compile Include="Reservas\ObtenerReservasPorClase\ObtenerReservasPorClaseAD.cs" />
     <Compile Include="Reservas\ObtenerReservasPorCliente\ObtenerReservasPorClienteAD.cs" />
+    <Compile Include="Reservas\ObtenerReservasPorUsuario\ObtenerReservasPorUsuarioAD.cs" />
     <Compile Include="Reservas\ObtenerTodasLasReservas\ObtenerTodasLasReservasAD.cs" />
     <Compile Include="Reservas\RegistrarReserva\RegistrarReservaAD.cs" />
     <Compile Include="Roles\CambiarEstadoRol\CambiarEstadoRolAD.cs" />
