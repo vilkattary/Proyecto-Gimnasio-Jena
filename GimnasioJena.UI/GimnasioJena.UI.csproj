@@ -314,6 +314,7 @@
     <Content Include="Views\Entrenadores\Editar.cshtml" />
     <Content Include="Views\Entrenadores\MisClases.cshtml" />
     <Content Include="Views\Entrenadores\InscritosClase.cshtml" />
+    <Content Include="Views\Entrenadores\AsistenciaClase.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

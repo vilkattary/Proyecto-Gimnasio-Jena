@@ -1,19 +1,24 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerClasesPorEntrenador;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Asistencias.ObtenerAsistenciasPorClase;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Asistencias.RegistrarAsistencia;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerClasesPorEntrenador;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.EditarEntrenador;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEntrenadores;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorClase;
+using GimnasioJena.Abstracciones.Modelos.Asistencias;
 using GimnasioJena.Abstracciones.Modelos.Entrenadores;
 using GimnasioJena.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId;
+using GimnasioJena.LogicaDeNegocio.Asistencias.ObtenerAsistenciasPorClase;
+using GimnasioJena.LogicaDeNegocio.Asistencias.RegistrarAsistencia;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerClasesPorEntrenador;
 using GimnasioJena.LogicaDeNegocio.Entrenadores.EditarEntrenador;
 using GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId;
 using GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEntrenadores;
+using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorClase;
 using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorClase;
 
 namespace GimnasioJena.UI.Controllers
 {
@@ -25,6 +30,8 @@ namespace GimnasioJena.UI.Controllers
         private readonly IEditarEntrenadorLN _editarEntrenadorServicio;
         private readonly IObtenerClasesPorEntrenadorLN _obtenerClasesPorEntrenadorServicio;
         private readonly IObtenerReservasPorClaseLN _obtenerReservasPorClaseServicio;
+        private readonly IObtenerAsistenciasPorClaseLN _obtenerAsistenciasPorClaseServicio;
+        private readonly IRegistrarAsistenciaLN _registrarAsistenciaServicio;
 
         public EntrenadoresController()
         {
@@ -34,6 +41,8 @@ namespace GimnasioJena.UI.Controllers
             _editarEntrenadorServicio = new EditarEntrenadorLN();
             _obtenerClasesPorEntrenadorServicio = new ObtenerClasesPorEntrenadorLN();
             _obtenerReservasPorClaseServicio = new ObtenerReservasPorClaseLN();
+            _obtenerAsistenciasPorClaseServicio = new ObtenerAsistenciasPorClaseLN();
+            _registrarAsistenciaServicio = new RegistrarAsistenciaLN();
         }
 
         [Authorize(Roles = "ENTRENADOR")]
@@ -69,6 +78,34 @@ namespace GimnasioJena.UI.Controllers
             ViewBag.IdClaseProgramada = id;
 
             return View(reservas);
+        }
+
+        [Authorize(Roles = "ENTRENADOR")]
+        public ActionResult AsistenciaClase(int id)
+        {
+            var asistencias = _obtenerAsistenciasPorClaseServicio.ObtenerAsistenciasPorClase(id);
+            ViewBag.IdClaseProgramada = id;
+
+            return View(asistencias);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ENTRENADOR")]
+        public ActionResult RegistrarAsistencia(AsistenciaCrearDto modelo, int idClaseProgramada)
+        {
+            bool resultado = _registrarAsistenciaServicio.RegistrarAsistencia(modelo);
+
+            if (resultado)
+            {
+                TempData["MensajeExito"] = "La asistencia se registró correctamente.";
+            }
+            else
+            {
+                TempData["MensajeError"] = "No se pudo registrar la asistencia.";
+            }
+
+            return RedirectToAction("AsistenciaClase", new { id = idClaseProgramada });
         }
 
         [Authorize(Roles = "ADMINISTRADOR")]
