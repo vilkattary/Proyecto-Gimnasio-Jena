@@ -255,6 +255,7 @@
     <Compile Include="Modelos\Entrenadores\EntrenadorListadoDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorPerfilDto.cs" />
     <Compile Include="Modelos\Home\AgregarSeccionHomeDto.cs" />
+    <Compile Include="Modelos\Home\ContenidoWebDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaClienteDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCrearDto.cs" />
@@ -297,14 +298,15 @@
     <Compile Include="Modelos\Usuarios\UsuarioListadoDto.cs" />
     <Compile Include="Modelos\Usuarios\UsuarioPerfilDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entidades\Home\SeccionesHome.cs" />
     <Compile Include="Modelos\Home\ModificarSeccionHomeDto.cs" />
     <Compile Include="AccesoADatos\Home\ObtenerSeccionesHome\IObtenerSeccionesHomeAD.cs" />
     <Compile Include="AccesoADatos\Home\ModificarSeccionHome\IModificarSeccionHomeAD.cs" />
     <Compile Include="LogicaDeNegocio\Home\ObtenerSeccionesHome\IObtenerSeccionesHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Home\ModificarSeccionHome\IModificarSeccionHomeLN.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Entidades\Home\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
@@ -312,7 +314,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-       <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.targets'))" />

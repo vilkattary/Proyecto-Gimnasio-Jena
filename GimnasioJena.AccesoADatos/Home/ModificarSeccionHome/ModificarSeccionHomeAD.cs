@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace GimnasioJena.AccesoADatos.Home.ModificarSeccionHome
 {
-    public class ModificarSeccionHomeAD : IModificarSeccionHomeAD
+    public class ModificarContenidoWebAD : IModificarContenidoWebAD
     {
-        public async Task<bool> ModificarSeccionHome(ModificarSeccionHomeDto dto)
+        public async Task<bool> ModificarContenidoWeb(ModificarContenidoWebDto dto)
         {
             using (var contexto = new Contexto())
             {
-                var seccion = await contexto.SeccionesHome
+                var contenido = await contexto.ContenidoWeb
                     .FirstOrDefaultAsync(s => s.Id == dto.Id);
 
-                if (seccion == null)
+                if (contenido == null)
                     return false;
 
-                seccion.TextoPrincipal  = dto.TextoPrincipal;
-                seccion.TextoSecundario = dto.TextoSecundario;
+                contenido.TextoPrincipal  = dto.TextoPrincipal;
+                contenido.TextoSecundario = dto.TextoSecundario;
 
                 if (!string.IsNullOrWhiteSpace(dto.UrlImagen))
-                    seccion.UrlImagen = dto.UrlImagen;
+                    contenido.UrlImagen = dto.UrlImagen;
                 // Si dto.UrlImagen llega null/vacío (no se subió imagen nueva),
                 // se conserva el valor ya guardado en BD.
 
-                seccion.FechaModificacion = DateTime.Now;
+                contenido.FechaModificacion = DateTime.Now;
 
                 await contexto.SaveChangesAsync();
                 return true;

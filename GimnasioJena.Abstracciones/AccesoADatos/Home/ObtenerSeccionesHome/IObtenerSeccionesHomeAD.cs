@@ -1,11 +1,11 @@
-using GimnasioJena.Abstracciones.Entidades.Home;
+using GimnasioJena.Abstracciones.Modelos.Home;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Home.ObtenerSeccionesHome
 {
-    public interface IObtenerSeccionesHomeAD
+    public interface IObtenerContenidoWebAD
     {
-        Task<List<SeccionesHome>> ObtenerSeccionesHome();
+        Task<IEnumerable<ContenidoWebDto>> ObtenerPorPaginaAsync(string pagina);
     }
 }

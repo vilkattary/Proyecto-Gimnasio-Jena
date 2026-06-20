@@ -16,28 +16,28 @@ namespace GimnasioJena.UI.Controllers
     [SoloAdministrador]
     public class SeccionesHomeController : Controller
     {
-        private readonly IObtenerSeccionesHomeLN _obtenerSeccionesHome;
-        private readonly IModificarSeccionHomeLN _modificarSeccionHome;
-        private readonly IEliminarSeccionHomeLN  _eliminarSeccionHome;
-        private readonly IAgregarSeccionHomeLN   _agregarSeccionHome;
+        private readonly IObtenerContenidoWebLN  _obtenerContenidoWeb;
+        private readonly IModificarContenidoWebLN _modificarContenidoWeb;
+        private readonly IEliminarSeccionHomeLN   _eliminarSeccionHome;
+        private readonly IAgregarSeccionHomeLN    _agregarSeccionHome;
 
         public SeccionesHomeController()
         {
-            _obtenerSeccionesHome = new ObtenerSeccionesHomeLN();
-            _modificarSeccionHome = new ModificarSeccionHomeLN();
-            _eliminarSeccionHome  = new EliminarSeccionHomeLN();
-            _agregarSeccionHome   = new AgregarSeccionHomeLN();
+            _obtenerContenidoWeb   = new ObtenerContenidoWebLN();
+            _modificarContenidoWeb = new ModificarContenidoWebLN();
+            _eliminarSeccionHome   = new EliminarSeccionHomeLN();
+            _agregarSeccionHome    = new AgregarSeccionHomeLN();
         }
 
         public async Task<ActionResult> Index()
         {
-            var modelo = await _obtenerSeccionesHome.ObtenerSeccionesHome();
+            var modelo = await _obtenerContenidoWeb.EjecutarAsync("Home");
             return View("~/Views/Home/AdminIndex.cshtml", modelo);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> GuardarSeccion(ModificarSeccionHomeDto dto)
+        public async Task<ActionResult> GuardarSeccion(ModificarContenidoWebDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace GimnasioJena.UI.Controllers
 
             try
             {
-                bool resultado = await _modificarSeccionHome.ModificarSeccionHome(dto);
+                bool resultado = await _modificarContenidoWeb.EjecutarAsync(dto);
 
                 if (resultado)
                     TempData["MensajeExito"] = "La sección se actualizó correctamente.";

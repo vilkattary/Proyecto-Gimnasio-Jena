@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Home.ModificarSeccionHome
 {
-    public interface IModificarSeccionHomeAD
+    public interface IModificarContenidoWebAD
     {
-        Task<bool> ModificarSeccionHome(ModificarSeccionHomeDto dto);
+        Task<bool> ModificarContenidoWeb(ModificarContenidoWebDto dto);
     }
 }
