@@ -115,6 +115,8 @@
     <Compile Include="AccesoADatos\Membresias\ObtenerTodasLasMembresias\IObtenerTodasLasMembresiasAD.cs" />
     <Compile Include="AccesoADatos\Membresias\RegistrarMembresia\IRegistrarMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\RenovarMembresia\IRenovarMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosAD.cs" />
+    <Compile Include="AccesoADatos\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdAD.cs" />
@@ -193,6 +195,8 @@
     <Compile Include="LogicaDeNegocio\Membresias\ObtenerTodasLasMembresias\IObtenerTodasLasMembresiasLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\RegistrarMembresia\IRegistrarMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\RenovarMembresia\IRenovarMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdLN.cs" />
@@ -311,9 +315,7 @@
     <Compile Include="LogicaDeNegocio\Home\ObtenerSeccionesHome\IObtenerSeccionesHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Home\ModificarSeccionHome\IModificarSeccionHomeLN.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entidades\Home\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />

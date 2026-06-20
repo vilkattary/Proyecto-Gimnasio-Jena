@@ -178,7 +178,7 @@
 
         @if (seccionClases.Any())
         {
-            <div class="row g-4 mb-3">
+            <div class="row g-4 mb-3 justify-content-center">
                 @foreach (var item in seccionClases)
                 {
                     bool esIconoBI = !string.IsNullOrEmpty(item.UrlImagen) && item.UrlImagen.StartsWith("bi-");
@@ -323,7 +323,7 @@
 
         @if (seccionTestimonios.Any())
         {
-            <div class="row g-4 mb-3">
+            <div class="row g-4 mb-3 justify-content-center">
                 @foreach (var item in seccionTestimonios)
                 {
                     <div class="col-12 col-lg-4">

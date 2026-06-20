@@ -116,6 +116,10 @@
     <Compile Include="Membresias\ObtenerTodasLasMembresias\ObtenerTodasLasMembresiasLN.cs" />
     <Compile Include="Membresias\RegistrarMembresia\RegistrarMembresiaLN.cs" />
     <Compile Include="Membresias\RenovarMembresia\RenovarMembresiaLN.cs" />
+    <Compile Include="Nosotros\AgregarSeccionNosotros\AgregarSeccionNosotrosLN.cs" />
+    <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosLN.cs" />
+    <Compile Include="Nosotros\ModificarSeccionNosotros\ModificarContenidoNosotrosLN.cs" />
+    <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recepcionistas\CambiarEstadoRecepcionista\CambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="Recepcionistas\EditarRecepcionista\EditarRecepcionistaLN.cs" />
