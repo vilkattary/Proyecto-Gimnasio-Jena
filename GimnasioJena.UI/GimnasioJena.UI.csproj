@@ -184,6 +184,7 @@
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\ComunicacionController.cs" />
     <Compile Include="Controllers\EntrenadoresController.cs" />
+    <Compile Include="Controllers\EstadoReservasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembresiasController.cs" />
@@ -315,11 +316,13 @@
     <Content Include="Views\Entrenadores\MisClases.cshtml" />
     <Content Include="Views\Entrenadores\InscritosClase.cshtml" />
     <Content Include="Views\Entrenadores\AsistenciaClase.cshtml" />
+    <Content Include="Views\Entrenadores\CambiarEstadoReserva.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Asistencias\" />
     <Folder Include="Views\Comunicacion\" />
+    <Folder Include="Views\EstadoReservas\" />
     <Folder Include="Views\Membresias\" />
     <Folder Include="Views\PerfilUsuarioViewModel\" />
     <Folder Include="Views\Recepcionistas\" />

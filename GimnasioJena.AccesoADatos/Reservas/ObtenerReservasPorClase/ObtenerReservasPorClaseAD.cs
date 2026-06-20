@@ -30,6 +30,7 @@ namespace GimnasioJena.AccesoADatos.Reservas.ObtenerReservasPorClase
                      nombreCliente = usuario.nombre + " " + usuario.apellido1 + " " + usuario.apellido2,
                      correoCliente = usuario.correo,
                      telefonoCliente = usuario.telefono,
+                     idEstadoReserva = reserva.idEstadoReserva,
                      estadoReserva = estadoReserva.nombreEstado
                  })
                 .OrderBy(r => r.nombreCliente)

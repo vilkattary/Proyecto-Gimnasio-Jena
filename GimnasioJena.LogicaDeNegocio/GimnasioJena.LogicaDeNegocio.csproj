@@ -105,6 +105,7 @@
     <Compile Include="Entrenadores\ObtenerEntrenadorPorUsuario\ObtenerEntrenadorPorUsuarioLN.cs" />
     <Compile Include="Entrenadores\ObtenerTodosLosEntrenadores\ObtenerTodosLosEntrenadoresLN.cs" />
     <Compile Include="Entrenadores\RegistrarEntrenador\RegistrarEntrenadorLN.cs" />
+    <Compile Include="EstadoReservas\ObtenerEstadoReservas\ObtenerEstadoReservaLN.cs" />
     <Compile Include="General\Fechas\FechasLN.cs" />
     <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeLN.cs" />
     <Compile Include="Home\EliminarSeccionHome\EliminarSeccionHomeLN.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Reportes\ObtenerReporteReservas\ObtenerReporteReservasLN.cs" />
     <Compile Include="Reservas\CambiarEstadoReserva\CambiarEstadoReservaLN.cs" />
     <Compile Include="Reservas\CancelarReserva\CancelarReservaLN.cs" />
+    <Compile Include="Reservas\EditarReserva\EditarReservaLN.cs" />
     <Compile Include="Reservas\ObtenerReservaPorId\ObtenerReservaPorIdLN.cs" />
     <Compile Include="Reservas\ObtenerReservasPorClase\ObtenerReservasPorClaseLN.cs" />
     <Compile Include="Reservas\ObtenerReservasPorCliente\ObtenerReservasPorClienteLN.cs" />
