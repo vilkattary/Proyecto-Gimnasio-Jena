@@ -25,5 +25,13 @@ namespace GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId
 
         }
 
+        public EntrenadorDto ObtenerEntrenadorPorId(int idEntrenador)
+        {
+            if (idEntrenador <= 0)
+                return null;
+
+            return _repositorio.ObtenerEntrenadorPorId(idEntrenador);
+        }
+
     }
 }

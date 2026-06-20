@@ -10,5 +10,6 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerEntrena
     public interface IObtenerEntrenadorPorIdLN
     {
         Task<EntrenadorDto> ObtenerEntrenadorPorId(string identityUserId);
+        EntrenadorDto ObtenerEntrenadorPorId(int idEntrenador);
     }
 }

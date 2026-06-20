@@ -1,0 +1,116 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Asistencias.AsistenciaClaseDto>
+
+@{
+    ViewBag.Title = "Registrar Asistencia";
+    int idClaseProgramada = ViewBag.IdClaseProgramada;
+}
+
+<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+
+<section class="container py-5">
+    <h2 class="fw-bold mb-4" style="color:var(--gym-dark);">
+        Registrar asistencia
+    </h2>
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["MensajeExito"]
+        </div>
+    }
+
+    @if (TempData["MensajeError"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["MensajeError"]
+        </div>
+    }
+
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body p-4">
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info mb-0">
+                    No hay clientes inscritos para registrar asistencia.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Estado asistencia</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.nombreCliente</td>
+                                    <td>@item.correoCliente</td>
+                                    <td>@item.telefonoCliente</td>
+                                    <td>
+                                        @if (item.asistio == null)
+                                        {
+                                            <span class="badge bg-secondary">Pendiente</span>
+                                        }
+                                        else if (item.asistio == true)
+                                        {
+                                            <span class="badge bg-success">Asistió</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">No asistió</span>
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        @using (Html.BeginForm("RegistrarAsistencia", "Entrenadores", FormMethod.Post, new { @class = "d-inline" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden" name="idReserva" value="@item.idReserva" />
+                                            <input type="hidden" name="idClaseProgramada" value="@idClaseProgramada" />
+                                            <input type="hidden" name="asistio" value="true" />
+                                            <input type="hidden" name="observaciones" value="Marcado como asistió por entrenador." />
+
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                Asistió
+                                            </button>
+                                        }
+
+                                        @using (Html.BeginForm("RegistrarAsistencia", "Entrenadores", FormMethod.Post, new { @class = "d-inline ms-1" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden" name="idReserva" value="@item.idReserva" />
+                                            <input type="hidden" name="idClaseProgramada" value="@idClaseProgramada" />
+                                            <input type="hidden" name="asistio" value="false" />
+                                            <input type="hidden" name="observaciones" value="Marcado como no asistió por entrenador." />
+
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                No asistió
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <div class="mt-4">
+                <a href="@Url.Action("MisClases", "Entrenadores")" class="btn btn-outline-gym">
+                    Volver a mis clases
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>

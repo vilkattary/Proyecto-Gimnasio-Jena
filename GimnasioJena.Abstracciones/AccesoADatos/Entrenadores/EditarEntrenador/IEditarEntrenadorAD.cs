@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GimnasioJena.Abstracciones.Modelos.Entrenadores;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Entrenadores.EditarEntrenador
 {
     public interface IEditarEntrenadorAD
     {
+        bool EditarEntrenador(EntrenadorEditarDto entrenador);
     }
 }
