@@ -134,6 +134,9 @@
     <Compile Include="Membresias\ObtenerTodasLasMembresias\ObtenerTodasLasMembresiasAD.cs" />
     <Compile Include="Membresias\RegistrarMembresia\RegistrarMembresiaAD.cs" />
     <Compile Include="Membresias\RenovarMembresia\RenovarMembresiaAD.cs" />
+    <Compile Include="Nosotros\AgregarSeccionNosotros\AgregarSeccionNosotrosAD.cs" />
+    <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosAD.cs" />
+    <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recepcionistas\CambiarEstadoRecepcionista\CambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="Recepcionistas\EditarRecepcionista\EditarRecepcionistaAD.cs" />

@@ -1,0 +1,339 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Home.ContenidoWebDto>
+@using System.Linq
+@{
+    ViewBag.Title = "Sobre Nosotros";
+
+    var header       = Model.FirstOrDefault(x => x.Seccion == "Header");
+    var historia1    = Model.FirstOrDefault(x => x.Clave == "nosotros-historia");
+    var historia2    = Model.FirstOrDefault(x => x.Clave == "nosotros-historia-p2");
+    var stats        = Model.Where(x => x.Seccion == "Stats").OrderBy(x => x.Orden).ToList();
+    var misionVision = Model.Where(x => x.Seccion == "MisionVision").OrderBy(x => x.Orden).ToList();
+    var valorTitulo  = Model.FirstOrDefault(x => x.Clave == "valores-titulo");
+    var valores      = Model.Where(x => x.Seccion == "Valores" && x.Clave != "valores-titulo").OrderBy(x => x.Orden).ToList();
+    var cta          = Model.FirstOrDefault(x => x.Seccion == "CTA");
+}
+
+<style>
+    .hero-nosotros {
+        background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.75)),
+                    url('@(header != null && !string.IsNullOrEmpty(header.UrlImagen) ? header.UrlImagen : "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1920")') center/cover no-repeat;
+        min-height: 52vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .historia-section {
+        background-color: var(--jena-light-gray);
+        padding: 5rem 0;
+    }
+
+    .historia-title-col {
+        position: relative;
+        padding-left: 1.5rem;
+    }
+
+    .historia-title-col::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 5px;
+        background-color: var(--jena-orange);
+        border-radius: 3px;
+    }
+
+    .stats-section {
+        background-color: var(--jena-dark-navy);
+        padding: 4rem 0;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        color: var(--jena-orange);
+        margin-bottom: 0.75rem;
+    }
+
+    .stat-number {
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        font-weight: 900;
+        color: var(--jena-white);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+        font-family: 'Audiowide', sans-serif;
+    }
+
+    .stat-label {
+        font-size: 0.95rem;
+        color: var(--jena-light-blue);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-family: var(--font-primary);
+    }
+
+    .mision-vision-section {
+        background-color: var(--jena-white);
+        padding: 5rem 0;
+    }
+
+    .mv-card {
+        border: none;
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        height: 100%;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-top: 4px solid var(--jena-orange);
+    }
+
+    .mv-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 45px rgba(255,107,53,0.15);
+    }
+
+    .mv-icon-wrap {
+        width: 70px; height: 70px;
+        background-color: var(--jena-navy);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .mv-icon-wrap i { font-size: 2rem; color: var(--jena-orange); }
+
+    .mv-card h3 { color: var(--jena-navy); font-size: 1.5rem; margin-bottom: 1rem; }
+
+    .mv-card p { color: #555; line-height: 1.8; margin: 0; }
+
+    .valores-section {
+        background-color: var(--jena-light-gray);
+        padding: 5rem 0;
+    }
+
+    .valor-card {
+        background-color: var(--jena-white);
+        border-radius: 16px;
+        padding: 2rem;
+        height: 100%;
+        box-shadow: 0 6px 25px rgba(0,0,0,0.07);
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--jena-orange);
+    }
+
+    .valor-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 35px rgba(255,107,53,0.18);
+    }
+
+    .valor-icon {
+        width: 55px; height: 55px;
+        background-color: var(--jena-navy);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 1.25rem;
+    }
+
+    .valor-icon i { font-size: 1.6rem; color: var(--jena-orange); }
+
+    .valor-card h4 {
+        color: var(--jena-navy);
+        font-size: 1.15rem;
+        margin-bottom: 0.75rem;
+        font-family: 'Audiowide', sans-serif;
+        letter-spacing: 1px;
+    }
+
+    .valor-card p { color: #666; font-size: 0.9rem; line-height: 1.7; margin: 0; }
+
+    .cta-nosotros {
+        background: linear-gradient(135deg, var(--jena-orange) 0%, var(--jena-dark-orange) 100%);
+        padding: 5rem 0;
+        text-align: center;
+    }
+
+    .cta-nosotros h2 {
+        color: var(--jena-white);
+        font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+        margin-bottom: 1.25rem;
+    }
+
+    .cta-nosotros p {
+        color: rgba(255,255,255,0.9);
+        font-size: 1.1rem;
+        max-width: 650px;
+        margin: 0 auto 2rem;
+        font-family: var(--font-primary);
+    }
+
+    .btn-cta-nosotros {
+        background-color: var(--jena-white);
+        color: var(--jena-orange);
+        font-weight: 700;
+        border-radius: 50px;
+        padding: 0.75rem 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: var(--font-primary);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        border: 2px solid var(--jena-white);
+    }
+
+    .btn-cta-nosotros:hover {
+        background-color: transparent;
+        color: var(--jena-white);
+    }
+
+    @@media (max-width: 768px) {
+        .stats-section .stat-item { padding: 1.5rem 0.5rem; }
+        .historia-section, .mision-vision-section, .valores-section, .cta-nosotros { padding: 3rem 0; }
+    }
+</style>
+
+<!-- ═══════════════════ HERO HEADER ═══════════════════ -->
+<section class="hero-nosotros">
+    <div class="container">
+        <div class="col-lg-8 mx-auto text-center">
+            <p class="mb-2 text-uppercase"
+               style="color: var(--jena-orange); font-size: 1rem; letter-spacing: 3px; font-family: var(--font-primary); font-weight: 600;">
+                @(header != null ? header.TextoSecundario : "Quiénes somos")
+            </p>
+            <h1 class="text-white text-uppercase">
+                @(header != null ? header.TextoPrincipal : "SOBRE NOSOTROS")
+            </h1>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════ NUESTRA HISTORIA ═══════════════════ -->
+@if (historia1 != null)
+{
+    <section class="historia-section">
+        <div class="container">
+            <div class="row align-items-start g-5">
+                <div class="col-lg-4">
+                    <div class="historia-title-col">
+                        <h2 style="color: var(--jena-navy); font-size: clamp(1.4rem, 2.8vw, 1.9rem); line-height: 1.35;">
+                            @historia1.TextoPrincipal
+                        </h2>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <p style="color: #444; line-height: 1.9; font-size: 1.05rem; margin-bottom: 1.5rem; font-family: var(--font-primary);">
+                        @historia1.TextoSecundario
+                    </p>
+                    @if (historia2 != null && !string.IsNullOrEmpty(historia2.TextoSecundario))
+                    {
+                        <p style="color: #444; line-height: 1.9; font-size: 1.05rem; margin: 0; font-family: var(--font-primary);">
+                            @historia2.TextoSecundario
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ═══════════════════ ESTADÍSTICAS ═══════════════════ -->
+@if (stats.Any())
+{
+    <section class="stats-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                @foreach (var stat in stats)
+                {
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="stat-item">
+                            @if (!string.IsNullOrEmpty(stat.UrlImagen))
+                            {
+                                <div class="stat-icon"><i class="bi @stat.UrlImagen"></i></div>
+                            }
+                            <div class="stat-number">@stat.TextoPrincipal</div>
+                            <div class="stat-label">@stat.TextoSecundario</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ═══════════════════ MISIÓN Y VISIÓN ═══════════════════ -->
+@if (misionVision.Any())
+{
+    <section class="mision-vision-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="text-uppercase" style="color: var(--jena-navy); font-size: clamp(1.8rem, 3.5vw, 2.5rem);">
+                    Misión &amp; Visión
+                </h2>
+            </div>
+            <div class="row g-4 justify-content-center">
+                @foreach (var item in misionVision)
+                {
+                    string mvIcon = string.IsNullOrEmpty(item.UrlImagen) ? "bi-star-fill" : item.UrlImagen;
+                    <div class="col-lg-5 col-md-6">
+                        <div class="mv-card">
+                            <div class="mv-icon-wrap">
+                                <i class="bi @mvIcon"></i>
+                            </div>
+                            <h3>@item.TextoPrincipal</h3>
+                            <p>@item.TextoSecundario</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ═══════════════════ NUESTROS VALORES ═══════════════════ -->
+@if (valores.Any())
+{
+    <section class="valores-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="text-uppercase" style="color: var(--jena-navy); font-size: clamp(1.8rem, 3.5vw, 2.5rem);">
+                    @(valorTitulo != null && !string.IsNullOrEmpty(valorTitulo.TextoPrincipal)
+                        ? valorTitulo.TextoPrincipal
+                        : "Lo que nos define")
+                </h2>
+            </div>
+            <div class="row g-4 justify-content-center">
+                @foreach (var valor in valores)
+                {
+                    string valorIcon = string.IsNullOrEmpty(valor.UrlImagen) ? "bi-star-fill" : valor.UrlImagen;
+                    <div class="col-lg-3 col-md-6">
+                        <div class="valor-card">
+                            <div class="valor-icon">
+                                <i class="bi @valorIcon"></i>
+                            </div>
+                            <h4>@valor.TextoPrincipal</h4>
+                            <p>@valor.TextoSecundario</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ═══════════════════ CTA ═══════════════════ -->
+@if (cta != null)
+{
+    <section class="cta-nosotros">
+        <div class="container">
+            <h2 class="text-uppercase">@cta.TextoPrincipal</h2>
+            <p>@cta.TextoSecundario</p>
+            <a href="@Url.Action("Contact", "Home")" class="btn-cta-nosotros">
+                <i class="bi bi-lightning-charge-fill"></i>Contáctanos
+            </a>
+        </div>
+    </section>
+}

@@ -187,10 +187,12 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembresiasController.cs" />
+    <Compile Include="Controllers\NosotrosController.cs" />
     <Compile Include="Controllers\RecepcionistasController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\ReservasController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\SeccionesNosotrosController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Filters\SoloAdministradorAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -315,6 +317,8 @@
     <Content Include="Views\Entrenadores\MisClases.cshtml" />
     <Content Include="Views\Entrenadores\InscritosClase.cshtml" />
     <Content Include="Views\Entrenadores\AsistenciaClase.cshtml" />
+    <Content Include="Views\Nosotros\Index.cshtml" />
+    <Content Include="Views\Nosotros\AdminNosotros.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

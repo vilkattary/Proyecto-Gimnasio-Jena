@@ -324,7 +324,7 @@ BOTONES DE ACCIÓN
 <section class="classes-section">
     <div class="container">
         <h2 class="text-uppercase">Nuestras Clases</h2>
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             @foreach (var item in clases)
             {
                 string iconClass = (!string.IsNullOrEmpty(item.UrlImagen) && item.UrlImagen.StartsWith("bi-"))
@@ -361,7 +361,7 @@ BOTONES DE ACCIÓN
 <section class="testimonials-section">
     <div class="container">
         <h2 class="text-uppercase">Lo Que Dicen Nuestros Clientes</h2>
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             @foreach (var item in testimonios)
             {
                 string iniciales = "?";

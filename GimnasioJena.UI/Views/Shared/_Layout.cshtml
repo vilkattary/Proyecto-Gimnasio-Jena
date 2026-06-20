@@ -79,6 +79,11 @@
                             @Html.ActionLink("Admin Home", "AdminIndex", "Home",
                                 new { area = "" }, new { @class = "nav-link" })
                         </li>
+
+                        <li class="nav-item">
+                            @Html.ActionLink("Admin Nosotros", "Index", "SeccionesNosotros",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
                     }
 
                     <li class="nav-item">
@@ -86,7 +91,7 @@
                     </li>
 
                     <li class="nav-item">
-                        @Html.ActionLink("Sobre Nosotros", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                        @Html.ActionLink("Sobre Nosotros", "Index", "Nosotros", new { area = "" }, new { @class = "nav-link" })
                     </li>
 
                     <li class="nav-item">
@@ -150,7 +155,7 @@
                     <h5>Enlaces Rápidos</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2">@Html.ActionLink("Inicio", "Index", "Home")</li>
-                        <li class="mb-2">@Html.ActionLink("Sobre Nosotros", "About", "Home")</li>
+                        <li class="mb-2">@Html.ActionLink("Sobre Nosotros", "Index", "Nosotros")</li>
                         <li class="mb-2">@Html.ActionLink("Clases", "ObtenerTodasLasClases", "Clases")</li>
                         <li class="mb-2">@Html.ActionLink("Contacto", "Contact", "Home")</li>
                     </ul>
