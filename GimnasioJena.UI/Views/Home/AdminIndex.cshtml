@@ -5,14 +5,11 @@
     var mensajeExito = TempData["MensajeExito"] as string;
     var mensajeError = TempData["MensajeError"] as string;
 
-    var seccionHero        = Model.Where(x => x.Seccion == "Hero").OrderBy(x => x.Orden).ToList();
-    var seccionClases      = Model.Where(x => x.Seccion == "Clases").OrderBy(x => x.Orden).ToList();
-    var seccionTestimonios = Model.Where(x => x.Seccion == "Testimonios").OrderBy(x => x.Orden).ToList();
+    var seccionHero = Model.Where(x => x.Seccion == "Hero").OrderBy(x => x.Orden).ToList();
+    var seccionClases = Model.Where(x => x.Seccion == "Clases").OrderBy(x => x.Orden).Take(3).ToList();
+    var seccionTestimonios = Model.Where(x => x.Seccion == "Testimonios").OrderBy(x => x.Orden).Take(3).ToList();
 }
 
-@* ══════════════════════════════════════════════
-   ALERTAS DE TEMPDATA
-══════════════════════════════════════════════ *@
 @if (!string.IsNullOrEmpty(mensajeExito))
 {
     <div class="alert alert-success alert-dismissible fade show mb-0 mt-5 rounded-0 border-0 border-bottom"
@@ -25,6 +22,7 @@
         </div>
     </div>
 }
+
 @if (!string.IsNullOrEmpty(mensajeError))
 {
     <div class="alert alert-danger alert-dismissible fade show mb-0 mt-5 rounded-0 border-0 border-bottom"
@@ -38,12 +36,8 @@
     </div>
 }
 
-@* ══════════════════════════════════════════════
-   CONTENIDO PRINCIPAL
-══════════════════════════════════════════════ *@
 <div class="container py-5">
 
-    @* ─── CABECERA DE PÁGINA ─── *@
     <div class="row mb-5">
         <div class="col-12">
             <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
@@ -52,7 +46,7 @@
                         <i class="bi bi-sliders me-2" style="color: var(--jena-orange);"></i>Administrar Inicio
                     </h1>
                     <p class="text-muted mb-0" style="font-family: var(--font-primary); font-size: 0.95rem;">
-                        Gestione el contenido dinámico de la página pública. Los cambios se reflejan de inmediato.
+                        Gestione el contenido de la página pública. Las tarjetas son fijas y solo se pueden editar.
                     </p>
                 </div>
                 <a href="@Url.Action("Index", "Home")" target="_blank"
@@ -65,9 +59,6 @@
         </div>
     </div>
 
-    @* ══════════════════════════════════════════════
-       BLOQUE 1 — SECCIÓN HERO
-    ══════════════════════════════════════════════ *@
     <div class="action-buttons-card mb-4">
         <h5>
             <i class="bi bi-image-fill me-2" style="color: var(--jena-orange);"></i>Sección Hero
@@ -87,13 +78,11 @@
                       method="post"
                       enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" name="Id"       value="@item.Id" />
-                    <input type="hidden" name="Clave"    value="@item.Clave" />
+                    <input type="hidden" name="Id" value="@item.Id" />
+                    <input type="hidden" name="Clave" value="@item.Clave" />
                     <input type="hidden" name="UrlImagen" value="@item.UrlImagen" />
 
                     <div class="row g-4 align-items-start">
-
-                        @* Vista previa imagen actual *@
                         @if (!string.IsNullOrEmpty(item.UrlImagen))
                         {
                             <div class="col-12 col-md-auto">
@@ -112,7 +101,6 @@
                             </div>
                         }
 
-                        @* Campos del formulario *@
                         <div class="col-12 col-md">
                             <div class="mb-3">
                                 <label class="form-label fw-semibold"
@@ -123,7 +111,6 @@
                                        name="TextoPrincipal"
                                        value="@item.TextoPrincipal"
                                        class="form-control"
-                                       placeholder="Ej: Entrena En Jéna Training Methodology"
                                        required />
                             </div>
 
@@ -134,8 +121,7 @@
                                 </label>
                                 <textarea name="TextoSecundario"
                                           class="form-control"
-                                          rows="3"
-                                          placeholder="Frase motivacional o descripción breve del gimnasio...">@item.TextoSecundario</textarea>
+                                          rows="3">@item.TextoSecundario</textarea>
                             </div>
 
                             <div class="mb-3">
@@ -168,13 +154,15 @@
         }
     </div>
 
-    @* ══════════════════════════════════════════════
-       BLOQUE 2 — NUESTRAS CLASES
-    ══════════════════════════════════════════════ *@
     <div class="action-buttons-card mb-4">
         <h5>
             <i class="bi bi-collection-fill me-2" style="color: var(--jena-orange);"></i>Nuestras Clases
         </h5>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Esta sección utiliza 3 tarjetas fijas. Para cambiar una clase visible, edite su nombre, descripción e ícono.
+        </div>
 
         @if (seccionClases.Any())
         {
@@ -183,49 +171,29 @@
                 {
                     bool esIconoBI = !string.IsNullOrEmpty(item.UrlImagen) && item.UrlImagen.StartsWith("bi-");
                     string iconoActual = esIconoBI ? item.UrlImagen : "bi-star-fill";
+
                     <div class="col-12 col-lg-4">
                         <div class="h-100"
                              style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
 
-                            @* Cabecera de tarjeta *@
                             <div class="d-flex align-items-center justify-content-between px-3 py-2"
                                  style="background: var(--jena-navy);">
                                 <span class="text-uppercase fw-bold"
                                       style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.78rem; letter-spacing: 1.5px;">
-                                    Datos de la clase
+                                    Tarjeta de clase
                                 </span>
-                                <div class="d-flex align-items-center gap-2">
-                                    @if (!string.IsNullOrEmpty(item.UrlImagen) && !item.UrlImagen.StartsWith("bi-"))
-                                    {
-                                        <img src="@item.UrlImagen"
-                                             alt="Ícono @item.TextoPrincipal"
-                                             style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%; border: 2px solid var(--jena-orange);" />
-                                    }
-                                    else
-                                    {
-                                        <span class="rounded-circle d-flex align-items-center justify-content-center"
-                                              style="width:36px; height:36px; background: var(--jena-orange);">
-                                            <i class="bi @iconoActual text-white" style="font-size: 1.1rem;"></i>
-                                        </span>
-                                    }
-                                    <form action="@Url.Action("EliminarSeccion", "SeccionesHome")" method="post" class="d-inline m-0"
-                                          onsubmit="return confirm('¿Eliminar esta tarjeta de clase?');">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="id" value="@item.Id" />
-                                        <button type="submit" class="btn btn-sm border-0 p-0"
-                                                style="background:transparent; color:#ff6b6b; line-height:1;" title="Eliminar tarjeta">
-                                            <i class="bi bi-trash-fill" style="font-size:1rem;"></i>
-                                        </button>
-                                    </form>
-                                </div>
+
+                                <span class="rounded-circle d-flex align-items-center justify-content-center"
+                                      style="width:36px; height:36px; background: var(--jena-orange);">
+                                    <i class="bi @iconoActual text-white" style="font-size: 1.1rem;"></i>
+                                </span>
                             </div>
 
-                            @* Formulario *@
                             <div class="p-3">
                                 <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
                                       method="post">
                                     @Html.AntiForgeryToken()
-                                    <input type="hidden" name="Id"    value="@item.Id" />
+                                    <input type="hidden" name="Id" value="@item.Id" />
                                     <input type="hidden" name="Clave" value="@item.Clave" />
 
                                     <div class="mb-3">
@@ -237,7 +205,6 @@
                                                name="TextoPrincipal"
                                                value="@item.TextoPrincipal"
                                                class="form-control"
-                                               placeholder="Ej: Fuerza Intensa"
                                                required />
                                     </div>
 
@@ -248,8 +215,7 @@
                                         </label>
                                         <textarea name="TextoSecundario"
                                                   class="form-control"
-                                                  rows="3"
-                                                  placeholder="Descripción breve de la clase...">@item.TextoSecundario</textarea>
+                                                  rows="3">@item.TextoSecundario</textarea>
                                     </div>
 
                                     <div class="mb-3">
@@ -264,25 +230,24 @@
                                             </span>
                                             <select name="UrlImagen" class="form-select"
                                                     onchange="actualizarIconoBI('@item.Id', this.value)">
-                                                <option value="bi-lightning-charge-fill"@Html.Raw(item.UrlImagen == "bi-lightning-charge-fill" ? " selected" : "")> Fuerza / Potencia</option>
-                                                <option value="bi-heart-pulse-fill"@Html.Raw(item.UrlImagen == "bi-heart-pulse-fill" ? " selected" : "")> Cardio / Salud</option>
-                                                <option value="bi-fire"@Html.Raw(item.UrlImagen == "bi-fire" ? " selected" : "")> Quema calorías</option>
-                                                <option value="bi-bicycle"@Html.Raw(item.UrlImagen == "bi-bicycle" ? " selected" : "")> Ciclismo / Spinning</option>
-                                                <option value="bi-person-arms-up"@Html.Raw(item.UrlImagen == "bi-person-arms-up" ? " selected" : "")> Ejercicio general</option>
-                                                <option value="bi-trophy-fill"@Html.Raw(item.UrlImagen == "bi-trophy-fill" ? " selected" : "")> Competencia / Reto</option>
-                                                <option value="bi-stopwatch-fill"@Html.Raw(item.UrlImagen == "bi-stopwatch-fill" ? " selected" : "")> Velocidad / Tiempo</option>
-                                                <option value="bi-activity"@Html.Raw(item.UrlImagen == "bi-activity" ? " selected" : "")> Actividad física</option>
-                                                <option value="bi-peace-fill"@Html.Raw(item.UrlImagen == "bi-peace-fill" ? " selected" : "")>☮ Yoga / Mindfulness</option>
-                                                <option value="bi-music-note-beamed"@Html.Raw(item.UrlImagen == "bi-music-note-beamed" ? " selected" : "")> Danza / Zumba</option>
-                                                <option value="bi-shield-fill-check"@Html.Raw(item.UrlImagen == "bi-shield-fill-check" ? " selected" : "")> Defensa / Artes marciales</option>
-                                                <option value="bi-water"@Html.Raw(item.UrlImagen == "bi-water" ? " selected" : "")> Natación / Aqua</option>
-                                                <option value="bi-wind"@Html.Raw(item.UrlImagen == "bi-wind" ? " selected" : "")> Respiración / Flexibilidad</option>
-                                                <option value="bi-arrow-up-circle-fill"@Html.Raw(item.UrlImagen == "bi-arrow-up-circle-fill" ? " selected" : "")> Progreso / Superación</option>
-                                                <option value="bi-stars"@Html.Raw(item.UrlImagen == "bi-stars" ? " selected" : "")> Élite / Premium</option>
-                                                <option value="bi-star-fill"@Html.Raw(item.UrlImagen == "bi-star-fill" ? " selected" : ""  )> General</option>
+                                                <option value="bi-lightning-charge-fill" @Html.Raw(item.UrlImagen == "bi-lightning-charge-fill" ? " selected" : "")> Fuerza / Potencia</option>
+                                                <option value="bi-heart-pulse-fill" @Html.Raw(item.UrlImagen == "bi-heart-pulse-fill" ? " selected" : "")> Cardio / Salud</option>
+                                                <option value="bi-fire" @Html.Raw(item.UrlImagen == "bi-fire" ? " selected" : "")> Quema calorías</option>
+                                                <option value="bi-bicycle" @Html.Raw(item.UrlImagen == "bi-bicycle" ? " selected" : "")> Ciclismo / Spinning</option>
+                                                <option value="bi-person-arms-up" @Html.Raw(item.UrlImagen == "bi-person-arms-up" ? " selected" : "")> Ejercicio general</option>
+                                                <option value="bi-trophy-fill" @Html.Raw(item.UrlImagen == "bi-trophy-fill" ? " selected" : "")> Competencia / Reto</option>
+                                                <option value="bi-stopwatch-fill" @Html.Raw(item.UrlImagen == "bi-stopwatch-fill" ? " selected" : "")> Velocidad / Tiempo</option>
+                                                <option value="bi-activity" @Html.Raw(item.UrlImagen == "bi-activity" ? " selected" : "")> Actividad física</option>
+                                                <option value="bi-peace-fill" @Html.Raw(item.UrlImagen == "bi-peace-fill" ? " selected" : "")> Yoga / Mindfulness</option>
+                                                <option value="bi-music-note-beamed" @Html.Raw(item.UrlImagen == "bi-music-note-beamed" ? " selected" : "")> Danza / Zumba</option>
+                                                <option value="bi-shield-fill-check" @Html.Raw(item.UrlImagen == "bi-shield-fill-check" ? " selected" : "")> Defensa / Artes marciales</option>
+                                                <option value="bi-water" @Html.Raw(item.UrlImagen == "bi-water" ? " selected" : "")> Natación / Aqua</option>
+                                                <option value="bi-wind" @Html.Raw(item.UrlImagen == "bi-wind" ? " selected" : "")> Respiración / Flexibilidad</option>
+                                                <option value="bi-arrow-up-circle-fill" @Html.Raw(item.UrlImagen == "bi-arrow-up-circle-fill" ? " selected" : "")> Progreso / Superación</option>
+                                                <option value="bi-stars" @Html.Raw(item.UrlImagen == "bi-stars" ? " selected" : "")> Élite / Premium</option>
+                                                <option value="bi-star-fill" @Html.Raw(item.UrlImagen == "bi-star-fill" ? " selected" : "")> General</option>
                                             </select>
                                         </div>
-                                        <div class="form-text">El ícono se mostrará en la página pública. El cambio es inmediato al guardar.</div>
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
@@ -300,78 +265,68 @@
                 }
             </div>
         }
-
-        @if (seccionClases.Count < 3)
-        {
-            <form action="@Url.Action("AgregarSeccion", "SeccionesHome")" method="post" class="mt-3">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="seccion" value="Clases" />
-                <button type="submit" class="btn-action" style="width:auto; padding:10px 24px;">
-                    <i class="bi bi-plus-circle-fill me-1"></i>Agregar clase
-                </button>
-            </form>
-        }
     </div>
 
-    @* ══════════════════════════════════════════════
-       BLOQUE 3 — TESTIMONIOS
-    ══════════════════════════════════════════════ *@
     <div class="action-buttons-card mb-4">
         <h5>
             <i class="bi bi-chat-quote-fill me-2" style="color: var(--jena-orange);"></i>Testimonios de Clientes
         </h5>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Esta sección utiliza 3 testimonios fijos. Para cambiar uno visible, edite el nombre, testimonio o avatar.
+        </div>
 
         @if (seccionTestimonios.Any())
         {
             <div class="row g-4 mb-3 justify-content-center">
                 @foreach (var item in seccionTestimonios)
                 {
+                    string iniciales = "?";
+
+                    if (item.TextoPrincipal != null && item.TextoPrincipal.Length >= 1)
+                    {
+                        iniciales = item.TextoPrincipal.Substring(0, 1).ToUpper();
+                        int ultimoEspacio = item.TextoPrincipal.LastIndexOf(' ');
+
+                        if (ultimoEspacio > 0)
+                        {
+                            iniciales += item.TextoPrincipal.Substring(ultimoEspacio + 1, 1).ToUpper();
+                        }
+                    }
+
                     <div class="col-12 col-lg-4">
                         <div class="h-100"
                              style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
 
-                            @* Cabecera de tarjeta *@
                             <div class="d-flex align-items-center justify-content-between px-3 py-2"
                                  style="background: #293039;">
                                 <span class="fw-bold"
                                       style="color: #FF6600; font-family: var(--font-primary); font-size: 0.78rem; letter-spacing: 1px;">
-                                    <i class="bi bi-quote me-1"></i>Agregar Testimonio
+                                    <i class="bi bi-quote me-1"></i>Tarjeta de testimonio
                                 </span>
-                                <div class="d-flex align-items-center gap-2">
-                                    @if (!string.IsNullOrEmpty(item.UrlImagen))
-                                    {
-                                        <img src="@item.UrlImagen"
-                                             alt="Avatar @item.TextoPrincipal"
-                                             style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%; border: 2px solid #FF6600;" />
-                                    }
-                                    else
-                                    {
-                                        <span class="rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                              style="width:36px; height:36px; background: #FF6600; color: #fff; font-size: 0.85rem;">
-                                            @(item.TextoPrincipal != null && item.TextoPrincipal.Length >= 1
-                                                ? item.TextoPrincipal.Substring(0, 1).ToUpper() + (item.TextoPrincipal.LastIndexOf(' ') > 0 ? item.TextoPrincipal.Substring(item.TextoPrincipal.LastIndexOf(' ') + 1, 1).ToUpper() : "")
-                                                : "?")
-                                        </span>
-                                    }
-                                    <form action="@Url.Action("EliminarSeccion", "SeccionesHome")" method="post" class="d-inline m-0"
-                                          onsubmit="return confirm('¿Eliminar este testimonio?');">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="id" value="@item.Id" />
-                                        <button type="submit" class="btn btn-sm border-0 p-0"
-                                                style="background:transparent; color:#ff6b6b; line-height:1;" title="Eliminar testimonio">
-                                            <i class="bi bi-trash-fill" style="font-size:1rem;"></i>
-                                        </button>
-                                    </form>
-                                </div>
+
+                                @if (!string.IsNullOrEmpty(item.UrlImagen))
+                                {
+                                    <img src="@item.UrlImagen"
+                                         alt="Avatar @item.TextoPrincipal"
+                                         style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%; border: 2px solid #FF6600;" />
+                                }
+                                else
+                                {
+                                    <span class="rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                          style="width:36px; height:36px; background: #FF6600; color: #fff; font-size: 0.85rem;">
+                                        @iniciales
+                                    </span>
+                                }
                             </div>
 
-                            @* Formulario *@
                             <div class="p-3">
                                 <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
                                       method="post"
                                       enctype="multipart/form-data">
                                     @Html.AntiForgeryToken()
-                                    <input type="hidden" name="Id"    value="@item.Id" />
+                                    <input type="hidden" name="Id" value="@item.Id" />
                                     <input type="hidden" name="Clave" value="@item.Clave" />
 
                                     <div class="mb-3">
@@ -383,7 +338,6 @@
                                                name="TextoPrincipal"
                                                value="@item.TextoPrincipal"
                                                class="form-control"
-                                               placeholder="Ej: María Rodríguez"
                                                required />
                                     </div>
 
@@ -394,14 +348,13 @@
                                         </label>
                                         <textarea name="TextoSecundario"
                                                   class="form-control"
-                                                  rows="4"
-                                                  placeholder="&ldquo;El testimonio del cliente...&rdquo;">@item.TextoSecundario</textarea>
+                                                  rows="4">@item.TextoSecundario</textarea>
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label fw-semibold"
                                                style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
-                                            <i class="bi bi-upload me-1" style="color: var(--jena-orange);"></i>Avatar (reemplazar)
+                                            <i class="bi bi-upload me-1" style="color: var(--jena-orange);"></i>Avatar
                                         </label>
                                         <input type="file"
                                                name="ArchivoImagen"
@@ -424,28 +377,17 @@
                 }
             </div>
         }
-
-        @if (seccionTestimonios.Count < 3)
-        {
-            <form action="@Url.Action("AgregarSeccion", "SeccionesHome")" method="post" class="mt-3">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="seccion" value="Testimonios" />
-                <button type="submit" class="btn-action" style="width:auto; padding:10px 24px;">
-                    <i class="bi bi-plus-circle-fill me-1"></i>Agregar testimonio
-                </button>
-            </form>
-        }
     </div>
 
 </div>
 
 @section scripts {
-<script>
-    function actualizarIconoBI(itemId, iconClass) {
-        var el = document.getElementById('icono-i-' + itemId);
-        if (el) {
-            el.className = 'bi ' + iconClass + ' text-white';
+    <script>
+        function actualizarIconoBI(itemId, iconClass) {
+            var el = document.getElementById('icono-i-' + itemId);
+            if (el) {
+                el.className = 'bi ' + iconClass + ' text-white';
+            }
         }
-    }
-</script>
+    </script>
 }
