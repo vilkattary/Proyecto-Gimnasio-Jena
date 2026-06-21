@@ -1,5 +1,5 @@
 using GimnasioJena.Abstracciones.AccesoADatos.Home.AgregarSeccionHome;
-using GimnasioJena.Abstracciones.Entidades.Home;
+using GimnasioJena.AccesoADatos.Entidades.Home;
 using GimnasioJena.Abstracciones.Modelos.Home;
 using System;
 using System.Linq;
@@ -15,20 +15,21 @@ namespace GimnasioJena.AccesoADatos.Home.AgregarSeccionHome
         {
             using (var contexto = new Contexto())
             {
-                int cantidad = contexto.SeccionesHome
+                int cantidad = contexto.ContenidoWeb
                     .Count(s => s.Seccion == dto.Seccion);
 
                 if (cantidad >= MaxPorSeccion)
                     return false;
 
-                int maxOrden = contexto.SeccionesHome.Any()
-                    ? contexto.SeccionesHome.Max(s => s.Orden)
+                int maxOrden = contexto.ContenidoWeb.Any()
+                    ? contexto.ContenidoWeb.Max(s => s.Orden)
                     : 0;
 
                 string clave = dto.Seccion.ToLower() + "-nuevo-" + (cantidad + 1);
 
-                var nueva = new SeccionesHome
+                var nueva = new ContenidoWeb
                 {
+                    Pagina            = "Home",
                     Seccion           = dto.Seccion,
                     Clave             = clave,
                     TextoPrincipal    = "Nueva " + dto.Seccion,
@@ -38,7 +39,7 @@ namespace GimnasioJena.AccesoADatos.Home.AgregarSeccionHome
                     FechaModificacion = DateTime.Now
                 };
 
-                contexto.SeccionesHome.Add(nueva);
+                contexto.ContenidoWeb.Add(nueva);
                 int filasAfectadas = await contexto.SaveChangesAsync();
                 return filasAfectadas > 0;
             }

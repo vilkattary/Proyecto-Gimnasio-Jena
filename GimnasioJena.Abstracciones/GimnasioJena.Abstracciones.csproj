@@ -105,6 +105,7 @@
     <Compile Include="AccesoADatos\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorAD.cs" />
+    <Compile Include="AccesoADatos\EstadoReservas\ObtenerEstadoReservas\IObtenerEstadoReservaAD.cs" />
     <Compile Include="AccesoADatos\Home\AgregarSeccionHome\IAgregarSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Home\EliminarSeccionHome\IEliminarSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaAD.cs" />
@@ -114,6 +115,8 @@
     <Compile Include="AccesoADatos\Membresias\ObtenerTodasLasMembresias\IObtenerTodasLasMembresiasAD.cs" />
     <Compile Include="AccesoADatos\Membresias\RegistrarMembresia\IRegistrarMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\RenovarMembresia\IRenovarMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosAD.cs" />
+    <Compile Include="AccesoADatos\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdAD.cs" />
@@ -129,9 +132,11 @@
     <Compile Include="AccesoADatos\Reportes\ObtenerReporteReservas\IObtenerReporteReservasAD.cs" />
     <Compile Include="AccesoADatos\Reservas\CambiarEstadoReserva\ICambiarEstadoReservaAD.cs" />
     <Compile Include="AccesoADatos\Reservas\CancelarReserva\ICancelarReservaAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\EditarReserva\IEditarReservaAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerReservaPorId\IObtenerReservaPorIdAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorClase\IObtenerReservasPorClaseAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorCliente\IObtenerReservasPorClienteAD.cs" />
+    <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorUsuario\IObtenerReservasPorUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasAD.cs" />
     <Compile Include="AccesoADatos\Reservas\RegistrarReserva\IRegistrarReservaAD.cs" />
     <Compile Include="AccesoADatos\Roles\CambiarEstadoRol\ICambiarEstadoRolAD.cs" />
@@ -180,6 +185,7 @@
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorLN.cs" />
+    <Compile Include="LogicaDeNegocio\EstadoReservas\ObtenerEstadoReservas\IObtenerEstadoReservasLN.CS" />
     <Compile Include="LogicaDeNegocio\Home\AgregarSeccionHome\IAgregarSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Home\EliminarSeccionHome\IEliminarSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaLN.cs" />
@@ -189,6 +195,8 @@
     <Compile Include="LogicaDeNegocio\Membresias\ObtenerTodasLasMembresias\IObtenerTodasLasMembresiasLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\RegistrarMembresia\IRegistrarMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\RenovarMembresia\IRenovarMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdLN.cs" />
@@ -204,9 +212,11 @@
     <Compile Include="LogicaDeNegocio\Reportes\ObtenerReporteReservas\IObtenerReporteReservasLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\CambiarEstadoReserva\ICambiarEstadoReservaLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\CancelarReserva\ICancelarReservaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\EditarReserva\IEditarReservaLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservaPorId\IObtenerReservaPorIdLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorClase\IObtenerReservasPorClaseLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorCliente\IObtenerReservasPorClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorUsuario\IObtenerReservasPorUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\RegistrarReserva\IRegistrarReservaLN.cs" />
     <Compile Include="LogicaDeNegocio\Roles\CambiarEstadoRol\ICambiarEstadoRolLN.cs" />
@@ -255,6 +265,7 @@
     <Compile Include="Modelos\Entrenadores\EntrenadorListadoDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorPerfilDto.cs" />
     <Compile Include="Modelos\Home\AgregarSeccionHomeDto.cs" />
+    <Compile Include="Modelos\Home\ContenidoWebDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaClienteDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCrearDto.cs" />
@@ -275,6 +286,7 @@
     <Compile Include="Modelos\Reportes\ReporteIngresosDto.cs" />
     <Compile Include="Modelos\Reportes\ReporteMembresiaDto.cs" />
     <Compile Include="Modelos\Reportes\ReporteReservaDto.cs" />
+    <Compile Include="Modelos\EstadoReserva\EstadoReservasDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaCancelarDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaClaseDto.cs" />
@@ -297,7 +309,6 @@
     <Compile Include="Modelos\Usuarios\UsuarioListadoDto.cs" />
     <Compile Include="Modelos\Usuarios\UsuarioPerfilDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entidades\Home\SeccionesHome.cs" />
     <Compile Include="Modelos\Home\ModificarSeccionHomeDto.cs" />
     <Compile Include="AccesoADatos\Home\ObtenerSeccionesHome\IObtenerSeccionesHomeAD.cs" />
     <Compile Include="AccesoADatos\Home\ModificarSeccionHome\IModificarSeccionHomeAD.cs" />
@@ -312,7 +323,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-       <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.targets'))" />

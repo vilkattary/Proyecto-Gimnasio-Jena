@@ -4,9 +4,12 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerClasesPorEntrenad
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.EditarEntrenador;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEntrenadores;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.EditarReserva;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorClase;
 using GimnasioJena.Abstracciones.Modelos.Asistencias;
 using GimnasioJena.Abstracciones.Modelos.Entrenadores;
+using GimnasioJena.Abstracciones.Modelos.Reservas;
+using GimnasioJena.AccesoADatos;
 using GimnasioJena.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId;
 using GimnasioJena.LogicaDeNegocio.Asistencias.ObtenerAsistenciasPorClase;
 using GimnasioJena.LogicaDeNegocio.Asistencias.RegistrarAsistencia;
@@ -14,6 +17,7 @@ using GimnasioJena.LogicaDeNegocio.Clases.ObtenerClasesPorEntrenador;
 using GimnasioJena.LogicaDeNegocio.Entrenadores.EditarEntrenador;
 using GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId;
 using GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEntrenadores;
+using GimnasioJena.LogicaDeNegocio.Reservas.EditarReserva;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorClase;
 using Microsoft.AspNet.Identity;
 using System.Linq;
@@ -32,6 +36,7 @@ namespace GimnasioJena.UI.Controllers
         private readonly IObtenerReservasPorClaseLN _obtenerReservasPorClaseServicio;
         private readonly IObtenerAsistenciasPorClaseLN _obtenerAsistenciasPorClaseServicio;
         private readonly IRegistrarAsistenciaLN _registrarAsistenciaServicio;
+        private readonly IEditarReservaLN _editarReservaServicio;
 
         public EntrenadoresController()
         {
@@ -43,6 +48,7 @@ namespace GimnasioJena.UI.Controllers
             _obtenerReservasPorClaseServicio = new ObtenerReservasPorClaseLN();
             _obtenerAsistenciasPorClaseServicio = new ObtenerAsistenciasPorClaseLN();
             _registrarAsistenciaServicio = new RegistrarAsistenciaLN();
+            _editarReservaServicio = new EditarReservaLN();
         }
 
         [Authorize(Roles = "ENTRENADOR")]
@@ -75,8 +81,18 @@ namespace GimnasioJena.UI.Controllers
         public ActionResult InscritosClase(int id)
         {
             var reservas = _obtenerReservasPorClaseServicio.ObtenerReservasPorClase(id);
-            ViewBag.IdClaseProgramada = id;
 
+            using (var contexto = new Contexto())
+            {
+                var estados = contexto.EstadoReservas
+                    .Where(e => e.estado) 
+                    .Select(e => new { e.idEstadoReserva, e.nombreEstado })
+                    .ToList();
+
+                ViewBag.EstadosReserva = new SelectList(estados, "idEstadoReserva", "nombreEstado");
+            }
+
+            ViewBag.IdClaseProgramada = id;
             return View(reservas);
         }
 
@@ -106,6 +122,53 @@ namespace GimnasioJena.UI.Controllers
             }
 
             return RedirectToAction("AsistenciaClase", new { id = idClaseProgramada });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ENTRENADOR")]
+        public ActionResult CambiarEstadoReserva(int idReserva, int idEstadoReserva, int idClaseProgramada)
+        {
+            var ok = _editarReservaServicio.CambiarEstadoReserva(idReserva, idEstadoReserva);
+
+            if (ok)
+                TempData["MensajeExito"] = "Estado de la reserva actualizado.";
+            else
+                TempData["MensajeError"] = "No se pudo actualizar el estado de la reserva.";
+
+            return RedirectToAction("InscritosClase", new { id = idClaseProgramada });
+        }
+        // GET
+        [Authorize(Roles = "ENTRENADOR")]
+        public ActionResult CambiarEstadoReserva(int id)
+        {
+            using (var contexto = new Contexto())
+            {
+                var reserva = contexto.Reservas.FirstOrDefault(r => r.idReserva == id);
+                if (reserva == null) return HttpNotFound();
+
+                var usuario = contexto.Usuarios.FirstOrDefault(u => u.idUsuario == reserva.idUsuario);
+
+                var dto = new ReservaClaseDto
+                {
+                    idReserva = reserva.idReserva,
+                    idClaseProgramada = reserva.idClaseProgramada,
+                    nombreCliente = usuario != null ? usuario.nombre + " " + usuario.apellido1 + " " + usuario.apellido2 : string.Empty,
+                    correoCliente = usuario?.correo,
+                    telefonoCliente = usuario?.telefono,
+                    idEstadoReserva = reserva.idEstadoReserva,
+                    estadoReserva = contexto.EstadoReservas.FirstOrDefault(e => e.idEstadoReserva == reserva.idEstadoReserva)?.nombreEstado
+                };
+
+                var estados = contexto.EstadoReservas
+                    .Where(e => e.estado)
+                    .Select(e => new { e.idEstadoReserva, e.nombreEstado })
+                    .ToList();
+
+                ViewBag.EstadosReserva = new SelectList(estados, "idEstadoReserva", "nombreEstado", dto.idEstadoReserva);
+
+                return View(dto);
+            }
         }
 
         [Authorize(Roles = "ADMINISTRADOR")]

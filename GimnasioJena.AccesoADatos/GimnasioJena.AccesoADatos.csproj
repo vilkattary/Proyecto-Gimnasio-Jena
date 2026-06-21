@@ -111,6 +111,8 @@
     <Compile Include="Entidades\Clases\ClaseEntidad.cs" />
     <Compile Include="Entidades\Comunicacion\MensajeEntidad.cs" />
     <Compile Include="Entidades\Entrenadores\EntrenadorEntidad.cs" />
+    <Compile Include="Entidades\EstadoReservas\EstadoReservaEntidad.cs" />
+    <Compile Include="Entidades\Home\SeccionesHome.cs" />
     <Compile Include="Entidades\Membresias\MembresiaEntidad.cs" />
     <Compile Include="Entidades\Membresias\PlanMembresiaEntidad.cs" />
     <Compile Include="Entidades\Pagos\PagoEntidad.cs" />
@@ -124,6 +126,7 @@
     <Compile Include="Entrenadores\ObtenerEntrenadorPorUsuario\ObtenerEntrenadorPorUsuarioAD.cs" />
     <Compile Include="Entrenadores\ObtenerTodosLosEntrenadores\ObtenerTodosLosEntrenadoresAD.cs" />
     <Compile Include="Entrenadores\RegistrarEntrenador\RegistrarEntrenadorAD.cs" />
+    <Compile Include="EstadoReservas\ObtenerEstadoReservas\ObtenerEstadoReservasAD.cs" />
     <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeAD.cs" />
     <Compile Include="Home\EliminarSeccionHome\EliminarSeccionHomeAD.cs" />
     <Compile Include="Membresias\CambiarEstadoMembresia\CambiarEstadoMembresiaAD.cs" />
@@ -133,6 +136,9 @@
     <Compile Include="Membresias\ObtenerTodasLasMembresias\ObtenerTodasLasMembresiasAD.cs" />
     <Compile Include="Membresias\RegistrarMembresia\RegistrarMembresiaAD.cs" />
     <Compile Include="Membresias\RenovarMembresia\RenovarMembresiaAD.cs" />
+    <Compile Include="Nosotros\AgregarSeccionNosotros\AgregarSeccionNosotrosAD.cs" />
+    <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosAD.cs" />
+    <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recepcionistas\CambiarEstadoRecepcionista\CambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="Recepcionistas\EditarRecepcionista\EditarRecepcionistaAD.cs" />
@@ -149,9 +155,11 @@
     <Compile Include="Reportes\ObtenerReporteReservas\ObtenerReporteReservasAD.cs" />
     <Compile Include="Reservas\CambiarEstadoReserva\CambiarEstadoReservaAD.cs" />
     <Compile Include="Reservas\CancelarReserva\CancelarReservaAD.cs" />
+    <Compile Include="Reservas\EditarReserva\EditarReservaAD.cs" />
     <Compile Include="Reservas\ObtenerReservaPorId\ObtenerReservaPorIdAD.cs" />
     <Compile Include="Reservas\ObtenerReservasPorClase\ObtenerReservasPorClaseAD.cs" />
     <Compile Include="Reservas\ObtenerReservasPorCliente\ObtenerReservasPorClienteAD.cs" />
+    <Compile Include="Reservas\ObtenerReservasPorUsuario\ObtenerReservasPorUsuarioAD.cs" />
     <Compile Include="Reservas\ObtenerTodasLasReservas\ObtenerTodasLasReservasAD.cs" />
     <Compile Include="Reservas\RegistrarReserva\RegistrarReservaAD.cs" />
     <Compile Include="Roles\CambiarEstadoRol\CambiarEstadoRolAD.cs" />

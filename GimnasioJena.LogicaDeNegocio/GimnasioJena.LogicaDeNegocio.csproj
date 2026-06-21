@@ -105,6 +105,7 @@
     <Compile Include="Entrenadores\ObtenerEntrenadorPorUsuario\ObtenerEntrenadorPorUsuarioLN.cs" />
     <Compile Include="Entrenadores\ObtenerTodosLosEntrenadores\ObtenerTodosLosEntrenadoresLN.cs" />
     <Compile Include="Entrenadores\RegistrarEntrenador\RegistrarEntrenadorLN.cs" />
+    <Compile Include="EstadoReservas\ObtenerEstadoReservas\ObtenerEstadoReservaLN.cs" />
     <Compile Include="General\Fechas\FechasLN.cs" />
     <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeLN.cs" />
     <Compile Include="Home\EliminarSeccionHome\EliminarSeccionHomeLN.cs" />
@@ -115,6 +116,10 @@
     <Compile Include="Membresias\ObtenerTodasLasMembresias\ObtenerTodasLasMembresiasLN.cs" />
     <Compile Include="Membresias\RegistrarMembresia\RegistrarMembresiaLN.cs" />
     <Compile Include="Membresias\RenovarMembresia\RenovarMembresiaLN.cs" />
+    <Compile Include="Nosotros\AgregarSeccionNosotros\AgregarSeccionNosotrosLN.cs" />
+    <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosLN.cs" />
+    <Compile Include="Nosotros\ModificarSeccionNosotros\ModificarContenidoNosotrosLN.cs" />
+    <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recepcionistas\CambiarEstadoRecepcionista\CambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="Recepcionistas\EditarRecepcionista\EditarRecepcionistaLN.cs" />
@@ -131,9 +136,11 @@
     <Compile Include="Reportes\ObtenerReporteReservas\ObtenerReporteReservasLN.cs" />
     <Compile Include="Reservas\CambiarEstadoReserva\CambiarEstadoReservaLN.cs" />
     <Compile Include="Reservas\CancelarReserva\CancelarReservaLN.cs" />
+    <Compile Include="Reservas\EditarReserva\EditarReservaLN.cs" />
     <Compile Include="Reservas\ObtenerReservaPorId\ObtenerReservaPorIdLN.cs" />
     <Compile Include="Reservas\ObtenerReservasPorClase\ObtenerReservasPorClaseLN.cs" />
     <Compile Include="Reservas\ObtenerReservasPorCliente\ObtenerReservasPorClienteLN.cs" />
+    <Compile Include="Reservas\ObtenerReservasPorUsuario\ObtenerReservasPorUsuarioLN.cs" />
     <Compile Include="Reservas\ObtenerTodasLasReservas\ObtenerTodasLasReservasLN.cs" />
     <Compile Include="Reservas\RegistrarReserva\RegistrarReservaLN.cs" />
     <Compile Include="Roles\CambiarEstadoRol\CambiarEstadoRolLN.cs" />

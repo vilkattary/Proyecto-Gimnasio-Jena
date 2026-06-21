@@ -2,9 +2,13 @@ using System.Web;
 
 namespace GimnasioJena.Abstracciones.Modelos.Home
 {
-    public class ModificarSeccionHomeDto
+    public class ModificarContenidoWebDto
     {
         public int Id { get; set; }
+
+        public string Pagina { get; set; }
+
+        public string Clave { get; set; }
 
         public string TextoPrincipal { get; set; }
 
