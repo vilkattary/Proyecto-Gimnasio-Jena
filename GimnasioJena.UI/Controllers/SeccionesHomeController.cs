@@ -31,7 +31,7 @@ namespace GimnasioJena.UI.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var modelo = await _obtenerContenidoWeb.EjecutarAsync("Home");
+            var modelo = await _obtenerContenidoWeb.EjecutarTodosAsync("Home");
             return View("~/Views/Home/AdminIndex.cshtml", modelo);
         }
 
@@ -69,9 +69,9 @@ namespace GimnasioJena.UI.Controllers
             bool resultado = await _eliminarSeccionHome.EliminarSeccionHome(id);
 
             if (resultado)
-                TempData["MensajeExito"] = "La tarjeta se eliminó correctamente.";
+                TempData["MensajeExito"] = "La tarjeta se desactivó correctamente.";
             else
-                TempData["MensajeError"] = "No se pudo eliminar la tarjeta.";
+                TempData["MensajeError"] = "No se pudo desactivar la tarjeta.";
 
             return RedirectToAction("Index");
         }

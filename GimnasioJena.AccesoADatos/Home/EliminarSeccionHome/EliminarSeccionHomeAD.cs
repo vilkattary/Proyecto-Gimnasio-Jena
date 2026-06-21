@@ -16,7 +16,12 @@ namespace GimnasioJena.AccesoADatos.Home.EliminarSeccionHome
                 if (seccion == null)
                     return false;
 
-                contexto.ContenidoWeb.Remove(seccion);
+                if (seccion.Seccion == "Hero")
+                    return false;
+
+                seccion.Estado = false;
+                seccion.FechaModificacion = System.DateTime.Now;
+
                 int filasAfectadas = await contexto.SaveChangesAsync();
                 return filasAfectadas > 0;
             }

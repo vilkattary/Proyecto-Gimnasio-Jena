@@ -4,6 +4,7 @@ using GimnasioJena.Abstracciones.Modelos.Home;
 using GimnasioJena.AccesoADatos.Home.ModificarSeccionHome;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Hosting;
 
@@ -20,16 +21,31 @@ namespace GimnasioJena.LogicaDeNegocio.Home.ModificarSeccionHome
 
         public async Task<bool> EjecutarAsync(ModificarContenidoWebDto dto)
         {
+            if (dto == null || dto.Id <= 0)
+                return false;
+
             if (dto.ArchivoImagen != null && dto.ArchivoImagen.ContentLength > 0)
             {
+                string extension = Path.GetExtension(dto.ArchivoImagen.FileName).ToLower();
+
+                string[] extensionesPermitidas =
+                {
+                    ".jpg",
+                    ".jpeg",
+                    ".png",
+                    ".webp"
+                };
+
+                if (!extensionesPermitidas.Contains(extension))
+                    return false;
+
                 string carpeta = HostingEnvironment.MapPath("~/images/uploads/");
 
                 if (!Directory.Exists(carpeta))
                     Directory.CreateDirectory(carpeta);
 
-                string extension     = Path.GetExtension(dto.ArchivoImagen.FileName);
                 string nombreArchivo = Guid.NewGuid().ToString() + extension;
-                string rutaCompleta  = Path.Combine(carpeta, nombreArchivo);
+                string rutaCompleta = Path.Combine(carpeta, nombreArchivo);
 
                 using (var fileStream = new FileStream(rutaCompleta, FileMode.Create, FileAccess.Write))
                 {
