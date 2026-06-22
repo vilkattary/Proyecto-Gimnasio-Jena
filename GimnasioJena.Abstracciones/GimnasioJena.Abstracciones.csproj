@@ -99,6 +99,7 @@
     <Compile Include="AccesoADatos\Comunicacion\ObtenerTodosLosMensajes\IObtenerTodosLosMensajesAD.cs" />
     <Compile Include="AccesoADatos\Comunicacion\RegistrarMensaje\IRegistrarMensajeAD.cs" />
     <Compile Include="AccesoADatos\Comunicacion\ResponderMensaje\IResponderMensajeAD.cs" />
+    <Compile Include="AccesoADatos\Contacto\IContactoAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\CambiarEstadoEntrenador\ICambiarEstadoEntrenadorAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\EditarEntrenador\IEditarEntrenadorAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\ObtenerEntrenadorPorId\IObtenerEntrenadorPorIdAD.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="AccesoADatos\Usuarios\ObtenerUsuarioPorId\IObtenerUsuarioPorIdAD.cs" />
     <Compile Include="AccesoADatos\Usuarios\RecuperarContrasena\IRecuperarContrasenaAD.cs" />
     <Compile Include="AccesoADatos\Usuarios\RegistrarUsuario\IRegistrarUsuarioAD.cs" />
+    <Compile Include="General\Email\IServicioEmail.cs" />
     <Compile Include="General\Fechas\IFechasLN.cs" />
     <Compile Include="LogicaDeNegocio\Asistencias\CambiarEstadoAsistencia\ICambiarEstadoAsistenciaLN.cs" />
     <Compile Include="LogicaDeNegocio\Asistencias\EditarAsistencia\IEditarAsistenciaLN.cs" />
@@ -181,6 +183,7 @@
     <Compile Include="LogicaDeNegocio\Comunicacion\ObtenerTodosLosMensajes\IObtenerTodosLosMensajesLN.cs" />
     <Compile Include="LogicaDeNegocio\Comunicacion\RegistrarMensaje\IRegistrarMensajeLN.cs" />
     <Compile Include="LogicaDeNegocio\Comunicacion\ResponderMensaje\IResponderMensajeLN.cs" />
+    <Compile Include="LogicaDeNegocio\Contacto\IContactoLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\CambiarEstadoEntrenador\ICambiarEstadoEntrenadorLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\EditarEntrenador\IEditarEntrenadorLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerEntrenadorPorId\IObtenerEntrenadorPorIdLN.cs" />
@@ -262,6 +265,8 @@
     <Compile Include="Modelos\Comunicacion\MensajeListadoDto.cs" />
     <Compile Include="Modelos\Comunicacion\MensajeResponderDto.cs" />
     <Compile Include="Modelos\Comunicacion\MensajeUsuarioDto.cs" />
+    <Compile Include="Modelos\Contacto\ContactoFormDto.cs" />
+    <Compile Include="Modelos\Contacto\ContactoInfoDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorCrearDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorDto.cs" />

@@ -9,9 +9,10 @@ namespace GimnasioJena.UI.Controllers
     public class AsistenciasController : Controller
     {
         // GET: Asistencias
-        public ActionResult Index()
+        public ActionResult Index(string clase = null)
         {
-            return View();
+            ViewBag.ClasePrueba = clase;
+            return View("FormularioContacto");
         }
 
         // GET: Asistencias/Details/5
