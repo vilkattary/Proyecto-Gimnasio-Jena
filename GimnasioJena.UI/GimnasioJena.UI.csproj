@@ -324,6 +324,7 @@
     <Content Include="Views\Nosotros\Index.cshtml" />
     <Content Include="Views\Nosotros\AdminNosotros.cshtml" />
     <Content Include="Views\Clientes\DetalleReserva.cshtml" />
+    <Content Include="Views\Reservas\Administrar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
