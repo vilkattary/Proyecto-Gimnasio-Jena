@@ -1,13 +1,16 @@
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Home.AgregarSeccionHome;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Home.CambiarEstadoSeccionHome;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Home.EliminarSeccionHome;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Home.ModificarSeccionHome;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Home.ObtenerSeccionesHome;
 using GimnasioJena.Abstracciones.Modelos.Home;
 using GimnasioJena.LogicaDeNegocio.Home.AgregarSeccionHome;
+using GimnasioJena.LogicaDeNegocio.Home.CambiarEstadoSeccionHome;
 using GimnasioJena.LogicaDeNegocio.Home.EliminarSeccionHome;
 using GimnasioJena.LogicaDeNegocio.Home.ModificarSeccionHome;
 using GimnasioJena.LogicaDeNegocio.Home.ObtenerSeccionesHome;
 using GimnasioJena.UI.Filters;
+using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -16,17 +19,19 @@ namespace GimnasioJena.UI.Controllers
     [SoloAdministrador]
     public class SeccionesHomeController : Controller
     {
-        private readonly IObtenerContenidoWebLN  _obtenerContenidoWeb;
-        private readonly IModificarContenidoWebLN _modificarContenidoWeb;
-        private readonly IEliminarSeccionHomeLN   _eliminarSeccionHome;
-        private readonly IAgregarSeccionHomeLN    _agregarSeccionHome;
+        private readonly IObtenerContenidoWebLN      _obtenerContenidoWeb;
+        private readonly IModificarContenidoWebLN     _modificarContenidoWeb;
+        private readonly IEliminarSeccionHomeLN       _eliminarSeccionHome;
+        private readonly IAgregarSeccionHomeLN        _agregarSeccionHome;
+        private readonly ICambiarEstadoSeccionHomeLN  _cambiarEstadoSeccionHome;
 
         public SeccionesHomeController()
         {
-            _obtenerContenidoWeb   = new ObtenerContenidoWebLN();
-            _modificarContenidoWeb = new ModificarContenidoWebLN();
-            _eliminarSeccionHome   = new EliminarSeccionHomeLN();
-            _agregarSeccionHome    = new AgregarSeccionHomeLN();
+            _obtenerContenidoWeb      = new ObtenerContenidoWebLN();
+            _modificarContenidoWeb    = new ModificarContenidoWebLN();
+            _eliminarSeccionHome      = new EliminarSeccionHomeLN();
+            _agregarSeccionHome       = new AgregarSeccionHomeLN();
+            _cambiarEstadoSeccionHome = new CambiarEstadoSeccionHomeLN();
         }
 
         public async Task<ActionResult> Index()
@@ -93,6 +98,27 @@ namespace GimnasioJena.UI.Controllers
                 TempData["MensajeExito"] = "Nueva tarjeta agregada. Complete los datos y guarde.";
             else
                 TempData["MensajeError"] = "No se puede agregar más de 3 tarjetas en esta sección.";
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ToggleEstado(int id)
+        {
+            try
+            {
+                bool resultado = await _cambiarEstadoSeccionHome.EjecutarAsync(id);
+
+                if (resultado)
+                    TempData["MensajeExito"] = "El estado de la tarjeta se cambió correctamente.";
+                else
+                    TempData["MensajeError"] = "No se pudo cambiar el estado. Verifique el registro.";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = ex.ToString();
+            }
 
             return RedirectToAction("Index");
         }

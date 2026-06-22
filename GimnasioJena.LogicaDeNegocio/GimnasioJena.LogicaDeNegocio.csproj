@@ -108,6 +108,7 @@
     <Compile Include="EstadoReservas\ObtenerEstadoReservas\ObtenerEstadoReservaLN.cs" />
     <Compile Include="General\Fechas\FechasLN.cs" />
     <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeLN.cs" />
+    <Compile Include="Home\CambiarEstadoSeccionHome\CambiarEstadoSeccionHomeLN.cs" />
     <Compile Include="Home\EliminarSeccionHome\EliminarSeccionHomeLN.cs" />
     <Compile Include="Membresias\CambiarEstadoMembresia\CambiarEstadoMembresiaLN.cs" />
     <Compile Include="Membresias\EditarMembresia\EditarMembresiaLN.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Membresias\RegistrarMembresia\RegistrarMembresiaLN.cs" />
     <Compile Include="Membresias\RenovarMembresia\RenovarMembresiaLN.cs" />
     <Compile Include="Nosotros\AgregarSeccionNosotros\AgregarSeccionNosotrosLN.cs" />
+    <Compile Include="Nosotros\CambiarEstadoSeccionNosotros\CambiarEstadoSeccionNosotrosLN.cs" />
     <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosLN.cs" />
     <Compile Include="Nosotros\ModificarSeccionNosotros\ModificarContenidoNosotrosLN.cs" />
     <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosLN.cs" />
