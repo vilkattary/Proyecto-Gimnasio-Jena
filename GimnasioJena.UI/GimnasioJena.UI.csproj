@@ -183,6 +183,7 @@
     <Compile Include="Controllers\ClasesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\ComunicacionController.cs" />
+    <Compile Include="Controllers\ContactoController.cs" />
     <Compile Include="Controllers\EntrenadoresController.cs" />
     <Compile Include="Controllers\EstadoReservasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -270,7 +271,11 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Contacto\FormularioContacto.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
+
+    
+    
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -436,3 +441,6 @@
   </Target>
   <Import Project="..\packages\EntityFramework.6.5.2\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" />
 </Project>
+
+
+
