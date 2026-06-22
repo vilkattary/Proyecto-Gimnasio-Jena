@@ -37,9 +37,7 @@ namespace GimnasioJena.UI.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return RedirectToAction("Index", "Contacto");
         }
 
         public ActionResult Planes()

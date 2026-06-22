@@ -99,6 +99,7 @@
     <Compile Include="Comunicacion\ObtenerTodosLosMensajes\ObtenerTodosLosMensajesAD.cs" />
     <Compile Include="Comunicacion\RegistrarMensaje\RegistrarMensajeAD.cs" />
     <Compile Include="Comunicacion\ResponderMensaje\ResponderMensajeAD.cs" />
+    <Compile Include="Contacto\ContactoAD.cs" />
     <Compile Include="Contexto.cs" />
     <Compile Include="Entidades\Asistencias\AsistenciaEntidad.cs" />
     <Compile Include="Entidades\Bitacora\BitacoraEntidad.cs" />

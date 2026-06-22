@@ -99,6 +99,7 @@
     <Compile Include="Comunicacion\ObtenerTodosLosMensajes\ObtenerTodosLosMensajesLN.cs" />
     <Compile Include="Comunicacion\RegistrarMensaje\RegistrarMensajeLN.cs" />
     <Compile Include="Comunicacion\ResponderMensaje\ResponderMensajeLN.cs" />
+    <Compile Include="Contacto\ContactoLN.cs" />
     <Compile Include="Entrenadores\CambiarEstadoEntrenador\CambiarEstadoEntrenadorLN.cs" />
     <Compile Include="Entrenadores\EditarEntrenador\EditarEntrenadorLN.cs" />
     <Compile Include="Entrenadores\ObtenerEntrenadorPorId\ObtenerEntrenadorPorIdLN.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Entrenadores\ObtenerTodosLosEntrenadores\ObtenerTodosLosEntrenadoresLN.cs" />
     <Compile Include="Entrenadores\RegistrarEntrenador\RegistrarEntrenadorLN.cs" />
     <Compile Include="EstadoReservas\ObtenerEstadoReservas\ObtenerEstadoReservaLN.cs" />
+    <Compile Include="General\Email\ServicioEmail.cs" />
     <Compile Include="General\Fechas\FechasLN.cs" />
     <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeLN.cs" />
     <Compile Include="Home\CambiarEstadoSeccionHome\CambiarEstadoSeccionHomeLN.cs" />

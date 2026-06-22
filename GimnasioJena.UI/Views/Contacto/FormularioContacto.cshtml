@@ -1,0 +1,193 @@
+@model GimnasioJena.Abstracciones.Modelos.Contacto.ContactoFormDto
+
+@{
+    ViewBag.Title = "Contacto";
+}
+
+<!-- Page Header -->
+<section style="background: linear-gradient(135deg, #111111 60%, #2c2c2c 100%); padding: 80px 0 60px;">
+    <div class="container text-center">
+        <p class="text-uppercase mb-2" style="color:#FF6600; font-family:'Oswald',sans-serif; letter-spacing:3px; font-size:1rem;">
+            <i class="bi bi-envelope-fill me-1"></i> Estamos aqu&iacute; para ti
+        </p>
+        <h1 class="display-4 fw-bold text-white mb-3">PONTE EN <span style="color:#FF6600;">CONTACTO</span></h1>
+        <div class="mx-auto" style="width:60px; height:4px; background:#FF6600; border-radius:2px;"></div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-4" role="alert">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <span>@TempData["MensajeExito"]</span>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        }
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <span>@TempData["MensajeError"]</span>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        }
+
+        <div class="row g-5">
+
+            <!-- Informacion de contacto -->
+            <div class="col-md-6 col-lg-5">
+                <p class="text-uppercase mb-1" style="color:#FF6600; font-family:'Oswald',sans-serif; letter-spacing:3px;">
+                    Informaci&oacute;n de contacto
+                </p>
+                <h2 class="fw-bold mb-4" style="color:#111;">&iquest;C&Oacute;MO LLEGAR A NOSOTROS?</h2>
+
+                <div class="d-flex mb-4">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-geo-alt-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">DIRECCI&Oacute;N</h6>
+                        <p class="text-muted mb-0">
+                            @if (!string.IsNullOrEmpty(ViewBag.Direccion as string))
+                            {
+                                @ViewBag.Direccion
+                            }
+                            else
+                            {
+                                <span>Gimnasio Jena<br />Tu ciudad, Tu pa&iacute;s</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-4">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-telephone-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">TEL&Eacute;FONO</h6>
+                        <p class="text-muted mb-0">
+                            @if (!string.IsNullOrEmpty(ViewBag.Telefono as string))
+                            {
+                                @ViewBag.Telefono
+                            }
+                            else
+                            {
+                                <span>+000 000-0000</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-4">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-envelope-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">CORREO ELECTR&Oacute;NICO</h6>
+                        <p class="text-muted mb-0">
+                            @if (!string.IsNullOrEmpty(ViewBag.Correo as string))
+                            {
+                                @ViewBag.Correo
+                            }
+                            else
+                            {
+                                <span>info@gimnasiojena.com</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-4">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-clock-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">HORARIO</h6>
+                        <p class="text-muted mb-0">
+                            Lunes &ndash; Viernes: 5:00 AM &ndash; 10:00 PM<br />
+                            S&aacute;bado: 6:00 AM &ndash; 8:00 PM<br />
+                            Domingo: Cerrado
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario -->
+            <div class="col-md-6 col-lg-7">
+                <div class="card border-0 shadow-sm p-4 p-lg-5">
+                    <h4 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">ENV&Iacute;ANOS UN MENSAJE</h4>
+                    <p class="text-muted mb-4">
+                        Completa el formulario y nos pondremos en contacto contigo a la brevedad posible.
+                    </p>
+
+                    @using (Html.BeginForm("EnviarMensaje", "Contacto", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row g-3">
+
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">
+                                    Nombre <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Tu nombre completo" })
+                                @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger small d-block mt-1" })
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">
+                                    Correo electr&oacute;nico <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.Correo, new { @class = "form-control", placeholder = "correo@ejemplo.com", type = "email" })
+                                @Html.ValidationMessageFor(m => m.Correo, "", new { @class = "text-danger small d-block mt-1" })
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">
+                                    Tel&eacute;fono <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "000 000-0000", type = "tel" })
+                                @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger small d-block mt-1" })
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">
+                                    Asunto <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.Asunto, new { @class = "form-control", placeholder = "En que podemos ayudarte?" })
+                                @Html.ValidationMessageFor(m => m.Asunto, "", new { @class = "text-danger small d-block mt-1" })
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">
+                                    Mensaje <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextAreaFor(m => m.Mensaje, new { @class = "form-control", rows = "5", placeholder = "Escribe tu mensaje aqui..." })
+                                @Html.ValidationMessageFor(m => m.Mensaje, "", new { @class = "text-danger small d-block mt-1" })
+                            </div>
+
+                            <div class="col-12 mt-2">
+                                <button type="submit" class="btn btn-action btn-lg w-100">
+                                    <i class="bi bi-send-fill me-2"></i>ENVIAR MENSAJE
+                                </button>
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
