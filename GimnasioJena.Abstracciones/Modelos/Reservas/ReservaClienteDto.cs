@@ -6,6 +6,7 @@ namespace GimnasioJena.Abstracciones.Modelos.Reservas
     {
         public int idReserva { get; set; }
         public int idUsuario { get; set; }
+        public int idEstadoReserva { get; set; }
         public string nombreClase { get; set; }
         public string nombreEntrenador { get; set; }
         public string estadoReserva { get; set; }
@@ -13,5 +14,6 @@ namespace GimnasioJena.Abstracciones.Modelos.Reservas
         public TimeSpan horaInicio { get; set; }
         public TimeSpan horaFin { get; set; }
         public string ubicacion { get; set; }
+        public string observaciones { get; set; }
     }
 }
