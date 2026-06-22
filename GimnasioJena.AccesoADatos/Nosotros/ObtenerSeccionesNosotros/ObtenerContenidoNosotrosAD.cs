@@ -40,6 +40,11 @@ namespace GimnasioJena.AccesoADatos.Nosotros.ObtenerSeccionesNosotros
             }
         }
 
+        public async Task<IEnumerable<ContenidoWebDto>> ObtenerTodosPorPaginaAsync(string pagina)
+        {
+            return await ObtenerPorPaginaAsync(pagina);
+        }
+
         private async Task SembrarContenidoNosotros(Contexto contexto)
         {
             var secciones = new List<ContenidoWeb>
