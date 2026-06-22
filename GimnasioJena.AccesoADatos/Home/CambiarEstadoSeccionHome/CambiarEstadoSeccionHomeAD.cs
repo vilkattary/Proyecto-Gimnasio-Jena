@@ -1,12 +1,13 @@
-using GimnasioJena.Abstracciones.AccesoADatos.Home.EliminarSeccionHome;
+using GimnasioJena.Abstracciones.AccesoADatos.Home.CambiarEstadoSeccionHome;
+using System;
 using System.Data.Entity;
 using System.Threading.Tasks;
 
-namespace GimnasioJena.AccesoADatos.Home.EliminarSeccionHome
+namespace GimnasioJena.AccesoADatos.Home.CambiarEstadoSeccionHome
 {
-    public class EliminarSeccionHomeAD : IEliminarSeccionHomeAD
+    public class CambiarEstadoSeccionHomeAD : ICambiarEstadoSeccionHomeAD
     {
-        public async Task<bool> EliminarSeccionHome(int id)
+        public async Task<bool> ToggleEstadoAsync(int id)
         {
             using (var contexto = new Contexto())
             {
@@ -19,8 +20,8 @@ namespace GimnasioJena.AccesoADatos.Home.EliminarSeccionHome
                 if (seccion.Seccion == "Hero")
                     return false;
 
-                seccion.Estado = false;
-                seccion.FechaModificacion = System.DateTime.Now;
+                seccion.Estado = !seccion.Estado;
+                seccion.FechaModificacion = DateTime.Now;
 
                 int filasAfectadas = await contexto.SaveChangesAsync();
                 return filasAfectadas > 0;

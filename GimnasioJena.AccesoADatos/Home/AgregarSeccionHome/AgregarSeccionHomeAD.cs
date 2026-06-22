@@ -16,13 +16,15 @@ namespace GimnasioJena.AccesoADatos.Home.AgregarSeccionHome
             using (var contexto = new Contexto())
             {
                 int cantidad = contexto.ContenidoWeb
-                    .Count(s => s.Seccion == dto.Seccion);
+    .Count(s => s.Pagina == "Home" && s.Seccion == dto.Seccion && s.Estado);
 
                 if (cantidad >= MaxPorSeccion)
                     return false;
 
-                int maxOrden = contexto.ContenidoWeb.Any()
-                    ? contexto.ContenidoWeb.Max(s => s.Orden)
+                int maxOrden = contexto.ContenidoWeb.Any(s => s.Pagina == "Home")
+                    ? contexto.ContenidoWeb
+                        .Where(s => s.Pagina == "Home")
+                        .Max(s => s.Orden)
                     : 0;
 
                 string clave = dto.Seccion.ToLower() + "-nuevo-" + (cantidad + 1);
@@ -36,7 +38,8 @@ namespace GimnasioJena.AccesoADatos.Home.AgregarSeccionHome
                     TextoSecundario   = "",
                     UrlImagen         = dto.Seccion == "Clases" ? "bi-star-fill" : "",
                     Orden             = maxOrden + 1,
-                    FechaModificacion = DateTime.Now
+                    FechaModificacion = DateTime.Now,
+                    Estado           = true
                 };
 
                 contexto.ContenidoWeb.Add(nueva);

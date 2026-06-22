@@ -107,6 +107,7 @@
     <Compile Include="AccesoADatos\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorAD.cs" />
     <Compile Include="AccesoADatos\EstadoReservas\ObtenerEstadoReservas\IObtenerEstadoReservaAD.cs" />
     <Compile Include="AccesoADatos\Home\AgregarSeccionHome\IAgregarSeccionHomeAD.cs" />
+    <Compile Include="AccesoADatos\Home\CambiarEstadoSeccionHome\ICambiarEstadoSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Home\EliminarSeccionHome\IEliminarSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\EditarMembresia\IEditarMembresiaAD.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="AccesoADatos\Membresias\RegistrarMembresia\IRegistrarMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\RenovarMembresia\IRenovarMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosAD.cs" />
+    <Compile Include="AccesoADatos\Nosotros\CambiarEstadoSeccionNosotros\ICambiarEstadoSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaAD.cs" />
@@ -187,6 +189,7 @@
     <Compile Include="LogicaDeNegocio\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorLN.cs" />
     <Compile Include="LogicaDeNegocio\EstadoReservas\ObtenerEstadoReservas\IObtenerEstadoReservasLN.CS" />
     <Compile Include="LogicaDeNegocio\Home\AgregarSeccionHome\IAgregarSeccionHomeLN.cs" />
+    <Compile Include="LogicaDeNegocio\Home\CambiarEstadoSeccionHome\ICambiarEstadoSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Home\EliminarSeccionHome\IEliminarSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\EditarMembresia\IEditarMembresiaLN.cs" />
@@ -196,6 +199,7 @@
     <Compile Include="LogicaDeNegocio\Membresias\RegistrarMembresia\IRegistrarMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\RenovarMembresia\IRenovarMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Nosotros\CambiarEstadoSeccionNosotros\ICambiarEstadoSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaLN.cs" />

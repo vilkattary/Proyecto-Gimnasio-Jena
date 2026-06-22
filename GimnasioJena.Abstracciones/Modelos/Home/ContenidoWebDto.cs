@@ -13,5 +13,7 @@ namespace GimnasioJena.Abstracciones.Modelos.Home
         public string UrlImagen { get; set; }
         public int Orden { get; set; }
         public DateTime? FechaModificacion { get; set; }
+
+        public bool Estado { get; set; }
     }
 }

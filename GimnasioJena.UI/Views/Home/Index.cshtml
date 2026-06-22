@@ -327,6 +327,7 @@ BOTONES DE ACCIÓN
         <div class="row g-4 justify-content-center">
             @foreach (var item in clases)
             {
+                if (!item.Estado) { continue; }
                 string iconClass = (!string.IsNullOrEmpty(item.UrlImagen) && item.UrlImagen.StartsWith("bi-"))
                                  ? item.UrlImagen
                                  : item.Clave == "clase-fuerza" ? "bi-lightning-charge-fill"
@@ -364,6 +365,7 @@ BOTONES DE ACCIÓN
         <div class="row g-4 justify-content-center">
             @foreach (var item in testimonios)
             {
+                if (!item.Estado) { continue; }
                 string iniciales = "?";
                 if (item.TextoPrincipal != null && item.TextoPrincipal.Length >= 1)
                 {
