@@ -47,6 +47,14 @@
                                 new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
+                            @Html.ActionLink("Clases", "ObtenerTodasLasClases", "Clases",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Reservas", "Administrar", "Reservas",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
                             @Html.ActionLink("Contacto", "Contact", "Home",
                                 new { area = "" }, new { @class = "nav-link" })
                         </li>
