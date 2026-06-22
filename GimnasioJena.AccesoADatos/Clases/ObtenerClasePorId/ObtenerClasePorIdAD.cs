@@ -41,9 +41,14 @@ namespace GimnasioJena.AccesoADatos.Clases.ObtenerClasePorId
                      horaFin = clase.horaFin,
 
                      cupoMaximo = clase.cupoMaximo,
-                     cuposReservados = _elContexto.Reservas.Count(r => r.idClaseProgramada == clase.idClaseProgramada),
-                     cuposDisponibles = clase.cupoMaximo - _elContexto.Reservas.Count(r => r.idClaseProgramada == clase.idClaseProgramada),
 
+                     cuposReservados = _elContexto.Reservas.Count(r =>
+    r.idClaseProgramada == clase.idClaseProgramada &&
+    r.idEstadoReserva == 1),
+
+                     cuposDisponibles = clase.cupoMaximo - _elContexto.Reservas.Count(r =>
+                         r.idClaseProgramada == clase.idClaseProgramada &&
+                         r.idEstadoReserva == 1),
                      ubicacion = clase.ubicacion,
                      observaciones = clase.observaciones,
 
