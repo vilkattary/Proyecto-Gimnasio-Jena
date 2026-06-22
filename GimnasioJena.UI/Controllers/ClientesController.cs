@@ -1,7 +1,9 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
 using GimnasioJena.Abstracciones.Modelos.Reservas;
 using GimnasioJena.AccesoADatos;
+using GimnasioJena.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
@@ -15,11 +17,13 @@ namespace GimnasioJena.UI.Controllers
     {
         private readonly IObtenerUsuarioPorIdLN _obtenerUsuarioServicio;
         private readonly IObtenerReservasPorUsuarioLN _obtenerReservasPorUsuarioServicio;
+        private readonly ICancelarReservaLN _cancelarReservaServicio;
 
         public ClientesController(IObtenerUsuarioPorIdLN obtenerUsuarioServicio)
         {
             _obtenerUsuarioServicio = obtenerUsuarioServicio;
             _obtenerReservasPorUsuarioServicio = new ObtenerReservasPorUsuarioLN();
+            _cancelarReservaServicio = new CancelarReservaLN();
         }
 
         public async Task<ActionResult> MiPerfil()
@@ -55,29 +59,30 @@ namespace GimnasioJena.UI.Controllers
             return View(reservas);
         }
 
-        public async Task<ActionResult> EliminarReserva(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CancelarReserva(int id)
         {
             var identityUserId = User.Identity.GetUserId();
             var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
+
             if (perfil == null)
             {
                 TempData["MensajeError"] = "Usuario no autenticado correctamente.";
                 return RedirectToAction("MisReservas");
             }
 
-            using (var contexto = new Contexto())
-            {
-                var reserva = contexto.Reservas.Find(id);
-                if (reserva == null || reserva.idUsuario != perfil.idUsuario)
-                {
-                    TempData["MensajeError"] = "No se encontró la reserva o no tienes permiso para cancelarla.";
-                    return RedirectToAction("MisReservas");
-                }
+            bool resultado = _cancelarReservaServicio.CancelarReserva(id, perfil.idUsuario);
 
-                contexto.Reservas.Remove(reserva);
-                contexto.SaveChanges();
+            if (resultado)
+            {
+                TempData["MensajeExito"] = "Reserva cancelada correctamente.";
             }
-            TempData["MensajeExito"] = "Reserva cancelada correctamente.";
+            else
+            {
+                TempData["MensajeError"] = "No se pudo cancelar la reserva. Verifica que esté activa.";
+            }
+
             return RedirectToAction("MisReservas");
         }
     }
