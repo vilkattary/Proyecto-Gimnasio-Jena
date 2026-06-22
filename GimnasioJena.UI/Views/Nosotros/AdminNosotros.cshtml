@@ -44,6 +44,55 @@
     </div>
 }
 
+<style>
+    .card-inactiva {
+        filter: grayscale(100%);
+        position: relative;
+    }
+    .card-inactiva::after {
+        content: 'INACTIVO';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #dc3545;
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        z-index: 10;
+        pointer-events: none;
+    }
+    /* Bloquea botones de edición en tarjetas inactivas */
+    .card-inactiva button[type="submit"] {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+    /* El interruptor permanece completamente interactivo */
+    .card-inactiva .toggle-form .form-check-input,
+    .card-inactiva .toggle-form .form-check-label {
+        pointer-events: auto;
+        opacity: 1;
+        filter: none;
+    }
+    /* Cursor indicativo en controles deshabilitados por fieldset */
+    .card-inactiva fieldset:disabled input,
+    .card-inactiva fieldset:disabled textarea,
+    .card-inactiva fieldset:disabled select,
+    .card-inactiva fieldset:disabled button {
+        cursor: not-allowed;
+    }
+    .toggle-form .form-check-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .toggle-form .form-check-input {
+        cursor: pointer;
+    }
+</style>
+
 <div class="container py-5">
 
     @* ─── CABECERA DE PÁGINA ─── *@
@@ -249,6 +298,11 @@
             <i class="bi bi-bar-chart-fill me-2" style="color: var(--jena-orange);"></i>Estadísticas (Contadores)
         </h5>
 
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Edite número, etiqueta e ícono de cada contador. Use el interruptor para activar o desactivar su visibilidad en la página pública.
+        </div>
+
         @if (!stats.Any())
         {
             <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontraron estadísticas.</div>
@@ -259,30 +313,21 @@
                 @foreach (var stat in stats)
                 {
                     string statIcon = string.IsNullOrEmpty(stat.UrlImagen) ? "bi-bar-chart-fill" : stat.UrlImagen;
-                    <div class="col-12 col-md-4">
-                        <div style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
-                            <div class="d-flex align-items-center justify-content-between px-3 py-2" style="background: var(--jena-dark-navy);">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="rounded-circle d-flex align-items-center justify-content-center"
-                                          style="width:36px; height:36px; background: var(--jena-orange); flex-shrink:0;">
-                                        <i class="bi @statIcon text-white" style="font-size:1rem;" id="stat-preview-@stat.Id"></i>
-                                    </span>
-                                    <span class="fw-bold text-uppercase"
-                                          style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.75rem; letter-spacing: 1.5px;">
-                                        Contador
-                                    </span>
-                                </div>
-                                <form action="@Url.Action("EliminarSeccion", "SeccionesNosotros")" method="post" class="d-inline m-0"
-                                      onsubmit="return confirm('¿Eliminar este contador de estadística?');">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@stat.Id" />
-                                    <button type="submit" class="btn btn-sm border-0 p-0"
-                                            style="background:transparent; color:#ff6b6b; line-height:1;" title="Eliminar">
-                                        <i class="bi bi-trash-fill" style="font-size:1rem;"></i>
-                                    </button>
-                                </form>
+                    <div class="col-12 col-md-4 @(stat.Estado ? "" : "card-inactiva")">
+                        <div class="h-100" style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+                            <div class="d-flex align-items-center justify-content-between px-3 py-2"
+                                 style="background: var(--jena-dark-navy);">
+                                <span class="text-uppercase fw-bold"
+                                      style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.78rem; letter-spacing: 1.5px;">
+                                    Tarjeta de estadística
+                                </span>
+                                <span class="rounded-circle d-flex align-items-center justify-content-center"
+                                      style="width:36px; height:36px; background: var(--jena-orange);">
+                                    <i class="bi @statIcon text-white" style="font-size:1.1rem;" id="stat-preview-@stat.Id"></i>
+                                </span>
                             </div>
                             <div class="p-3">
+                                <fieldset @Html.Raw(!stat.Estado ? "disabled" : "") style="border:none;padding:0;margin:0;">
                                 <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="Id"    value="@stat.Id" />
@@ -340,22 +385,26 @@
                                         </button>
                                     </div>
                                 </form>
+                                </fieldset>
+                                <hr class="my-2" style="border-color: var(--jena-light-blue);" />
+                                <form action="@Url.Action("ToggleEstado", "SeccionesNosotros")" method="post" class="toggle-form mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@stat.Id" />
+                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="toggle-stat-@stat.Id"
+                                               @(stat.Estado ? "checked" : "")
+                                               onchange="this.form.submit()" />
+                                        <label class="form-check-label" for="toggle-stat-@stat.Id">
+                                            @(stat.Estado ? "Activo" : "Inactivo")
+                                        </label>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 }
             </div>
-        }
-
-        @if (stats.Count < 3)
-        {
-            <form action="@Url.Action("AgregarSeccion", "SeccionesNosotros")" method="post" class="mt-3">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="seccion" value="Stats" />
-                <button type="submit" class="btn-action" style="width:auto; padding:10px 24px;">
-                    <i class="bi bi-plus-circle-fill me-1"></i>Agregar estadística
-                </button>
-            </form>
         }
     </div>
 
@@ -494,6 +543,11 @@
         }
 
         @* Las 4 tarjetas de valores *@
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Edite nombre, descripción e ícono de cada tarjeta de valor. Use el interruptor para activar o desactivar su visibilidad en la página pública.
+        </div>
+
         @if (!valores.Any())
         {
             <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontraron tarjetas de valores.</div>
@@ -504,30 +558,21 @@
                 @foreach (var valor in valores)
                 {
                     string valIcon = string.IsNullOrEmpty(valor.UrlImagen) ? "bi-star-fill" : valor.UrlImagen;
-                    <div class="col-12 col-md-6">
-                        <div style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
-                            <div class="d-flex align-items-center justify-content-between px-3 py-2" style="background: var(--jena-navy);">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="rounded-circle d-flex align-items-center justify-content-center"
-                                          style="width:36px; height:36px; background: var(--jena-orange); flex-shrink:0;">
-                                        <i class="bi @valIcon text-white" style="font-size:1rem;" id="val-ico-@valor.Id"></i>
-                                    </span>
-                                    <span class="fw-bold text-uppercase"
-                                          style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.75rem; letter-spacing: 1.5px;">
-                                        Valor: @valor.TextoPrincipal
-                                    </span>
-                                </div>
-                                <form action="@Url.Action("EliminarSeccion", "SeccionesNosotros")" method="post" class="d-inline m-0"
-                                      onsubmit="return confirm('¿Eliminar este valor?');">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@valor.Id" />
-                                    <button type="submit" class="btn btn-sm border-0 p-0"
-                                            style="background:transparent; color:#ff6b6b; line-height:1;" title="Eliminar">
-                                        <i class="bi bi-trash-fill" style="font-size:1rem;"></i>
-                                    </button>
-                                </form>
+                    <div class="col-12 col-md-6 @(valor.Estado ? "" : "card-inactiva")">
+                        <div class="h-100" style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+                            <div class="d-flex align-items-center justify-content-between px-3 py-2"
+                                 style="background: var(--jena-navy);">
+                                <span class="text-uppercase fw-bold"
+                                      style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.78rem; letter-spacing: 1.5px;">
+                                    Valor: @valor.TextoPrincipal
+                                </span>
+                                <span class="rounded-circle d-flex align-items-center justify-content-center"
+                                      style="width:36px; height:36px; background: var(--jena-orange);">
+                                    <i class="bi @valIcon text-white" style="font-size:1.1rem;" id="val-ico-@valor.Id"></i>
+                                </span>
                             </div>
                             <div class="p-3">
+                                <fieldset @Html.Raw(!valor.Estado ? "disabled" : "") style="border:none;padding:0;margin:0;">
                                 <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="Id"    value="@valor.Id" />
@@ -586,22 +631,26 @@
                                         </button>
                                     </div>
                                 </form>
+                                </fieldset>
+                                <hr class="my-2" style="border-color: var(--jena-light-blue);" />
+                                <form action="@Url.Action("ToggleEstado", "SeccionesNosotros")" method="post" class="toggle-form mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@valor.Id" />
+                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="toggle-valor-@valor.Id"
+                                               @(valor.Estado ? "checked" : "")
+                                               onchange="this.form.submit()" />
+                                        <label class="form-check-label" for="toggle-valor-@valor.Id">
+                                            @(valor.Estado ? "Activo" : "Inactivo")
+                                        </label>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 }
             </div>
-        }
-
-        @if (valores.Count < 4)
-        {
-            <form action="@Url.Action("AgregarSeccion", "SeccionesNosotros")" method="post" class="mt-3">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="seccion" value="Valores" />
-                <button type="submit" class="btn-action" style="width:auto; padding:10px 24px;">
-                    <i class="bi bi-plus-circle-fill me-1"></i>Agregar valor
-                </button>
-            </form>
         }
     </div>
 

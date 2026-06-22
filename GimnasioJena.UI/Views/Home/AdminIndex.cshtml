@@ -6,9 +6,58 @@
     var mensajeError = TempData["MensajeError"] as string;
 
     var seccionHero = Model.Where(x => x.Seccion == "Hero").OrderBy(x => x.Orden).ToList();
-    var seccionClases = Model.Where(x => x.Seccion == "Clases").OrderBy(x => x.Orden).Take(3).ToList();
-    var seccionTestimonios = Model.Where(x => x.Seccion == "Testimonios").OrderBy(x => x.Orden).Take(3).ToList();
+    var seccionClases = Model.Where(x => x.Seccion == "Clases").OrderBy(x => x.Orden).ToList();
+    var seccionTestimonios = Model.Where(x => x.Seccion == "Testimonios").OrderBy(x => x.Orden).ToList();
 }
+
+<style>
+    .card-inactiva {
+        filter: grayscale(100%);
+        position: relative;
+    }
+    .card-inactiva::after {
+        content: 'INACTIVO';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #dc3545;
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        z-index: 10;
+        pointer-events: none;
+    }
+    /* Bloquea botones de edición en tarjetas inactivas */
+    .card-inactiva button[type="submit"] {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+    /* El interruptor permanece completamente interactivo */
+    .card-inactiva .toggle-form .form-check-input,
+    .card-inactiva .toggle-form .form-check-label {
+        pointer-events: auto;
+        opacity: 1;
+        filter: none;
+    }
+    /* Cursor indicativo en controles deshabilitados por fieldset */
+    .card-inactiva fieldset:disabled input,
+    .card-inactiva fieldset:disabled textarea,
+    .card-inactiva fieldset:disabled select,
+    .card-inactiva fieldset:disabled button {
+        cursor: not-allowed;
+    }
+    .toggle-form .form-check-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .toggle-form .form-check-input {
+        cursor: pointer;
+    }
+</style>
 
 @if (!string.IsNullOrEmpty(mensajeExito))
 {
@@ -161,7 +210,7 @@
 
         <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
-            Esta sección utiliza 3 tarjetas fijas. Para cambiar una clase visible, edite su nombre, descripción e ícono.
+            Edite nombre, descripción e ícono de cada tarjeta. Use el interruptor para activar o desactivar su visibilidad en la página pública.
         </div>
 
         @if (seccionClases.Any())
@@ -172,7 +221,7 @@
                     bool esIconoBI = !string.IsNullOrEmpty(item.UrlImagen) && item.UrlImagen.StartsWith("bi-");
                     string iconoActual = esIconoBI ? item.UrlImagen : "bi-star-fill";
 
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-4 @(item.Estado ? "" : "card-inactiva")">
                         <div class="h-100"
                              style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
 
@@ -190,6 +239,7 @@
                             </div>
 
                             <div class="p-3">
+                                <fieldset @Html.Raw(!item.Estado ? "disabled" : "") style="border:none;padding:0;margin:0;">
                                 <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
                                       method="post">
                                     @Html.AntiForgeryToken()
@@ -259,6 +309,21 @@
                                         </button>
                                     </div>
                                 </form>
+                                </fieldset>
+                                <hr class="my-2" style="border-color: var(--jena-light-blue);" />
+                                <form action="@Url.Action("ToggleEstado", "SeccionesHome")" method="post" class="toggle-form mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="toggle-clase-@item.Id"
+                                               @(item.Estado ? "checked" : "")
+                                               onchange="this.form.submit()" />
+                                        <label class="form-check-label" for="toggle-clase-@item.Id">
+                                            @(item.Estado ? "Activo" : "Inactivo")
+                                        </label>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -274,7 +339,7 @@
 
         <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
-            Esta sección utiliza 3 testimonios fijos. Para cambiar uno visible, edite el nombre, testimonio o avatar.
+            Edite el nombre, testimonio o avatar de cada tarjeta. Use el interruptor para activar o desactivar su visibilidad en la página pública.
         </div>
 
         @if (seccionTestimonios.Any())
@@ -295,7 +360,7 @@
                         }
                     }
 
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-4 @(item.Estado ? "" : "card-inactiva")">
                         <div class="h-100"
                              style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
 
@@ -322,6 +387,7 @@
                             </div>
 
                             <div class="p-3">
+                                <fieldset @Html.Raw(!item.Estado ? "disabled" : "") style="border:none;padding:0;margin:0;">
                                 <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
                                       method="post"
                                       enctype="multipart/form-data">
@@ -369,6 +435,21 @@
                                         <button type="submit" class="btn-action" style="width: auto; padding: 8px 20px; font-size: 0.85rem; margin-bottom: 0;">
                                             <i class="bi bi-save-fill"></i>Guardar
                                         </button>
+                                    </div>
+                                </form>
+                                </fieldset>
+                                <hr class="my-2" style="border-color: var(--jena-light-blue);" />
+                                <form action="@Url.Action("ToggleEstado", "SeccionesHome")" method="post" class="toggle-form mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="toggle-testimonio-@item.Id"
+                                               @(item.Estado ? "checked" : "")
+                                               onchange="this.form.submit()" />
+                                        <label class="form-check-label" for="toggle-testimonio-@item.Id">
+                                            @(item.Estado ? "Activo" : "Inactivo")
+                                        </label>
                                     </div>
                                 </form>
                             </div>

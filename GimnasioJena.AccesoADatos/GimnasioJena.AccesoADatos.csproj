@@ -128,6 +128,7 @@
     <Compile Include="Entrenadores\RegistrarEntrenador\RegistrarEntrenadorAD.cs" />
     <Compile Include="EstadoReservas\ObtenerEstadoReservas\ObtenerEstadoReservasAD.cs" />
     <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeAD.cs" />
+    <Compile Include="Home\CambiarEstadoSeccionHome\CambiarEstadoSeccionHomeAD.cs" />
     <Compile Include="Home\EliminarSeccionHome\EliminarSeccionHomeAD.cs" />
     <Compile Include="Membresias\CambiarEstadoMembresia\CambiarEstadoMembresiaAD.cs" />
     <Compile Include="Membresias\EditarMembresia\EditarMembresiaAD.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Membresias\RegistrarMembresia\RegistrarMembresiaAD.cs" />
     <Compile Include="Membresias\RenovarMembresia\RenovarMembresiaAD.cs" />
     <Compile Include="Nosotros\AgregarSeccionNosotros\AgregarSeccionNosotrosAD.cs" />
+    <Compile Include="Nosotros\CambiarEstadoSeccionNosotros\CambiarEstadoSeccionNosotrosAD.cs" />
     <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosAD.cs" />
     <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

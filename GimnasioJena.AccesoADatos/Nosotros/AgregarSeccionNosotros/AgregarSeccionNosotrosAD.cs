@@ -9,8 +9,8 @@ namespace GimnasioJena.AccesoADatos.Nosotros.AgregarSeccionNosotros
 {
     public class AgregarSeccionNosotrosAD : IAgregarSeccionNosotrosAD
     {
-        // Stats máximo 3, Valores máximo 4
-        private const int MaxStats  = 3;
+        // Stats máximo 4, Valores máximo 4
+        private const int MaxStats  = 4;
         private const int MaxValores = 4;
 
         public async Task<bool> AgregarSeccionNosotros(AgregarSeccionHomeDto dto)

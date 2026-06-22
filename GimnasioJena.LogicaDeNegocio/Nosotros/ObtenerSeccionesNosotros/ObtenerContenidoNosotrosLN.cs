@@ -23,7 +23,7 @@ namespace GimnasioJena.LogicaDeNegocio.Nosotros.ObtenerSeccionesNosotros
 
         public async Task<IEnumerable<ContenidoWebDto>> EjecutarTodosAsync(string pagina)
         {
-            return await EjecutarAsync(pagina);
+            return await _repositorio.ObtenerTodosPorPaginaAsync(pagina);
         }
     }
 }
