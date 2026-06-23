@@ -1,12 +1,10 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.Modelos.Reservas;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Reservas.ObtenerTodasLasReservas
 {
     public interface IObtenerTodasLasReservasAD
     {
+        List<ReservaListadoDto> ObtenerTodasLasReservas();
     }
 }

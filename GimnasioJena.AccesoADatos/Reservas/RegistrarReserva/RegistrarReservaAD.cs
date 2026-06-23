@@ -2,6 +2,7 @@
 using GimnasioJena.Abstracciones.Modelos.Reservas;
 using GimnasioJena.AccesoADatos.Entidades.Reservas;
 using System;
+using System.Linq;
 
 namespace GimnasioJena.AccesoADatos.Reservas.RegistrarReserva
 {
@@ -16,6 +17,24 @@ namespace GimnasioJena.AccesoADatos.Reservas.RegistrarReserva
 
         public int RegistrarReserva(ReservaCrearDto reserva)
         {
+            var reservaExistente = _elContexto.Reservas.FirstOrDefault(r =>
+                r.idUsuario == reserva.idUsuario &&
+                r.idClaseProgramada == reserva.idClaseProgramada);
+
+            if (reservaExistente != null)
+            {
+                if (reservaExistente.idEstadoReserva == 1)
+                {
+                    return 0;
+                }
+
+                reservaExistente.idEstadoReserva = 1;
+                reservaExistente.fechaReserva = DateTime.Now;
+                reservaExistente.observaciones = reserva.observaciones;
+
+                return _elContexto.SaveChanges();
+            }
+
             var reservaAGuardar = new ReservaEntidad
             {
                 idUsuario = reserva.idUsuario,

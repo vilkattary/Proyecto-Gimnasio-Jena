@@ -70,11 +70,11 @@ namespace GimnasioJena.UI.Controllers
             try
             {
                 await _contactoLN.ProcesarNuevoMensajeAsync(dto);
-                TempData["MensajeExito"] = "Mensaje enviado correctamente. Revisad tu correo para la confirmacion.";
+                TempData["MensajeExito"] = "Mensaje enviado correctamente. Revisa tu correo para la confirmacion.";
             }
-            catch (Exception ex)
+            catch
             {
-                TempData["MensajeError"] = "Error al enviar el mensaje: " + ex.Message;
+                TempData["MensajeError"] = "Ocurrió un error al enviar el mensaje. Inténtalo nuevamente más tarde.";
             }
 
             return RedirectToAction("Index");

@@ -1,0 +1,69 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Reservas.ReservaListadoDto>
+
+@{
+    ViewBag.Title = "Administrar Reservas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="page-title">Administrar Reservas</h1>
+        <p class="text-muted">Listado general de reservas registradas en el sistema.</p>
+    </div>
+
+    <div class="info-card">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info">
+                No hay reservas registradas.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Clase</th>
+                            <th>Entrenador</th>
+                            <th>Fecha Clase</th>
+                            <th>Horario</th>
+                            <th>Estado</th>
+                            <th>Fecha Reserva</th>
+                            <th>Ubicación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model)
+                        {
+                            <tr>
+                                <td>@r.nombreCliente</td>
+                                <td>@r.nombreClase</td>
+                                <td>@r.nombreEntrenador</td>
+                                <td>@r.fechaClase.ToString("dd/MM/yyyy")</td>
+                                <td>@r.horaInicio.ToString(@"hh\:mm") - @r.horaFin.ToString(@"hh\:mm")</td>
+                                <td>
+                                    @if (r.idEstadoReserva == 1)
+                                    {
+                                        <span class="badge bg-success">@r.estadoReserva</span>
+                                    }
+                                    else if (r.idEstadoReserva == 2)
+                                    {
+                                        <span class="badge bg-secondary">@r.estadoReserva</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">@r.estadoReserva</span>
+                                    }
+                                </td>
+                                <td>@r.fechaReserva.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@r.ubicacion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
