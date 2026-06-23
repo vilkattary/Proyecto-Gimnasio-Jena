@@ -38,7 +38,8 @@ namespace GimnasioJena.AccesoADatos.Clases.ObtenerClasesPorEntrenador
 
                      inscritos =
                         _elContexto.Reservas.Count(r =>
-                            r.idClaseProgramada == clase.idClaseProgramada),
+                            r.idClaseProgramada == clase.idClaseProgramada &&
+                            r.idEstadoReserva == 1),
 
                      ubicacion = clase.ubicacion
                  })

@@ -183,6 +183,7 @@
     <Compile Include="Controllers\ClasesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\ComunicacionController.cs" />
+    <Compile Include="Controllers\ContactoController.cs" />
     <Compile Include="Controllers\EntrenadoresController.cs" />
     <Compile Include="Controllers\EstadoReservasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -270,6 +271,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Contacto\FormularioContacto.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -321,6 +323,8 @@
     <Content Include="Views\Entrenadores\CambiarEstadoReserva.cshtml" />
     <Content Include="Views\Nosotros\Index.cshtml" />
     <Content Include="Views\Nosotros\AdminNosotros.cshtml" />
+    <Content Include="Views\Clientes\DetalleReserva.cshtml" />
+    <Content Include="Views\Reservas\Administrar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

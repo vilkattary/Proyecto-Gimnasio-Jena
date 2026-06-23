@@ -26,86 +26,102 @@
 
             <div class="collapse navbar-collapse" id="navbarApex">
                 <ul class="navbar-nav ms-auto align-items-center gap-2">
-                    <li class="nav-item">
-                        @Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
-                    </li>
-
-                    @if (Request.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            @Html.ActionLink("Clases", "ObtenerTodasLasClases", "Clases", new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                    }
-
-                    @if (User.IsInRole("ENTRENADOR"))
-                    {
-                        <li class="nav-item">
-                            @Html.ActionLink("Entrenador", "Index", "Entrenadores",
-                                new { area = "" }, new { @class = "nav-link" })
-                        </li>
-
-                        <li class="nav-item">
-                            @Html.ActionLink("Mis clases", "MisClases", "Entrenadores",
-                                new { area = "" }, new { @class = "nav-link" })
-                        </li>
-
-                        <li class="nav-item">
-                            @Html.ActionLink("Registrar asistencia", "MisClases", "Entrenadores",
-                                new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                    }
-
-                    @if (User.IsInRole("CLIENTE"))
-                    {
-                        <li class="nav-item">
-                            @Html.ActionLink("Cliente", "MiPerfil", "Clientes",
-                                new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                    }
 
                     @if (User.IsInRole("ADMINISTRADOR"))
                     {
+                        @* ── ADMINISTRADOR: sin Inicio ni Sobre Nosotros ── *@
+                        <li class="nav-item">
+                            @Html.ActionLink("Página de Inicio", "AdminIndex", "Home",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Página Nosotros", "Index", "SeccionesNosotros",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
                         <li class="nav-item">
                             @Html.ActionLink("Usuarios", "Index", "Usuarios",
                                 new { area = "" }, new { @class = "nav-link" })
                         </li>
-
                         <li class="nav-item">
                             @Html.ActionLink("Entrenadores", "Administrar", "Entrenadores",
                                 new { area = "" }, new { @class = "nav-link" })
                         </li>
-
                         <li class="nav-item">
-                            @Html.ActionLink("Admin Home", "AdminIndex", "Home",
+                            @Html.ActionLink("Clases", "ObtenerTodasLasClases", "Clases",
                                 new { area = "" }, new { @class = "nav-link" })
                         </li>
-
                         <li class="nav-item">
-                            @Html.ActionLink("Admin Nosotros", "Index", "SeccionesNosotros",
+                            @Html.ActionLink("Reservas", "Administrar", "Reservas",
+                                new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Contacto", "Contact", "Home",
                                 new { area = "" }, new { @class = "nav-link" })
                         </li>
                     }
+                    else
+                    {
+                        @* ── RESTO DE ROLES / PÚBLICO ── *@
+                        <li class="nav-item">
+                            @Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                        </li>
 
-                    <li class="nav-item">
-                        @Html.ActionLink("Precios", "Planes", "Home", new { area = "" }, new { @class = "nav-link" })
-                    </li>
+                        if (Request.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Clases", "ObtenerTodasLasClases", "Clases", new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                        }
 
-                    <li class="nav-item">
-                        @Html.ActionLink("Sobre Nosotros", "Index", "Nosotros", new { area = "" }, new { @class = "nav-link" })
-                    </li>
+                        if (User.IsInRole("ENTRENADOR"))
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Entrenador", "Index", "Entrenadores",
+                                    new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Mis clases", "MisClases", "Entrenadores",
+                                    new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Registrar asistencia", "MisClases", "Entrenadores",
+                                    new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                        }
 
+                        if (User.IsInRole("CLIENTE"))
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Cliente", "MiPerfil", "Clientes",
+                                    new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                        }
+
+                        <li class="nav-item">
+                            @Html.ActionLink("Sobre Nosotros", "Index", "Nosotros", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+
+                    @* ── MEMBRESÍA: visible para todos ── *@
                     <li class="nav-item">
-                        @Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                        @Html.ActionLink("Membresía", "Planes", "Home", new { area = "" }, new { @class = "nav-link" })
                     </li>
 
                     @if (Request.IsAuthenticated)
                     {
+                        var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+                        var nombreClaim = claimsIdentity != null ? claimsIdentity.FindFirst("NombreCompleto") : null;
+                        var nombreMostrar = (nombreClaim != null && !string.IsNullOrEmpty(nombreClaim.Value))
+                            ? nombreClaim.Value
+                            : User.Identity.Name;
                         <li class="nav-item">
-                            @Html.ActionLink("Hola, " + User.Identity.Name, "Index", "Manage",
+                            @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
                                 routeValues: null,
                                 htmlAttributes: new { @class = "nav-link", style = "color: var(--jena-orange) !important;" })
                         </li>
-
                         <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
                             @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "d-inline" }))
                             {
@@ -121,7 +137,6 @@
                                 routeValues: null,
                                 htmlAttributes: new { @class = "nav-link" })
                         </li>
-
                         <li class="nav-item ms-lg-2">
                             <a href="@Url.Action("Register", "Account")" class="btn btn-join-now">
                                 Unirse Ahora
