@@ -1,0 +1,728 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Home.ContenidoWebDto>
+@using System.Linq
+@{
+    ViewBag.Title = "Administrar Sobre Nosotros";
+
+    var mensajeExito = TempData["MensajeExito"] as string;
+    var mensajeError = TempData["MensajeError"] as string;
+
+    var header       = Model.FirstOrDefault(x => x.Seccion == "Header");
+    var historia1    = Model.FirstOrDefault(x => x.Clave == "nosotros-historia");
+    var historia2    = Model.FirstOrDefault(x => x.Clave == "nosotros-historia-p2");
+    var stats        = Model.Where(x => x.Seccion == "Stats").OrderBy(x => x.Orden).ToList();
+    var misionVision = Model.Where(x => x.Seccion == "MisionVision").OrderBy(x => x.Orden).ToList();
+    var valorTitulo  = Model.FirstOrDefault(x => x.Clave == "valores-titulo");
+    var valores      = Model.Where(x => x.Seccion == "Valores" && x.Clave != "valores-titulo").OrderBy(x => x.Orden).ToList();
+    var cta          = Model.FirstOrDefault(x => x.Seccion == "CTA");
+}
+
+@* ══════════════════════════════════════════════
+   ALERTAS TEMPDATA
+══════════════════════════════════════════════ *@
+@if (!string.IsNullOrEmpty(mensajeExito))
+{
+    <div class="alert alert-success alert-dismissible fade show mb-0 mt-5 rounded-0 border-0 border-bottom"
+         role="alert"
+         style="border-bottom-color: var(--jena-orange) !important; background-color: #e8f5e9;">
+        <div class="container d-flex align-items-center gap-2">
+            <i class="bi bi-check-circle-fill fs-5" style="color: #2e7d32;"></i>
+            <span class="fw-semibold" style="color: #1b5e20;">@mensajeExito</span>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    </div>
+}
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger alert-dismissible fade show mb-0 mt-5 rounded-0 border-0 border-bottom"
+         role="alert"
+         style="border-bottom-color: #c62828 !important; background-color: #ffebee;">
+        <div class="container d-flex align-items-center gap-2">
+            <i class="bi bi-exclamation-triangle-fill fs-5" style="color: #c62828;"></i>
+            <span class="fw-semibold" style="color: #b71c1c;">@mensajeError</span>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    </div>
+}
+
+<style>
+    .card-inactiva {
+        filter: grayscale(100%);
+        position: relative;
+    }
+    .card-inactiva::after {
+        content: 'INACTIVO';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #dc3545;
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        z-index: 10;
+        pointer-events: none;
+    }
+    /* Bloquea botones de edición en tarjetas inactivas */
+    .card-inactiva button[type="submit"] {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+    /* El interruptor permanece completamente interactivo */
+    .card-inactiva .toggle-form .form-check-input,
+    .card-inactiva .toggle-form .form-check-label {
+        pointer-events: auto;
+        opacity: 1;
+        filter: none;
+    }
+    /* Cursor indicativo en controles deshabilitados por fieldset */
+    .card-inactiva fieldset:disabled input,
+    .card-inactiva fieldset:disabled textarea,
+    .card-inactiva fieldset:disabled select,
+    .card-inactiva fieldset:disabled button {
+        cursor: not-allowed;
+    }
+    .toggle-form .form-check-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .toggle-form .form-check-input {
+        cursor: pointer;
+    }
+</style>
+
+<div class="container py-5">
+
+    @* ─── CABECERA DE PÁGINA ─── *@
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+                <div>
+                    <h1 class="mb-1 text-uppercase" style="color: var(--jena-navy); font-size: clamp(1.5rem, 3vw, 2.2rem);">
+                        <i class="bi bi-people-fill me-2" style="color: var(--jena-orange);"></i>Administrar Sobre Nosotros
+                    </h1>
+                    <p class="text-muted mb-0" style="font-family: var(--font-primary); font-size: 0.95rem;">
+                        Gestione el contenido dinámico de la página pública. Los cambios se reflejan de inmediato.
+                    </p>
+                </div>
+                <a href="@Url.Action("Index", "Nosotros")" target="_blank"
+                   class="btn-action text-decoration-none"
+                   style="width: auto; padding: 10px 24px; white-space: nowrap;">
+                    <i class="bi bi-box-arrow-up-right"></i>Ver página pública
+                </a>
+            </div>
+            <hr style="border-color: var(--jena-orange); border-width: 2px; opacity: 1; margin-top: 1.25rem;" />
+        </div>
+    </div>
+
+    @* ══════════════════════════════════════════════
+       BLOQUE 1 — CABECERA PRINCIPAL
+    ══════════════════════════════════════════════ *@
+    <div class="action-buttons-card mb-4">
+        <h5>
+            <i class="bi bi-type-h1 me-2" style="color: var(--jena-orange);"></i>Cabecera Principal
+        </h5>
+
+        @if (header == null)
+        {
+            <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontró el registro de cabecera.</div>
+        }
+        else
+        {
+            <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post"
+                  enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id"       value="@header.Id" />
+                <input type="hidden" name="Clave"    value="@header.Clave" />
+                <input type="hidden" name="UrlImagen" value="@header.UrlImagen" />
+
+                <div class="row g-4 align-items-start">
+
+                    @* Vista previa de la imagen de fondo actual *@
+                    @if (!string.IsNullOrEmpty(header.UrlImagen))
+                    {
+                        <div class="col-12 col-md-auto">
+                            <label class="form-label fw-semibold d-block"
+                                   style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                Imagen actual
+                            </label>
+                            <div style="position: relative; display: inline-block;">
+                                <img src="@header.UrlImagen"
+                                     alt="Fondo hero actual"
+                                     class="img-thumbnail"
+                                     style="width: 200px; height: 120px; object-fit: cover; border-radius: 10px; border: 2px solid var(--jena-light-blue);" />
+                                <span class="badge position-absolute top-0 start-0 m-1"
+                                      style="background: var(--jena-navy); font-size: 0.7rem;">FONDO</span>
+                            </div>
+                        </div>
+                    }
+
+                    @* Campos *@
+                    <div class="col-12 col-md">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold"
+                                       style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                    Título principal <span style="color: var(--jena-orange);">*</span>
+                                </label>
+                                <input type="text" name="TextoPrincipal" value="@header.TextoPrincipal"
+                                       class="form-control" placeholder="Ej: SOBRE NOSOTROS" required />
+                                <div class="form-text">Título grande de la cabecera de la página.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold"
+                                       style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                    Subtítulo
+                                </label>
+                                <input type="text" name="TextoSecundario" value="@header.TextoSecundario"
+                                       class="form-control" placeholder="Ej: Quiénes somos" />
+                                <div class="form-text">Texto en naranja que aparece encima del título.</div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold"
+                                       style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                    <i class="bi bi-upload me-1" style="color: var(--jena-orange);"></i>Reemplazar imagen de fondo
+                                </label>
+                                <input type="file" name="ArchivoImagen" accept="image/*" class="form-control" />
+                                <div class="form-text">Formatos: JPG, PNG, WEBP. Recomendado: 1920×1080 px.</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-3">
+                            <small class="text-muted" style="font-family: var(--font-primary); font-size: 0.78rem;">
+                                <i class="bi bi-clock me-1"></i>
+                                Última modificación: @(header.FechaModificacion.HasValue ? header.FechaModificacion.Value.ToString("dd/MM/yyyy HH:mm") : "-")
+                            </small>
+                            <button type="submit" class="btn-action" style="width: auto; padding: 10px 28px;">
+                                <i class="bi bi-save-fill"></i>Guardar Cabecera
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        }
+    </div>
+
+    @* ══════════════════════════════════════════════
+       BLOQUE 2 — NUESTRA HISTORIA
+    ══════════════════════════════════════════════ *@
+    <div class="action-buttons-card mb-4">
+        <h5>
+            <i class="bi bi-book-half me-2" style="color: var(--jena-orange);"></i>Nuestra Historia
+        </h5>
+
+        @if (historia1 == null && historia2 == null)
+        {
+            <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontraron registros para la historia.</div>
+        }
+
+        @if (historia1 != null)
+        {
+            <div class="mb-4 pb-4" style="border-bottom: 1px dashed var(--jena-light-blue);">
+                <p class="fw-semibold mb-3" style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+                    <i class="bi bi-1-circle-fill me-1" style="color: var(--jena-orange);"></i>Título y primer párrafo
+                </p>
+                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id"    value="@historia1.Id" />
+                    <input type="hidden" name="Clave" value="@historia1.Clave" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"
+                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+                            Título de la sección <span style="color: var(--jena-orange);">*</span>
+                        </label>
+                        <input type="text" name="TextoPrincipal" value="@historia1.TextoPrincipal"
+                               class="form-control" placeholder="Ej: MÁS DE 10 AÑOS FORJANDO CAMPEONES" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"
+                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+                            Primer párrafo
+                        </label>
+                        <textarea name="TextoSecundario" class="form-control" rows="4"
+                                  placeholder="Describe cómo nació el gimnasio...">@historia1.TextoSecundario</textarea>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <small class="text-muted" style="font-size: 0.78rem;">
+                            <i class="bi bi-clock me-1"></i>@(historia1.FechaModificacion.HasValue ? historia1.FechaModificacion.Value.ToString("dd/MM/yyyy HH:mm") : "-")
+                        </small>
+                        <button type="submit" class="btn-action" style="width: auto; padding: 8px 24px; font-size: 0.88rem;">
+                            <i class="bi bi-save-fill"></i>Guardar primer párrafo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        }
+
+        @if (historia2 != null)
+        {
+            <div>
+                <p class="fw-semibold mb-3" style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+                    <i class="bi bi-2-circle-fill me-1" style="color: var(--jena-orange);"></i>Segundo párrafo
+                </p>
+                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id"              value="@historia2.Id" />
+                    <input type="hidden" name="Clave"           value="@historia2.Clave" />
+                    <input type="hidden" name="TextoPrincipal"  value="" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"
+                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+                            Segundo párrafo
+                        </label>
+                        <textarea name="TextoSecundario" class="form-control" rows="4"
+                                  placeholder="Continúa la historia del gimnasio...">@historia2.TextoSecundario</textarea>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <small class="text-muted" style="font-size: 0.78rem;">
+                            <i class="bi bi-clock me-1"></i>@(historia2.FechaModificacion.HasValue ? historia2.FechaModificacion.Value.ToString("dd/MM/yyyy HH:mm") : "-")
+                        </small>
+                        <button type="submit" class="btn-action" style="width: auto; padding: 8px 24px; font-size: 0.88rem;">
+                            <i class="bi bi-save-fill"></i>Guardar segundo párrafo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+
+    @* ══════════════════════════════════════════════
+       BLOQUE 3 — ESTADÍSTICAS
+    ══════════════════════════════════════════════ *@
+    <div class="action-buttons-card mb-4">
+        <h5>
+            <i class="bi bi-bar-chart-fill me-2" style="color: var(--jena-orange);"></i>Estadísticas (Contadores)
+        </h5>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Edite número, etiqueta e ícono de cada contador. Use el interruptor para activar o desactivar su visibilidad en la página pública.
+        </div>
+
+        @if (!stats.Any())
+        {
+            <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontraron estadísticas.</div>
+        }
+        else
+        {
+            <div class="row g-4 justify-content-center">
+                @foreach (var stat in stats)
+                {
+                    string statIcon = string.IsNullOrEmpty(stat.UrlImagen) ? "bi-bar-chart-fill" : stat.UrlImagen;
+                    <div class="col-12 col-md-4 @(stat.Estado ? "" : "card-inactiva")">
+                        <div class="h-100" style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+                            <div class="d-flex align-items-center justify-content-between px-3 py-2"
+                                 style="background: var(--jena-dark-navy);">
+                                <span class="text-uppercase fw-bold"
+                                      style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.78rem; letter-spacing: 1.5px;">
+                                    Tarjeta de estadística
+                                </span>
+                                <span class="rounded-circle d-flex align-items-center justify-content-center"
+                                      style="width:36px; height:36px; background: var(--jena-orange);">
+                                    <i class="bi @statIcon text-white" style="font-size:1.1rem;" id="stat-preview-@stat.Id"></i>
+                                </span>
+                            </div>
+                            <div class="p-3">
+                                <fieldset @Html.Raw(!stat.Estado ? "disabled" : "") style="border:none;padding:0;margin:0;">
+                                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="Id"    value="@stat.Id" />
+                                    <input type="hidden" name="Clave" value="@stat.Clave" />
+
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            Número <span style="color: var(--jena-orange);">*</span>
+                                        </label>
+                                        <input type="text" name="TextoPrincipal" value="@stat.TextoPrincipal"
+                                               class="form-control" placeholder="Ej: 500+" required />
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            Etiqueta <span style="color: var(--jena-orange);">*</span>
+                                        </label>
+                                        <input type="text" name="TextoSecundario" value="@stat.TextoSecundario"
+                                               class="form-control" placeholder="Ej: Miembros Activos" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            <i class="bi bi-palette-fill me-1" style="color: var(--jena-orange);"></i>Ícono
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text px-3"
+                                                  style="background: var(--jena-navy); border-color: var(--jena-navy); min-width:48px; font-size:1.3rem;">
+                                                <i class="bi @statIcon text-white" id="stat-ico-@stat.Id"></i>
+                                            </span>
+                                            <select name="UrlImagen" class="form-select"
+                                                    onchange="actualizarIconoBI('stat-ico-@stat.Id', this.value)">
+                                                <option value="bi-people-fill"@Html.Raw(stat.UrlImagen == "bi-people-fill" ? " selected" : "")>Personas / Comunidad</option>
+                                                <option value="bi-calendar-check-fill"@Html.Raw(stat.UrlImagen == "bi-calendar-check-fill" ? " selected" : "")>Calendario / Experiencia</option>
+                                                <option value="bi-lightning-charge-fill"@Html.Raw(stat.UrlImagen == "bi-lightning-charge-fill" ? " selected" : "")>Clases / Actividades</option>
+                                                <option value="bi-trophy-fill"@Html.Raw(stat.UrlImagen == "bi-trophy-fill" ? " selected" : "")>Logros / Excelencia</option>
+                                                <option value="bi-bar-chart-fill"@Html.Raw(stat.UrlImagen == "bi-bar-chart-fill" ? " selected" : "")>Estadísticas</option>
+                                                <option value="bi-stopwatch-fill"@Html.Raw(stat.UrlImagen == "bi-stopwatch-fill" ? " selected" : "")>Velocidad / Tiempo</option>
+                                                <option value="bi-activity"@Html.Raw(stat.UrlImagen == "bi-activity" ? " selected" : "")>Actividad física</option>
+                                                <option value="bi-fire"@Html.Raw(stat.UrlImagen == "bi-fire" ? " selected" : "")>Intensidad</option>
+                                                <option value="bi-heart-fill"@Html.Raw(stat.UrlImagen == "bi-heart-fill" ? " selected" : "")>Salud / Bienestar</option>
+                                                <option value="bi-award-fill"@Html.Raw(stat.UrlImagen == "bi-award-fill" ? " selected" : "")>Reconocimiento</option>
+                                                <option value="bi-star-fill"@Html.Raw(stat.UrlImagen == "bi-star-fill" ? " selected" : "")>General</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-text">El ícono se mostrará en la página pública. El cambio es inmediato al guardar.</div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                            <i class="bi bi-clock me-1"></i>@(stat.FechaModificacion.HasValue ? stat.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
+                                        </small>
+                                        <button type="submit" class="btn-action" style="width: auto; padding: 8px 20px; font-size: 0.85rem; margin-bottom: 0;">
+                                            <i class="bi bi-save-fill"></i>Guardar
+                                        </button>
+                                    </div>
+                                </form>
+                                </fieldset>
+                                <hr class="my-2" style="border-color: var(--jena-light-blue);" />
+                                <form action="@Url.Action("ToggleEstado", "SeccionesNosotros")" method="post" class="toggle-form mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@stat.Id" />
+                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="toggle-stat-@stat.Id"
+                                               @(stat.Estado ? "checked" : "")
+                                               onchange="this.form.submit()" />
+                                        <label class="form-check-label" for="toggle-stat-@stat.Id">
+                                            @(stat.Estado ? "Activo" : "Inactivo")
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @* ══════════════════════════════════════════════
+       BLOQUE 4 — MISIÓN Y VISIÓN
+    ══════════════════════════════════════════════ *@
+    <div class="action-buttons-card mb-4">
+        <h5>
+            <i class="bi bi-bullseye me-2" style="color: var(--jena-orange);"></i>Misión y Visión
+        </h5>
+
+        @if (!misionVision.Any())
+        {
+            <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontraron registros de misión/visión.</div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var item in misionVision)
+                {
+                    string mvIcon = string.IsNullOrEmpty(item.UrlImagen) ? "bi-star-fill" : item.UrlImagen;
+                    string mvLabel = item.Clave == "mision" ? "Misión" : "Visión";
+                    <div class="col-12 col-md-6">
+                        <div style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+                            <div class="d-flex align-items-center gap-2 px-3 py-2" style="background: var(--jena-navy);">
+                                <span class="rounded-circle d-flex align-items-center justify-content-center"
+                                      style="width:36px; height:36px; background: var(--jena-orange); flex-shrink:0;">
+                                    <i class="bi @mvIcon text-white" style="font-size:1.1rem;" id="mv-ico-@item.Id"></i>
+                                </span>
+                                <span class="fw-bold text-uppercase"
+                                      style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.75rem; letter-spacing: 1.5px;">
+                                    @mvLabel
+                                </span>
+                            </div>
+                            <div class="p-3">
+                                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="Id"    value="@item.Id" />
+                                    <input type="hidden" name="Clave" value="@item.Clave" />
+
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            Título <span style="color: var(--jena-orange);">*</span>
+                                        </label>
+                                        <input type="text" name="TextoPrincipal" value="@item.TextoPrincipal"
+                                               class="form-control" placeholder="Ej: Nuestra Misión" required />
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            Párrafo descriptivo
+                                        </label>
+                                        <textarea name="TextoSecundario" class="form-control" rows="4"
+                                                  placeholder="Describe la misión o visión...">@item.TextoSecundario</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            <i class="bi bi-palette-fill me-1" style="color: var(--jena-orange);"></i>Ícono
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text px-3"
+                                                  style="background: var(--jena-navy); border-color: var(--jena-navy); min-width:48px; font-size:1.3rem;">
+                                                <i class="bi @mvIcon text-white" id="mv-ico-preview-@item.Id"></i>
+                                            </span>
+                                            <select name="UrlImagen" class="form-select"
+                                                    onchange="actualizarIconoBI('mv-ico-preview-@item.Id', this.value)">
+                                                <option value="bi-bullseye"@Html.Raw(item.UrlImagen == "bi-bullseye" ? " selected" : "")>Misión / Meta</option>
+                                                <option value="bi-eye-fill"@Html.Raw(item.UrlImagen == "bi-eye-fill" ? " selected" : "")>Visión / Perspectiva</option>
+                                                <option value="bi-trophy-fill"@Html.Raw(item.UrlImagen == "bi-trophy-fill" ? " selected" : "")>Excelencia</option>
+                                                <option value="bi-heart-fill"@Html.Raw(item.UrlImagen == "bi-heart-fill" ? " selected" : "")>Compromiso / Salud</option>
+                                                <option value="bi-people-fill"@Html.Raw(item.UrlImagen == "bi-people-fill" ? " selected" : "")>Comunidad</option>
+                                                <option value="bi-shield-check"@Html.Raw(item.UrlImagen == "bi-shield-check" ? " selected" : "")>Integridad / Protección</option>
+                                                <option value="bi-lightning-charge-fill"@Html.Raw(item.UrlImagen == "bi-lightning-charge-fill" ? " selected" : "")>Fuerza / Potencia</option>
+                                                <option value="bi-fire"@Html.Raw(item.UrlImagen == "bi-fire" ? " selected" : "")>Intensidad / Pasión</option>
+                                                <option value="bi-stars"@Html.Raw(item.UrlImagen == "bi-stars" ? " selected" : "")>Élite / Premium</option>
+                                                <option value="bi-arrow-up-circle-fill"@Html.Raw(item.UrlImagen == "bi-arrow-up-circle-fill" ? " selected" : "")>Progreso / Superación</option>
+                                                <option value="bi-gem"@Html.Raw(item.UrlImagen == "bi-gem" ? " selected" : "")>Valor / Distinción</option>
+                                                <option value="bi-star-fill"@Html.Raw(item.UrlImagen == "bi-star-fill" ? " selected" : "")>General</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-text">El ícono se mostrará en la página pública. El cambio es inmediato al guardar.</div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                            <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
+                                        </small>
+                                        <button type="submit" class="btn-action" style="width: auto; padding: 8px 20px; font-size: 0.85rem; margin-bottom: 0;">
+                                            <i class="bi bi-save-fill"></i>Guardar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @* ══════════════════════════════════════════════
+       BLOQUE 5 — NUESTROS VALORES
+    ══════════════════════════════════════════════ *@
+    <div class="action-buttons-card mb-4">
+        <h5>
+            <i class="bi bi-shield-fill-check me-2" style="color: var(--jena-orange);"></i>Nuestros Valores
+        </h5>
+
+        @* Título de la sección *@
+        @if (valorTitulo != null)
+        {
+            <div class="mb-4 pb-4" style="border-bottom: 1px dashed var(--jena-light-blue);">
+                <p class="fw-semibold mb-2" style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+                    <i class="bi bi-fonts me-1" style="color: var(--jena-orange);"></i>Título de la sección "Lo que nos define"
+                </p>
+                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post" class="d-flex align-items-end gap-3 flex-wrap">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id"              value="@valorTitulo.Id" />
+                    <input type="hidden" name="Clave"           value="@valorTitulo.Clave" />
+                    <input type="hidden" name="TextoSecundario" value="" />
+
+                    <div class="flex-grow-1">
+                        <label class="form-label fw-semibold"
+                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                            Título visible de la sección <span style="color: var(--jena-orange);">*</span>
+                        </label>
+                        <input type="text" name="TextoPrincipal" value="@valorTitulo.TextoPrincipal"
+                               class="form-control" placeholder="Ej: Lo que nos define" required />
+                    </div>
+                    <button type="submit" class="btn-action" style="width: auto; padding: 10px 24px; margin-bottom: 0; white-space: nowrap;">
+                        <i class="bi bi-save-fill"></i>Guardar título
+                    </button>
+                </form>
+            </div>
+        }
+
+        @* Las 4 tarjetas de valores *@
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Edite nombre, descripción e ícono de cada tarjeta de valor. Use el interruptor para activar o desactivar su visibilidad en la página pública.
+        </div>
+
+        @if (!valores.Any())
+        {
+            <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontraron tarjetas de valores.</div>
+        }
+        else
+        {
+            <div class="row g-4 justify-content-center">
+                @foreach (var valor in valores)
+                {
+                    string valIcon = string.IsNullOrEmpty(valor.UrlImagen) ? "bi-star-fill" : valor.UrlImagen;
+                    <div class="col-12 col-md-6 @(valor.Estado ? "" : "card-inactiva")">
+                        <div class="h-100" style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+                            <div class="d-flex align-items-center justify-content-between px-3 py-2"
+                                 style="background: var(--jena-navy);">
+                                <span class="text-uppercase fw-bold"
+                                      style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.78rem; letter-spacing: 1.5px;">
+                                    Valor: @valor.TextoPrincipal
+                                </span>
+                                <span class="rounded-circle d-flex align-items-center justify-content-center"
+                                      style="width:36px; height:36px; background: var(--jena-orange);">
+                                    <i class="bi @valIcon text-white" style="font-size:1.1rem;" id="val-ico-@valor.Id"></i>
+                                </span>
+                            </div>
+                            <div class="p-3">
+                                <fieldset @Html.Raw(!valor.Estado ? "disabled" : "") style="border:none;padding:0;margin:0;">
+                                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="Id"    value="@valor.Id" />
+                                    <input type="hidden" name="Clave" value="@valor.Clave" />
+
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            Nombre del valor <span style="color: var(--jena-orange);">*</span>
+                                        </label>
+                                        <input type="text" name="TextoPrincipal" value="@valor.TextoPrincipal"
+                                               class="form-control" placeholder="Ej: Excelencia" required />
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            Descripción
+                                        </label>
+                                        <textarea name="TextoSecundario" class="form-control" rows="3"
+                                                  placeholder="Describe este valor corporativo...">@valor.TextoSecundario</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold"
+                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+                                            <i class="bi bi-palette-fill me-1" style="color: var(--jena-orange);"></i>Ícono
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text px-3"
+                                                  style="background: var(--jena-navy); border-color: var(--jena-navy); min-width:48px; font-size:1.3rem;">
+                                                <i class="bi @valIcon text-white" id="val-ico-preview-@valor.Id"></i>
+                                            </span>
+                                            <select name="UrlImagen" class="form-select"
+                                                    onchange="actualizarIconoBI('val-ico-preview-@valor.Id', this.value)">
+                                                <option value="bi-trophy-fill"@Html.Raw(valor.UrlImagen == "bi-trophy-fill" ? " selected" : "")>Excelencia / Logros</option>
+                                                <option value="bi-heart-fill"@Html.Raw(valor.UrlImagen == "bi-heart-fill" ? " selected" : "")>Compromiso / Pasión</option>
+                                                <option value="bi-people-fill"@Html.Raw(valor.UrlImagen == "bi-people-fill" ? " selected" : "")>Comunidad / Personas</option>
+                                                <option value="bi-shield-check"@Html.Raw(valor.UrlImagen == "bi-shield-check" ? " selected" : "")>Integridad / Protección</option>
+                                                <option value="bi-bullseye"@Html.Raw(valor.UrlImagen == "bi-bullseye" ? " selected" : "")>Enfoque / Meta</option>
+                                                <option value="bi-fire"@Html.Raw(valor.UrlImagen == "bi-fire" ? " selected" : "")>Intensidad / Motivación</option>
+                                                <option value="bi-stars"@Html.Raw(valor.UrlImagen == "bi-stars" ? " selected" : "")>Élite / Premium</option>
+                                                <option value="bi-award-fill"@Html.Raw(valor.UrlImagen == "bi-award-fill" ? " selected" : "")>Reconocimiento</option>
+                                                <option value="bi-gem"@Html.Raw(valor.UrlImagen == "bi-gem" ? " selected" : "")>Distinción / Valor</option>
+                                                <option value="bi-hand-thumbs-up-fill"@Html.Raw(valor.UrlImagen == "bi-hand-thumbs-up-fill" ? " selected" : "")>Apoyo / Positividad</option>
+                                                <option value="bi-arrow-up-circle-fill"@Html.Raw(valor.UrlImagen == "bi-arrow-up-circle-fill" ? " selected" : "")>Superación / Progreso</option>
+                                                <option value="bi-star-fill"@Html.Raw(valor.UrlImagen == "bi-star-fill" ? " selected" : "")>General</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-text">El ícono se mostrará en la página pública. El cambio es inmediato al guardar.</div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                            <i class="bi bi-clock me-1"></i>@(valor.FechaModificacion.HasValue ? valor.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
+                                        </small>
+                                        <button type="submit" class="btn-action" style="width: auto; padding: 8px 20px; font-size: 0.85rem; margin-bottom: 0;">
+                                            <i class="bi bi-save-fill"></i>Guardar
+                                        </button>
+                                    </div>
+                                </form>
+                                </fieldset>
+                                <hr class="my-2" style="border-color: var(--jena-light-blue);" />
+                                <form action="@Url.Action("ToggleEstado", "SeccionesNosotros")" method="post" class="toggle-form mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@valor.Id" />
+                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="toggle-valor-@valor.Id"
+                                               @(valor.Estado ? "checked" : "")
+                                               onchange="this.form.submit()" />
+                                        <label class="form-check-label" for="toggle-valor-@valor.Id">
+                                            @(valor.Estado ? "Activo" : "Inactivo")
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @* ══════════════════════════════════════════════
+       BLOQUE 6 — LLAMADA A LA ACCIÓN (CTA)
+    ══════════════════════════════════════════════ *@
+    <div class="action-buttons-card mb-4">
+        <h5>
+            <i class="bi bi-megaphone-fill me-2" style="color: var(--jena-orange);"></i>Llamada a la Acción (CTA)
+        </h5>
+
+        @if (cta == null)
+        {
+            <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontró el registro del CTA.</div>
+        }
+        else
+        {
+            <div style="border-radius: 12px; overflow: hidden;">
+                <div class="px-3 py-2 mb-3 d-flex align-items-center gap-2"
+                     style="background: linear-gradient(135deg, var(--jena-orange), var(--jena-dark-orange)); border-radius: 10px;">
+                    <i class="bi bi-lightning-charge-fill text-white fs-5"></i>
+                    <span class="fw-bold text-white text-uppercase"
+                          style="font-family: var(--font-primary); font-size: 0.8rem; letter-spacing: 1.5px;">
+                        Bloque naranja inferior de la página
+                    </span>
+                </div>
+                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id"    value="@cta.Id" />
+                    <input type="hidden" name="Clave" value="@cta.Clave" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"
+                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                            Título de la invitación <span style="color: var(--jena-orange);">*</span>
+                        </label>
+                        <input type="text" name="TextoPrincipal" value="@cta.TextoPrincipal"
+                               class="form-control" placeholder="Ej: ¿QUIERES SER PARTE DE NUESTRA FAMILIA?" required />
+                        <div class="form-text">Se muestra en mayúsculas como el título principal del bloque naranja.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"
+                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                            Texto persuasivo
+                        </label>
+                        <textarea name="TextoSecundario" class="form-control" rows="3"
+                                  placeholder="Texto motivador que invita a unirse al gimnasio...">@cta.TextoSecundario</textarea>
+                        <div class="form-text">Aparece debajo del título, antes del botón de contacto.</div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-1">
+                        <small class="text-muted" style="font-family: var(--font-primary); font-size: 0.78rem;">
+                            <i class="bi bi-clock me-1"></i>
+                            Última modificación: @(cta.FechaModificacion.HasValue ? cta.FechaModificacion.Value.ToString("dd/MM/yyyy HH:mm") : "-")
+                        </small>
+                        <button type="submit" class="btn-action" style="width: auto; padding: 10px 28px;">
+                            <i class="bi bi-save-fill"></i>Guardar CTA
+                        </button>
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section scripts {
+<script>
+    function actualizarIconoBI(iconId, iconClass) {
+        var el = document.getElementById(iconId);
+        if (el) {
+            el.className = 'bi ' + iconClass + ' text-white';
+        }
+    }
+</script>
+}

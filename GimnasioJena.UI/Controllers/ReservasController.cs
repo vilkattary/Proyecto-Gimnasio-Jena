@@ -1,6 +1,8 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.RegistrarReserva;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerTodasLasReservas;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.RegistrarReserva;
 using GimnasioJena.Abstracciones.Modelos.Reservas;
 using GimnasioJena.AccesoADatos;
+using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerTodasLasReservas;
 using GimnasioJena.LogicaDeNegocio.Reservas.RegistrarReserva;
 using Microsoft.AspNet.Identity;
 using System;
@@ -13,10 +15,19 @@ namespace GimnasioJena.UI.Controllers
     public class ReservasController : Controller
     {
         private readonly IRegistrarReservaLN _registrarReservaServicio;
+        private readonly IObtenerTodasLasReservasLN _obtenerTodasLasReservasServicio;
 
         public ReservasController()
         {
             _registrarReservaServicio = new RegistrarReservaLN();
+            _obtenerTodasLasReservasServicio = new ObtenerTodasLasReservasLN();
+        }
+
+        [Authorize(Roles = "ADMINISTRADOR")]
+        public ActionResult Administrar()
+        {
+            var reservas = _obtenerTodasLasReservasServicio.ObtenerTodasLasReservas();
+            return View(reservas);
         }
 
         [HttpGet]

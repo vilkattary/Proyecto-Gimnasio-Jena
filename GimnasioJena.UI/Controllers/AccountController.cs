@@ -85,6 +85,22 @@ namespace GimnasioJena.UI.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    // Inyectar el nombre real del usuario como claim tras el login exitoso
+                    var appUser = await UserManager.FindByEmailAsync(model.Email);
+                    if (appUser != null)
+                    {
+                        string nombreCompleto = model.Email;
+                        using (var ctx = new Contexto())
+                        {
+                            var usuarioPerfil = ctx.Usuarios.FirstOrDefault(u => u.identityUserId == appUser.Id);
+                            if (usuarioPerfil != null)
+                                nombreCompleto = usuarioPerfil.nombre;
+                        }
+                        var identity = await appUser.GenerateUserIdentityAsync(UserManager, nombreCompleto);
+                        var authManager = HttpContext.GetOwinContext().Authentication;
+                        authManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                        authManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties { IsPersistent = model.RememberMe }, identity);
+                    }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

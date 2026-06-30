@@ -1,12 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GimnasioJena.Abstracciones.AccesoADatos.Reservas.ObtenerReservaPorId;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
+using GimnasioJena.Abstracciones.Modelos.Reservas;
+using GimnasioJena.AccesoADatos.Reservas.ObtenerReservaPorId;
 
 namespace GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservaPorId
 {
-    public class ObtenerReservaPorIdLN
+    public class ObtenerReservaPorIdLN : IObtenerReservaPorIdLN
     {
+        private readonly IObtenerReservaPorIdAD _obtenerReservaPorIdAD;
+
+        public ObtenerReservaPorIdLN()
+        {
+            _obtenerReservaPorIdAD = new ObtenerReservaPorIdAD();
+        }
+
+        public ReservaListadoDto ObtenerReservaPorId(int idReserva)
+        {
+            if (idReserva <= 0)
+            {
+                return null;
+            }
+
+            return _obtenerReservaPorIdAD.ObtenerReservaPorId(idReserva);
+        }
     }
 }

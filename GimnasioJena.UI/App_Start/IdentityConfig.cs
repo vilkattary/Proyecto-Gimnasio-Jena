@@ -1,16 +1,12 @@
-﻿using GimnasioJena.UI.Models;
+﻿using GimnasioJena.Abstracciones.General.Email;
+using GimnasioJena.LogicaDeNegocio.General.Email;
+using GimnasioJena.UI.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -19,31 +15,11 @@ namespace GimnasioJena.UI
 {
     public class EmailService : IIdentityMessageService
     {
-        public async Task SendAsync(IdentityMessage message)
+        private readonly IServicioEmail _servicio = new ServicioEmail();
+
+        public Task SendAsync(IdentityMessage message)
         {
-            var smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
-            var smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
-            var smtpUser = ConfigurationManager.AppSettings["SmtpUser"];
-            var smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"];
-            var smtpFrom = ConfigurationManager.AppSettings["SmtpFrom"];
-
-            using (var client = new SmtpClient(smtpHost, smtpPort))
-            {
-                client.EnableSsl = true;
-                client.Credentials = new NetworkCredential(smtpUser, smtpPassword);
-
-                var mail = new MailMessage
-                {
-                    From = new MailAddress(smtpFrom, "Gimnasio Jena"),
-                    Subject = message.Subject,
-                    Body = message.Body,
-                    IsBodyHtml = true
-                };
-
-                mail.To.Add(message.Destination);
-
-                await client.SendMailAsync(mail);
-            }
+            return _servicio.EnviarAsync(message.Destination, message.Subject, message.Body);
         }
     }
 

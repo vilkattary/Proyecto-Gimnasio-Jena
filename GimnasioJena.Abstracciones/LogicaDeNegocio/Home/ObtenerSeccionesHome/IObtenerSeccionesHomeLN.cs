@@ -7,5 +7,6 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Home.ObtenerSeccionesHome
     public interface IObtenerContenidoWebLN
     {
         Task<IEnumerable<ContenidoWebDto>> EjecutarAsync(string pagina);
+        Task<IEnumerable<ContenidoWebDto>> EjecutarTodosAsync(string pagina);
     }
 }

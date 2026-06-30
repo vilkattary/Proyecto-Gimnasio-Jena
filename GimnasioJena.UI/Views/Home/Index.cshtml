@@ -311,7 +311,7 @@ BOTONES DE ACCIÓN
                 </p>
                 @if (!Request.IsAuthenticated)
                 {
-                    <a href="@Url.Action("Contact", "Home")" class="btn btn-apex-primary">
+                    <a href="@Url.Action("Index", "Contacto")" class="btn btn-apex-primary">
                         <i class="bi bi-lightning-charge-fill me-2"></i>Contáctanos
                     </a>
                 }
@@ -324,9 +324,10 @@ BOTONES DE ACCIÓN
 <section class="classes-section">
     <div class="container">
         <h2 class="text-uppercase">Nuestras Clases</h2>
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             @foreach (var item in clases)
             {
+                if (!item.Estado) { continue; }
                 string iconClass = (!string.IsNullOrEmpty(item.UrlImagen) && item.UrlImagen.StartsWith("bi-"))
                                  ? item.UrlImagen
                                  : item.Clave == "clase-fuerza" ? "bi-lightning-charge-fill"
@@ -349,7 +350,7 @@ BOTONES DE ACCIÓN
                         </div>
                         <h3>@item.TextoPrincipal</h3>
                         <p>@item.TextoSecundario</p>
-                        <a href="@Url.Action("Contact", "Home")" class="btn-action">Agenda tu clase de prueba</a>
+                        <a href="@Url.Action("Index", "Contacto", new { disciplina = item.TextoPrincipal })" class="btn-action">Agenda tu clase de prueba</a>
                     </div>
                 </div>
             }
@@ -361,9 +362,10 @@ BOTONES DE ACCIÓN
 <section class="testimonials-section">
     <div class="container">
         <h2 class="text-uppercase">Lo Que Dicen Nuestros Clientes</h2>
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             @foreach (var item in testimonios)
             {
+                if (!item.Estado) { continue; }
                 string iniciales = "?";
                 if (item.TextoPrincipal != null && item.TextoPrincipal.Length >= 1)
                 {

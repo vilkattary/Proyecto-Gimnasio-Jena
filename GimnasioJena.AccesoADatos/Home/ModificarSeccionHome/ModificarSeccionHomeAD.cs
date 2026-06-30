@@ -13,7 +13,7 @@ namespace GimnasioJena.AccesoADatos.Home.ModificarSeccionHome
             using (var contexto = new Contexto())
             {
                 var contenido = await contexto.ContenidoWeb
-                    .FirstOrDefaultAsync(s => s.Id == dto.Id);
+                .FirstOrDefaultAsync(s => s.Id == dto.Id && s.Estado);
 
                 if (contenido == null)
                     return false;
