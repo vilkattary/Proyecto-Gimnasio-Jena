@@ -47,5 +47,35 @@ namespace GimnasioJena.AccesoADatos.Reservas.RegistrarReserva
             _elContexto.Reservas.Add(reservaAGuardar);
             return _elContexto.SaveChanges();
         }
+
+        public ReservaClaseValidacionDto ObtenerClaseParaValidacion(int idClaseProgramada)
+        {
+            return _elContexto.Clases
+                .Where(c => c.idClaseProgramada == idClaseProgramada)
+                .Select(c => new ReservaClaseValidacionDto
+                {
+                    idClaseProgramada = c.idClaseProgramada,
+                    idEstadoClase = c.idEstadoClase,
+                    fechaClase = c.fechaClase,
+                    horaInicio = c.horaInicio,
+                    cupoMaximo = c.cupoMaximo
+                })
+                .FirstOrDefault();
+        }
+
+        public bool UsuarioTieneReservaActiva(int idUsuario, int idClaseProgramada)
+        {
+            return _elContexto.Reservas.Any(r =>
+                r.idUsuario == idUsuario &&
+                r.idClaseProgramada == idClaseProgramada &&
+                r.idEstadoReserva == 1);
+        }
+
+        public int ContarReservasActivasPorClase(int idClaseProgramada)
+        {
+            return _elContexto.Reservas.Count(r =>
+                r.idClaseProgramada == idClaseProgramada &&
+                r.idEstadoReserva == 1);
+        }
     }
 }

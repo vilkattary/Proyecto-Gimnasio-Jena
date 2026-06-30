@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GimnasioJena.Abstracciones.Modelos.Membresias;
 
 namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente
 {
     public interface IObtenerMembresiaPorClienteLN
     {
+        MembresiaClienteDto ObtenerMembresiaActivaPorCliente(int idUsuario);
     }
 }

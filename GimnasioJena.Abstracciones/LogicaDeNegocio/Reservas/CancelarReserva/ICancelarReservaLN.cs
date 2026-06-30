@@ -1,7 +1,9 @@
-﻿namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva
+﻿using GimnasioJena.Abstracciones.Modelos.Reservas;
+
+namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva
 {
     public interface ICancelarReservaLN
     {
-        bool CancelarReserva(int idReserva, int idUsuario);
+        bool CancelarReserva(ReservaCancelarDto reserva, int idUsuario);
     }
 }

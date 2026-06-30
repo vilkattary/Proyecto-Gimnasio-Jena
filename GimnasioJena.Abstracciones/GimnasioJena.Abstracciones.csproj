@@ -83,7 +83,6 @@
     <Compile Include="AccesoADatos\Clases\CambiarEstadoClase\ICambiarEstadoClaseAD.cs" />
     <Compile Include="AccesoADatos\Clases\EditarClase\IEditarClaseAD.cs" />
     <Compile Include="AccesoADatos\Clases\ObtenerClasePorId\IObtenerClasePorIdAD.cs" />
-    <Compile Include="AccesoADatos\Clases\ObtenerClasesDisponibles\IObtenerClasesDisponiblesAD.cs" />
     <Compile Include="AccesoADatos\Clases\ObtenerClasesPorEntrenador\IObtenerClasesPorEntrenadorAD.cs" />
     <Compile Include="AccesoADatos\Clases\ObtenerTodasLasClases\IObtenerTodasLasClasesAD.cs" />
     <Compile Include="AccesoADatos\Clases\RegistrarClase\IRegistrarClaseAD.cs" />
@@ -167,7 +166,6 @@
     <Compile Include="LogicaDeNegocio\Clases\CambiarEstadoClase\ICambiarEstadoClaseLN.cs" />
     <Compile Include="LogicaDeNegocio\Clases\EditarClase\IEditarClaseLN.cs" />
     <Compile Include="LogicaDeNegocio\Clases\ObtenerClasePorId\IObtenerClasePorIdLN.cs" />
-    <Compile Include="LogicaDeNegocio\Clases\ObtenerClasesDisponibles\IObtenerClasesDisponiblesLN.cs" />
     <Compile Include="LogicaDeNegocio\Clases\ObtenerClasesPorEntrenador\IObtenerClasesPorEntrenadorLN.cs" />
     <Compile Include="LogicaDeNegocio\Clases\ObtenerTodasLasClases\IObtenerTodasLasClasesLN.cs" />
     <Compile Include="LogicaDeNegocio\Clases\RegistrarClase\IRegistrarClaseLN.cs" />
@@ -248,7 +246,6 @@
     <Compile Include="Modelos\Asistencias\AsistenciaListadoDto.cs" />
     <Compile Include="Modelos\Clases\ClaseCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Clases\ClaseCrearDto.cs" />
-    <Compile Include="Modelos\Clases\ClaseDisponibleDto.cs" />
     <Compile Include="Modelos\Clases\ClaseDto.cs" />
     <Compile Include="Modelos\Clases\ClaseEditarDto.cs" />
     <Compile Include="Modelos\Clases\ClaseEntrenadorDto.cs" />
@@ -299,6 +296,7 @@
     <Compile Include="Modelos\Reservas\ReservaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaCancelarDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaClaseDto.cs" />
+    <Compile Include="Modelos\Reservas\ReservaClaseValidacionDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaClienteDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaCrearDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaDto.cs" />

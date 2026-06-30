@@ -298,7 +298,6 @@
     <Content Include="Views\Clientes\MiMembresia.cshtml" />
     <Content Include="Views\Clientes\MiPerfil.cshtml" />
     <Content Include="Views\Clientes\MisReservas.cshtml" />
-    <Content Include="Views\Clientes\ReservarClases.cshtml" />
     <Content Include="Views\Operacion\ListaAsistencia.cshtml" />
     <Content Include="Views\Operacion\MisClases.cshtml" />
     <Content Include="Views\Operacion\Operaciones.cshtml" />
