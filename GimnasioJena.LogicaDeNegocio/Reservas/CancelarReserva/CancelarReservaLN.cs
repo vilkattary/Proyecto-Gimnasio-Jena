@@ -1,5 +1,6 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Reservas.CancelarReserva;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
+using GimnasioJena.Abstracciones.Modelos.Reservas;
 using GimnasioJena.AccesoADatos.Reservas.CancelarReserva;
 
 namespace GimnasioJena.LogicaDeNegocio.Reservas.CancelarReserva
@@ -13,15 +14,18 @@ namespace GimnasioJena.LogicaDeNegocio.Reservas.CancelarReserva
             _cancelarReservaAD = new CancelarReservaAD();
         }
 
-        public bool CancelarReserva(int idReserva, int idUsuario)
+        public bool CancelarReserva(ReservaCancelarDto reserva, int idUsuario)
         {
-            if (idReserva <= 0)
+            if (reserva == null)
+                return false;
+
+            if (reserva.idReserva <= 0)
                 return false;
 
             if (idUsuario <= 0)
                 return false;
 
-            return _cancelarReservaAD.CancelarReserva(idReserva, idUsuario);
+            return _cancelarReservaAD.CancelarReserva(reserva, idUsuario);
         }
     }
 }

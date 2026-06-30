@@ -104,7 +104,13 @@ namespace GimnasioJena.UI.Controllers
                 return RedirectToAction("MisReservas");
             }
 
-            bool resultado = _cancelarReservaServicio.CancelarReserva(id, perfil.idUsuario);
+            var reservaCancelar = new ReservaCancelarDto
+            {
+                idReserva = id,
+                motivoCancelacion = "Cancelación solicitada desde Mis Reservas"
+            };
+
+            bool resultado = _cancelarReservaServicio.CancelarReserva(reservaCancelar, perfil.idUsuario);
 
             if (resultado)
             {
@@ -112,7 +118,7 @@ namespace GimnasioJena.UI.Controllers
             }
             else
             {
-                TempData["MensajeError"] = "No se pudo cancelar la reserva. Verifica que esté activa.";
+                TempData["MensajeError"] = "No se pudo cancelar la reserva. Verifica que esté activa y que la clase no haya iniciado.";
             }
 
             return RedirectToAction("MisReservas");

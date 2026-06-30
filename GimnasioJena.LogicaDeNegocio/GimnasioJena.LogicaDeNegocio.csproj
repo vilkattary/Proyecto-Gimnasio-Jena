@@ -83,7 +83,6 @@
     <Compile Include="Clases\CambiarEstadoClase\CambiarEstadoClaseLN.cs" />
     <Compile Include="Clases\EditarClase\EditarClaseLN.cs" />
     <Compile Include="Clases\ObtenerClasePorId\ObtenerClasePorIdLN.cs" />
-    <Compile Include="Clases\ObtenerClasesDisponibles\ObtenerClasesDisponiblesLN.cs" />
     <Compile Include="Clases\ObtenerClasesPorEntrenador\ObtenerClasesPorEntrenadorLN.cs" />
     <Compile Include="Clases\ObtenerTodasLasClases\ObtenerTodasLasClasesLN.cs" />
     <Compile Include="Clases\RegistrarClase\RegistrarClaseLN.cs" />
