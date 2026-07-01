@@ -11,5 +11,8 @@ namespace GimnasioJena.Abstracciones.AccesoADatos.Reservas.RegistrarReserva
         bool UsuarioTieneReservaActiva(int idUsuario, int idClaseProgramada);
 
         int ContarReservasActivasPorClase(int idClaseProgramada);
+        bool DescontarClaseDisponible(int idMembresiaCliente);
+
+        int RegistrarReservaYDescontarClase(ReservaCrearDto reserva, int idMembresiaCliente);
     }
 }

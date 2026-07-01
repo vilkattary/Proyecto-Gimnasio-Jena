@@ -324,13 +324,16 @@
     <Content Include="Views\Nosotros\AdminNosotros.cshtml" />
     <Content Include="Views\Clientes\DetalleReserva.cshtml" />
     <Content Include="Views\Reservas\Administrar.cshtml" />
+    <Content Include="Views\Membresias\Index.cshtml" />
+    <Content Include="Views\Membresias\Create.cshtml" />
+    <Content Include="Views\Membresias\Edit.cshtml" />
+    <Content Include="Views\Membresias\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Asistencias\" />
     <Folder Include="Views\Comunicacion\" />
     <Folder Include="Views\EstadoReservas\" />
-    <Folder Include="Views\Membresias\" />
     <Folder Include="Views\PerfilUsuarioViewModel\" />
     <Folder Include="Views\Recepcionistas\" />
     <Folder Include="Views\Reportes\" />

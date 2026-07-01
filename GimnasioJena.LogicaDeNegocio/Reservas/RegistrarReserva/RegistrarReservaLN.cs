@@ -66,7 +66,8 @@ namespace GimnasioJena.LogicaDeNegocio.Reservas.RegistrarReserva
 
             reserva.idEstadoReserva = 1;
 
-            return _registrarReservaAD.RegistrarReserva(reserva) > 0;
+            return _registrarReservaAD
+                .RegistrarReservaYDescontarClase(reserva, membresia.idMembresiaCliente) > 0;
         }
     }
 }
