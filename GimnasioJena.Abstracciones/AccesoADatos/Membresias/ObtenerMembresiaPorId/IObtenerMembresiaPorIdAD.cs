@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GimnasioJena.Abstracciones.Modelos.Membresias;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Membresias.ObtenerMembresiaPorId
 {
     public interface IObtenerMembresiaPorIdAD
     {
+        MembresiaEditarDto ObtenerMembresiaPorId(int idMembresiaCliente);
+        MembresiaClienteDto ObtenerDetalleMembresiaPorId(int idMembresiaCliente);
     }
 }

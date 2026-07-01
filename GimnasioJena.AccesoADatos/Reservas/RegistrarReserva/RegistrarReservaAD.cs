@@ -47,7 +47,39 @@ namespace GimnasioJena.AccesoADatos.Reservas.RegistrarReserva
             _elContexto.Reservas.Add(reservaAGuardar);
             return _elContexto.SaveChanges();
         }
+        public bool DescontarClaseDisponible(int idMembresiaCliente)
+        {
+            var membresia = _elContexto.Membresias
+                .FirstOrDefault(m => m.idMembresiaCliente == idMembresiaCliente);
 
+            if (membresia == null)
+                return false;
+
+            if (!membresia.clasesDisponibles.HasValue)
+                return true;
+
+            if (membresia.clasesDisponibles.Value <= 0)
+                return false;
+
+            membresia.clasesDisponibles = membresia.clasesDisponibles.Value - 1;
+
+            return _elContexto.SaveChanges() > 0;
+        }
+
+        public int RegistrarReservaYDescontarClase(ReservaCrearDto reserva, int idMembresiaCliente)
+        {
+            int resultadoReserva = RegistrarReserva(reserva);
+
+            if (resultadoReserva <= 0)
+                return 0;
+
+            bool resultadoDescuento = DescontarClaseDisponible(idMembresiaCliente);
+
+            if (!resultadoDescuento)
+                return 0;
+
+            return resultadoReserva;
+        }
         public ReservaClaseValidacionDto ObtenerClaseParaValidacion(int idClaseProgramada)
         {
             return _elContexto.Clases

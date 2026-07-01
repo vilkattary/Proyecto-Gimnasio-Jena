@@ -1,0 +1,113 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Membresias.MembresiaClienteDto
+
+@{
+    ViewBag.Title = "Detalle Membresía";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="page-title">Detalle de Membresía</h1>
+        <p class="text-muted">
+            Información completa de la membresía seleccionada.
+        </p>
+    </div>
+
+    <div class="info-card">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Cliente</label>
+                <div>@Model.nombreCliente</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Plan</label>
+                <div>@Model.nombrePlan</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Estado</label>
+
+                @if (Model.estadoMembresia == "Activa")
+                {
+                    <div><span class="badge bg-success">@Model.estadoMembresia</span></div>
+                }
+                else if (Model.estadoMembresia == "Inactiva")
+                {
+                    <div><span class="badge bg-secondary">@Model.estadoMembresia</span></div>
+                }
+                else if (Model.estadoMembresia == "Vencida")
+                {
+                    <div><span class="badge bg-danger">@Model.estadoMembresia</span></div>
+                }
+                else
+                {
+                    <div><span class="badge bg-warning text-dark">@Model.estadoMembresia</span></div>
+                }
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Precio</label>
+                <div>₡ @Model.precio.ToString("N2")</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Fecha Inicio</label>
+                <div>@Model.fechaInicio.ToString("dd/MM/yyyy")</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Fecha Fin</label>
+                <div>@Model.fechaFin.ToString("dd/MM/yyyy")</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Clases Disponibles</label>
+
+                <div>
+                    @(Model.clasesDisponibles.HasValue
+                        ? Model.clasesDisponibles.Value.ToString()
+                        : "Ilimitadas")
+                </div>
+            </div>
+
+            <div class="col-12 mb-4">
+                <label class="fw-bold">Observaciones</label>
+
+                <div class="border rounded p-3 bg-light">
+
+                    @(String.IsNullOrWhiteSpace(Model.observaciones)
+                        ? "Sin observaciones."
+                        : Model.observaciones)
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a href="@Url.Action("Edit","Membresias",new { id=Model.idMembresiaCliente })"
+               class="btn btn-action">
+
+                <i class="bi bi-pencil-square"></i>
+                Editar
+
+            </a>
+
+            <a href="@Url.Action("Index","Membresias")"
+               class="btn btn-outline-gym">
+
+                Volver
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

@@ -105,10 +105,25 @@
                         </li>
                     }
 
-                    @* ── MEMBRESÍA: visible para todos ── *@
-                    <li class="nav-item">
-                        @Html.ActionLink("Membresía", "Planes", "Home", new { area = "" }, new { @class = "nav-link" })
-                    </li>
+                    @* ── MEMBRESÍA SEGÚN ROL ── *@
+                    @if (User.IsInRole("ADMINISTRADOR"))
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Membresía", "Index", "Membresias", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                    else if (User.IsInRole("CLIENTE"))
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Mi Membresía", "MiMembresia", "Clientes", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Membresía", "Planes", "Home", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
 
                     @if (Request.IsAuthenticated)
                     {
