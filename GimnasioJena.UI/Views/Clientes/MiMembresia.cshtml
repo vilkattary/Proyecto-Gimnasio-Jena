@@ -1,6 +1,19 @@
-﻿@model GimnasioJena.Abstracciones.Modelos.Usuarios.UsuarioPerfilDto
+﻿@model GimnasioJena.Abstracciones.Modelos.Membresias.MembresiaClienteDto
 @{
     ViewBag.Title = "MiMembresia";
+}
+
+@if (Model == null)
+{
+    <div class="container py-5">
+        <div class="alert alert-warning">
+            No tienes una membresía activa actualmente.
+        </div>
+        <a href="@Url.Action("ObtenerTodasLasClases", "Clases")" class="btn btn-action">
+            Ver clases disponibles
+        </a>
+    </div>
+    return;
 }
 
 <div class="container-fluid p-4">
@@ -25,7 +38,7 @@
     <div class="current-membership-card">
         <h5 class="text-center mb-3" style="color: var(--jena-navy); font-weight: 800;">
             <i class="bi bi-star-fill" style="color: var(--jena-orange);"></i>
-            @if (Model.Membresia.estadoMembresia == "Activa")
+            @if (Model.estadoMembresia == "Activa")
             {
                 @:Membresía Activa
             }
@@ -37,7 +50,7 @@
 
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h2 class="info-value">@Model.Membresia.nombrePlan</h2>
+                <h2 class="info-value">@Model.nombrePlan</h2>
                 <p class="membership-description">
                     Para quienes entrenan con frecuencia. Disfruta de acceso completo a todas las instalaciones
                     y beneficios exclusivos para miembros regulares.
@@ -65,21 +78,22 @@
                 <div class="renewal-info">
                     <p>
                         <i class="bi bi-calendar-event me-2"></i>
-                        <strong>Próxima renovación:</strong> <h2 class="info-value">@Model.Membresia.fechaFin</h2>
-                        <small>Tu membresía se renovará automáticamente</small>
+                        <strong>Próxima renovación:</strong> <h2 class="info-value">@Model.fechaFin.ToString("dd/MM/yyyy")</h2>
+                        <small>Tu membresía vence en esta fecha.</small>
                     </p>
                 </div>
             </div>
 
             <div class="col-lg-4 text-center">
                 <div class="price">
-                    <h2 class="info-value">@Model.Membresia.precio</h2> <span> / mes</span>
+                    <h2 class="info-value">₡ @Model.precio.ToString("N2")</h2> <span> / mes</span>
                 </div>
-                <a href="#" class="btn btn-outline mb-3">
-                    <i class="bi bi-arrow-repeat me-2"></i>Renovar Ahora
-                </a>
-                <a href="#" class="btn btn-outline">
-                    <i class="bi bi-gear me-2"></i>Gestionar Plan
+                <p class="mt-3">
+                    <strong>Clases disponibles:</strong>
+                    @(Model.clasesDisponibles.HasValue ? Model.clasesDisponibles.Value.ToString() : "Ilimitadas")
+                </p>
+                <a href="@Url.Action("ObtenerTodasLasClases", "Clases")" class="btn btn-outline">
+                    <i class="bi bi-calendar-plus me-2"></i>Reservar clases
                 </a>
             </div>
         </div>

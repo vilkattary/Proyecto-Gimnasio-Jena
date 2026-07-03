@@ -1,9 +1,11 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
 using GimnasioJena.Abstracciones.Modelos.Reservas;
 using GimnasioJena.AccesoADatos;
+using GimnasioJena.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente;
 using GimnasioJena.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
@@ -21,6 +23,7 @@ namespace GimnasioJena.UI.Controllers
         private readonly IObtenerReservasPorUsuarioLN _obtenerReservasPorUsuarioServicio;
         private readonly ICancelarReservaLN _cancelarReservaServicio;
         private readonly IObtenerReservaPorIdLN _obtenerReservaPorIdServicio;
+        private readonly IObtenerMembresiaPorClienteLN _obtenerMembresiaPorClienteServicio;
 
         public ClientesController(IObtenerUsuarioPorIdLN obtenerUsuarioServicio)
         {
@@ -28,6 +31,7 @@ namespace GimnasioJena.UI.Controllers
             _obtenerReservasPorUsuarioServicio = new ObtenerReservasPorUsuarioLN();
             _cancelarReservaServicio = new CancelarReservaLN();
             _obtenerReservaPorIdServicio = new ObtenerReservaPorIdLN();
+            _obtenerMembresiaPorClienteServicio = new ObtenerMembresiaPorClienteLN();
         }
 
         public async Task<ActionResult> MiPerfil()
@@ -41,7 +45,17 @@ namespace GimnasioJena.UI.Controllers
         {
             var identityUserId = User.Identity.GetUserId();
             var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
-            return View(perfil);
+
+            if (perfil == null)
+            {
+                TempData["MensajeError"] = "No se encontró la información del usuario.";
+                return RedirectToAction("MiPerfil");
+            }
+
+            var membresia = _obtenerMembresiaPorClienteServicio
+                .ObtenerMembresiaActivaPorCliente(perfil.idUsuario);
+
+            return View(membresia);
         }
 
         public ActionResult ReservarClases()
