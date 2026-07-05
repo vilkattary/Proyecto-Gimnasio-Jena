@@ -10,6 +10,7 @@ using GimnasioJena.LogicaDeNegocio.Clases.EditarClase;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerClasePorId;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase;
+using GimnasioJena.LogicaDeNegocio.Bitacora;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
