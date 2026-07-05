@@ -1,13 +1,16 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.EditarClase;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.EditarClase;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerClasePorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.RegistrarClase;
+using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.AccesoADatos;
 using GimnasioJena.LogicaDeNegocio.Clases.EditarClase;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerClasePorId;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +24,7 @@ namespace GimnasioJena.UI.Controllers
         private readonly IObtenerClasePorIdLN _obtenerClasePorId;
         private readonly IRegistrarClaseLN _registrarClase;
         private readonly IEditarClaseLN _editarClase;
+        private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
 
         public ClasesController()
         {
@@ -28,6 +32,7 @@ namespace GimnasioJena.UI.Controllers
             _obtenerClasePorId = new ObtenerClasePorIdLN();
             _registrarClase = new RegistrarClaseLN();
             _editarClase = new EditarClaseLN();
+            _registrarBitacoraLN = new RegistrarBitacoraLN();
         }
 
         public ActionResult ObtenerTodasLasClases()
@@ -107,6 +112,13 @@ namespace GimnasioJena.UI.Controllers
 
                 if (seAgrego)
                 {
+                    RegistrarBitacora(
+                        "ClaseProgramada",
+                        "CREATE",
+                        null,
+                        "Se registró una nueva clase."
+                    );
+
                     TempData["MensajeExito"] = "La clase se registró correctamente.";
                     return RedirectToAction("ObtenerTodasLasClases");
                 }
@@ -205,6 +217,13 @@ namespace GimnasioJena.UI.Controllers
 
                 if (seActualizo)
                 {
+                    RegistrarBitacora(
+                        "ClaseProgramada",
+                        "UPDATE",
+                        claseAEditar.idClaseProgramada,
+                        "Se actualizó la clase programada."
+                    );
+
                     TempData["MensajeExito"] = "La clase se actualizó correctamente.";
                     return RedirectToAction("ObtenerTodasLasClases");
                 }
@@ -292,6 +311,36 @@ namespace GimnasioJena.UI.Controllers
                     idEstadoClaseSeleccionado
                 );
             }
+        }
+        private int? ObtenerIdUsuarioActual()
+        {
+            var identityUserId = User.Identity.GetUserId();
+
+            using (var contexto = new Contexto())
+            {
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                return usuario?.idUsuario;
+            }
+        }
+
+        private string ObtenerIpUsuario()
+        {
+            return Request.UserHostAddress;
+        }
+
+        private void RegistrarBitacora(string tabla, string accion, int? idRegistro, string detalle)
+        {
+            _registrarBitacoraLN.RegistrarBitacora(new BitacoraDto
+            {
+                idUsuario = ObtenerIdUsuarioActual(),
+                tablaAfectada = tabla,
+                accionRealizada = accion,
+                idRegistroAfectado = idRegistro,
+                detalle = detalle,
+                ipUsuario = ObtenerIpUsuario()
+            });
         }
     }
 }

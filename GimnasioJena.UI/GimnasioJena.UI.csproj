@@ -180,6 +180,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AsistenciasController.cs" />
+    <Compile Include="Controllers\BitacorasController.cs" />
     <Compile Include="Controllers\ClasesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\ComunicacionController.cs" />
@@ -328,6 +329,7 @@
     <Content Include="Views\Membresias\Create.cshtml" />
     <Content Include="Views\Membresias\Edit.cshtml" />
     <Content Include="Views\Membresias\Details.cshtml" />
+    <Content Include="Views\Bitacoras\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
