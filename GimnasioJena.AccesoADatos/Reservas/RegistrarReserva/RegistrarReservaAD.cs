@@ -47,5 +47,67 @@ namespace GimnasioJena.AccesoADatos.Reservas.RegistrarReserva
             _elContexto.Reservas.Add(reservaAGuardar);
             return _elContexto.SaveChanges();
         }
+        public bool DescontarClaseDisponible(int idMembresiaCliente)
+        {
+            var membresia = _elContexto.Membresias
+                .FirstOrDefault(m => m.idMembresiaCliente == idMembresiaCliente);
+
+            if (membresia == null)
+                return false;
+
+            if (!membresia.clasesDisponibles.HasValue)
+                return true;
+
+            if (membresia.clasesDisponibles.Value <= 0)
+                return false;
+
+            membresia.clasesDisponibles = membresia.clasesDisponibles.Value - 1;
+
+            return _elContexto.SaveChanges() > 0;
+        }
+
+        public int RegistrarReservaYDescontarClase(ReservaCrearDto reserva, int idMembresiaCliente)
+        {
+            int resultadoReserva = RegistrarReserva(reserva);
+
+            if (resultadoReserva <= 0)
+                return 0;
+
+            bool resultadoDescuento = DescontarClaseDisponible(idMembresiaCliente);
+
+            if (!resultadoDescuento)
+                return 0;
+
+            return resultadoReserva;
+        }
+        public ReservaClaseValidacionDto ObtenerClaseParaValidacion(int idClaseProgramada)
+        {
+            return _elContexto.Clases
+                .Where(c => c.idClaseProgramada == idClaseProgramada)
+                .Select(c => new ReservaClaseValidacionDto
+                {
+                    idClaseProgramada = c.idClaseProgramada,
+                    idEstadoClase = c.idEstadoClase,
+                    fechaClase = c.fechaClase,
+                    horaInicio = c.horaInicio,
+                    cupoMaximo = c.cupoMaximo
+                })
+                .FirstOrDefault();
+        }
+
+        public bool UsuarioTieneReservaActiva(int idUsuario, int idClaseProgramada)
+        {
+            return _elContexto.Reservas.Any(r =>
+                r.idUsuario == idUsuario &&
+                r.idClaseProgramada == idClaseProgramada &&
+                r.idEstadoReserva == 1);
+        }
+
+        public int ContarReservasActivasPorClase(int idClaseProgramada)
+        {
+            return _elContexto.Reservas.Count(r =>
+                r.idClaseProgramada == idClaseProgramada &&
+                r.idEstadoReserva == 1);
+        }
     }
 }

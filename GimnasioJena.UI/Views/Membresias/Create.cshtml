@@ -1,0 +1,85 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Membresias.MembresiaCrearDto
+
+@{
+    ViewBag.Title = "Registrar Membresía";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="page-title">Registrar Membresía</h1>
+        <p class="text-muted">Asigna una membresía a un cliente.</p>
+    </div>
+
+    <div class="info-card">
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["MensajeError"]
+            </div>
+        }
+
+        @using (Html.BeginForm("Create", "Membresias", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.idUsuario, "Cliente", new { @class = "form-label fw-bold" })
+                @Html.DropDownListFor(m => m.idUsuario, (IEnumerable<SelectListItem>)ViewBag.Usuarios, "Seleccione un cliente", new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.idUsuario, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.idPlanMembresia, "Plan", new { @class = "form-label fw-bold" })
+                @Html.DropDownListFor(m => m.idPlanMembresia, (IEnumerable<SelectListItem>)ViewBag.Planes, "Seleccione un plan", new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.idPlanMembresia, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.idEstadoMembresia, "Estado", new { @class = "form-label fw-bold" })
+                @Html.DropDownListFor(m => m.idEstadoMembresia, (IEnumerable<SelectListItem>)ViewBag.Estados, "Seleccione un estado", new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.idEstadoMembresia, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(m => m.fechaInicio, "Fecha Inicio", new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.fechaInicio, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.ValidationMessageFor(m => m.fechaInicio, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(m => m.fechaFin, "Fecha Fin", new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.fechaFin, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.ValidationMessageFor(m => m.fechaFin, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.clasesDisponibles, "Clases Disponibles", new { @class = "form-label fw-bold" })
+                @Html.TextBoxFor(m => m.clasesDisponibles, new { @class = "form-control", type = "number", min = "0", placeholder = "Ejemplo: 30" })
+                @Html.ValidationMessageFor(m => m.clasesDisponibles, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.observaciones, "Observaciones", new { @class = "form-label fw-bold" })
+                @Html.TextAreaFor(m => m.observaciones, new { @class = "form-control", rows = "4", placeholder = "Observaciones opcionales..." })
+                @Html.ValidationMessageFor(m => m.observaciones, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-action">
+                    Registrar Membresía
+                </button>
+
+                <a href="@Url.Action("Index", "Membresias")" class="btn btn-outline-gym">
+                    Volver
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,12 +1,10 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.Modelos.Membresias;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Membresias.ObtenerTodasLasMembresias
 {
     public interface IObtenerTodasLasMembresiasAD
     {
+        List<MembresiaListadoDto> ObtenerTodasLasMembresias();
     }
 }

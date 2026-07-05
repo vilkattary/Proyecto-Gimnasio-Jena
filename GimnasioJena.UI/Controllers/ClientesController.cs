@@ -1,9 +1,13 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
+using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Reservas;
-using GimnasioJena.AccesoADatos;
+using GimnasioJena.LogicaDeNegocio.Bitacora;
+using GimnasioJena.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente;
 using GimnasioJena.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
@@ -11,6 +15,7 @@ using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Linq;
 
 namespace GimnasioJena.UI.Controllers
 {
@@ -21,13 +26,16 @@ namespace GimnasioJena.UI.Controllers
         private readonly IObtenerReservasPorUsuarioLN _obtenerReservasPorUsuarioServicio;
         private readonly ICancelarReservaLN _cancelarReservaServicio;
         private readonly IObtenerReservaPorIdLN _obtenerReservaPorIdServicio;
-
+        private readonly IObtenerMembresiaPorClienteLN _obtenerMembresiaPorClienteServicio;
+        private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
         public ClientesController(IObtenerUsuarioPorIdLN obtenerUsuarioServicio)
         {
             _obtenerUsuarioServicio = obtenerUsuarioServicio;
             _obtenerReservasPorUsuarioServicio = new ObtenerReservasPorUsuarioLN();
             _cancelarReservaServicio = new CancelarReservaLN();
             _obtenerReservaPorIdServicio = new ObtenerReservaPorIdLN();
+            _obtenerMembresiaPorClienteServicio = new ObtenerMembresiaPorClienteLN();
+            _registrarBitacoraLN = new RegistrarBitacoraLN();
         }
 
         public async Task<ActionResult> MiPerfil()
@@ -41,7 +49,17 @@ namespace GimnasioJena.UI.Controllers
         {
             var identityUserId = User.Identity.GetUserId();
             var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
-            return View(perfil);
+
+            if (perfil == null)
+            {
+                TempData["MensajeError"] = "No se encontró la información del usuario.";
+                return RedirectToAction("MiPerfil");
+            }
+
+            var membresia = _obtenerMembresiaPorClienteServicio
+                .ObtenerMembresiaActivaPorCliente(perfil.idUsuario);
+
+            return View(membresia);
         }
 
         public ActionResult ReservarClases()
@@ -104,18 +122,49 @@ namespace GimnasioJena.UI.Controllers
                 return RedirectToAction("MisReservas");
             }
 
-            bool resultado = _cancelarReservaServicio.CancelarReserva(id, perfil.idUsuario);
+            var reservaCancelar = new ReservaCancelarDto
+            {
+                idReserva = id,
+                motivoCancelacion = "Cancelación solicitada desde Mis Reservas"
+            };
+
+            bool resultado = _cancelarReservaServicio.CancelarReserva(reservaCancelar, perfil.idUsuario);
 
             if (resultado)
             {
+                RegistrarBitacora(
+                    "Reserva",
+                    "UPDATE",
+                    id,
+                    "El cliente canceló la reserva con idReserva: " + id,
+                    perfil.idUsuario
+                );
+
                 TempData["MensajeExito"] = "Reserva cancelada correctamente.";
             }
             else
             {
-                TempData["MensajeError"] = "No se pudo cancelar la reserva. Verifica que esté activa.";
+                TempData["MensajeError"] = "No se pudo cancelar la reserva. Verifica que esté activa y que la clase no haya iniciado.";
             }
 
             return RedirectToAction("MisReservas");
+        }
+        private string ObtenerIpUsuario()
+        {
+            return Request.UserHostAddress;
+        }
+
+        private void RegistrarBitacora(string tabla, string accion, int? idRegistro, string detalle, int? idUsuario)
+        {
+            _registrarBitacoraLN.RegistrarBitacora(new BitacoraDto
+            {
+                idUsuario = idUsuario,
+                tablaAfectada = tabla,
+                accionRealizada = accion,
+                idRegistroAfectado = idRegistro,
+                detalle = detalle,
+                ipUsuario = ObtenerIpUsuario()
+            });
         }
     }
 }
