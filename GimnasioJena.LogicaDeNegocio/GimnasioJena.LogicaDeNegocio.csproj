@@ -80,6 +80,8 @@
     <Compile Include="Asistencias\ObtenerAsistenciasPorCliente\ObtenerAsistenciasPorClienteLN.cs" />
     <Compile Include="Asistencias\ObtenerTodasLasAsistencias\ObtenerTodasLasAsistenciasLN.cs" />
     <Compile Include="Asistencias\RegistrarAsistencia\RegistrarAsistenciaLN.cs" />
+    <Compile Include="Bitacora\ObtenerBitacoraLN.cs" />
+    <Compile Include="Bitacora\RegistrarBitacoraLN.cs" />
     <Compile Include="Clases\CambiarEstadoClase\CambiarEstadoClaseLN.cs" />
     <Compile Include="Clases\EditarClase\EditarClaseLN.cs" />
     <Compile Include="Clases\ObtenerClasePorId\ObtenerClasePorIdLN.cs" />

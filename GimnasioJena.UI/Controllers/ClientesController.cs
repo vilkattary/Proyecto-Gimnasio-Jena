@@ -1,10 +1,12 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
+using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Reservas;
-using GimnasioJena.AccesoADatos;
+using GimnasioJena.LogicaDeNegocio.Bitacora;
 using GimnasioJena.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente;
 using GimnasioJena.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
@@ -13,6 +15,7 @@ using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Linq;
 
 namespace GimnasioJena.UI.Controllers
 {
@@ -24,7 +27,7 @@ namespace GimnasioJena.UI.Controllers
         private readonly ICancelarReservaLN _cancelarReservaServicio;
         private readonly IObtenerReservaPorIdLN _obtenerReservaPorIdServicio;
         private readonly IObtenerMembresiaPorClienteLN _obtenerMembresiaPorClienteServicio;
-
+        private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
         public ClientesController(IObtenerUsuarioPorIdLN obtenerUsuarioServicio)
         {
             _obtenerUsuarioServicio = obtenerUsuarioServicio;
@@ -32,6 +35,7 @@ namespace GimnasioJena.UI.Controllers
             _cancelarReservaServicio = new CancelarReservaLN();
             _obtenerReservaPorIdServicio = new ObtenerReservaPorIdLN();
             _obtenerMembresiaPorClienteServicio = new ObtenerMembresiaPorClienteLN();
+            _registrarBitacoraLN = new RegistrarBitacoraLN();
         }
 
         public async Task<ActionResult> MiPerfil()
@@ -128,6 +132,14 @@ namespace GimnasioJena.UI.Controllers
 
             if (resultado)
             {
+                RegistrarBitacora(
+                    "Reserva",
+                    "UPDATE",
+                    id,
+                    "El cliente canceló la reserva con idReserva: " + id,
+                    perfil.idUsuario
+                );
+
                 TempData["MensajeExito"] = "Reserva cancelada correctamente.";
             }
             else
@@ -136,6 +148,23 @@ namespace GimnasioJena.UI.Controllers
             }
 
             return RedirectToAction("MisReservas");
+        }
+        private string ObtenerIpUsuario()
+        {
+            return Request.UserHostAddress;
+        }
+
+        private void RegistrarBitacora(string tabla, string accion, int? idRegistro, string detalle, int? idUsuario)
+        {
+            _registrarBitacoraLN.RegistrarBitacora(new BitacoraDto
+            {
+                idUsuario = idUsuario,
+                tablaAfectada = tabla,
+                accionRealizada = accion,
+                idRegistroAfectado = idRegistro,
+                detalle = detalle,
+                ipUsuario = ObtenerIpUsuario()
+            });
         }
     }
 }

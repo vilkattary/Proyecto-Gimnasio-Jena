@@ -1,0 +1,77 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Bitacora.BitacoraDto>
+
+@{
+    ViewBag.Title = "Bitácora";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="page-title">Bitácora del Sistema</h1>
+        <p class="text-muted">Registro de acciones importantes realizadas dentro del sistema.</p>
+    </div>
+
+    <div class="info-card">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info">
+                No hay registros en la bitácora.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Usuario</th>
+                            <th>Tabla</th>
+                            <th>Acción</th>
+                            <th>Registro</th>
+                            <th>Fecha</th>
+                            <th>Detalle</th>
+                            <th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in Model)
+                        {
+                            <tr>
+                                <td>@b.idBitacora</td>
+                                <td>@b.nombreUsuario</td>
+                                <td>@b.tablaAfectada</td>
+                                <td>
+                                    @if (b.accionRealizada == "CREAR")
+                                    {
+                                        <span class="badge bg-success">@b.accionRealizada</span>
+                                    }
+                                    else if (b.accionRealizada == "EDITAR")
+                                    {
+                                        <span class="badge bg-primary">@b.accionRealizada</span>
+                                    }
+                                    else if (b.accionRealizada == "ELIMINAR")
+                                    {
+                                        <span class="badge bg-danger">@b.accionRealizada</span>
+                                    }
+                                    else if (b.accionRealizada == "RENOVAR")
+                                    {
+                                        <span class="badge bg-warning text-dark">@b.accionRealizada</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@b.accionRealizada</span>
+                                    }
+                                </td>
+                                <td>@(b.idRegistroAfectado.HasValue ? b.idRegistroAfectado.Value.ToString() : "-")</td>
+                                <td>@b.fechaAccion.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@b.detalle</td>
+                                <td>@b.ipUsuario</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
