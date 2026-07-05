@@ -24,6 +24,7 @@ namespace GimnasioJena.AccesoADatos.Asistencias.ObtenerAsistenciasPorClase
                     on reserva.idReserva equals asistencia.idReserva into asistenciaJoin
                  from asistencia in asistenciaJoin.DefaultIfEmpty()
                  where reserva.idClaseProgramada == idClaseProgramada
+                    && reserva.idEstadoReserva != 2
                  select new AsistenciaClaseDto
                  {
                      idReserva = reserva.idReserva,

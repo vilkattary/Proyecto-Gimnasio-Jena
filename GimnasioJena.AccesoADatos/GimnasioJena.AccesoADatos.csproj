@@ -80,10 +80,11 @@
     <Compile Include="Asistencias\ObtenerAsistenciasPorCliente\ObtenerAsistenciasPorClienteAD.cs" />
     <Compile Include="Asistencias\ObtenerTodasLasAsistencias\ObtenerTodasLasAsistenciasAD.cs" />
     <Compile Include="Asistencias\RegistrarAsistencia\RegistrarAsistenciaAD.cs" />
+    <Compile Include="Bitacora\ObtenerBitacoraAD.cs" />
+    <Compile Include="Bitacora\RegistrarBitacoraAD.cs" />
     <Compile Include="Clases\CambiarEstadoClase\CambiarEstadoClaseAD.cs" />
     <Compile Include="Clases\EditarClase\EditarClaseAD.cs" />
     <Compile Include="Clases\ObtenerClasePorId\ObtenerClasePorIdAD.cs" />
-    <Compile Include="Clases\ObtenerClasesDisponibles\ObtenerClasesDisponiblesAD.cs" />
     <Compile Include="Clases\ObtenerClasesPorEntrenador\ObtenerClasesPorEntrenadorAD.cs" />
     <Compile Include="Clases\ObtenerTodasLasClases\ObtenerTodasLasClasesAD.cs" />
     <Compile Include="Clases\RegistrarClase\RegistrarClaseAD.cs" />

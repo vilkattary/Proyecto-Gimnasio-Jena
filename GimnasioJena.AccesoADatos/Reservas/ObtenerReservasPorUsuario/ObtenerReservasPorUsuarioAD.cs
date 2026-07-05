@@ -26,8 +26,9 @@ namespace GimnasioJena.AccesoADatos.Reservas.ObtenerReservasPorUsuario
                 select new ReservaListadoDto
                 {
                     idReserva = reserva.idReserva,
+                    idUsuario = reserva.idUsuario,
                     idClaseProgramada = reserva.idClaseProgramada,
-                    nombreCliente = string.Empty, 
+                    nombreCliente = string.Empty,
                     nombreClase = tipo.nombreClase,
                     nombreEntrenador = entrenador.nombre + " " + entrenador.apellido1,
                     idEstadoReserva = reserva.idEstadoReserva,
@@ -39,7 +40,10 @@ namespace GimnasioJena.AccesoADatos.Reservas.ObtenerReservasPorUsuario
                     ubicacion = clase.ubicacion
                 };
 
-            return q.OrderBy(r => r.fechaClase).ThenBy(r => r.horaInicio).ToList();
+            return q
+                .OrderBy(r => r.fechaClase)
+                .ThenBy(r => r.horaInicio)
+                .ToList();
         }
     }
 }

@@ -12,5 +12,6 @@ namespace GimnasioJena.Abstracciones.Modelos.Membresias
         public DateTime fechaInicio { get; set; }
         public DateTime fechaFin { get; set; }
         public int? clasesDisponibles { get; set; }
+        public decimal precio { get; set; }
     }
 }
