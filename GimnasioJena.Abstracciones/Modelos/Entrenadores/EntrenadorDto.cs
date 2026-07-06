@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using System;
 
 namespace GimnasioJena.Abstracciones.Modelos.Entrenadores
 {
@@ -12,5 +13,6 @@ namespace GimnasioJena.Abstracciones.Modelos.Entrenadores
         public string descripcion { get; set; }
         public DateTime fechaContratacion { get; set; }
         public bool estado { get; set; }
+        public UsuarioPerfilDto Usuario { get; set; }
     }
 }

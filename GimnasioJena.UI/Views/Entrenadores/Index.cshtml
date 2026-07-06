@@ -6,113 +6,180 @@
     bool perfilPendiente =
         Model.especialidad == "Pendiente de completar" ||
         Model.descripcion == "Pendiente de completar";
+
+    string[] nombres = Model.nombreCompleto != null ? Model.nombreCompleto.Split(' ') : new string[0];
+    string iniciales = nombres.Length > 1
+        ? nombres[0].Substring(0, 1) + nombres[1].Substring(0, 1)
+        : (nombres.Length == 1 ? nombres[0].Substring(0, 1) : "E");
 }
 
-<link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
+<div class="container-fluid p-4">
 
-<section class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-9">
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["MensajeExito"]
+        </div>
+    }
 
-            @if (TempData["MensajeExito"] != null)
-            {
-                <div class="alert alert-success">
-                    @TempData["MensajeExito"]
-                </div>
-            }
+    @if (perfilPendiente)
+    {
+        <div class="alert alert-warning">
+            <strong>Perfil pendiente de completar.</strong>
+            Tu información profesional todavía no ha sido actualizada por administración.
+        </div>
+    }
 
-            @if (perfilPendiente)
-            {
-                <div class="alert alert-warning">
-                    <strong>Perfil pendiente de completar.</strong>
-                    Tu información profesional todavía no ha sido actualizada por administración.
-                </div>
-            }
+    <div class="text-center mb-5">
+        <h2 class="page-title">Mi Perfil</h2>
+    </div>
 
-            <div class="card shadow-sm rounded-4" style="border-top:4px solid var(--gym-orange);">
-                <div class="card-body p-4">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="bi bi-award"></i>
+            <h3>@Model.especialidad</h3>
+            <p>Especialidad</p>
+        </div>
 
-                    <div class="d-flex flex-column flex-md-row align-items-center gap-4 mb-4">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center"
-                             style="width:100px;height:100px;background:var(--gym-orange);color:white;font-size:2.5rem;">
-                            <i class="bi bi-person-badge-fill"></i>
-                        </div>
+        <div class="stat-card">
+            <i class="bi bi-calendar-event"></i>
+            <h3>@Model.fechaContratacion.ToString("dd/MM/yyyy")</h3>
+            <p>Contratado Desde</p>
+        </div>
 
-                        <div class="text-center text-md-start">
-                            <h2 class="fw-bold mb-1" style="color:var(--gym-dark);">
-                                @Model.nombreCompleto
-                            </h2>
+        <div class="stat-card">
+            <i class="bi bi-star-fill"></i>
+            <h3>@(Model.estado ? "Activo" : "Inactivo")</h3>
+            <p>Estado</p>
+        </div>
+    </div>
 
-                            <p class="text-muted mb-2">
-                                @Model.correo
-                            </p>
-
-                            <span class="badge bg-primary">
-                                @Model.especialidad
-                            </span>
-
-                            @if (Model.estado)
+    <div class="row">
+        <div class="col-lg-7 mb-4">
+            <div class="info-card">
+                <div class="row">
+                    <div class="col-md-4 profile-section mb-3 mb-md-0">
+                        <div class="profile-avatar mx-auto">
+                            @if (Model.Usuario != null && !string.IsNullOrWhiteSpace(Model.Usuario.fotoPerfil))
                             {
-                                <span class="badge bg-success ms-1">Activo</span>
+                                <img src="@Url.Content(Model.Usuario.fotoPerfil)"
+                                     alt="Foto del entrenador"
+                                     class="rounded-circle"
+                                     style="width:120px;height:120px;object-fit:cover;border:3px solid var(--jena-orange);" />
                             }
                             else
                             {
-                                <span class="badge bg-secondary ms-1">Inactivo</span>
+                                <span class="initials">@iniciales</span>
+                            }
+
+                            @if (Model.estado)
+                            {
+                                <div class="verified-badge">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
                             }
                         </div>
                     </div>
 
-                    <hr />
-
-                    <h4 class="fw-bold mb-3" style="color:var(--gym-dark);">
-                        Información profesional
-                    </h4>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-600">Nombre completo</label>
-                            <input type="text" class="form-control" value="@Model.nombreCompleto" readonly />
+                    <div class="col-md-8">
+                        <div class="info-item">
+                            <i class="bi bi-person-circle"></i>
+                            <div class="info-content">
+                                <div class="info-label">Nombre Completo</div>
+                                <div class="info-value">@Model.nombreCompleto</div>
+                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-600">Correo electrónico</label>
-                            <input type="text" class="form-control" value="@Model.correo" readonly />
+                        <div class="info-item">
+                            <i class="bi bi-envelope"></i>
+                            <div class="info-content">
+                                <div class="info-label">Correo Electrónico</div>
+                                <div class="info-value">@Model.correo</div>
+                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-600">Especialidad</label>
-                            <input type="text" class="form-control" value="@Model.especialidad" readonly />
+                        <div class="info-item">
+                            <i class="bi bi-award"></i>
+                            <div class="info-content">
+                                <div class="info-label">Especialidad</div>
+                                <div class="info-value">@Model.especialidad</div>
+                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-600">Fecha de contratación</label>
-                            <input type="text" class="form-control" value="@Model.fechaContratacion.ToString("dd/MM/yyyy")" readonly />
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label fw-600">Descripción</label>
-                            <textarea class="form-control" rows="4" readonly>@Model.descripcion</textarea>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-600">Estado</label>
-                            <input type="text" class="form-control" value="@(Model.estado ? "Activo" : "Inactivo")" readonly />
+                        <div class="info-item">
+                            <i class="bi bi-calendar-event"></i>
+                            <div class="info-content">
+                                <div class="info-label">Fecha de Contratación</div>
+                                <div class="info-value">@Model.fechaContratacion.ToString("dd/MM/yyyy")</div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="d-flex flex-wrap gap-2 mt-4">
-                        <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
-                            Cambiar contraseña
-                        </a>
-
-                        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-gym">
-                            Volver al inicio
-                        </a>
-                    </div>
-
                 </div>
             </div>
 
+            <div class="description-card">
+                <h5><i class="bi bi-info-circle me-2"></i>Descripción</h5>
+                <p>
+                    @Model.descripcion
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="action-buttons-card">
+                <h5><i class="bi bi-lightning-charge me-2"></i>Acciones Rápidas</h5>
+
+                <a href="@Url.Action("MisClases", "Entrenadores")" class="btn btn-action">
+                    <i class="bi bi-lightning-charge-fill "></i>
+                    <span>Mis Clases</span>
+                </a>
+                <a href="@Url.Action("EditarPerfil", "Manage")" class="btn btn-action">
+                    <i class="bi bi-pencil-square"></i>
+                    <span>Editar Perfil</span>
+                </a>
+
+                <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
+                    <i class="bi bi-shield-lock"></i>
+                    <span>Cambiar Contraseña</span>
+                </a>
+
+                <a href="@Url.Action("Index", "Home")" class="btn btn-action">
+                    <i class="bi bi-house-door"></i>
+                    <span>Volver al Inicio</span>
+                </a>
+            </div>
+
+            <div class="info-card">
+                <h5 class="text-center mb-3" style="color: var(--jena-navy); font-weight: 800;">
+                    <i class="bi bi-star-fill" style="color: var(--jena-orange);"></i>
+                    Estado de Cuenta
+                </h5>
+
+                <div class="text-center">
+                    <div class="mb-3">
+                        <span style="font-size: 2rem; font-weight: 800; color: var(--jena-orange);">
+                            @(Model.estado ? "Activo" : "Inactivo")
+                        </span>
+                    </div>
+
+                    <div class="info-item" style="border: none; padding: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="bi bi-award"></i>
+                        <div class="info-content" style="text-align: left;">
+                            <div class="info-label">Especialidad</div>
+                            <div class="info-value">@Model.especialidad</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item" style="border: none; padding: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="bi bi-calendar-check"></i>
+                        <div class="info-content" style="text-align: left;">
+                            <div class="info-label">Fecha de Contratación</div>
+                            <div class="info-value">@Model.fechaContratacion.ToString("dd/MM/yyyy")</div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+</div>
