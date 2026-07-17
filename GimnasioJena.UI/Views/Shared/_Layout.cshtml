@@ -59,8 +59,12 @@
                                  new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Contacto", "Contact", "Home",
-                                 new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink(
+                                "Pagos",
+                                "Index",
+                                "Pagos",
+                                new { area = "" },
+                                new { @class = "nav-link" })
                         </li>
                     }
                     else

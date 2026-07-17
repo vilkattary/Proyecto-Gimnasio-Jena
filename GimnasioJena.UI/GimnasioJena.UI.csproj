@@ -191,6 +191,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembresiasController.cs" />
     <Compile Include="Controllers\NosotrosController.cs" />
+    <Compile Include="Controllers\PagosController.cs" />
     <Compile Include="Controllers\RecepcionistasController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\ReservasController.cs" />
@@ -330,6 +331,8 @@
     <Content Include="Views\Membresias\Edit.cshtml" />
     <Content Include="Views\Membresias\Details.cshtml" />
     <Content Include="Views\Bitacoras\Index.cshtml" />
+    <Content Include="Views\Pagos\Index.cshtml" />
+    <Content Include="Views\Pagos\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
