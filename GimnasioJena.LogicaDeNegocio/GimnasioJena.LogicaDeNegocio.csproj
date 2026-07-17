@@ -125,6 +125,8 @@
     <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosLN.cs" />
     <Compile Include="Nosotros\ModificarSeccionNosotros\ModificarContenidoNosotrosLN.cs" />
     <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosLN.cs" />
+    <Compile Include="Pagos\ObtenerTodosLosPagos\ObtenerTodosLosPagosLN.cs" />
+    <Compile Include="Pagos\RegistrarPago\RegistrarPagoLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recepcionistas\CambiarEstadoRecepcionista\CambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="Recepcionistas\EditarRecepcionista\EditarRecepcionistaLN.cs" />

@@ -121,6 +121,8 @@
     <Compile Include="AccesoADatos\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Nosotros\CambiarEstadoSeccionNosotros\ICambiarEstadoSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosAD.cs" />
+    <Compile Include="AccesoADatos\Pagos\ObtenerTodosLosPagos\IObtenerTodosLosPagosAD.cs" />
+    <Compile Include="AccesoADatos\Pagos\RegistrarPago\IRegistrarPagoAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdAD.cs" />
@@ -206,6 +208,8 @@
     <Compile Include="LogicaDeNegocio\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Nosotros\CambiarEstadoSeccionNosotros\ICambiarEstadoSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Pagos\ObtenerTodosLosPagos\IObtenerTodosLosPagosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Pagos\RegistrarPago\IRegistrarPagoLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdLN.cs" />
@@ -284,6 +288,11 @@
     <Compile Include="Modelos\Membresias\MembresiaEditarDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaListadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaRenovarDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoActualizarEstadoDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoCrearDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoDetalleDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoListadoDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoMembresiaValidacionDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaCrearDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaDto.cs" />
