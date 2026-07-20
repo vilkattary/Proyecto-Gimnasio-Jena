@@ -38,7 +38,23 @@ namespace GimnasioJena.UI.Controllers
 
         public ActionResult ObtenerTodasLasClases()
         {
-            List<ClaseListadoDto> listaDeClases = _obtenerTodasLasClases.ObtenerTodasLasClases();
+            List<ClaseListadoDto> listaDeClases;
+
+            if (User.IsInRole("CLIENTE"))
+            {
+                listaDeClases =
+                    _obtenerTodasLasClases.ObtenerProximasClasesParaCliente();
+
+                ViewBag.EsVistaCliente = true;
+            }
+            else
+            {
+                listaDeClases =
+                    _obtenerTodasLasClases.ObtenerTodasLasClases();
+
+                ViewBag.EsVistaCliente = false;
+            }
+
             return View(listaDeClases);
         }
 
