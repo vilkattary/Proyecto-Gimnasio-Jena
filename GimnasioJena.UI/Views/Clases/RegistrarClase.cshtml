@@ -7,162 +7,316 @@
 
 <div class="container py-5">
 
+    @* ── Encabezado ── *@
     <div class="text-center mb-5">
         <div class="d-flex justify-content-center align-items-center mb-3">
             <div style="width:60px;height:60px;border-radius:50%;
                         background-color:var(--jena-orange);
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        margin-right:20px;
+                        display:flex;align-items:center;justify-content:center;
+                        margin-right:16px;
                         box-shadow:0 4px 15px rgba(255,107,53,0.4);">
                 <i class="bi bi-calendar3" style="font-size:1.8rem;color:#fff;"></i>
             </div>
-
             <h1 class="page-title mb-0">Registrar Clase</h1>
         </div>
     </div>
 
+    @* ── Error del servidor ── *@
     @if (TempData["MensajeError"] != null)
     {
-        <div class="alert alert-danger">
-            @TempData["MensajeError"]
-        </div>
+        <div class="alert alert-danger">@TempData["MensajeError"]</div>
     }
 
-    @using (Html.BeginForm("RegistrarClase", "Clases", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+    @* ── Resumen de validación (solo visible con errores) ── *@
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+    }
+
+    @* ── Formulario ── *@
+    @using (Html.BeginForm("RegistrarClase", "Clases", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.idEstadoClase)
 
-        <div class="row g-4">
+        @* ─ Tarjeta 1: Datos generales ─ *@
+        <div class="info-card info-card-static mb-4">
+            <h5 class="mb-4">
+                <i class="bi bi-list-check me-2" style="color:var(--jena-orange);"></i>
+                Datos de la Clase
+            </h5>
 
-            <div class="col-lg-7">
-                <div class="info-card">
+            <div class="row g-3">
+                <div class="col-12 col-md-8">
+                    <label class="info-label">Tipo de clase <span class="text-danger">*</span></label>
+                    @Html.TextBoxFor(m => m.nombreTipoClase,
+                        new { @class = "form-control mt-1", placeholder = "Ej: Yoga, Spinning, Zumba..." })
+                    @Html.ValidationMessageFor(m => m.nombreTipoClase, "",
+                        new { @class = "text-danger small" })
+                </div>
 
-                    <h5 class="mb-4">
-                        <i class="bi bi-list-check me-2" style="color:var(--jena-orange);"></i>
-                        Datos de la Clase
-                    </h5>
+                <div class="col-12 col-md-4">
+                    <label class="info-label">Cupo máximo <span class="text-danger">*</span></label>
+                    @Html.TextBoxFor(m => m.cupoMaximo,
+                        new { @class = "form-control mt-1", type = "number", min = "1", max = "12" })
+                    @Html.ValidationMessageFor(m => m.cupoMaximo, "",
+                        new { @class = "text-danger small" })
+                </div>
 
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
-
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="info-label">Tipo de clase</label>
-                            @Html.DropDownListFor(
-                                m => m.idTipoClase,
-                                (SelectList)ViewBag.TiposClase,
-                                "Seleccione un tipo de clase",
-                                new { @class = "form-control mt-1" }
-                            )
-                            @Html.ValidationMessageFor(m => m.idTipoClase, "", new { @class = "text-danger small" })
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="info-label">Estado</label>
-                            @Html.DropDownListFor(
-                                m => m.idEstadoClase,
-                                (SelectList)ViewBag.EstadosClase,
-                                "Seleccione un estado",
-                                new { @class = "form-control mt-1" }
-                            )
-                            @Html.ValidationMessageFor(m => m.idEstadoClase, "", new { @class = "text-danger small" })
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="info-label">Entrenador</label>
-                        @Html.DropDownListFor(
-                            m => m.idUsuarioEntrenador,
-                            (SelectList)ViewBag.Entrenadores,
-                            "Seleccione un entrenador",
-                            new { @class = "form-control mt-1" }
-                        )
-                        @Html.ValidationMessageFor(m => m.idUsuarioEntrenador, "", new { @class = "text-danger small" })
-                    </div>
-
-                    <div class="mb-4">
-                        @Html.LabelFor(m => m.fechaClase, "Fecha de la clase", new { @class = "info-label" })
-                        @Html.TextBoxFor(m => m.fechaClase, "{0:yyyy-MM-dd}", new { @class = "form-control mt-1", type = "date" })
-                        @Html.ValidationMessageFor(m => m.fechaClase, "", new { @class = "text-danger small" })
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            @Html.LabelFor(m => m.horaInicio, "Hora de inicio", new { @class = "info-label" })
-                            @Html.TextBoxFor(m => m.horaInicio, new { @class = "form-control mt-1", type = "time" })
-                            @Html.ValidationMessageFor(m => m.horaInicio, "", new { @class = "text-danger small" })
-                        </div>
-
-                        <div class="col-md-6">
-                            @Html.LabelFor(m => m.horaFin, "Hora de finalización", new { @class = "info-label" })
-                            @Html.TextBoxFor(m => m.horaFin, new { @class = "form-control mt-1", type = "time" })
-                            @Html.ValidationMessageFor(m => m.horaFin, "", new { @class = "text-danger small" })
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            @Html.LabelFor(m => m.cupoMaximo, "Cupo máximo", new { @class = "info-label" })
-                            @Html.TextBoxFor(m => m.cupoMaximo, new
-                            {
-                                @class = "form-control mt-1",
-                                type = "number",
-                                min = "1",
-                                max = "12",
-                                placeholder = "12"
-                            })
-                            @Html.ValidationMessageFor(m => m.cupoMaximo, "", new { @class = "text-danger small" })
-                        </div>
-
-                        <div class="col-md-8">
-                            @Html.LabelFor(m => m.ubicacion, "Ubicación", new { @class = "info-label" })
-                            @Html.TextBoxFor(m => m.ubicacion, new
-                            {
-                                @class = "form-control mt-1",
-                                placeholder = "Sala principal"
-                            })
-                            @Html.ValidationMessageFor(m => m.ubicacion, "", new { @class = "text-danger small" })
-                        </div>
-                    </div>
-
+                <div class="col-12">
+                    <label class="info-label">Observaciones</label>
+                    @Html.TextAreaFor(m => m.observaciones,
+                        new { @class = "form-control mt-1", rows = "3",
+                              placeholder = "Detalle adicional sobre la clase..." })
                 </div>
             </div>
+        </div>
 
-            <div class="col-lg-5">
-                <div class="description-card mb-4">
-                    <h5>Información Adicional</h5>
-
-                    <div class="mt-3">
-                        @Html.LabelFor(m => m.observaciones, "Observaciones", new { @class = "info-label mb-2 d-block" })
-                        @Html.TextAreaFor(m => m.observaciones, new
-                        {
-                            @class = "form-control",
-                            rows = "10",
-                            placeholder = "Escribe alguna observación o detalle adicional sobre la clase...",
-                            style = "resize:vertical;border-radius:12px;"
-                        })
-                        @Html.ValidationMessageFor(m => m.observaciones, "", new { @class = "text-danger small" })
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-orange w-100"
-                        style="font-size:1rem; letter-spacing:1px; padding:16px 30px; border-radius:50px;">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    Registrar Clase
+        @* ─ Tarjeta 2: Horarios ─ *@
+        <div class="info-card info-card-static mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h5 class="mb-0">
+                    <i class="bi bi-clock me-2" style="color:var(--jena-orange);"></i>
+                    Horarios <span class="text-danger">*</span>
+                </h5>
+                <button type="button" id="btnAgregarHorario" class="btn-outline-jena">
+                    <i class="bi bi-plus-circle me-1"></i> Agregar horario
                 </button>
-
-                <div class="text-center mt-4">
-                    <a href="@Url.Action("ObtenerTodasLasClases")" class="text-muted text-decoration-none">
-                        ← Volver al listado
-                    </a>
-                </div>
             </div>
 
+            <div id="horariosContainer"></div>
+
+            <p id="sinHorarios" class="text-muted small fst-italic mb-0" style="display:none;">
+                Hacé clic en &ldquo;Agregar horario&rdquo; para definir los días y horas de la clase.
+            </p>
+        </div>
+
+        @* ─ Acciones ─ *@
+        <div class="d-flex flex-column flex-sm-row justify-content-end gap-3">
+            <a href="@Url.Action("ObtenerTodasLasClases")"
+               class="btn-outline-form">
+                ← Volver al listado
+            </a>
+            <button type="submit" class="btn-outline-form">
+                <i class="bi bi-check-circle me-2"></i> Registrar Clase
+            </button>
         </div>
     }
 </div>
 
+@* ── Template oculto para filas de horario (clonado por JS) ── *@
+<div id="horarioTemplate" class="d-none">
+    <div class="horario-item border rounded-3 p-3 mb-3 position-relative"
+         style="background:#f8f9fa;">
+        <button type="button"
+                class="btn-eliminar-horario position-absolute top-0 end-0 m-2"
+                aria-label="Eliminar horario"
+                title="Eliminar horario"
+                style="background:#fff;color:var(--jena-navy);border:2px solid var(--jena-orange);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s,color 0.2s;">
+            <i class="bi bi-trash" style="font-size:0.85rem;"></i>
+        </button>
+
+        <div class="row g-3 align-items-end">
+            <div class="col-12 col-sm-6 col-md-3">
+                <label class="info-label">Día <span class="text-danger">*</span></label>
+                <input type="date"
+                       name="Horarios[__INDEX__].fechaClase"
+                       class="form-control mt-1"
+                       required />
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <label class="info-label">Hora inicio <span class="text-danger">*</span></label>
+                <input type="hidden" name="Horarios[__INDEX__].horaInicio" class="hidden-time-inicio" />
+                <div class="d-flex gap-1 mt-1">
+                    <select class="form-select form-select-sm sel-hour-inicio time-select" required>
+                        <option value="">HH</option>
+                        @for (int h = 1; h <= 12; h++) {
+                            <option value="@h.ToString("D2")">@h.ToString("D2")</option>
+                        }
+                    </select>
+                    <select class="form-select form-select-sm sel-min-inicio time-select" required>
+                        <option value="">MM</option>
+                        @for (int m = 0; m < 60; m += 5) {
+                            <option value="@m.ToString("D2")">@m.ToString("D2")</option>
+                        }
+                    </select>
+                    <select class="form-select form-select-sm sel-ampm-inicio time-select-ampm" required>
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <label class="info-label">Hora fin <span class="text-danger">*</span></label>
+                <input type="hidden" name="Horarios[__INDEX__].horaFin" class="hidden-time-fin" />
+                <div class="d-flex gap-1 mt-1">
+                    <select class="form-select form-select-sm sel-hour-fin time-select" required>
+                        <option value="">HH</option>
+                        @for (int h = 1; h <= 12; h++) {
+                            <option value="@h.ToString("D2")">@h.ToString("D2")</option>
+                        }
+                    </select>
+                    <select class="form-select form-select-sm sel-min-fin time-select" required>
+                        <option value="">MM</option>
+                        @for (int m = 0; m < 60; m += 5) {
+                            <option value="@m.ToString("D2")">@m.ToString("D2")</option>
+                        }
+                    </select>
+                    <select class="form-select form-select-sm sel-ampm-fin time-select-ampm" required>
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <label class="info-label">Entrenador <span class="text-danger">*</span></label>
+                <select name="Horarios[__INDEX__].idUsuarioEntrenador"
+                        class="form-select mt-1"
+                        required>
+                    <option value="">Seleccione un entrenador</option>
+                    @if (ViewBag.Entrenadores != null)
+                    {
+                        foreach (SelectListItem item in (SelectList)ViewBag.Entrenadores)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <style>
+        /* ── Selectores de hora HH / MM ── */
+        .time-select {
+            flex: 1 1 0;
+            min-width: 52px;
+            padding-left: 6px;
+            padding-right: 4px;
+        }
+        /* ── Selector AM/PM: más estrecho y siempre legible ── */
+        .time-select-ampm {
+            flex: 0 0 60px;
+            min-width: 60px;
+            padding-left: 6px;
+            padding-right: 4px;
+        }
+
+        /* ── Botón "Agregar horario" ── */
+        .btn-outline-jena {
+            background: #fff;
+            color: var(--jena-navy);
+            border: 2px solid var(--jena-orange);
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .btn-outline-jena:hover {
+            background: var(--jena-orange);
+            color: #fff;
+        }
+
+        /* ── Botón eliminar fila de horario ── */
+        .btn-eliminar-horario:hover {
+            background: var(--jena-orange) !important;
+            color: #fff !important;
+        }
+
+        /* ── Cards informativas: sin hover ni animación ── */
+        .info-card-static,
+        .info-card-static:hover {
+            transform: none !important;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08) !important;
+            border-color: var(--jena-light-blue) !important;
+        }
+        .info-card-static::before,
+        .info-card-static:hover::before {
+            height: 0 !important;
+        }
+    </style>
+    <script>
+        (function () {
+            var rowIndex = 0;
+
+            function actualizarAviso() {
+                var n = document.querySelectorAll('#horariosContainer .horario-item').length;
+                document.getElementById('sinHorarios').style.display = n === 0 ? 'block' : 'none';
+            }
+
+            function agregarHorario() {
+                var html = document.getElementById('horarioTemplate').innerHTML
+                               .replace(/__INDEX__/g, rowIndex++);
+                var wrapper = document.createElement('div');
+                wrapper.innerHTML = html;
+                var item = wrapper.firstElementChild;
+
+                item.querySelector('.btn-eliminar-horario').addEventListener('click', function () {
+                    item.remove();
+                    reindexar();
+                    actualizarAviso();
+                });
+
+                // Sincronizar hidden en tiempo real al cambiar cualquier select de hora
+                var selects = item.querySelectorAll('.sel-hour-inicio, .sel-min-inicio, .sel-ampm-inicio, .sel-hour-fin, .sel-min-fin, .sel-ampm-fin');
+                selects.forEach(function (sel) {
+                    sel.addEventListener('change', function () { sincronizarItem(item); });
+                });
+
+                document.getElementById('horariosContainer').appendChild(item);
+                actualizarAviso();
+            }
+
+            function reindexar() {
+                document.querySelectorAll('#horariosContainer .horario-item')
+                    .forEach(function (item, idx) {
+                        item.querySelectorAll('[name]').forEach(function (el) {
+                            el.name = el.name.replace(/Horarios\[\d+\]/, 'Horarios[' + idx + ']');
+                        });
+                    });
+                rowIndex = document.querySelectorAll('#horariosContainer .horario-item').length;
+            }
+
+            // Convierte hora 12h + AM/PM a formato HH:mm:ss (24h) para el servidor
+            function toTime24(hour, min, ampm) {
+                var h = parseInt(hour, 10);
+                if (ampm === 'AM') {
+                    if (h === 12) h = 0;
+                } else {
+                    if (h !== 12) h += 12;
+                }
+                return (h < 10 ? '0' + h : h) + ':' + min + ':00';
+            }
+
+            // Sincroniza los hidden de UNA fila cada vez que cambia un select
+            function sincronizarItem(item) {
+                var hI = item.querySelector('.sel-hour-inicio').value;
+                var mI = item.querySelector('.sel-min-inicio').value;
+                var aI = item.querySelector('.sel-ampm-inicio').value;
+                item.querySelector('.hidden-time-inicio').value = (hI && mI) ? toTime24(hI, mI, aI) : '';
+
+                var hF = item.querySelector('.sel-hour-fin').value;
+                var mF = item.querySelector('.sel-min-fin').value;
+                var aF = item.querySelector('.sel-ampm-fin').value;
+                item.querySelector('.hidden-time-fin').value = (hF && mF) ? toTime24(hF, mF, aF) : '';
+            }
+
+            // Garantía final: sincronizar todas las filas justo antes de enviar
+            function sincronizarTodas() {
+                document.querySelectorAll('#horariosContainer .horario-item').forEach(sincronizarItem);
+            }
+
+            document.querySelector('form').addEventListener('submit', sincronizarTodas);
+            document.getElementById('btnAgregarHorario').addEventListener('click', agregarHorario);
+            agregarHorario(); // primera fila automática al cargar
+        })();
+    </script>
 }

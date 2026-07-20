@@ -25,7 +25,8 @@ namespace GimnasioJena.AccesoADatos
         public DbSet<UsuarioEntidad> Usuarios { get; set; }
         public DbSet<EntrenadorEntidad> Entrenadores { get; set; }
         public DbSet<MembresiaEntidad> Membresias { get; set; }
-        public DbSet<ClaseEntidad> Clases { get; set; }
+        public DbSet<ClaseEntidad>         Clases          { get; set; }
+        public DbSet<HorarioClaseEntidad>   HorariosClase   { get; set; }
         public DbSet<ReservaEntidad> Reservas { get; set; }
         public DbSet<AsistenciaEntidad> Asistencias { get; set; }
         public DbSet<MensajeEntidad> Mensajes { get; set; }

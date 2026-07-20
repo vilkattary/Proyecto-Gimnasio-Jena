@@ -50,13 +50,12 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label class="info-label">Tipo de clase</label>
-                            @Html.DropDownListFor(
-                                m => m.idTipoClase,
-                                (SelectList)ViewBag.TiposClase,
-                                "Seleccione un tipo de clase",
-                                new { @class = "form-control mt-1" }
+                            @Html.HiddenFor(m => m.idTipoClase)
+                            @Html.TextBoxFor(
+                                m => m.nombreTipoClase,
+                                new { @class = "form-control mt-1", placeholder = "Ej: Yoga, Spinning, Zumba..." }
                             )
-                            @Html.ValidationMessageFor(m => m.idTipoClase, "", new { @class = "text-danger small" })
+                            @Html.ValidationMessageFor(m => m.nombreTipoClase, "", new { @class = "text-danger small" })
                         </div>
 
                         <div class="col-md-6">

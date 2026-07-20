@@ -1,6 +1,7 @@
 ﻿namespace GimnasioJena.UI.Migrations
 {
-    using System;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -14,10 +15,17 @@
 
         protected override void Seed(GimnasioJena.UI.Models.ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method
-            //  to avoid creating duplicate seed data.
+            string[] roles = { "ADMINISTRADOR", "CLIENTE", "ENTRENADOR", "RECEPCIONISTA" };
+
+            foreach (var rol in roles)
+            {
+                if (!roleManager.RoleExists(rol))
+                {
+                    roleManager.Create(new IdentityRole(rol));
+                }
+            }
         }
     }
 }

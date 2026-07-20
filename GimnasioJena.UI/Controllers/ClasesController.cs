@@ -6,6 +6,7 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.RegistrarClase;
 using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.AccesoADatos;
+using GimnasioJena.AccesoADatos.Entidades.Catalogos;
 using GimnasioJena.LogicaDeNegocio.Clases.EditarClase;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerClasePorId;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
@@ -58,16 +59,7 @@ namespace GimnasioJena.UI.Controllers
         public ActionResult RegistrarClase()
         {
             CargarCatalogos();
-
-            return View(new ClaseCrearDto
-            {
-                idEstadoClase = 1,
-                fechaClase = DateTime.Today,
-                horaInicio = new TimeSpan(6, 0, 0),
-                horaFin = new TimeSpan(7, 0, 0),
-                cupoMaximo = 12,
-                fechaCreacion = DateTime.Now
-            });
+            return View(new ClaseCrearDto { idEstadoClase = 1, cupoMaximo = 12 });
         }
 
         [HttpPost]
@@ -76,29 +68,30 @@ namespace GimnasioJena.UI.Controllers
         {
             try
             {
-                if (claseAGuardar.idTipoClase <= 0)
-                {
-                    ModelState.AddModelError("idTipoClase", "Debe seleccionar un tipo de clase.");
-                }
+                claseAGuardar.idEstadoClase = 1;
 
-                if (claseAGuardar.idUsuarioEntrenador <= 0)
-                {
-                    ModelState.AddModelError("idUsuarioEntrenador", "Debe seleccionar un entrenador.");
-                }
-
-                if (claseAGuardar.idEstadoClase <= 0)
-                {
-                    claseAGuardar.idEstadoClase = 1;
-                }
+                if (string.IsNullOrWhiteSpace(claseAGuardar.nombreTipoClase))
+                    ModelState.AddModelError("nombreTipoClase", "El tipo de clase es obligatorio.");
 
                 if (claseAGuardar.cupoMaximo < 1 || claseAGuardar.cupoMaximo > 12)
-                {
                     ModelState.AddModelError("cupoMaximo", "El cupo máximo debe estar entre 1 y 12.");
-                }
 
-                if (claseAGuardar.horaFin <= claseAGuardar.horaInicio)
+                if (claseAGuardar.Horarios == null || !claseAGuardar.Horarios.Any())
+                    ModelState.AddModelError("", "Debe agregar al menos un horario.");
+
+                if (claseAGuardar.Horarios != null)
                 {
-                    ModelState.AddModelError("horaFin", "La hora de finalización debe ser mayor que la hora de inicio.");
+                    for (int i = 0; i < claseAGuardar.Horarios.Count; i++)
+                    {
+                        var h = claseAGuardar.Horarios[i];
+                        if (h.idUsuarioEntrenador <= 0)
+                            ModelState.AddModelError("", $"Horario {i + 1}: debe seleccionar un entrenador.");
+                        if (!string.IsNullOrWhiteSpace(h.horaInicio) && !string.IsNullOrWhiteSpace(h.horaFin))
+                        {
+                            if (TimeSpan.Parse(h.horaFin) <= TimeSpan.Parse(h.horaInicio))
+                                ModelState.AddModelError("", $"Horario {i + 1}: la hora de fin debe ser mayor a la de inicio.");
+                        }
+                    }
                 }
 
                 if (!ModelState.IsValid)
@@ -107,30 +100,32 @@ namespace GimnasioJena.UI.Controllers
                     return View(claseAGuardar);
                 }
 
-                claseAGuardar.fechaCreacion = DateTime.Now;
+                claseAGuardar.idTipoClase = ObtenerOCrearTipoClase(claseAGuardar.nombreTipoClase.Trim());
 
                 bool seAgrego = _registrarClase.RegistrarClase(claseAGuardar);
 
                 if (seAgrego)
                 {
-                    RegistrarBitacora(
-                        "ClaseProgramada",
-                        "CREATE",
-                        null,
-                        "Se registró una nueva clase."
-                    );
-
+                    RegistrarBitacora("HorarioClase", "INSERT", null,
+                        $"Se registró la clase '{claseAGuardar.nombreTipoClase}' con {claseAGuardar.Horarios?.Count ?? 0} horario(s).");
                     TempData["MensajeExito"] = "La clase se registró correctamente.";
                     return RedirectToAction("ObtenerTodasLasClases");
                 }
 
-                TempData["MensajeError"] = "No se pudo registrar la clase.";
+                TempData["MensajeError"] = "No fue posible registrar la clase. Verificá los datos e intentá de nuevo.";
                 CargarCatalogos();
                 return View(claseAGuardar);
             }
-            catch
+            catch (Exception ex)
             {
-                TempData["MensajeError"] = "Ocurrió un error al registrar la clase.";
+                var inner = ex;
+                while (inner.InnerException != null) inner = inner.InnerException;
+                System.Diagnostics.Trace.TraceError("[RegistrarClase] {0} | Inner: {1}", ex.Message, inner.Message);
+#if DEBUG
+                TempData["MensajeError"] = $"[DEBUG] {ex.GetType().Name}: {ex.Message} | Inner: {inner.Message}";
+#else
+                TempData["MensajeError"] = "No fue posible registrar la clase. Verificá los datos e intentá de nuevo.";
+#endif
                 CargarCatalogos();
                 return View(claseAGuardar);
             }
@@ -150,6 +145,7 @@ namespace GimnasioJena.UI.Controllers
             {
                 idClaseProgramada = claseListado.idClaseProgramada,
                 idTipoClase = claseListado.idTipoClase,
+                nombreTipoClase = claseListado.nombreClase,
                 idUsuarioEntrenador = claseListado.idUsuarioEntrenador,
                 idEstadoClase = claseListado.idEstadoClase,
                 fechaClase = claseListado.fechaClase,
@@ -162,7 +158,6 @@ namespace GimnasioJena.UI.Controllers
             };
 
             CargarCatalogos(
-                laClase.idTipoClase,
                 laClase.idUsuarioEntrenador,
                 laClase.idEstadoClase
             );
@@ -176,9 +171,9 @@ namespace GimnasioJena.UI.Controllers
         {
             try
             {
-                if (claseAEditar.idTipoClase <= 0)
+                if (string.IsNullOrWhiteSpace(claseAEditar.nombreTipoClase))
                 {
-                    ModelState.AddModelError("idTipoClase", "Debe seleccionar un tipo de clase.");
+                    ModelState.AddModelError("nombreTipoClase", "El tipo de clase es obligatorio.");
                 }
 
                 if (claseAEditar.idUsuarioEntrenador <= 0)
@@ -204,7 +199,6 @@ namespace GimnasioJena.UI.Controllers
                 if (!ModelState.IsValid)
                 {
                     CargarCatalogos(
-                        claseAEditar.idTipoClase,
                         claseAEditar.idUsuarioEntrenador,
                         claseAEditar.idEstadoClase
                     );
@@ -213,6 +207,7 @@ namespace GimnasioJena.UI.Controllers
                 }
 
                 claseAEditar.fechaModificacion = DateTime.Now;
+                claseAEditar.idTipoClase = ObtenerOCrearTipoClase(claseAEditar.nombreTipoClase.Trim());
 
                 bool seActualizo = _editarClase.EditarClase(claseAEditar);
 
@@ -232,7 +227,6 @@ namespace GimnasioJena.UI.Controllers
                 TempData["MensajeError"] = "No se pudo actualizar la clase.";
 
                 CargarCatalogos(
-                    claseAEditar.idTipoClase,
                     claseAEditar.idUsuarioEntrenador,
                     claseAEditar.idEstadoClase
                 );
@@ -244,7 +238,6 @@ namespace GimnasioJena.UI.Controllers
                 TempData["MensajeError"] = "Ocurrió un error al actualizar la clase.";
 
                 CargarCatalogos(
-                    claseAEditar.idTipoClase,
                     claseAEditar.idUsuarioEntrenador,
                     claseAEditar.idEstadoClase
                 );
@@ -266,23 +259,36 @@ namespace GimnasioJena.UI.Controllers
             return View(disponibles);
         }
 
+        private int ObtenerOCrearTipoClase(string nombreTipoClase)
+        {
+            using (var contexto = new Contexto())
+            {
+                var tipo = contexto.TiposClase
+                    .FirstOrDefault(t => t.nombreClase.ToLower() == nombreTipoClase.ToLower());
+
+                if (tipo == null)
+                {
+                    tipo = new TipoClaseEntidad
+                    {
+                        nombreClase = nombreTipoClase,
+                        descripcion = string.Empty,
+                        duracionMinutos = 40,
+                        estado = true
+                    };
+                    contexto.TiposClase.Add(tipo);
+                    contexto.SaveChanges();
+                }
+
+                return tipo.idTipoClase;
+            }
+        }
+
         private void CargarCatalogos(
-            int? idTipoClaseSeleccionado = null,
             int? idUsuarioEntrenadorSeleccionado = null,
             int? idEstadoClaseSeleccionado = null)
         {
             using (var contexto = new Contexto())
             {
-                ViewBag.TiposClase = new SelectList(
-                    contexto.TiposClase
-                        .Where(t => t.estado)
-                        .OrderBy(t => t.nombreClase)
-                        .ToList(),
-                    "idTipoClase",
-                    "nombreClase",
-                    idTipoClaseSeleccionado
-                );
-
                 ViewBag.Entrenadores = new SelectList(
                     contexto.Entrenadores
                         .Where(e => e.estado)

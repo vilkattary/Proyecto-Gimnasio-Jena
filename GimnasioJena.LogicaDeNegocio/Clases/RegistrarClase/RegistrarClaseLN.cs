@@ -5,30 +5,44 @@ using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.AccesoADatos.Clases.RegistrarClase;
 using GimnasioJena.LogicaDeNegocio.General.Fechas;
 using System;
+using System.Linq;
 
 namespace GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase
 {
     public class RegistrarClaseLN : IRegistrarClaseLN
     {
         private IRegistrarClaseAD _registrarClaseAD;
-        private IFechasLN _fechasLN;
+        private IFechasLN         _fechasLN;
 
         public RegistrarClaseLN()
         {
             _registrarClaseAD = new RegistrarClaseAD();
-            _fechasLN = new FechasLN();
+            _fechasLN         = new FechasLN();
         }
 
-        public bool RegistrarClase(ClaseCrearDto registrarClaseAGuardar)
+        public bool RegistrarClase(ClaseCrearDto dto)
         {
-            if (registrarClaseAGuardar == null)
+            if (dto == null)
                 return false;
 
-            registrarClaseAGuardar.fechaCreacion = _fechasLN.ObtenerFechaActual();
+            dto.fechaCreacion = _fechasLN.ObtenerFechaActual();
 
-            int cantidadDeDatosAlmacenados = _registrarClaseAD.RegistrarClase(registrarClaseAGuardar);
+            if (dto.Horarios != null && dto.Horarios.Any())
+            {
+                foreach (var h in dto.Horarios)
+                {
+                    if (string.IsNullOrWhiteSpace(h.fechaClase)  ||
+                        string.IsNullOrWhiteSpace(h.horaInicio)  ||
+                        string.IsNullOrWhiteSpace(h.horaFin)     ||
+                        h.idUsuarioEntrenador <= 0)
+                        return false;
 
-            return cantidadDeDatosAlmacenados > 0;
+                    if (TimeSpan.Parse(h.horaFin) <= TimeSpan.Parse(h.horaInicio))
+                        return false;
+                }
+            }
+
+            return _registrarClaseAD.RegistrarClase(dto) > 0;
         }
     }
 }

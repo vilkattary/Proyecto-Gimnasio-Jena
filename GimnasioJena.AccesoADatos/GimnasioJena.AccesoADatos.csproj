@@ -111,6 +111,7 @@
     <Compile Include="Entidades\Catalogos\MetodoPagoEntidad.cs" />
     <Compile Include="Entidades\Catalogos\TipoClaseEntidad.cs" />
     <Compile Include="Entidades\Clases\ClaseEntidad.cs" />
+    <Compile Include="Entidades\Clases\HorarioClaseEntidad.cs" />
     <Compile Include="Entidades\Comunicacion\MensajeEntidad.cs" />
     <Compile Include="Entidades\Entrenadores\EntrenadorEntidad.cs" />
     <Compile Include="Entidades\EstadoReservas\EstadoReservaEntidad.cs" />
