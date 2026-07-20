@@ -1,7 +1,10 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerTodasLasReservas;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerTodasLasReservas;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.RegistrarReserva;
+using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Reservas;
 using GimnasioJena.AccesoADatos;
+using GimnasioJena.LogicaDeNegocio.Bitacora;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerTodasLasReservas;
 using GimnasioJena.LogicaDeNegocio.Reservas.RegistrarReserva;
 using Microsoft.AspNet.Identity;
@@ -16,11 +19,13 @@ namespace GimnasioJena.UI.Controllers
     {
         private readonly IRegistrarReservaLN _registrarReservaServicio;
         private readonly IObtenerTodasLasReservasLN _obtenerTodasLasReservasServicio;
+        private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
 
         public ReservasController()
         {
             _registrarReservaServicio = new RegistrarReservaLN();
             _obtenerTodasLasReservasServicio = new ObtenerTodasLasReservasLN();
+            _registrarBitacoraLN = new RegistrarBitacoraLN();
         }
 
         [Authorize(Roles = "ADMINISTRADOR")]
@@ -85,6 +90,14 @@ namespace GimnasioJena.UI.Controllers
 
                 if (resultado)
                 {
+                    RegistrarBitacora(
+                        "Reserva",
+                        "CREATE",
+                        modelo.idClaseProgramada,
+                        "El cliente con idUsuario " + modelo.idUsuario +
+                        " registró una reserva para la clase con idClaseProgramada: " + modelo.idClaseProgramada
+                    );
+
                     TempData["MensajeExito"] = "La reserva se registró correctamente.";
                     return RedirectToAction("ObtenerTodasLasClases", "Clases");
                 }
@@ -93,5 +106,36 @@ namespace GimnasioJena.UI.Controllers
                 return View(modelo);
             }
         }
+        private int? ObtenerIdUsuarioActual()
+        {
+            var identityUserId = User.Identity.GetUserId();
+
+            using (var contexto = new Contexto())
+            {
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                return usuario?.idUsuario;
+            }
+        }
+
+        private string ObtenerIpUsuario()
+        {
+            return Request.UserHostAddress;
+        }
+
+        private void RegistrarBitacora(string tabla, string accion, int? idRegistro, string detalle)
+        {
+            _registrarBitacoraLN.RegistrarBitacora(new BitacoraDto
+            {
+                idUsuario = ObtenerIdUsuarioActual(),
+                tablaAfectada = tabla,
+                accionRealizada = accion,
+                idRegistroAfectado = idRegistro,
+                detalle = detalle,
+                ipUsuario = ObtenerIpUsuario()
+            });
+        }
+
     }
 }

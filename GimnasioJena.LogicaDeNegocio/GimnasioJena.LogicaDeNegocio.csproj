@@ -80,10 +80,11 @@
     <Compile Include="Asistencias\ObtenerAsistenciasPorCliente\ObtenerAsistenciasPorClienteLN.cs" />
     <Compile Include="Asistencias\ObtenerTodasLasAsistencias\ObtenerTodasLasAsistenciasLN.cs" />
     <Compile Include="Asistencias\RegistrarAsistencia\RegistrarAsistenciaLN.cs" />
+    <Compile Include="Bitacora\ObtenerBitacoraLN.cs" />
+    <Compile Include="Bitacora\RegistrarBitacoraLN.cs" />
     <Compile Include="Clases\CambiarEstadoClase\CambiarEstadoClaseLN.cs" />
     <Compile Include="Clases\EditarClase\EditarClaseLN.cs" />
     <Compile Include="Clases\ObtenerClasePorId\ObtenerClasePorIdLN.cs" />
-    <Compile Include="Clases\ObtenerClasesDisponibles\ObtenerClasesDisponiblesLN.cs" />
     <Compile Include="Clases\ObtenerClasesPorEntrenador\ObtenerClasesPorEntrenadorLN.cs" />
     <Compile Include="Clases\ObtenerTodasLasClases\ObtenerTodasLasClasesLN.cs" />
     <Compile Include="Clases\RegistrarClase\RegistrarClaseLN.cs" />
@@ -124,6 +125,8 @@
     <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosLN.cs" />
     <Compile Include="Nosotros\ModificarSeccionNosotros\ModificarContenidoNosotrosLN.cs" />
     <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosLN.cs" />
+    <Compile Include="Pagos\ObtenerTodosLosPagos\ObtenerTodosLosPagosLN.cs" />
+    <Compile Include="Pagos\RegistrarPago\RegistrarPagoLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recepcionistas\CambiarEstadoRecepcionista\CambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="Recepcionistas\EditarRecepcionista\EditarRecepcionistaLN.cs" />

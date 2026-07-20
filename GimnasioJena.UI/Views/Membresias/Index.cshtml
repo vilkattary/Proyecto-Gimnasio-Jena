@@ -1,0 +1,172 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Membresias.MembresiaListadoDto>
+
+@{
+    ViewBag.Title = "Membresías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="page-title">Membresías</h1>
+        <p class="text-muted">
+            Administración general de las membresías asignadas a los clientes.
+        </p>
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+        <a href="@Url.Action("Create", "Membresias")" class="btn btn-action">
+            <i class="bi bi-plus-circle me-1"></i>
+            Registrar Membresía
+        </a>
+    </div>
+
+    <div class="info-card">
+
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["MensajeError"]
+            </div>
+        }
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info">
+                No hay membresías registradas.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Plan</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th>Inicio</th>
+                            <th>Fin</th>
+                            <th>Clases</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var m in Model)
+                        {
+                            <tr>
+
+                                <td>@m.idMembresiaCliente</td>
+
+                                <td>@m.nombreCliente</td>
+
+                                <td>@m.nombrePlan</td>
+
+                                <td>
+                                    ₡ @m.precio.ToString("N2")
+                                </td>
+
+                                <td>
+
+                                    @if (m.estadoMembresia == "Activa")
+                                    {
+                                        <span class="badge bg-success">
+                                            @m.estadoMembresia
+                                        </span>
+                                    }
+                                    else if (m.estadoMembresia == "Inactiva")
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @m.estadoMembresia
+                                        </span>
+                                    }
+                                    else if (m.estadoMembresia == "Vencida")
+                                    {
+                                        <span class="badge bg-danger">
+                                            @m.estadoMembresia
+                                        </span>
+                                    }
+                                    else if (m.estadoMembresia == "Suspendida")
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            @m.estadoMembresia
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-dark">
+                                            @m.estadoMembresia
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+                                    @m.fechaInicio.ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+                                    @m.fechaFin.ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+
+                                    @(m.clasesDisponibles.HasValue
+                                        ? m.clasesDisponibles.Value.ToString()
+                                        : "Ilimitadas")
+
+                                </td>
+
+                                <td class="text-center">
+
+                                    <a href="@Url.Action("Details", "Membresias", new { id = m.idMembresiaCliente })"
+                                       class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-eye"></i>
+                                        Detalle
+                                    </a>
+
+                                    <a href="@Url.Action("Edit", "Membresias", new { id = m.idMembresiaCliente })"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil-square"></i>
+                                        Editar
+                                    </a>
+
+                                    @using (Html.BeginForm("Renovar", "Membresias", FormMethod.Post, new { @class = "d-inline" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@m.idMembresiaCliente" />
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-success"
+                                                onclick="return confirm('¿Deseas renovar esta membresía?')">
+                                            <i class="bi bi-arrow-clockwise"></i>
+                                            Renovar
+                                        </button>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+            </div>
+        }
+
+    </div>
+
+</div>

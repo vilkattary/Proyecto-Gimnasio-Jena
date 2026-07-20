@@ -17,6 +17,17 @@ namespace GimnasioJena.AccesoADatos.Asistencias.RegistrarAsistencia
 
         public int RegistrarAsistencia(AsistenciaCrearDto asistencia)
         {
+            var reserva = _elContexto.Reservas
+                .FirstOrDefault(r => r.idReserva == asistencia.idReserva);
+
+            if (reserva == null)
+                return 0;
+
+            if (reserva.idEstadoReserva != 1 &&
+                reserva.idEstadoReserva != 3 &&
+                reserva.idEstadoReserva != 4)
+                return 0;
+
             var asistenciaExistente = _elContexto.Asistencias
                 .FirstOrDefault(a => a.idReserva == asistencia.idReserva);
 
@@ -26,20 +37,23 @@ namespace GimnasioJena.AccesoADatos.Asistencias.RegistrarAsistencia
                 asistenciaExistente.observaciones = asistencia.observaciones;
                 asistenciaExistente.fechaRegistro = DateTime.Now;
                 asistenciaExistente.idUsuarioRecepcionista = asistencia.idUsuarioRecepcionista;
+            }
+            else
+            {
+                var asistenciaNueva = new AsistenciaEntidad
+                {
+                    idReserva = asistencia.idReserva,
+                    idUsuarioRecepcionista = asistencia.idUsuarioRecepcionista,
+                    fechaRegistro = DateTime.Now,
+                    asistio = asistencia.asistio,
+                    observaciones = asistencia.observaciones
+                };
 
-                return _elContexto.SaveChanges();
+                _elContexto.Asistencias.Add(asistenciaNueva);
             }
 
-            var asistenciaNueva = new AsistenciaEntidad
-            {
-                idReserva = asistencia.idReserva,
-                idUsuarioRecepcionista = asistencia.idUsuarioRecepcionista,
-                fechaRegistro = DateTime.Now,
-                asistio = asistencia.asistio,
-                observaciones = asistencia.observaciones
-            };
+            reserva.idEstadoReserva = asistencia.asistio ? 3 : 4;
 
-            _elContexto.Asistencias.Add(asistenciaNueva);
             return _elContexto.SaveChanges();
         }
     }

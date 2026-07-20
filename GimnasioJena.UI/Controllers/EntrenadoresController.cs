@@ -1,5 +1,6 @@
 ﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Asistencias.ObtenerAsistenciasPorClase;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Asistencias.RegistrarAsistencia;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerClasesPorEntrenador;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.EditarEntrenador;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId;
@@ -7,12 +8,14 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEnt
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.EditarReserva;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorClase;
 using GimnasioJena.Abstracciones.Modelos.Asistencias;
+using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Entrenadores;
 using GimnasioJena.Abstracciones.Modelos.Reservas;
 using GimnasioJena.AccesoADatos;
 using GimnasioJena.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId;
 using GimnasioJena.LogicaDeNegocio.Asistencias.ObtenerAsistenciasPorClase;
 using GimnasioJena.LogicaDeNegocio.Asistencias.RegistrarAsistencia;
+using GimnasioJena.LogicaDeNegocio.Bitacora;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerClasesPorEntrenador;
 using GimnasioJena.LogicaDeNegocio.Entrenadores.EditarEntrenador;
 using GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerEntrenadorPorId;
@@ -37,6 +40,7 @@ namespace GimnasioJena.UI.Controllers
         private readonly IObtenerAsistenciasPorClaseLN _obtenerAsistenciasPorClaseServicio;
         private readonly IRegistrarAsistenciaLN _registrarAsistenciaServicio;
         private readonly IEditarReservaLN _editarReservaServicio;
+        private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
 
         public EntrenadoresController()
         {
@@ -49,6 +53,7 @@ namespace GimnasioJena.UI.Controllers
             _obtenerAsistenciasPorClaseServicio = new ObtenerAsistenciasPorClaseLN();
             _registrarAsistenciaServicio = new RegistrarAsistenciaLN();
             _editarReservaServicio = new EditarReservaLN();
+            _registrarBitacoraLN = new RegistrarBitacoraLN();
         }
 
         [Authorize(Roles = "ENTRENADOR")]
@@ -114,6 +119,15 @@ namespace GimnasioJena.UI.Controllers
 
             if (resultado)
             {
+                RegistrarBitacora(
+                    "Asistencia",
+                    "UPDATE",
+                    modelo.idReserva,
+                    modelo.asistio
+                        ? "El entrenador marcó asistencia para la reserva con idReserva: " + modelo.idReserva
+                        : "El entrenador marcó no asistencia para la reserva con idReserva: " + modelo.idReserva
+                );
+
                 TempData["MensajeExito"] = "La asistencia se registró correctamente.";
             }
             else
@@ -122,6 +136,36 @@ namespace GimnasioJena.UI.Controllers
             }
 
             return RedirectToAction("AsistenciaClase", new { id = idClaseProgramada });
+        }
+        private int? ObtenerIdUsuarioActual()
+        {
+            var identityUserId = User.Identity.GetUserId();
+
+            using (var contexto = new Contexto())
+            {
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                return usuario?.idUsuario;
+            }
+        }
+
+        private string ObtenerIpUsuario()
+        {
+            return Request.UserHostAddress;
+        }
+
+        private void RegistrarBitacora(string tabla, string accion, int? idRegistro, string detalle)
+        {
+            _registrarBitacoraLN.RegistrarBitacora(new BitacoraDto
+            {
+                idUsuario = ObtenerIdUsuarioActual(),
+                tablaAfectada = tabla,
+                accionRealizada = accion,
+                idRegistroAfectado = idRegistro,
+                detalle = detalle,
+                ipUsuario = ObtenerIpUsuario()
+            });
         }
 
         [HttpPost]
