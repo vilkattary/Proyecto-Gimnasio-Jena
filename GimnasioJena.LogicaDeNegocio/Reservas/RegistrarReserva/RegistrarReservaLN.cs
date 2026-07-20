@@ -39,8 +39,15 @@ namespace GimnasioJena.LogicaDeNegocio.Reservas.RegistrarReserva
                 return false;
 
             DateTime fechaHoraClase = clase.fechaClase.Date.Add(clase.horaInicio);
+            DateTime ahora = DateTime.Now;
 
-            if (fechaHoraClase <= DateTime.Now)
+            DateTime aperturaReserva = fechaHoraClase.AddHours(-24);
+            DateTime cierreReserva = fechaHoraClase.AddMinutes(-10);
+
+            if (ahora < aperturaReserva)
+                return false;
+
+            if (ahora >= cierreReserva)
                 return false;
 
             var membresia = _obtenerMembresiaPorClienteLN.ObtenerMembresiaActivaPorCliente(reserva.idUsuario);
