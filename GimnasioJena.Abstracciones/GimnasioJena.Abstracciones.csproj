@@ -255,7 +255,6 @@
     <Compile Include="Modelos\Bitacora\BitacoraDto.cs" />
     <Compile Include="Modelos\Clases\ClaseCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Clases\ClaseCrearDto.cs" />
-    <Compile Include="Modelos\Clases\HorarioItemDto.cs" />
     <Compile Include="Modelos\Clases\ClaseDto.cs" />
     <Compile Include="Modelos\Clases\ClaseEditarDto.cs" />
     <Compile Include="Modelos\Clases\ClaseEntrenadorDto.cs" />

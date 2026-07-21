@@ -7,7 +7,6 @@ namespace GimnasioJena.Abstracciones.Modelos.Clases
         public int idClaseProgramada { get; set; }
 
         public int idTipoClase { get; set; }
-        public string nombreTipoClase { get; set; }
         public int idUsuarioEntrenador { get; set; }
         public int idEstadoClase { get; set; }
 

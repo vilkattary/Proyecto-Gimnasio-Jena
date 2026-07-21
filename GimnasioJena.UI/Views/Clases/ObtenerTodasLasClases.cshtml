@@ -1,68 +1,10 @@
 ﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Clases.ClaseListadoDto>
-@using Microsoft.AspNet.Identity
-@using System.Linq
 
 @{
     ViewBag.Title = "Gestión de Clases";
-    int statTotal        = Model != null ? Model.Count()                                            : 0;
-    int statCupos        = Model != null ? Model.Sum(c => c.cuposDisponibles)                       : 0;
-    int statActivas      = Model != null ? Model.Count(c => c.estadoClase == "Activo")              : 0;
-    int statInstructores = Model != null ? Model.Select(c => c.nombreEntrenador).Distinct().Count() : 0;
-
-    // Reservas activas del cliente actual (solo para rol CLIENTE)
-    var reservasCliente = new System.Collections.Generic.Dictionary<int, int>(); // idClase -> idReserva
-    if (User.IsInRole("CLIENTE"))
-    {
-        var identityId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-        using (var ctx = new GimnasioJena.AccesoADatos.Contexto())
-        {
-            var usuario = ctx.Usuarios.FirstOrDefault(u => u.identityUserId == identityId);
-            if (usuario != null)
-            {
-                var reservas = ctx.Reservas
-                    .Where(r => r.idUsuario == usuario.idUsuario && r.idEstadoReserva == 1)
-                    .Select(r => new { r.idClaseProgramada, r.idReserva })
-                    .ToList();
-                foreach (var r in reservas)
-                {
-                    reservasCliente[r.idClaseProgramada] = r.idReserva;
-                }
-            }
-        }
-    }
 }
 
-@* ── Isla de datos JSON para FullCalendar ── *@
-<script id="clases-data" type="application/json">
-[
-    @if (Model != null && Model.Any())
-    {
-        bool primero = true;
-        foreach (var c in Model)
-        {
-            if (!primero) { <text>,</text> }
-            primero = false;
-            string dtI  = c.fechaClase.ToString("yyyy-MM-dd") + "T" + c.horaInicio.ToString(@"hh\:mm\:ss");
-            string dtF  = c.fechaClase.ToString("yyyy-MM-dd") + "T" + c.horaFin.ToString(@"hh\:mm\:ss");
-            bool activa = c.estadoClase == "Activo";
-            int  pct    = c.cupoMaximo > 0 ? (int)Math.Round((double)c.cuposReservados / c.cupoMaximo * 100) : 0;
-            string jN   = (c.nombreClase      ?? "").Replace("\\","\\\\").Replace("\"","\\\"");
-            string jE   = (c.nombreEntrenador ?? "").Replace("\\","\\\\").Replace("\"","\\\"");
-            string jU   = (c.ubicacion        ?? "").Replace("\\","\\\\").Replace("\"","\\\"");
-            string jO   = (c.observaciones    ?? "").Replace("\\","\\\\").Replace("\"","\\\"");
-            bool   yaReservo  = reservasCliente.ContainsKey(c.idClaseProgramada);
-            int    idReservaC = yaReservo ? reservasCliente[c.idClaseProgramada] : 0;
-            <text>{"id":"@c.idClaseProgramada","title":"@jN","start":"@dtI","end":"@dtF",
-             "activa":@activa.ToString().ToLower(),"entrenador":"@jE","estado":"@c.estadoClase",
-             "cupoMax":@c.cupoMaximo,"cuposRes":@c.cuposReservados,"cuposDis":@c.cuposDisponibles,
-             "pctOcupado":@pct,"ubicacion":"@jU","observaciones":"@jO","idClase":@c.idClaseProgramada,
-             "yaReservo":@yaReservo.ToString().ToLower(),"idReserva":@idReservaC}</text>
-        }
-    }
-]
-</script>
-
-<div class="container-fluid px-2 px-sm-3 px-md-4 py-3 py-md-4">
+<div class="container-fluid p-4">
 
     <div class="welcome-section mb-4">
         <div class="logo-circular">
@@ -71,580 +13,269 @@
         </div>
         <div class="welcome-text">
             <h3>Gestión de Clases</h3>
-            <p>Calendario semanal de todas las clases programadas</p>
+            <p>Listado completo de todas las clases programadas en el sistema</p>
         </div>
     </div>
 
     @if (TempData["MensajeExito"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success">
             @TempData["MensajeExito"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
+
     @if (TempData["MensajeError"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger">
             @TempData["MensajeError"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+    }
+
+    @{
+        int statTotal = Model != null ? Model.Count() : 0;
+        int statCupos = Model != null ? Model.Sum(c => c.cuposDisponibles) : 0;
+        int statActivas = Model != null ? Model.Count(c => c.estadoClase == "Activa") : 0;
+        int statInstructores = Model != null ? Model.Select(c => c.nombreEntrenador).Distinct().Count() : 0;
     }
 
     <div class="stats-grid mb-4">
-        <div class="stat-card"><i class="bi bi-calendar-check"></i><h3>@statTotal</h3><p>Total Clases</p></div>
-        <div class="stat-card"><i class="bi bi-people"></i><h3>@statCupos</h3><p>Cupos Disponibles</p></div>
-        <div class="stat-card"><i class="bi bi-check-circle"></i><h3>@statActivas</h3><p>Clases Activas</p></div>
-        <div class="stat-card"><i class="bi bi-person-badge"></i><h3>@statInstructores</h3><p>Instructores</p></div>
+        <div class="stat-card">
+            <i class="bi bi-calendar-check"></i>
+            <h3>@statTotal</h3>
+            <p>Total Clases</p>
+        </div>
+
+        <div class="stat-card">
+            <i class="bi bi-people"></i>
+            <h3>@statCupos</h3>
+            <p>Cupos Disponibles</p>
+        </div>
+
+        <div class="stat-card">
+            <i class="bi bi-check-circle"></i>
+            <h3>@statActivas</h3>
+            <p>Clases Activas</p>
+        </div>
+
+        <div class="stat-card">
+            <i class="bi bi-person-badge"></i>
+            <h3>@statInstructores</h3>
+            <p>Instructores</p>
+        </div>
     </div>
 
-    <div class="d-flex justify-content-end mb-4">
-        @if (User.IsInRole("ADMINISTRADOR"))
-        {
-            @Html.ActionLink("+ Nueva Clase", "RegistrarClase", null, new { @class = "btn-outline-form" })
-        }
-    </div>
+    <div class="info-card mb-4">
+        <div class="row align-items-end g-3">
 
-    <div class="info-card info-card-static mb-4 p-2 p-md-4">
-        <div id="calendarioClases"></div>
-    </div>
+            <div class="col-md-3">
+                <label class="info-label mb-1">
+                    <i class="bi bi-funnel me-1"></i> Tipo de Clase
+                </label>
 
-</div>
+                <select class="form-select" id="filtroTipo">
+                    <option value="">Todas las clases</option>
 
-@* Token antiforgery para las peticiones fetch del cliente ── *@
-@if (User.IsInRole("CLIENTE"))
-{
-    using (Html.BeginForm()) { @Html.AntiForgeryToken() }
-}
-
-@* ── MODAL: Detalle de Clase ── *@
-<div class="modal fade" id="modalDetalleClase" tabindex="-1"
-     aria-labelledby="modalDetalleClaseLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
-        <div class="modal-content" style="border-radius:20px;border:none;overflow:hidden;">
-
-            <div class="modal-header"
-                 style="background:var(--jena-navy);border-bottom:3px solid var(--jena-orange);">
-                <div class="d-flex align-items-center gap-3">
-                    <div style="width:48px;height:48px;border-radius:50%;background:var(--jena-orange);
-                                display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <i id="modal-icono" class="bi bi-calendar-event"
-                           style="font-size:1.4rem;color:#fff;"></i>
-                    </div>
-                    <div>
-                        <h5 class="modal-title mb-0" id="modalDetalleClaseLabel"
-                            style="color:#fff;font-family:'Audiowide',sans-serif;letter-spacing:1px;"></h5>
-                        <span id="modal-badge-estado"
-                              style="font-size:.78rem;padding:2px 10px;border-radius:50px;
-                                     display:inline-block;margin-top:4px;"></span>
-                    </div>
-                </div>
-                <button type="button" class="btn-close btn-close-white ms-auto"
-                        data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    @if (Model != null)
+                    {
+                        foreach (var nombre in Model.Select(c => c.nombreClase).Distinct().Where(t => t != null).OrderBy(n => n))
+                        {
+                            <option value="@nombre.ToLower()">@nombre</option>
+                        }
+                    }
+                </select>
             </div>
 
-            <div class="modal-body p-4">
+            <div class="col-md-3">
+                <label class="info-label mb-1">
+                    <i class="bi bi-toggle-on me-1"></i> Estado
+                </label>
 
-                <div class="row g-3 mb-4" style="font-size:.9rem;color:var(--jena-navy);">
-                    <div class="col-6 col-md-4">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-person-badge" style="color:var(--jena-orange);font-size:1.1rem;"></i>
-                            <span id="modal-entrenador"></span>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-calendar-date" style="color:var(--jena-orange);font-size:1.1rem;"></i>
-                            <span id="modal-fecha"></span>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-clock" style="color:var(--jena-orange);font-size:1.1rem;"></i>
-                            <span id="modal-horario"></span>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-people" style="color:var(--jena-orange);font-size:1.1rem;"></i>
-                            <span id="modal-cupos"></span>
-                        </div>
-                    </div>
-                    </div>
-
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between mb-1"
-                         style="font-size:.82rem;color:var(--jena-navy);">
-                        <span>Ocupación</span>
-                        <span id="modal-pct-texto">0%</span>
-                    </div>
-                    <div style="background:#e9ecef;border-radius:10px;height:8px;overflow:hidden;">
-                        <div id="modal-barra-ocupacion"
-                             style="height:100%;border-radius:10px;transition:width .4s ease;
-                                    width:0%;background:var(--jena-light-blue);"></div>
-                    </div>
-                </div>
-
-                <div id="modal-obs-wrapper" style="display:none;">
-                    <p class="info-label mb-1">Observaciones</p>
-                    <p id="modal-observaciones" class="p-2 rounded mb-0"
-                       style="background:#f8f9fa;font-size:.9rem;
-                              color:var(--jena-navy);border:1px solid #dee2e6;"></p>
-                </div>
-
+                <select class="form-select" id="filtroEstado">
+                    <option value="">Todos</option>
+                    <option value="activa">Clases Activas</option>
+                    <option value="inactiva">Clases Inactivas</option>
+                    <option value="cancelada">Clases Canceladas</option>
+                    <option value="finalizada">Clases Finalizadas</option>
+                </select>
             </div>
 
-            <div class="modal-footer" style="border-top:1px solid #dee2e6;gap:12px;">
-                <button type="button" class="btn-outline-form"
-                        data-bs-dismiss="modal">Cerrar</button>
-                @if (User.IsInRole("ADMINISTRADOR"))
-                {
-                    <a id="modal-btn-editar" href="#" class="btn-outline-form">
-                        <i class="bi bi-pencil me-1"></i> Editar clase
-                    </a>
-                }
-                @if (User.IsInRole("CLIENTE"))
-                {
-                    <button id="modal-btn-reservar" type="button" class="btn-outline-form"
-                            style="display:none;">
-                    </button>
-                }
+            <div class="col-md-3">
+                <label class="info-label mb-1">
+                    <i class="bi bi-sort-down me-1"></i> Ordenar Por
+                </label>
+
+                <select class="form-select" id="filtroOrden">
+                    <option value="">Seleccionar</option>
+                    <option value="instructor">Instructor</option>
+                    <option value="cupos">Cupos disponibles</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <button class="btn-orange w-100" onclick="aplicarFiltros()">
+                    <i class="bi bi-search me-2"></i>Buscar
+                </button>
             </div>
 
         </div>
     </div>
+
+    <div class="mb-4 d-flex justify-content-end">
+        @if (User.IsInRole("ADMINISTRADOR"))
+        {
+            @Html.ActionLink("+ Crear Nueva Clase", "RegistrarClase", null, new { @class = "btn-orange" })
+        }
+    </div>
+
+    <div id="listaClases">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="info-card text-center py-5">
+                <i class="bi bi-calendar-x" style="font-size:3rem; color:var(--jena-orange);"></i>
+                <h4 class="mt-3">No hay clases registradas</h4>
+                <p>Actualmente no existen clases programadas en el sistema.</p>
+            </div>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                string tipo = item.nombreClase ?? "";
+                string tipoLower = tipo.ToLower();
+                string estadoLower = item.estadoClase != null ? item.estadoClase.ToLower() : "";
+
+                var iconoClase = tipoLower.Contains("spinning") ? "bi-bicycle"
+                               : tipoLower.Contains("yoga") ? "bi-heart-pulse"
+                               : tipoLower.Contains("box") ? "bi-trophy"
+                               : tipoLower.Contains("crossfit") ? "bi-lightning-charge"
+                               : tipoLower.Contains("hiit") ? "bi-fire"
+                               : "bi-calendar-event";
+
+                var pctOcupado = item.cupoMaximo > 0
+                    ? (int)Math.Round((double)item.cuposReservados / item.cupoMaximo * 100)
+                    : 0;
+
+                var colorBarra = pctOcupado >= 80 ? "var(--jena-orange)"
+                               : pctOcupado >= 50 ? "#f0ad4e"
+                               : "var(--jena-light-blue)";
+
+                var esActiva = item.estadoClase == "Activa";
+
+                var badgeTexto = !string.IsNullOrWhiteSpace(item.estadoClase) ? item.estadoClase : "Sin estado";
+                var badgeIcono = esActiva ? "bi-check-circle" : "bi-x-circle";
+                var badgeColor = esActiva
+                    ? "background:rgba(28,200,138,.15);color:#1c7a55;"
+                    : "background:rgba(220,53,69,.12);color:#a71d2a;";
+
+                <div class="clase-item mb-3"
+                     data-tipo="@tipoLower"
+                     data-estado="@estadoLower"
+                     data-instructor="@item.nombreEntrenador"
+                     data-cupos="@item.cuposDisponibles">
+
+                    <div class="info-card p-0 overflow-hidden">
+                        <div class="row g-0 align-items-stretch">
+
+                            <div class="col-md-2 d-flex align-items-center justify-content-center"
+                                 style="background:var(--jena-navy); min-height:140px; border-radius:18px 0 0 18px;">
+                                <i class="bi @iconoClase" style="font-size:3rem; color:var(--jena-orange);"></i>
+                            </div>
+
+                            <div class="col-md-8 p-3">
+
+                                <div class="d-flex flex-wrap gap-2 mb-2">
+                                    <span style="@badgeColor font-size:.8rem; font-weight:700; padding:4px 14px; border-radius:50px; display:inline-flex; align-items:center; gap:5px;">
+                                        <i class="bi @badgeIcono"></i> @badgeTexto
+                                    </span>
+
+                                    @if (item.cuposDisponibles > 0)
+                                    {
+                                        <span style="background:rgba(108,142,164,.15); color:var(--jena-navy); font-size:.8rem; font-weight:700; padding:4px 14px; border-radius:50px; display:inline-flex; align-items:center; gap:5px;">
+                                            <i class="bi bi-people"></i> @item.cuposDisponibles plazas
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span style="background:rgba(220,53,69,.12); color:#a71d2a; font-size:.8rem; font-weight:700; padding:4px 14px; border-radius:50px; display:inline-flex; align-items:center; gap:5px;">
+                                            <i class="bi bi-x-circle"></i> Lleno
+                                        </span>
+                                    }
+
+                                    <span style="background:rgba(255,107,53,.12); color:var(--jena-dark-orange); font-size:.8rem; font-weight:700; padding:4px 14px; border-radius:50px;">
+                                        @item.nombreClase
+                                    </span>
+                                </div>
+
+                                <h5 style="color:var(--jena-navy); font-family:'Audiowide',sans-serif; letter-spacing:1px; margin-bottom:10px;">
+                                    @item.nombreClase
+                                </h5>
+
+                                <div class="row g-1" style="font-size:.88rem; color:var(--jena-navy);">
+                                    <div class="col-6 col-md-2">
+                                        <i class="bi bi-hash" style="color:var(--jena-orange);"></i>
+                                        <strong>#@item.idClaseProgramada</strong>
+                                    </div>
+
+                                    <div class="col-6 col-md-2">
+                                        <i class="bi bi-person-badge" style="color:var(--jena-orange);"></i>
+                                        @item.nombreEntrenador
+                                    </div>
+
+                                    <div class="col-6 col-md-2">
+                                        <i class="bi bi-geo-alt" style="color:var(--jena-orange);"></i>
+                                        @item.ubicacion
+                                    </div>
+
+                                    <div class="col-6 col-md-2">
+                                        <i class="bi bi-people" style="color:var(--jena-orange);"></i>
+                                        @item.cuposReservados / @item.cupoMaximo
+                                    </div>
+
+                                    <div class="col-6 col-md-2">
+                                        <i class="bi bi-calendar-date" style="color:var(--jena-orange);"></i>
+                                        @item.fechaClase.ToString("dd/MM/yyyy")
+                                    </div>
+
+                                    <div class="col-6 col-md-2">
+                                        <i class="bi bi-clock" style="color:var(--jena-orange);"></i>
+                                        @item.horaInicio.ToString(@"hh\:mm") - @item.horaFin.ToString(@"hh\:mm")
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between" style="font-size:.8rem; color:var(--jena-light-blue); margin-bottom:4px;">
+                                        <span>Ocupación</span>
+                                        <span>@pctOcupado%</span>
+                                    </div>
+
+                                    <div style="background:var(--jena-light-gray); border-radius:10px; height:6px; overflow:hidden;">
+                                        <div style="width:@pctOcupado%; height:100%; background:@colorBarra; border-radius:10px; transition:width .4s ease;"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
+                                @if (User.IsInRole("ADMINISTRADOR"))
+                                {
+                                    @Html.ActionLink("Editar", "EditarClase", new { id = item.idClaseProgramada }, new { @class = "btn-action" })
+                                }
+
+                                @if (User.IsInRole("CLIENTE"))
+                                {
+                                    @Html.ActionLink("Reservar Clase", "ReservarClase", "Reservas", new { id = item.idClaseProgramada }, new { @class = "btn-action" })
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
 </div>
 
 @section Scripts {
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales/es.global.min.js"></script>
-
-    <style>
-        /* ── Modal z-index: garantizar que quede sobre el navbar fixed-top ── */
-        .modal-backdrop { z-index: 1055 !important; }
-        #modalDetalleClase { z-index: 1060 !important; }
-
-        /* ── Calendario base ── */
-        #calendarioClases {
-            font-family: inherit;
-            min-height:  500px;
-        }
-
-        /* Título */
-        .fc .fc-toolbar-title {
-            font-family: 'Audiowide', sans-serif;
-            font-size:   1.05rem;
-            color:       var(--jena-navy);
-        }
-
-        /* Botones de navegación */
-        .fc .fc-button-primary {
-            background:   var(--jena-navy)   !important;
-            border-color: var(--jena-navy)   !important;
-            font-size:    .82rem;
-            padding:      .3rem .6rem;
-        }
-        .fc .fc-button-primary:not(:disabled):hover,
-        .fc .fc-button-primary:not(:disabled).fc-button-active {
-            background:   var(--jena-orange) !important;
-            border-color: var(--jena-orange) !important;
-        }
-
-        /* Indicador "ahora" */
-        .fc .fc-timegrid-now-indicator-line {
-            border-color: var(--jena-orange);
-        }
-
-        /* Evento activo */
-        .fc-event-activo {
-            background:    var(--jena-navy)             !important;
-            border:        2px solid var(--jena-orange) !important;
-            border-radius: 6px !important;
-            cursor:        pointer;
-        }
-        .fc-event-activo .fc-event-title,
-        .fc-event-activo .fc-event-time {
-            color:     #fff !important;
-            font-size: .78rem;
-        }
-
-        /* Evento cancelado */
-        .fc-event-cancelado {
-            background:    rgba(220,53,69,.12)        !important;
-            border:        1px solid rgba(220,53,69,.4) !important;
-            border-radius: 6px !important;
-            cursor:        pointer;
-            opacity:       .85;
-        }
-        .fc-event-cancelado .fc-event-title {
-            color:           #a71d2a   !important;
-            text-decoration: line-through;
-            font-size:       .78rem;
-        }
-        .fc-event-cancelado .fc-event-time {
-            color: #a71d2a !important;
-            font-size: .78rem;
-        }
-
-        /* Vista lista: colores consistentes */
-        .fc-list-event.fc-event-activo td {
-            background: rgba(0,32,72,.06);
-        }
-        .fc-list-event.fc-event-cancelado td {
-            background: rgba(220,53,69,.06);
-        }
-        .fc-list-event.fc-event-cancelado .fc-list-event-title a {
-            color:           #a71d2a !important;
-            text-decoration: line-through;
-        }
-
-        /* ── Mobile (< 576 px) ── */
-        @@media (max-width: 575.98px) {
-            /* Toolbar: título centrado debajo de los botones */
-            .fc .fc-toolbar {
-                flex-wrap: wrap;
-                gap:       6px;
-            }
-            .fc .fc-toolbar-chunk {
-                width: 100%;
-                display: flex;
-                justify-content: center;
-            }
-            .fc .fc-toolbar-title {
-                font-size:   .85rem;
-                text-align:  center;
-            }
-            .fc .fc-button-primary {
-                font-size: .72rem;
-                padding:   .25rem .45rem;
-            }
-            /* Encabezado de columna más compacto */
-            .fc .fc-col-header-cell-cushion {
-                font-size: .72rem;
-                padding:   2px 1px;
-            }
-            /* Etiqueta de hora */
-            .fc .fc-timegrid-slot-label-cushion,
-            .fc .fc-list-day-text,
-            .fc .fc-list-day-side-text {
-                font-size: .72rem;
-            }
-            /* Sin padding en el contenedor del calendario */
-            .info-card.info-card-static {
-                padding: 8px !important;
-                border-radius: 12px !important;
-            }
-        }
-
-        /* ── Tablet (576 – 767 px) ── */
-        @@media (min-width: 576px) and (max-width: 767.98px) {
-            .fc .fc-toolbar-title { font-size: .92rem; }
-            .fc .fc-button-primary { font-size: .78rem; padding: .28rem .5rem; }
-            .fc .fc-col-header-cell-cushion { font-size: .78rem; }
-        }
-    </style>
-
-    <script>
-        (function () {
-
-            var rawData = JSON.parse(
-                document.getElementById('clases-data').textContent || '[]'
-            );
-
-            var eventos = rawData.map(function (c) {
-                return {
-                    id:            c.id,
-                    title:         c.title,
-                    start:         c.start,
-                    end:           c.end,
-                    classNames:    c.activa ? ['fc-event-activo'] : ['fc-event-cancelado'],
-                    extendedProps: c
-                };
-            });
-
-            function fmtFecha(iso) {
-                if (!iso) return '-';
-                return new Date(iso).toLocaleDateString('es-CR',
-                    { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
-            }
-            function fmtHora(iso) {
-                if (!iso) return '-';
-                return new Date(iso).toLocaleTimeString('es-CR',
-                    { hour:'2-digit', minute:'2-digit', hour12: true });
-            }
-            function iconoClase(nombre) {
-                var n = (nombre || '').toLowerCase();
-                if (n.includes('spinning'))  return 'bi-bicycle';
-                if (n.includes('yoga'))      return 'bi-heart-pulse';
-                if (n.includes('box'))       return 'bi-trophy';
-                if (n.includes('crossfit'))  return 'bi-lightning-charge';
-                if (n.includes('hiit'))      return 'bi-fire';
-                return 'bi-calendar-event';
-            }
-
-            /* ── Breakpoint único: < 768 px = mobile ── */
-            var MOBILE_BP = 768;
-
-            function esMobile() {
-                return window.innerWidth < MOBILE_BP;
-            }
-
-            function vistaPorAncho() {
-                return esMobile() ? 'timeGridDay' : 'timeGridWeek';
-            }
-
-            function toolbarPorAncho() {
-                if (esMobile()) {
-                    /* Solo iconos de flecha + título + Hoy para no desbordar */
-                    return {
-                        left:   'prev,next',
-                        center: 'title',
-                        right:  'today'
-                    };
-                }
-                /* Desktop: acceso a mes, semana y día */
-                return {
-                    left:   'prev,next today',
-                    center: 'title',
-                    right:  'dayGridMonth,timeGridWeek,timeGridDay'
-                };
-            }
-
-            function textoPorAncho() {
-                if (esMobile()) {
-                    return {
-                        today: 'Hoy',
-                        day:   'Día'
-                    };
-                }
-                return {
-                    today:  'Hoy',
-                    month:  'Mes',
-                    week:   'Semana',
-                    day:    'Día',
-                    list:   'Lista'
-                };
-            }
-
-            var calendar = new FullCalendar.Calendar(
-                document.getElementById('calendarioClases'), {
-                locale:        'es',
-                initialView:   vistaPorAncho(),
-                headerToolbar: toolbarPorAncho(),
-                buttonText:    textoPorAncho(),
-
-                /* Usar iconos SVG nativos de FullCalendar para prev/next */
-                buttonIcons: {
-                    prev:       'chevron-left',
-                    next:       'chevron-right',
-                    prevYear:   'chevrons-left',
-                    nextYear:   'chevrons-right'
-                },
-
-                /* Definición de la vista día con slot compacto en mobile */
-                views: {
-                    timeGridDay: {
-                        titleFormat: { weekday: 'long', day: 'numeric', month: 'long' },
-                        slotDuration:      '00:30:00',
-                        slotLabelInterval: '01:00:00'
-                    },
-                    timeGridWeek: {
-                        slotDuration:      '00:30:00',
-                        slotLabelInterval: '01:00:00',
-                        dayHeaderFormat:   { weekday: 'short', day: 'numeric' }
-                    }
-                },
-
-                slotMinTime:   '05:00:00',
-                slotMaxTime:   '23:00:00',
-                allDaySlot:    false,
-                nowIndicator:  true,
-                events:        eventos,
-                height:        'auto',
-                expandRows:    true,
-
-                /* Reaccionar al resize: cambiar vista y toolbar en tiempo real */
-                windowResize: function () {
-                    var nuevaVista   = vistaPorAncho();
-                    var nuevoToolbar = toolbarPorAncho();
-                    var nuevoTexto   = textoPorAncho();
-                    if (calendar.view.type !== nuevaVista) {
-                        calendar.changeView(nuevaVista);
-                    }
-                    calendar.setOption('headerToolbar', nuevoToolbar);
-                    calendar.setOption('buttonText',    nuevoTexto);
-                },
-
-                eventClick: function (info) {
-                    var p   = info.event.extendedProps;
-                    var pct = p.pctOcupado || 0;
-
-                    document.getElementById('modal-icono').className =
-                        'bi ' + iconoClase(info.event.title);
-                    document.getElementById('modalDetalleClaseLabel').textContent =
-                        info.event.title || '-';
-
-                    var badge = document.getElementById('modal-badge-estado');
-                    badge.textContent = p.estado || '-';
-                    badge.style.cssText = p.activa
-                        ? 'background:#fff;color:#1c7a55;border:1px solid #1c7a55;font-size:.78rem;padding:2px 10px;border-radius:50px;display:inline-block;margin-top:4px;'
-                        : 'background:#fff;color:#a71d2a;border:1px solid #a71d2a;font-size:.78rem;padding:2px 10px;border-radius:50px;display:inline-block;margin-top:4px;';
-
-                    document.getElementById('modal-entrenador').textContent = p.entrenador || '-';
-                    document.getElementById('modal-fecha').textContent      = fmtFecha(info.event.startStr);
-                    document.getElementById('modal-horario').textContent    =
-                        fmtHora(info.event.startStr) + ' - ' + fmtHora(info.event.endStr);
-                    document.getElementById('modal-cupos').textContent      =
-                        (p.cuposRes || 0) + ' / ' + (p.cupoMax || 0) + ' reservados';
-                    var colorBarra = pct >= 80 ? 'var(--jena-orange)'
-                                   : pct >= 50 ? '#f0ad4e'
-                                   : 'var(--jena-light-blue)';
-                    document.getElementById('modal-pct-texto').textContent = pct + '%';
-                    var barra = document.getElementById('modal-barra-ocupacion');
-                    barra.style.width      = pct + '%';
-                    barra.style.background = colorBarra;
-
-                    var obsW = document.getElementById('modal-obs-wrapper');
-                    if (p.observaciones && p.observaciones.trim() !== '') {
-                        document.getElementById('modal-observaciones').textContent = p.observaciones;
-                        obsW.style.display = 'block';
-                    } else {
-                        obsW.style.display = 'none';
-                    }
-
-                    var btnEditar = document.getElementById('modal-btn-editar');
-                    if (btnEditar) {
-                        btnEditar.href = '@Url.Action("EditarClase","Clases")?id=' + p.idClase;
-                    }
-
-                    actualizarBtnReserva(p.activa, p.yaReservo, p.idClase, p.idReserva, p.cuposDis);
-
-                    _modalDetalleClase.show();
-                }
-            });
-
-            calendar.render();
-
-            // ── Instancia única del modal (evita backdrops acumulados) ───────
-            // Mover el modal al <body> para evitar conflictos de stacking context
-            var _modalEl = document.getElementById('modalDetalleClase');
-            document.body.appendChild(_modalEl);
-
-            var _modalDetalleClase = new bootstrap.Modal(_modalEl, { backdrop: true, keyboard: true });
-
-            // Limpiar backdrops huérfanos al cerrar
-            document.getElementById('modalDetalleClase').addEventListener('hidden.bs.modal', function () {
-                document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
-                document.body.classList.remove('modal-open');
-                document.body.style.removeProperty('overflow');
-                document.body.style.removeProperty('padding-right');
-            });
-
-            // ── Adjuntar handler del botón reservar ─────────────────────────
-            var _btnReservar = document.getElementById('modal-btn-reservar');
-            if (_btnReservar) {
-                _btnReservar.addEventListener('click', function () { accionReserva(); });
-            }
-
-            // ── Estado del modal ─────────────────────────────────────────────
-            var _modalState = { idClase: 0, idReserva: 0, yaReservo: false };
-
-            // ── Helpers reserva ──────────────────────────────────────────────
-            function actualizarBtnReserva(activa, yaReservo, idClase, idReserva, cuposDis) {
-                var btn = document.getElementById('modal-btn-reservar');
-                if (!btn) return;
-
-                if (!activa && !yaReservo) { btn.style.display = 'none'; return; }
-                if (!yaReservo && cuposDis <= 0) { btn.style.display = 'none'; return; }
-
-                btn.style.display = 'inline-block';
-                btn.disabled      = false;
-                _modalState = { idClase: idClase, idReserva: idReserva, yaReservo: yaReservo };
-
-                if (yaReservo) {
-                    btn.innerHTML         = '<i class="bi bi-x-circle me-1"></i> Cancelar reserva';
-                    btn.style.borderColor = 'rgba(220,53,69,.7)';
-                    btn.style.color       = '#a71d2a';
-                } else {
-                    btn.innerHTML         = '<i class="bi bi-calendar-check me-1"></i> Reservar';
-                    btn.style.borderColor = '';
-                    btn.style.color       = '';
-                }
-            }
-
-            function accionReserva() {
-                var btn = document.getElementById('modal-btn-reservar');
-                btn.disabled  = true;
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Procesando...';
-
-                var url, body;
-                if (_modalState.yaReservo) {
-                    url  = '@Url.Action("CancelarDesdeCalendario","Reservas")';
-                    body = 'idReserva=' + _modalState.idReserva;
-                } else {
-                    url  = '@Url.Action("ReservarDesdeCalendario","Reservas")';
-                    body = 'idClase=' + _modalState.idClase;
-                }
-
-                var token = document.querySelector('input[name="__RequestVerificationToken"]');
-                if (token) body += '&__RequestVerificationToken=' + encodeURIComponent(token.value);
-
-                fetch(url, {
-                    method:  'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body:    body
-                })
-                .then(function (r) { return r.json(); })
-                .then(function (data) {
-                    if (data.ok) {
-                        _modalState.yaReservo = !_modalState.yaReservo;
-                        if (data.idReserva) _modalState.idReserva = data.idReserva;
-
-                        actualizarBtnReserva(true, _modalState.yaReservo,
-                            _modalState.idClase, _modalState.idReserva, 99);
-
-                        mostrarToast(data.mensaje, 'success');
-
-                        var ev = calendar.getEventById(String(_modalState.idClase));
-                        if (ev) {
-                            var delta = _modalState.yaReservo ? -1 : 1;
-                            ev.setExtendedProp('cuposRes', (ev.extendedProps.cuposRes || 0) - delta);
-                            ev.setExtendedProp('cuposDis', (ev.extendedProps.cuposDis || 0) + delta);
-                            ev.setExtendedProp('yaReservo', _modalState.yaReservo);
-                            ev.setExtendedProp('idReserva', _modalState.idReserva);
-                        }
-                    } else {
-                        mostrarToast(data.mensaje, 'error');
-                        btn.disabled  = false;
-                        btn.innerHTML = _modalState.yaReservo
-                            ? '<i class="bi bi-x-circle me-1"></i> Cancelar reserva'
-                            : '<i class="bi bi-calendar-check me-1"></i> Reservar';
-                    }
-                })
-                .catch(function () {
-                    mostrarToast('Error de conexión. Intentá de nuevo.', 'error');
-                    btn.disabled = false;
-                });
-            }
-
-            function mostrarToast(msg, tipo) {
-                var color = tipo === 'success' ? '#1c7a55'              : '#a71d2a';
-                var bg    = tipo === 'success' ? 'rgba(28,200,138,.12)' : 'rgba(220,53,69,.12)';
-                var icono = tipo === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill';
-                var div   = document.createElement('div');
-                div.style.cssText =
-                    'position:fixed;bottom:24px;right:24px;z-index:9999;' +
-                    'background:' + bg + ';color:' + color + ';' +
-                    'border:1px solid ' + color + ';border-radius:12px;' +
-                    'padding:14px 20px;font-size:.9rem;font-weight:600;' +
-                    'box-shadow:0 4px 16px rgba(0,0,0,.12);max-width:320px;';
-                div.innerHTML = '<i class="bi ' + icono + ' me-2"></i>' + msg;
-                document.body.appendChild(div);
-                setTimeout(function () { div.remove(); }, 3500);
-            }
-
-        })();
-    </script>
+    @Scripts.Render("~/Content/script/ObtenerTodasLasClases.js")
 }

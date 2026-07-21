@@ -10,10 +10,9 @@ namespace GimnasioJena.AccesoADatos.Entidades.Clases
         [Key]
         public int idClaseProgramada { get; set; }
 
-        public int? idHorarioClase     { get; set; }
-        public int  idTipoClase        { get; set; }
-        public int  idUsuarioEntrenador { get; set; }
-        public int  idEstadoClase      { get; set; }
+        public int idTipoClase { get; set; }
+        public int idUsuarioEntrenador { get; set; }
+        public int idEstadoClase { get; set; }
 
         public DateTime fechaClase { get; set; }
 
