@@ -51,6 +51,23 @@
                                  new { area = "" }, new { @class = "nav-link" })
                         </li>
                         <li class="nav-item">
+                            @Html.ActionLink(
+                                "Programación Semanal",
+                                "Index",
+                                "HorariosSemanales",
+                                new { area = "" },
+                                new { @class = "nav-link" })
+                        </li>
+
+                        <li class="nav-item">
+                            @Html.ActionLink(
+                                "Registrar Clase",
+                                "RegistrarClase",
+                                "Clases",
+                                new { area = "" },
+                                new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
                             @Html.ActionLink("Reservas", "Administrar", "Reservas",
                                  new { area = "" }, new { @class = "nav-link" })
                         </li>

@@ -66,19 +66,114 @@ namespace GimnasioJena.AccesoADatos.Reservas.RegistrarReserva
             return _elContexto.SaveChanges() > 0;
         }
 
-        public int RegistrarReservaYDescontarClase(ReservaCrearDto reserva, int idMembresiaCliente)
+        public int RegistrarReservaYDescontarClase(
+    ReservaCrearDto reserva,
+    int idMembresiaCliente)
         {
-            int resultadoReserva = RegistrarReserva(reserva);
+            using (var transaccion =
+                _elContexto.Database.BeginTransaction())
+            {
+                try
+                {
+                    var membresia = _elContexto.Membresias
+                        .FirstOrDefault(m =>
+                            m.idMembresiaCliente ==
+                            idMembresiaCliente);
 
-            if (resultadoReserva <= 0)
-                return 0;
+                    if (membresia == null)
+                    {
+                        transaccion.Rollback();
+                        return 0;
+                    }
 
-            bool resultadoDescuento = DescontarClaseDisponible(idMembresiaCliente);
+                    /*
+                     * Si clasesDisponibles es NULL,
+                     * se interpreta como una membresía
+                     * con clases ilimitadas.
+                     */
+                    if (membresia.clasesDisponibles.HasValue)
+                    {
+                        if (membresia.clasesDisponibles.Value <= 0)
+                        {
+                            transaccion.Rollback();
+                            return 0;
+                        }
 
-            if (!resultadoDescuento)
-                return 0;
+                        membresia.clasesDisponibles =
+                            membresia.clasesDisponibles.Value - 1;
+                    }
 
-            return resultadoReserva;
+                    var reservaExistente =
+                        _elContexto.Reservas.FirstOrDefault(r =>
+                            r.idUsuario == reserva.idUsuario &&
+                            r.idClaseProgramada ==
+                            reserva.idClaseProgramada);
+
+                    if (reservaExistente != null)
+                    {
+                        /*
+                         * Si ya está activa, no se vuelve
+                         * a registrar ni se descuenta otra clase.
+                         */
+                        if (reservaExistente.idEstadoReserva == 1)
+                        {
+                            transaccion.Rollback();
+                            return 0;
+                        }
+
+                        /*
+                         * Si anteriormente fue cancelada,
+                         * se reactiva el mismo registro.
+                         */
+                        reservaExistente.idEstadoReserva = 1;
+                        reservaExistente.fechaReserva = DateTime.Now;
+                        reservaExistente.observaciones =
+                            reserva.observaciones;
+                    }
+                    else
+                    {
+                        var reservaAGuardar =
+                            new ReservaEntidad
+                            {
+                                idUsuario =
+                                    reserva.idUsuario,
+
+                                idClaseProgramada =
+                                    reserva.idClaseProgramada,
+
+                                idEstadoReserva = 1,
+
+                                fechaReserva =
+                                    DateTime.Now,
+
+                                observaciones =
+                                    reserva.observaciones
+                            };
+
+                        _elContexto.Reservas.Add(
+                            reservaAGuardar
+                        );
+                    }
+
+                    int registrosAfectados =
+                        _elContexto.SaveChanges();
+
+                    if (registrosAfectados <= 0)
+                    {
+                        transaccion.Rollback();
+                        return 0;
+                    }
+
+                    transaccion.Commit();
+
+                    return registrosAfectados;
+                }
+                catch
+                {
+                    transaccion.Rollback();
+                    return 0;
+                }
+            }
         }
         public ReservaClaseValidacionDto ObtenerClaseParaValidacion(int idClaseProgramada)
         {

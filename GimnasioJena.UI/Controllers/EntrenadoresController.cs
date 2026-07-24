@@ -113,29 +113,43 @@ namespace GimnasioJena.UI.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ENTRENADOR")]
-        public ActionResult RegistrarAsistencia(AsistenciaCrearDto modelo, int idClaseProgramada)
+        public ActionResult RegistrarAsistencia(
+        AsistenciaCrearDto modelo,
+        int idClaseProgramada)
         {
-            bool resultado = _registrarAsistenciaServicio.RegistrarAsistencia(modelo);
+            var resultado =
+            _registrarAsistenciaServicio
+                .RegistrarAsistencia(
+                modelo,
+                idClaseProgramada
+        );
 
-            if (resultado)
+            if (resultado.fueExitosa)
             {
                 RegistrarBitacora(
                     "Asistencia",
                     "UPDATE",
                     modelo.idReserva,
                     modelo.asistio
-                        ? "El entrenador marcó asistencia para la reserva con idReserva: " + modelo.idReserva
-                        : "El entrenador marcó no asistencia para la reserva con idReserva: " + modelo.idReserva
+                        ? "El entrenador marcó asistencia para la reserva con idReserva: "
+                            + modelo.idReserva
+                        : "El entrenador marcó no asistencia para la reserva con idReserva: "
+                            + modelo.idReserva
                 );
 
-                TempData["MensajeExito"] = "La asistencia se registró correctamente.";
+                TempData["MensajeExito"] =
+                    resultado.mensaje;
             }
             else
             {
-                TempData["MensajeError"] = "No se pudo registrar la asistencia.";
+                TempData["MensajeError"] =
+                    resultado.mensaje;
             }
 
-            return RedirectToAction("AsistenciaClase", new { id = idClaseProgramada });
+            return RedirectToAction(
+                "AsistenciaClase",
+                new { id = idClaseProgramada }
+            );
         }
         private int? ObtenerIdUsuarioActual()
         {

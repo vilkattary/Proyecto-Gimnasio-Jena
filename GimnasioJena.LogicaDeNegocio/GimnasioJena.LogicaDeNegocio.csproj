@@ -113,6 +113,12 @@
     <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeLN.cs" />
     <Compile Include="Home\CambiarEstadoSeccionHome\CambiarEstadoSeccionHomeLN.cs" />
     <Compile Include="Home\EliminarSeccionHome\EliminarSeccionHomeLN.cs" />
+    <Compile Include="HorariosSemanales\CambiarEstadoHorarioSemanal\CambiarEstadoHorarioSemanalLN.cs" />
+    <Compile Include="HorariosSemanales\EditarHorarioSemanal\IEditarHorarioSemanalLN.cs" />
+    <Compile Include="HorariosSemanales\GenerarClasesProgramadas\GenerarClasesProgramadasLN.cs" />
+    <Compile Include="HorariosSemanales\ObtenerHorarioSemanalPorId\ObtenerHorarioSemanalPorIdLN.cs" />
+    <Compile Include="HorariosSemanales\ObtenerHorariosSemanales\ObtenerHorariosSemanalesLN.cs" />
+    <Compile Include="HorariosSemanales\RegistrarHorariosSemanales\RegistrarHorariosSemanalesLN.cs" />
     <Compile Include="Membresias\CambiarEstadoMembresia\CambiarEstadoMembresiaLN.cs" />
     <Compile Include="Membresias\EditarMembresia\EditarMembresiaLN.cs" />
     <Compile Include="Membresias\ObtenerMembresiaPorCliente\ObtenerMembresiaPorClienteLN.cs" />
