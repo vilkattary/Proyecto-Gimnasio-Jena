@@ -81,7 +81,7 @@ namespace GimnasioJena.UI.Controllers
                 fechaClase = DateTime.Today,
                 horaInicio = new TimeSpan(6, 0, 0),
                 horaFin = new TimeSpan(7, 0, 0),
-                cupoMaximo = 12,
+                cupoMaximo = 30,
                 fechaCreacion = DateTime.Now
             });
         }
@@ -107,9 +107,9 @@ namespace GimnasioJena.UI.Controllers
                     claseAGuardar.idEstadoClase = 1;
                 }
 
-                if (claseAGuardar.cupoMaximo < 1 || claseAGuardar.cupoMaximo > 12)
+                if (claseAGuardar.cupoMaximo < 1 || claseAGuardar.cupoMaximo > 30)
                 {
-                    ModelState.AddModelError("cupoMaximo", "El cupo máximo debe estar entre 1 y 12.");
+                    ModelState.AddModelError("cupoMaximo", "El cupo máximo debe estar entre 1 y 30.");
                 }
 
                 if (claseAGuardar.horaFin <= claseAGuardar.horaInicio)
@@ -131,7 +131,7 @@ namespace GimnasioJena.UI.Controllers
                 {
                     RegistrarBitacora(
                         "ClaseProgramada",
-                        "CREATE",
+                        "INSERT",
                         null,
                         "Se registró una nueva clase."
                     );
@@ -207,9 +207,9 @@ namespace GimnasioJena.UI.Controllers
                     ModelState.AddModelError("idEstadoClase", "Debe seleccionar un estado.");
                 }
 
-                if (claseAEditar.cupoMaximo < 1 || claseAEditar.cupoMaximo > 12)
+                if (claseAEditar.cupoMaximo < 1 || claseAEditar.cupoMaximo > 30)
                 {
-                    ModelState.AddModelError("cupoMaximo", "El cupo máximo debe estar entre 1 y 12.");
+                    ModelState.AddModelError("cupoMaximo", "El cupo máximo debe estar entre 1 y 30.");
                 }
 
                 if (claseAEditar.horaFin <= claseAEditar.horaInicio)

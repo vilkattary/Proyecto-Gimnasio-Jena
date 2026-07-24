@@ -1,0 +1,672 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.HorariosSemanales.HorarioSemanalListadoDto>
+
+@{
+    ViewBag.Title = "Programación semanal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var horarios = Model != null
+        ? Model.ToList()
+        : new List<GimnasioJena.Abstracciones.Modelos.HorariosSemanales.HorarioSemanalListadoDto>();
+
+    var dias = horarios
+        .GroupBy(h => new
+        {
+            h.diaSemana,
+            h.nombreDia
+        })
+        .OrderBy(g => g.Key.diaSemana)
+        .ToList();
+}
+
+<style>
+    :root {
+        --jena-navy: #2C3E50;
+        --jena-dark-navy: #1A2332;
+        --jena-orange: #FF6B35;
+        --jena-dark-orange: #D95F31;
+        --jena-light-gray: #F8F9FA;
+        --jena-border: #DEE2E6;
+        --jena-success: #198754;
+        --jena-danger: #DC3545;
+        --jena-muted: #6C757D;
+    }
+
+    .horarios-page {
+        min-height: 100vh;
+        padding: 40px 0 60px;
+        background: linear-gradient( 135deg, rgba(44, 62, 80, .05), rgba(255, 107, 53, .04) );
+    }
+
+    .horarios-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+    .horarios-title-area {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .horarios-icon {
+        display: flex;
+        width: 62px;
+        height: 62px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: white;
+        background: var(--jena-orange);
+        box-shadow: 0 7px 20px rgba(255, 107, 53, .32);
+    }
+
+        .horarios-icon i {
+            font-size: 1.8rem;
+        }
+
+    .horarios-title h1 {
+        margin: 0 0 5px;
+        color: var(--jena-navy);
+        font-weight: 800;
+    }
+
+    .horarios-title p {
+        margin: 0;
+        color: var(--jena-muted);
+    }
+
+    .horarios-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .btn-nueva-programacion {
+        min-height: 46px;
+        padding: 11px 20px;
+        border: 0;
+        border-radius: 11px;
+        color: white;
+        background: linear-gradient( 135deg, var(--jena-orange), var(--jena-dark-orange) );
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(255, 107, 53, .25);
+    }
+
+        .btn-nueva-programacion:hover {
+            color: white;
+            transform: translateY(-1px);
+        }
+
+    .btn-generar {
+        min-height: 46px;
+        padding: 11px 20px;
+        border: 1px solid var(--jena-navy);
+        border-radius: 11px;
+        color: var(--jena-navy);
+        background: white;
+        font-weight: 800;
+    }
+
+        .btn-generar:hover {
+            color: white;
+            background: var(--jena-navy);
+        }
+
+    .resumen-programacion {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(160px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .resumen-card {
+        padding: 18px 20px;
+        border: 1px solid var(--jena-border);
+        border-radius: 14px;
+        background: white;
+        box-shadow: 0 8px 24px rgba(26, 35, 50, .06);
+    }
+
+        .resumen-card span {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--jena-muted);
+            font-size: .88rem;
+            font-weight: 700;
+        }
+
+        .resumen-card strong {
+            color: var(--jena-navy);
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .resumen-card.activos strong {
+            color: var(--jena-success);
+        }
+
+        .resumen-card.inactivos strong {
+            color: var(--jena-danger);
+        }
+
+    .dia-card {
+        overflow: hidden;
+        margin-bottom: 22px;
+        border: 0;
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 10px 30px rgba(26, 35, 50, .08);
+    }
+
+    .dia-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 22px;
+        color: white;
+        background: linear-gradient( 135deg, var(--jena-navy), var(--jena-dark-navy) );
+    }
+
+        .dia-card-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .dia-card-header span {
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: white;
+            background: rgba(255, 255, 255, .15);
+            font-size: .84rem;
+            font-weight: 700;
+        }
+
+    .tabla-horarios {
+        margin: 0;
+    }
+
+        .tabla-horarios thead th {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--jena-border);
+            color: var(--jena-navy);
+            background: var(--jena-light-gray);
+            font-size: .84rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            white-space: nowrap;
+        }
+
+        .tabla-horarios tbody td {
+            padding: 16px;
+            border-color: #EDF0F2;
+            color: #344054;
+            vertical-align: middle;
+        }
+
+        .tabla-horarios tbody tr:hover {
+            background: #FFF9F6;
+        }
+
+    .horario-principal {
+        color: var(--jena-navy);
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+        .horario-principal i {
+            color: var(--jena-orange);
+        }
+
+    .clase-nombre {
+        color: var(--jena-navy);
+        font-weight: 800;
+    }
+
+    .entrenador-nombre {
+        font-weight: 600;
+    }
+
+    .dato-secundario {
+        color: var(--jena-muted);
+        font-size: .88rem;
+    }
+
+    .estado-badge {
+        display: inline-flex;
+        min-width: 88px;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 11px;
+        border-radius: 20px;
+        font-size: .82rem;
+        font-weight: 800;
+    }
+
+    .estado-activo {
+        color: #146C43;
+        background: #D1E7DD;
+    }
+
+    .estado-inactivo {
+        color: #842029;
+        background: #F8D7DA;
+    }
+
+    .acciones-horario {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .form-cambiar-estado {
+        display: inline;
+        margin: 0;
+    }
+
+        .form-cambiar-estado .btn-accion {
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            background: transparent;
+        }
+
+    .btn-accion {
+        display: inline-flex;
+        width: 38px;
+        height: 38px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--jena-border);
+        border-radius: 9px;
+        color: var(--jena-navy);
+        background: white;
+        text-decoration: none;
+        transition: all .2s ease;
+    }
+
+        .btn-accion:hover {
+            border-color: var(--jena-orange);
+            color: white;
+            background: var(--jena-orange);
+        }
+
+        .btn-accion.estado:hover {
+            border-color: var(--jena-navy);
+            background: var(--jena-navy);
+        }
+
+    .estado-vacio {
+        padding: 60px 25px;
+        border: 1px dashed var(--jena-border);
+        border-radius: 16px;
+        background: white;
+        text-align: center;
+    }
+
+        .estado-vacio i {
+            display: block;
+            margin-bottom: 15px;
+            color: var(--jena-orange);
+            font-size: 3.2rem;
+        }
+
+        .estado-vacio h3 {
+            margin-bottom: 8px;
+            color: var(--jena-navy);
+            font-weight: 800;
+        }
+
+        .estado-vacio p {
+            max-width: 560px;
+            margin: 0 auto 22px;
+            color: var(--jena-muted);
+        }
+
+    .alerta-programacion {
+        margin-bottom: 24px;
+        padding: 16px 18px;
+        border: 1px solid rgba(255, 107, 53, .25);
+        border-radius: 13px;
+        color: var(--jena-navy);
+        background: rgba(255, 107, 53, .07);
+    }
+
+    @@media (max-width: 991px) {
+        .horarios-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .horarios-actions {
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        .resumen-programacion {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .horarios-title-area {
+            align-items: flex-start;
+        }
+
+        .horarios-title h1 {
+            font-size: 1.7rem;
+        }
+
+        .horarios-actions {
+            flex-direction: column;
+        }
+
+        .btn-nueva-programacion,
+        .btn-generar {
+            width: 100%;
+        }
+
+        .dia-card {
+            overflow-x: auto;
+        }
+
+        .tabla-horarios {
+            min-width: 920px;
+        }
+    }
+</style>
+
+<section class="horarios-page">
+    <div class="container">
+
+        <div class="horarios-header">
+
+            <div class="horarios-title-area">
+
+                <div class="horarios-icon">
+                    <i class="bi bi-calendar-week"></i>
+                </div>
+
+                <div class="horarios-title">
+                    <h1>Programación semanal</h1>
+
+                    <p>
+                        Administre los horarios recurrentes utilizados
+                        para generar las clases del gimnasio.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="horarios-actions">
+
+                <a href="@Url.Action(
+                        "Registrar",
+                        "HorariosSemanales"
+                    )"
+                   class="btn btn-nueva-programacion">
+
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Nueva programación
+                </a>
+
+                <a href="@Url.Action(
+                        "GenerarClases",
+                        "HorariosSemanales"
+                    )"
+                   class="btn btn-generar">
+
+                    <i class="bi bi-calendar-plus me-2"></i>
+                    Generar próximas clases
+                </a>
+
+            </div>
+        </div>
+
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                @TempData["MensajeError"]
+            </div>
+        }
+
+        @if (horarios.Any())
+        {
+            <div class="resumen-programacion">
+
+                <div class="resumen-card">
+                    <span>Total de horarios</span>
+                    <strong>@horarios.Count</strong>
+                </div>
+
+                <div class="resumen-card activos">
+                    <span>Horarios activos</span>
+                    <strong>@horarios.Count(h => h.estado)</strong>
+                </div>
+
+                <div class="resumen-card inactivos">
+                    <span>Horarios inactivos</span>
+                    <strong>@horarios.Count(h => !h.estado)</strong>
+                </div>
+
+            </div>
+
+            <div class="alerta-programacion">
+                <i class="bi bi-info-circle-fill me-2"
+                   style="color:var(--jena-orange);"></i>
+
+                La programación semanal define los horarios recurrentes.
+                Las clases con fecha específica se generarán posteriormente
+                desde estos horarios.
+            </div>
+
+            foreach (var dia in dias)
+            {
+                <div class="dia-card">
+
+                    <div class="dia-card-header">
+
+                        <h2>
+                            <i class="bi bi-calendar-day me-2"></i>
+                            @dia.Key.nombreDia
+                        </h2>
+
+                        <span>
+                            @dia.Count()
+                            @(dia.Count() == 1 ? "horario" : "horarios")
+                        </span>
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="table tabla-horarios">
+
+                            <thead>
+                                <tr>
+                                    <th>Horario</th>
+                                    <th>Clase</th>
+                                    <th>Entrenador</th>
+                                    <th>Cupo</th>
+                                    <th>Ubicación</th>
+                                    <th>Estado</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (
+                                    var horario in dia
+                                        .OrderBy(h => h.horaInicio)
+                                )
+                                {
+                                    <tr>
+
+                                        <td>
+                                            <div class="horario-principal">
+                                                <i class="bi bi-clock me-1"></i>
+
+                                                @horario.horaInicio.ToString(@"hh\:mm")
+                                                -
+                                                @horario.horaFin.ToString(@"hh\:mm")
+                                            </div>
+
+                                            <div class="dato-secundario">
+                                                ID: @horario.idHorario
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="clase-nombre">
+                                                @horario.nombreClase
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="entrenador-nombre">
+                                                @horario.nombreEntrenador
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <strong>
+                                                @horario.cupoMaximo
+                                            </strong>
+
+                                            <span class="dato-secundario">
+                                                personas
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            @horario.ubicacion
+                                        </td>
+
+                                        <td>
+                                            <span class="estado-badge
+                                                @(horario.estado
+                                                    ? "estado-activo"
+                                                    : "estado-inactivo")">
+
+                                                <i class="bi
+                                                    @(horario.estado
+                                                        ? "bi-check-circle-fill"
+                                                        : "bi-x-circle-fill")">
+                                                </i>
+
+                                                @horario.nombreEstado
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <div class="acciones-horario">
+
+                                                <a href="@Url.Action(
+                    "Editar",
+                    "HorariosSemanales",
+                    new
+                    {
+                        id = horario.idHorario
+                    }
+                )"
+                                                   class="btn-accion"
+                                                   title="Editar horario">
+
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+
+                                                @using (
+                                                    Html.BeginForm(
+                                                        "CambiarEstado",
+                                                        "HorariosSemanales",
+                                                        FormMethod.Post,
+                                                        new
+                                                        {
+                                                            @class = "form-cambiar-estado"
+                                                        }
+                                                    )
+                                                )
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    @Html.Hidden(
+                                                        "idHorario",
+                                                        horario.idHorario
+                                                    )
+
+                                                    <button type="submit"
+                                                            class="btn-accion estado"
+                                                            title="@(horario.estado
+                    ? "Desactivar horario"
+                    : "Activar horario")">
+
+                                                        <i class="bi
+                    @(horario.estado
+                        ? "bi-toggle-on"
+                        : "bi-toggle-off")">
+                                                        </i>
+
+                                                    </button>
+                                                }
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="estado-vacio">
+
+                <i class="bi bi-calendar2-x"></i>
+
+                <h3>No hay programación registrada</h3>
+
+                <p>
+                    Cree la programación semanal para definir los días,
+                    horas, clases y entrenadores que se utilizarán
+                    recurrentemente.
+                </p>
+
+                <a href="@Url.Action(
+                        "Registrar",
+                        "HorariosSemanales"
+                    )"
+                   class="btn btn-nueva-programacion">
+
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Crear primera programación
+                </a>
+
+            </div>
+        }
+
+    </div>
+</section>

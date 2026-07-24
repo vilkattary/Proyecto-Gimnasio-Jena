@@ -188,6 +188,7 @@
     <Compile Include="Controllers\EntrenadoresController.cs" />
     <Compile Include="Controllers\EstadoReservasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HorariosSemanalesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembresiasController.cs" />
     <Compile Include="Controllers\NosotrosController.cs" />
@@ -333,6 +334,10 @@
     <Content Include="Views\Bitacoras\Index.cshtml" />
     <Content Include="Views\Pagos\Index.cshtml" />
     <Content Include="Views\Pagos\Create.cshtml" />
+    <Content Include="Views\HorariosSemanales\Registrar.cshtml" />
+    <Content Include="Views\HorariosSemanales\Index.cshtml" />
+    <Content Include="Views\HorariosSemanales\GenerarClases.cshtml" />
+    <Content Include="Views\HorariosSemanales\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

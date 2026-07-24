@@ -56,5 +56,25 @@ namespace GimnasioJena.AccesoADatos.Asistencias.RegistrarAsistencia
 
             return _elContexto.SaveChanges();
         }
+
+        public AsistenciaValidacionDto ObtenerAsistenciaParaValidacion(
+    int idReserva)
+        {
+            return
+                (from reserva in _elContexto.Reservas
+                 join clase in _elContexto.Clases
+                    on reserva.idClaseProgramada equals clase.idClaseProgramada
+                 where reserva.idReserva == idReserva
+                 select new AsistenciaValidacionDto
+                 {
+                     idReserva = reserva.idReserva,
+                     idClaseProgramada = reserva.idClaseProgramada,
+                     idEstadoReserva = reserva.idEstadoReserva,
+                     idEstadoClase = clase.idEstadoClase,
+                     fechaClase = clase.fechaClase,
+                     horaInicio = clase.horaInicio
+                 })
+                .FirstOrDefault();
+        }
     }
 }
