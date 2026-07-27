@@ -27,11 +27,21 @@ jobs:
         run: nuget restore ./GimnasioJena.sln
 
       - name: Replace connection string in Web.config
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: './GimnasioJena.UI/Web.config'
-        env:
-          connectionStrings.MiConexion.connectionString: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+        shell: powershell
+        run: |
+          $configPath = "./GimnasioJena.UI/Web.config"
+          $secretConn = "${{ secrets.AZURE_SQL_CONNECTION_STRING }}"
+          
+          if (Test-Path $configPath) {
+              $content = Get-Content $configPath -Raw
+              # Reemplaza dinámicamente cualquier texto dentro de connectionString="..." por el secreto de Azure
+              $content = $content -replace 'connectionString="[^"]+"', ('connectionString="' + $secretConn + '"')
+              Set-Content -Path $configPath -Value $content
+              Write-Host "Cadena de conexión reemplazada con éxito en Web.config."
+          } else {
+              Write-Error "No se encontró el archivo Web.config en la ruta especificada."
+              exit 1
+          }
 
       - name: Build and Package Web App
         run: |
