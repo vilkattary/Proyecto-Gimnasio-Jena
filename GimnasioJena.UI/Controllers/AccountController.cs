@@ -94,12 +94,21 @@ namespace GimnasioJena.UI.Controllers
                         {
                             var usuarioPerfil = ctx.Usuarios.FirstOrDefault(u => u.identityUserId == appUser.Id);
                             if (usuarioPerfil != null)
-                                nombreCompleto = usuarioPerfil.nombre;
+                                nombreCompleto = string.Join(" ", new[] { usuarioPerfil.nombre, usuarioPerfil.apellido1}
+                                    .Where(s => !string.IsNullOrWhiteSpace(s)));
                         }
                         var identity = await appUser.GenerateUserIdentityAsync(UserManager, nombreCompleto);
                         var authManager = HttpContext.GetOwinContext().Authentication;
                         authManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                         authManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties { IsPersistent = model.RememberMe }, identity);
+
+                        // Redirigir al Dashboard si es Administrador (User.IsInRole no aplica aún en este request)
+                        if (!Url.IsLocalUrl(returnUrl))
+                        {
+                            bool esAdmin = await UserManager.IsInRoleAsync(appUser.Id, "ADMINISTRADOR");
+                            if (esAdmin)
+                                return RedirectToAction("Dashboard", "Admin");
+                        }
                     }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -544,6 +553,10 @@ namespace GimnasioJena.UI.Controllers
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
+            }
+            if (User.IsInRole("ADMINISTRADOR"))
+            {
+                return RedirectToAction("Dashboard", "Admin");
             }
             return RedirectToAction("Index", "Home");
         }
