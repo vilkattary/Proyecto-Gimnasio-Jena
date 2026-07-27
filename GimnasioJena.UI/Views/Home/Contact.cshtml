@@ -1,15 +1,15 @@
-@{
+﻿@{
     ViewBag.Title = "Contacto";
 }
 
 <!-- Page Header -->
-<section style="background: linear-gradient(135deg, #111111 60%, #2c2c2c 100%); padding: 80px 0 60px;">
+<section class="hero-section-dark">
     <div class="container text-center">
-        <p class="text-uppercase mb-2" style="color:#FF6600; font-family:'Oswald',sans-serif; letter-spacing:3px; font-size:1rem;">
+        <p class="text-uppercase mb-2 eyebrow-jena">
             <i class="bi bi-envelope-fill me-1"></i> Estamos aquí para ti
         </p>
-        <h1 class="display-4 fw-bold text-white mb-3">PONTE EN <span style="color:#FF6600;">CONTACTO</span></h1>
-        <div class="mx-auto" style="width:60px; height:4px; background:#FF6600; border-radius:2px;"></div>
+        <h1 class="text-white">PONTE EN <span class="text-accent">CONTACTO</span></h1>
+        <div class="mx-auto divider-orange"></div>
     </div>
 </section>
 
@@ -20,45 +20,45 @@
 
             <!-- Información de contacto -->
             <div class="col-lg-5">
-                <p class="text-uppercase mb-1" style="color:#FF6600; font-family:'Oswald',sans-serif; letter-spacing:3px;">Información de contacto</p>
-                <h2 class="fw-bold mb-4" style="color:#111;">¿CÓMO LLEGAR A NOSOTROS?</h2>
+                <p class="text-uppercase mb-1 eyebrow-jena">Información de contacto</p>
+                <h2 class="text-navy">¿CÓMO LLEGAR A NOSOTROS?</h2>
 
                 <div class="d-flex mb-4">
                     <div class="me-3 mt-1">
-                        <i class="bi bi-geo-alt-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                        <i class="bi bi-geo-alt-fill icon-jena-lg"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">DIRECCIÓN</h6>
+                        <h6 class="heading-dark">DIRECCIÓN</h6>
                         <p class="text-muted mb-0">Gimnasio Jena<br />Tu ciudad, Tu país</p>
                     </div>
                 </div>
 
                 <div class="d-flex mb-4">
                     <div class="me-3 mt-1">
-                        <i class="bi bi-telephone-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                        <i class="bi bi-telephone-fill icon-jena-lg"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">TELÉFONO</h6>
+                        <h6 class="heading-dark">TELÉFONO</h6>
                         <p class="text-muted mb-0">+000 000-0000</p>
                     </div>
                 </div>
 
                 <div class="d-flex mb-4">
                     <div class="me-3 mt-1">
-                        <i class="bi bi-envelope-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                        <i class="bi bi-envelope-fill icon-jena-lg"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">CORREO ELECTRÓNICO</h6>
+                        <h6 class="heading-dark">CORREO ELECTRÓNICO</h6>
                         <p class="text-muted mb-0">info@gimnasiojena.com</p>
                     </div>
                 </div>
 
                 <div class="d-flex mb-4">
                     <div class="me-3 mt-1">
-                        <i class="bi bi-clock-fill" style="font-size:1.8rem; color:#FF6600;"></i>
+                        <i class="bi bi-clock-fill icon-jena-lg"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">HORARIO</h6>
+                        <h6 class="heading-dark">HORARIO</h6>
                         <p class="text-muted mb-0">
                             Lunes &ndash; Viernes: 5:00 AM &ndash; 10:00 PM<br />
                             Sábado: 6:00 AM &ndash; 8:00 PM<br />
@@ -70,8 +70,8 @@
 
             <!-- Formulario -->
             <div class="col-lg-7">
-                <div class="card border-0 shadow-sm p-4 p-lg-5">
-                    <h4 class="fw-bold mb-1" style="font-family:'Oswald',sans-serif; color:#111;">ENVÍANOS UN MENSAJE</h4>
+                <div class="card-jena-info">
+                    <h4 class="heading-dark">ENVIÁNOS UN MENSAJE</h4>
                     <p class="text-muted mb-4">Completa el formulario y nos pondremos en contacto contigo a la brevedad posible.</p>
 
                     @using (Html.BeginForm("Contact", "Home", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
@@ -88,26 +88,26 @@
 
                         <div class="row g-3">
                             <div class="col-sm-6">
-                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Nombre</label>
+                                <label class="form-label fw-bold small text-uppercase text-navy">Nombre</label>
                                 <input type="text" class="form-control" name="nombre" placeholder="Tu nombre" required />
                                 <div class="invalid-feedback">Por favor ingresa tu nombre.</div>
                             </div>
                             <div class="col-sm-6">
-                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Apellido</label>
+                                <label class="form-label fw-bold small text-uppercase text-navy">Apellido</label>
                                 <input type="text" class="form-control" name="apellido" placeholder="Tu apellido" required />
                                 <div class="invalid-feedback">Por favor ingresa tu apellido.</div>
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Correo electrónico</label>
+                                <label class="form-label fw-bold small text-uppercase text-navy">Correo electrónico</label>
                                 <input type="email" class="form-control" name="correo" placeholder="correo@ejemplo.com" required />
                                 <div class="invalid-feedback">Por favor ingresa un correo válido.</div>
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Teléfono (opcional)</label>
+                                <label class="form-label fw-bold small text-uppercase text-navy">Teléfono (opcional)</label>
                                 <input type="tel" class="form-control" name="telefono" placeholder="+1 (000) 000-0000" />
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Asunto</label>
+                                <label class="form-label fw-bold small text-uppercase text-navy">Asunto</label>
                                 <select class="form-select" name="asunto" required>
                                     <option value="" selected disabled>Selecciona un asunto...</option>
                                     <option value="membresia">Información sobre membresías</option>
@@ -118,7 +118,7 @@
                                 <div class="invalid-feedback">Por favor selecciona un asunto.</div>
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-bold small text-uppercase" style="color:#111;">Mensaje</label>
+                                <label class="form-label fw-bold small text-uppercase text-navy">Mensaje</label>
                                 <textarea class="form-control" name="mensaje" rows="4" placeholder="Escribe tu mensaje aquí..." required></textarea>
                                 <div class="invalid-feedback">Por favor escribe tu mensaje.</div>
                             </div>
@@ -153,3 +153,4 @@
     })();
 </script>
 }
+

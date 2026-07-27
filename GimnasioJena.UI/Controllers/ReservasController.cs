@@ -86,23 +86,28 @@ namespace GimnasioJena.UI.Controllers
                 modelo.idUsuario = usuario.idUsuario;
                 modelo.idEstadoReserva = 1;
 
-                bool resultado = _registrarReservaServicio.RegistrarReserva(modelo);
+                var resultado = _registrarReservaServicio.RegistrarReserva(modelo);
 
-                if (resultado)
+                if (resultado.fueExitosa)
                 {
                     RegistrarBitacora(
                         "Reserva",
-                        "CREATE",
+                        "INSERT",
                         modelo.idClaseProgramada,
                         "El cliente con idUsuario " + modelo.idUsuario +
                         " registró una reserva para la clase con idClaseProgramada: " + modelo.idClaseProgramada
                     );
 
-                    TempData["MensajeExito"] = "La reserva se registró correctamente.";
-                    return RedirectToAction("ObtenerTodasLasClases", "Clases");
+                    TempData["MensajeExito"] = resultado.mensaje;
+
+                    return RedirectToAction(
+                        "ObtenerTodasLasClases",
+                        "Clases"
+                    );
                 }
 
-                TempData["MensajeError"] = "No se pudo registrar la reserva.";
+                TempData["MensajeError"] = resultado.mensaje;
+
                 return View(modelo);
             }
         }

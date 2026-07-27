@@ -11,6 +11,7 @@ using GimnasioJena.AccesoADatos.Entidades.Reservas;
 using GimnasioJena.AccesoADatos.Entidades.Roles;
 using GimnasioJena.AccesoADatos.Entidades.Usuarios;
 using System.Data.Entity;
+using GimnasioJena.AccesoADatos.Entidades.HorariosSemanales;
 
 namespace GimnasioJena.AccesoADatos
 {
@@ -39,5 +40,6 @@ namespace GimnasioJena.AccesoADatos
         public DbSet<PlanMembresiaEntidad> PlanesMembresia { get; set; }
         public DbSet<PagoEntidad> Pagos { get; set; }
         public DbSet<ContenidoWeb> ContenidoWeb { get; set; }
+        public DbSet<HorarioSemanalEntidad> HorariosSemanales { get; set; }
     }
 }

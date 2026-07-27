@@ -1,0 +1,254 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Pagos.PagoCrearDto
+
+@{
+    ViewBag.Title = "Registrar Pago";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="page-title">Registrar Pago</h1>
+        <p class="text-muted">
+            Registra un pago recibido y relaciónalo con una membresía.
+        </p>
+    </div>
+
+    <div class="info-card">
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["MensajeError"]
+            </div>
+        }
+
+        @using (Html.BeginForm("Create", "Pagos", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+            <div class="mb-3">
+                @Html.LabelFor(
+                    m => m.idMembresiaCliente,
+                    "Membresía del cliente",
+                    new { @class = "form-label fw-bold" })
+
+                @Html.DropDownListFor(
+        m => m.idMembresiaCliente,
+        (IEnumerable<SelectListItem>)ViewBag.Membresias,
+        "Seleccione una membresía",
+        new
+        {
+        @class = "form-select",
+        id = "idMembresiaCliente",
+        onchange = "cargarPrecioMembresia(this.value)"
+        })
+
+                @Html.ValidationMessageFor(
+                    m => m.idMembresiaCliente,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(
+                    m => m.idMetodoPago,
+                    "Método de pago",
+                    new { @class = "form-label fw-bold" })
+
+                @Html.DropDownListFor(
+                    m => m.idMetodoPago,
+                    (IEnumerable<SelectListItem>)ViewBag.MetodosPago,
+                    "Seleccione un método",
+                    new { @class = "form-select" })
+
+                @Html.ValidationMessageFor(
+                    m => m.idMetodoPago,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(
+                    m => m.idEstadoPago,
+                    "Estado del pago",
+                    new { @class = "form-label fw-bold" })
+
+                @Html.DropDownListFor(
+                    m => m.idEstadoPago,
+                    (IEnumerable<SelectListItem>)ViewBag.EstadosPago,
+                    "Seleccione un estado",
+                    new { @class = "form-select" })
+
+                @Html.ValidationMessageFor(
+                    m => m.idEstadoPago,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(
+                        m => m.monto,
+                        "Monto",
+                        new { @class = "form-label fw-bold" })
+
+                    @Html.TextBoxFor(
+    m => m.monto,
+    new
+    {
+        @class = "form-control",
+        type = "number",
+        min = "0.01",
+        step = "0.01",
+        id = "monto",
+        @readonly = "readonly"
+    })
+
+                    @Html.ValidationMessageFor(
+                        m => m.monto,
+                        "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    @Html.LabelFor(
+                        m => m.fechaPago,
+                        "Fecha del pago",
+                        new { @class = "form-label fw-bold" })
+
+                    @Html.TextBoxFor(
+                        m => m.fechaPago,
+                        "{0:yyyy-MM-ddTHH:mm}",
+                        new
+                        {
+                            @class = "form-control",
+                            type = "datetime-local"
+                        })
+
+                    @Html.ValidationMessageFor(
+                        m => m.fechaPago,
+                        "",
+                        new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(
+                    m => m.referenciaPago,
+                    "Referencia",
+                    new { @class = "form-label fw-bold" })
+
+                @Html.TextBoxFor(
+                    m => m.referenciaPago,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "Ejemplo: comprobante, transferencia o referencia externa"
+                    })
+
+                @Html.ValidationMessageFor(
+                    m => m.referenciaPago,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(
+                    m => m.observaciones,
+                    "Observaciones",
+                    new { @class = "form-label fw-bold" })
+
+                @Html.TextAreaFor(
+                    m => m.observaciones,
+                    new
+                    {
+                        @class = "form-control",
+                        rows = "4",
+                        placeholder = "Información adicional del pago..."
+                    })
+
+                @Html.ValidationMessageFor(
+                    m => m.observaciones,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-action">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Registrar pago
+                </button>
+
+                <a href="@Url.Action("Index", "Pagos")"
+                   class="btn btn-outline-gym">
+                    Volver
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function cargarPrecioMembresia(idMembresiaCliente) {
+
+            var montoInput = document.getElementById("monto");
+
+            if (!montoInput) {
+                console.error("No se encontró el campo monto.");
+                return;
+            }
+
+            if (!idMembresiaCliente) {
+                montoInput.value = "";
+                return;
+            }
+
+            var url = '@Url.Action("ObtenerPrecioMembresia", "Pagos")'
+                + '?idMembresiaCliente='
+                + encodeURIComponent(idMembresiaCliente);
+
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            })
+            .then(function (respuestaHttp) {
+
+                if (!respuestaHttp.ok) {
+                    throw new Error("Error HTTP: " + respuestaHttp.status);
+                }
+
+                return respuestaHttp.json();
+            })
+            .then(function (respuesta) {
+
+                if (respuesta.exito) {
+                    montoInput.value = respuesta.precio;
+                } else {
+                    montoInput.value = "";
+                    alert(respuesta.mensaje);
+                }
+            })
+            .catch(function (error) {
+                montoInput.value = "";
+                console.error("Error obteniendo el precio:", error);
+                alert("No se pudo obtener el precio del plan.");
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            var membresiaSelect =
+                document.getElementById("idMembresiaCliente");
+
+            if (membresiaSelect && membresiaSelect.value) {
+                cargarPrecioMembresia(membresiaSelect.value);
+            }
+        });
+    </script>
+}

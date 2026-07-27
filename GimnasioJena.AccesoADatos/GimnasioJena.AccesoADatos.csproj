@@ -115,6 +115,7 @@
     <Compile Include="Entidades\Entrenadores\EntrenadorEntidad.cs" />
     <Compile Include="Entidades\EstadoReservas\EstadoReservaEntidad.cs" />
     <Compile Include="Entidades\Home\SeccionesHome.cs" />
+    <Compile Include="Entidades\HorariosSemanales\HorarioSemanalEntidad.cs" />
     <Compile Include="Entidades\Membresias\MembresiaEntidad.cs" />
     <Compile Include="Entidades\Membresias\PlanMembresiaEntidad.cs" />
     <Compile Include="Entidades\Pagos\PagoEntidad.cs" />
@@ -132,6 +133,12 @@
     <Compile Include="Home\AgregarSeccionHome\AgregarSeccionHomeAD.cs" />
     <Compile Include="Home\CambiarEstadoSeccionHome\CambiarEstadoSeccionHomeAD.cs" />
     <Compile Include="Home\EliminarSeccionHome\EliminarSeccionHomeAD.cs" />
+    <Compile Include="HorariosSemanales\CambiarEstadoHorarioSemanal\CambiarEstadoHorarioSemanalAD.cs" />
+    <Compile Include="HorariosSemanales\EditarHorarioSemanal\EditarHorarioSemanalAD.cs" />
+    <Compile Include="HorariosSemanales\GenerarClasesProgramadas\GenerarClasesProgramadasAD.cs" />
+    <Compile Include="HorariosSemanales\ObtenerHorarioSemanalPorId\ObtenerHorarioSemanalPorIdAD.cs" />
+    <Compile Include="HorariosSemanales\ObtenerHorariosSemanales\ObtenerHorariosSemanalesAD.cs" />
+    <Compile Include="HorariosSemanales\RegistrarHorariosSemanales\RegistrarHorariosSemanalesAD.cs" />
     <Compile Include="Membresias\CambiarEstadoMembresia\CambiarEstadoMembresiaAD.cs" />
     <Compile Include="Membresias\EditarMembresia\EditarMembresiaAD.cs" />
     <Compile Include="Membresias\ObtenerMembresiaPorCliente\ObtenerMembresiaPorClienteAD.cs" />
@@ -143,6 +150,8 @@
     <Compile Include="Nosotros\CambiarEstadoSeccionNosotros\CambiarEstadoSeccionNosotrosAD.cs" />
     <Compile Include="Nosotros\EliminarSeccionNosotros\EliminarSeccionNosotrosAD.cs" />
     <Compile Include="Nosotros\ObtenerSeccionesNosotros\ObtenerContenidoNosotrosAD.cs" />
+    <Compile Include="Pagos\ObtenerTodosLosPagos\ObtenerTodosLosPagosAD.cs" />
+    <Compile Include="Pagos\RegistrarPago\RegistrarPagoAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recepcionistas\CambiarEstadoRecepcionista\CambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="Recepcionistas\EditarRecepcionista\EditarRecepcionistaAD.cs" />
@@ -194,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entidades\Generales\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

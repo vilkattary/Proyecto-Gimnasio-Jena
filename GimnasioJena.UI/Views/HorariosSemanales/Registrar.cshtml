@@ -1,0 +1,729 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.HorariosSemanales.HorarioSemanalMultipleCrearDto
+
+@{
+    ViewBag.Title = "Programación semanal";
+
+    int diaSeleccionado = Model != null && Model.diaSemana >= 1
+        ? Model.diaSemana
+        : 1;
+}
+
+<section class="programacion-page">
+    <div class="container">
+
+        <div class="programacion-header">
+            <h1 class="page-title">
+                <i class="bi bi-calendar-week me-2"></i>
+                Programación semanal
+            </h1>
+
+            <p>
+                Configure varios horarios recurrentes para un mismo
+                día, tipo de clase y entrenador.
+            </p>
+        </div>
+
+        <div class="programacion-card">
+
+            <div class="programacion-card-header">
+                <h2>Nueva programación</h2>
+
+                <p>
+                    Cada rango agregado se convertirá en un horario
+                    semanal independiente.
+                </p>
+            </div>
+
+            <div class="programacion-card-body">
+
+                @using (
+                    Html.BeginForm(
+                        "Registrar",
+                        "HorariosSemanales",
+                        FormMethod.Post,
+                        new
+                        {
+                            id = "formHorarioSemanal",
+                            autocomplete = "off"
+                        }
+                    )
+                )
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(
+                        false,
+                        "",
+                        new { @class = "validation-summary-errors" }
+                    )
+
+                    @Html.HiddenFor(
+                        model => model.diaSemana,
+                        new { id = "diaSemanaSeleccionado" }
+                    )
+
+                    <div class="section-title">
+                        <span class="section-number">1</span>
+                        Seleccione el día
+                    </div>
+
+                    <div class="dias-selector"
+                         role="group"
+                         aria-label="Seleccione un día de la semana">
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 1 ? "activo" : "")"
+                                data-dia="1"
+                                data-nombre="Lunes"
+                                aria-pressed="@(diaSeleccionado == 1 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Lunes
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 2 ? "activo" : "")"
+                                data-dia="2"
+                                data-nombre="Martes"
+                                aria-pressed="@(diaSeleccionado == 2 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Martes
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 3 ? "activo" : "")"
+                                data-dia="3"
+                                data-nombre="Miércoles"
+                                aria-pressed="@(diaSeleccionado == 3 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Miércoles
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 4 ? "activo" : "")"
+                                data-dia="4"
+                                data-nombre="Jueves"
+                                aria-pressed="@(diaSeleccionado == 4 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Jueves
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 5 ? "activo" : "")"
+                                data-dia="5"
+                                data-nombre="Viernes"
+                                aria-pressed="@(diaSeleccionado == 5 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Viernes
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 6 ? "activo" : "")"
+                                data-dia="6"
+                                data-nombre="Sábado"
+                                aria-pressed="@(diaSeleccionado == 6 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Sábado
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 7 ? "activo" : "")"
+                                data-dia="7"
+                                data-nombre="Domingo"
+                                aria-pressed="@(diaSeleccionado == 7 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Domingo
+                        </button>
+
+                    </div>
+
+                    <div class="dia-seleccionado-resumen"
+                         id="resumenDiaSeleccionado">
+
+                        <i class="bi bi-calendar-check"></i>
+
+                        <span>
+                            Día seleccionado:
+                            <strong id="nombreDiaSeleccionado">
+                                @(diaSeleccionado == 1 ? "Lunes" :
+                                  diaSeleccionado == 2 ? "Martes" :
+                                  diaSeleccionado == 3 ? "Miércoles" :
+                                  diaSeleccionado == 4 ? "Jueves" :
+                                  diaSeleccionado == 5 ? "Viernes" :
+                                  diaSeleccionado == 6 ? "Sábado" :
+                                  diaSeleccionado == 7 ? "Domingo" :
+                                  "Lunes")
+                            </strong>
+                        </span>
+                    </div>
+
+                    @Html.ValidationMessageFor(
+                        model => model.diaSemana,
+                        "",
+                        new { @class = "text-danger" }
+                    )
+
+                    <div class="section-title mt-4">
+                        <span class="section-number">2</span>
+                        Información general
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(
+                                model => model.idTipoClase,
+                                new { @class = "form-label" }
+                            )
+
+                            @Html.DropDownListFor(
+                                model => model.idTipoClase,
+                                ViewBag.TiposClase
+                                    as IEnumerable<SelectListItem>,
+                                "Seleccione el tipo de clase",
+                                new { @class = "form-select" }
+                            )
+
+                            @Html.ValidationMessageFor(
+                                model => model.idTipoClase,
+                                "",
+                                new { @class = "text-danger" }
+                            )
+                        </div>
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(
+                                model => model.idUsuarioEntrenador,
+                                new { @class = "form-label" }
+                            )
+
+                            @Html.DropDownListFor(
+                                model => model.idUsuarioEntrenador,
+                                ViewBag.Entrenadores
+                                    as IEnumerable<SelectListItem>,
+                                "Seleccione el entrenador",
+                                new { @class = "form-select" }
+                            )
+
+                            @Html.ValidationMessageFor(
+                                model => model.idUsuarioEntrenador,
+                                "",
+                                new { @class = "text-danger" }
+                            )
+                        </div>
+
+                        <div class="col-md-4">
+                            @Html.LabelFor(
+                                model => model.cupoMaximo,
+                                new { @class = "form-label" }
+                            )
+
+                            @Html.TextBoxFor(
+                                model => model.cupoMaximo,
+                                new
+                                {
+                                    @class = "form-control",
+                                    type = "number",
+                                    min = "1",
+                                    max = "30"
+                                }
+                            )
+
+                            @Html.ValidationMessageFor(
+                                model => model.cupoMaximo,
+                                "",
+                                new { @class = "text-danger" }
+                            )
+                        </div>
+
+
+                    </div>
+
+                    <div class="section-title mt-5">
+                        <span class="section-number">3</span>
+                        Rangos horarios
+                    </div>
+
+                    <div class="horarios-panel">
+
+                        <div id="contenedorHorarios">
+
+                            @if (
+                                Model.horarios != null &&
+                                Model.horarios.Any()
+                            )
+                            {
+                                for (
+                                    int i = 0;
+                                    i < Model.horarios.Count;
+                                    i++
+                                )
+                                {
+                                    <div class="horario-row"
+                                         data-index="@i">
+
+                                        <div>
+                                            <label class="form-label">
+                                                Hora de inicio
+                                            </label>
+
+                                            @Html.TextBoxFor(
+                                                model =>
+                                                    model.horarios[i]
+                                                        .horaInicio,
+                                                new
+                                                {
+                                                    @class =
+                                                        "form-control hora-inicio",
+                                                    type = "time",
+                                                    step = "300"
+                                                }
+                                            )
+
+                                            @Html.ValidationMessageFor(
+                                                model =>
+                                                    model.horarios[i]
+                                                        .horaInicio,
+                                                "",
+                                                new
+                                                {
+                                                    @class = "text-danger"
+                                                }
+                                            )
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label">
+                                                Hora de finalización
+                                            </label>
+
+                                            @Html.TextBoxFor(
+                                                model =>
+                                                    model.horarios[i]
+                                                        .horaFin,
+                                                new
+                                                {
+                                                    @class =
+                                                        "form-control hora-fin",
+                                                    type = "time",
+                                                    step = "300"
+                                                }
+                                            )
+
+                                            @Html.ValidationMessageFor(
+                                                model =>
+                                                    model.horarios[i]
+                                                        .horaFin,
+                                                "",
+                                                new
+                                                {
+                                                    @class = "text-danger"
+                                                }
+                                            )
+                                        </div>
+
+                                        <button type="button"
+                                                class="btn-eliminar-horario"
+                                                title="Eliminar horario">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                        <button type="button"
+                                id="btnAgregarHorario"
+                                class="btn btn-agregar w-100 mt-3">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Agregar otro horario
+                        </button>
+                    </div>
+
+                    <div class="acciones-formulario">
+
+                        <a href="@Url.Action(
+                                "Index",
+                                "HorariosSemanales"
+                            )"
+                           class="btn btn-volver">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Volver
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-guardar">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Guardar programación
+                        </button>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const inputDia =
+                document.getElementById("diaSemanaSeleccionado");
+
+            const botonesDia =
+                document.querySelectorAll(".dia-button");
+
+            const nombreDiaSeleccionado =
+                document.getElementById("nombreDiaSeleccionado");
+
+            const contenedorHorarios =
+                document.getElementById("contenedorHorarios");
+
+            const botonAgregarHorario =
+                document.getElementById("btnAgregarHorario");
+
+            const formulario =
+                document.getElementById("formHorarioSemanal");
+
+            /* ==========================================
+               SELECCIÓN DEL DÍA
+               ========================================== */
+
+            function seleccionarDia(boton) {
+
+                if (!boton) {
+                    return;
+                }
+
+                const dia =
+                    boton.getAttribute("data-dia");
+
+                const nombreDia =
+                    boton.getAttribute("data-nombre");
+
+                inputDia.value = dia;
+
+                botonesDia.forEach(function (elemento) {
+
+                    elemento.classList.remove("activo");
+
+                    elemento.setAttribute(
+                        "aria-pressed",
+                        "false"
+                    );
+                });
+
+                boton.classList.add("activo");
+
+                boton.setAttribute(
+                    "aria-pressed",
+                    "true"
+                );
+
+                if (nombreDiaSeleccionado) {
+                    nombreDiaSeleccionado.textContent =
+                        nombreDia;
+                }
+            }
+
+            botonesDia.forEach(function (boton) {
+
+                boton.addEventListener(
+                    "click",
+                    function () {
+                        seleccionarDia(boton);
+                    }
+                );
+            });
+
+            function activarDiaInicial() {
+
+                let diaActual =
+                    inputDia.value;
+
+                if (
+                    !diaActual ||
+                    diaActual === "0"
+                ) {
+                    diaActual = "1";
+                    inputDia.value = "1";
+                }
+
+                const botonInicial =
+                    document.querySelector(
+                        '.dia-button[data-dia="' +
+                        diaActual +
+                        '"]'
+                    );
+
+                seleccionarDia(botonInicial);
+            }
+
+            activarDiaInicial();
+
+            /* ==========================================
+               AGREGAR HORARIOS
+               ========================================== */
+
+            botonAgregarHorario.addEventListener(
+                "click",
+                function () {
+
+                    const filas =
+                        contenedorHorarios.querySelectorAll(
+                            ".horario-row"
+                        );
+
+                    let horaInicioSugerida = "05:00";
+                    let horaFinSugerida = "06:00";
+
+                    if (filas.length > 0) {
+
+                        const ultimaFila =
+                            filas[filas.length - 1];
+
+                        const ultimaHoraFin =
+                            ultimaFila.querySelector(
+                                ".hora-fin"
+                            ).value;
+
+                        if (ultimaHoraFin) {
+
+                            horaInicioSugerida =
+                                ultimaHoraFin;
+
+                            horaFinSugerida =
+                                sumarUnaHora(
+                                    ultimaHoraFin
+                                );
+                        }
+                    }
+
+                    const nuevaFila =
+                        document.createElement("div");
+
+                    nuevaFila.className =
+                        "horario-row";
+
+                    nuevaFila.innerHTML = `
+                            <div>
+                                <label class="form-label">
+                                    Hora de inicio
+                                </label>
+
+                                <input
+                                    type="time"
+                                    step="300"
+                                    class="form-control hora-inicio"
+                                    value="${horaInicioSugerida}" />
+                            </div>
+
+                            <div>
+                                <label class="form-label">
+                                    Hora de finalización
+                                </label>
+
+                                <input
+                                    type="time"
+                                    step="300"
+                                    class="form-control hora-fin"
+                                    value="${horaFinSugerida}" />
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn-eliminar-horario"
+                                title="Eliminar horario">
+
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        `;
+
+                    contenedorHorarios.appendChild(
+                        nuevaFila
+                    );
+
+                    reasignarIndices();
+                }
+            );
+
+            /* ==========================================
+               ELIMINAR HORARIOS
+               ========================================== */
+
+            contenedorHorarios.addEventListener(
+                "click",
+                function (evento) {
+
+                    const botonEliminar =
+                        evento.target.closest(
+                            ".btn-eliminar-horario"
+                        );
+
+                    if (!botonEliminar) {
+                        return;
+                    }
+
+                    const filas =
+                        contenedorHorarios.querySelectorAll(
+                            ".horario-row"
+                        );
+
+                    if (filas.length <= 1) {
+
+                        alert(
+                            "Debe conservar al menos un rango horario."
+                        );
+
+                        return;
+                    }
+
+                    botonEliminar
+                        .closest(".horario-row")
+                        .remove();
+
+                    reasignarIndices();
+                }
+            );
+
+            /* ==========================================
+               VALIDACIÓN DEL FORMULARIO
+               ========================================== */
+
+            formulario.addEventListener(
+                "submit",
+                function (evento) {
+
+                    if (
+                        !inputDia.value ||
+                        inputDia.value === "0"
+                    ) {
+                        evento.preventDefault();
+
+                        alert(
+                            "Debe seleccionar el día de la semana."
+                        );
+
+                        return;
+                    }
+
+                    const filas =
+                        contenedorHorarios.querySelectorAll(
+                            ".horario-row"
+                        );
+
+                    if (filas.length === 0) {
+
+                        evento.preventDefault();
+
+                        alert(
+                            "Debe agregar al menos un rango horario."
+                        );
+
+                        return;
+                    }
+
+                    reasignarIndices();
+                }
+            );
+
+            /* ==========================================
+               REASIGNACIÓN DE ÍNDICES MVC
+               ========================================== */
+
+            function reasignarIndices() {
+
+                const filas =
+                    contenedorHorarios.querySelectorAll(
+                        ".horario-row"
+                    );
+
+                filas.forEach(
+                    function (fila, indice) {
+
+                        fila.setAttribute(
+                            "data-index",
+                            indice
+                        );
+
+                        const horaInicio =
+                            fila.querySelector(
+                                ".hora-inicio"
+                            );
+
+                        const horaFin =
+                            fila.querySelector(
+                                ".hora-fin"
+                            );
+
+                        horaInicio.name =
+                            "horarios[" +
+                            indice +
+                            "].horaInicio";
+
+                        horaInicio.id =
+                            "horarios_" +
+                            indice +
+                            "__horaInicio";
+
+                        horaFin.name =
+                            "horarios[" +
+                            indice +
+                            "].horaFin";
+
+                        horaFin.id =
+                            "horarios_" +
+                            indice +
+                            "__horaFin";
+                    }
+                );
+            }
+
+            reasignarIndices();
+
+            /* ==========================================
+               SUMAR UNA HORA
+               ========================================== */
+
+            function sumarUnaHora(horaTexto) {
+
+                const partes =
+                    horaTexto.split(":");
+
+                let horas =
+                    parseInt(partes[0], 10);
+
+                let minutos =
+                    parseInt(partes[1], 10);
+
+                horas++;
+
+                if (horas >= 24) {
+                    horas = 23;
+                    minutos = 59;
+                }
+
+                const horasTexto =
+                    horas
+                        .toString()
+                        .padStart(2, "0");
+
+                const minutosTexto =
+                    minutos
+                        .toString()
+                        .padStart(2, "0");
+
+                return (
+                    horasTexto +
+                    ":" +
+                    minutosTexto
+                );
+            }
+        });
+    </script>
+}

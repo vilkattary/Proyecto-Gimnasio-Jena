@@ -111,6 +111,12 @@
     <Compile Include="AccesoADatos\Home\AgregarSeccionHome\IAgregarSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Home\CambiarEstadoSeccionHome\ICambiarEstadoSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Home\EliminarSeccionHome\IEliminarSeccionHomeAD.cs" />
+    <Compile Include="AccesoADatos\HorariosSemanales\CambiarEstadoHorarioSemanal\ICambiarEstadoHorarioSemanalAD.cs" />
+    <Compile Include="AccesoADatos\HorariosSemanales\EditarHorarioSemanal\IEditarHorarioSemanalAD.cs" />
+    <Compile Include="AccesoADatos\HorariosSemanales\GenerarClasesProgramadas\IGenerarClasesProgramadasAD.cs" />
+    <Compile Include="AccesoADatos\HorariosSemanales\ObtenerHorarioSemanalPorId\IObtenerHorarioSemanalPorIdAD.cs" />
+    <Compile Include="AccesoADatos\HorariosSemanales\ObtenerHorariosSemanales\IObtenerHorariosSemanalesAD.cs" />
+    <Compile Include="AccesoADatos\HorariosSemanales\RegistrarHorariosSemanales\IRegistrarHorariosSemanalesAD.cs" />
     <Compile Include="AccesoADatos\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\EditarMembresia\IEditarMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteAD.cs" />
@@ -121,6 +127,8 @@
     <Compile Include="AccesoADatos\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Nosotros\CambiarEstadoSeccionNosotros\ICambiarEstadoSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosAD.cs" />
+    <Compile Include="AccesoADatos\Pagos\ObtenerTodosLosPagos\IObtenerTodosLosPagosAD.cs" />
+    <Compile Include="AccesoADatos\Pagos\RegistrarPago\IRegistrarPagoAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdAD.cs" />
@@ -156,6 +164,7 @@
     <Compile Include="AccesoADatos\Usuarios\ObtenerUsuarioPorId\IObtenerUsuarioPorIdAD.cs" />
     <Compile Include="AccesoADatos\Usuarios\RecuperarContrasena\IRecuperarContrasenaAD.cs" />
     <Compile Include="AccesoADatos\Usuarios\RegistrarUsuario\IRegistrarUsuarioAD.cs" />
+    <Compile Include="General\DiasSemana\DiasSemana.cs" />
     <Compile Include="General\Email\IServicioEmail.cs" />
     <Compile Include="General\Fechas\IFechasLN.cs" />
     <Compile Include="LogicaDeNegocio\Asistencias\CambiarEstadoAsistencia\ICambiarEstadoAsistenciaLN.cs" />
@@ -196,6 +205,12 @@
     <Compile Include="LogicaDeNegocio\Home\AgregarSeccionHome\IAgregarSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Home\CambiarEstadoSeccionHome\ICambiarEstadoSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Home\EliminarSeccionHome\IEliminarSeccionHomeLN.cs" />
+    <Compile Include="LogicaDeNegocio\HorariosSemanales\CambiarEstadoHorarioSemanal\ICambiarEstadoHorarioSemanalLN.cs" />
+    <Compile Include="LogicaDeNegocio\HorariosSemanales\EditarHorarioSemanal\IEditarHorarioSemanalLN.cs" />
+    <Compile Include="LogicaDeNegocio\HorariosSemanales\GenerarClasesProgramadas\IGenerarClasesProgramadasLN.cs" />
+    <Compile Include="LogicaDeNegocio\HorariosSemanales\ObtenerHorarioSemanalPorId\IObtenerHorarioSemanalPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\HorariosSemanales\ObtenerHorariosSemanales\IObtenerHorariosSemanalesLN.cs" />
+    <Compile Include="LogicaDeNegocio\HorariosSemanales\RegistrarHorariosSemanales\IRegistrarHorariosSemanalesLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\EditarMembresia\IEditarMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteLN.cs" />
@@ -206,6 +221,8 @@
     <Compile Include="LogicaDeNegocio\Nosotros\AgregarSeccionNosotros\IAgregarSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Nosotros\CambiarEstadoSeccionNosotros\ICambiarEstadoSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Pagos\ObtenerTodosLosPagos\IObtenerTodosLosPagosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Pagos\RegistrarPago\IRegistrarPagoLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdLN.cs" />
@@ -248,6 +265,8 @@
     <Compile Include="Modelos\Asistencias\AsistenciaDto.cs" />
     <Compile Include="Modelos\Asistencias\AsistenciaEditarDto.cs" />
     <Compile Include="Modelos\Asistencias\AsistenciaListadoDto.cs" />
+    <Compile Include="Modelos\Asistencias\AsistenciaValidacionDto.cs" />
+    <Compile Include="Modelos\Asistencias\ResultadoAsistenciaDto.cs" />
     <Compile Include="Modelos\Bitacora\BitacoraDto.cs" />
     <Compile Include="Modelos\Clases\ClaseCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Clases\ClaseCrearDto.cs" />
@@ -277,6 +296,14 @@
     <Compile Include="Modelos\Entrenadores\EntrenadorPerfilDto.cs" />
     <Compile Include="Modelos\Home\AgregarSeccionHomeDto.cs" />
     <Compile Include="Modelos\Home\ContenidoWebDto.cs" />
+    <Compile Include="Modelos\HorariosSemanales\GenerarClasesProgramadasDto.cs" />
+    <Compile Include="Modelos\HorariosSemanales\HorarioSemanalCrearDto.cs" />
+    <Compile Include="Modelos\HorariosSemanales\HorarioSemanalDetalleCrearDto.cs" />
+    <Compile Include="Modelos\HorariosSemanales\HorarioSemanalEditarDto.cs" />
+    <Compile Include="Modelos\HorariosSemanales\HorarioSemanalListadoDto.cs" />
+    <Compile Include="Modelos\HorariosSemanales\HorarioSemanalMultipleCrearDto.cs" />
+    <Compile Include="Modelos\HorariosSemanales\ResultadoGeneracionClasesDto.cs" />
+    <Compile Include="Modelos\HorariosSemanales\ResultadoRegistroHorariosDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaClienteDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCrearDto.cs" />
@@ -284,6 +311,11 @@
     <Compile Include="Modelos\Membresias\MembresiaEditarDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaListadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaRenovarDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoActualizarEstadoDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoCrearDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoDetalleDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoListadoDto.cs" />
+    <Compile Include="Modelos\Pagos\PagoMembresiaValidacionDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaCrearDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaDto.cs" />
@@ -306,6 +338,7 @@
     <Compile Include="Modelos\Reservas\ReservaCrearDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaListadoDto.cs" />
+    <Compile Include="Modelos\Reservas\ResultadoReservaDto.cs" />
     <Compile Include="Modelos\Roles\RolCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Roles\RolCrearDto.cs" />
     <Compile Include="Modelos\Roles\RolDto.cs" />

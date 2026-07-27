@@ -10,63 +10,14 @@
     var seccionTestimonios = Model.Where(x => x.Seccion == "Testimonios").OrderBy(x => x.Orden).ToList();
 }
 
-<style>
-    .card-inactiva {
-        filter: grayscale(100%);
-        position: relative;
-    }
-    .card-inactiva::after {
-        content: 'INACTIVO';
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: #dc3545;
-        color: #fff;
-        font-size: 0.68rem;
-        font-weight: 700;
-        letter-spacing: 1.5px;
-        padding: 2px 8px;
-        border-radius: 4px;
-        z-index: 10;
-        pointer-events: none;
-    }
-    /* Bloquea botones de edición en tarjetas inactivas */
-    .card-inactiva button[type="submit"] {
-        pointer-events: none;
-        opacity: 0.5;
-    }
-    /* El interruptor permanece completamente interactivo */
-    .card-inactiva .toggle-form .form-check-input,
-    .card-inactiva .toggle-form .form-check-label {
-        pointer-events: auto;
-        opacity: 1;
-        filter: none;
-    }
-    /* Cursor indicativo en controles deshabilitados por fieldset */
-    .card-inactiva fieldset:disabled input,
-    .card-inactiva fieldset:disabled textarea,
-    .card-inactiva fieldset:disabled select,
-    .card-inactiva fieldset:disabled button {
-        cursor: not-allowed;
-    }
-    .toggle-form .form-check-label {
-        font-size: 0.82rem;
-        font-weight: 600;
-        cursor: pointer;
-    }
-    .toggle-form .form-check-input {
-        cursor: pointer;
-    }
-</style>
-
 @if (!string.IsNullOrEmpty(mensajeExito))
 {
     <div class="alert alert-success alert-dismissible fade show mb-0 mt-5 rounded-0 border-0 border-bottom"
          role="alert"
-         style="border-bottom-color: var(--jena-orange) !important; background-color: #e8f5e9;">
+         class="tab-active-success">
         <div class="container d-flex align-items-center gap-2">
-            <i class="bi bi-check-circle-fill fs-5" style="color: #2e7d32;"></i>
-            <span class="fw-semibold" style="color: #1b5e20;">@mensajeExito</span>
+            <i class="bi bi-check-circle-fill fs-5 text-success-dark"></i>
+            <span class="fw-semibold text-success-darker">@mensajeExito</span>
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
     </div>
@@ -76,10 +27,10 @@
 {
     <div class="alert alert-danger alert-dismissible fade show mb-0 mt-5 rounded-0 border-0 border-bottom"
          role="alert"
-         style="border-bottom-color: #c62828 !important; background-color: #ffebee;">
+         class="tab-active-danger">
         <div class="container d-flex align-items-center gap-2">
-            <i class="bi bi-exclamation-triangle-fill fs-5" style="color: #c62828;"></i>
-            <span class="fw-semibold" style="color: #b71c1c;">@mensajeError</span>
+            <i class="bi bi-exclamation-triangle-fill fs-5 text-danger-dark"></i>
+            <span class="fw-semibold text-danger-darker">@mensajeError</span>
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
     </div>
@@ -91,26 +42,25 @@
         <div class="col-12">
             <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
                 <div>
-                    <h1 class="mb-1 text-uppercase" style="color: var(--jena-navy); font-size: clamp(1.5rem, 3vw, 2.2rem);">
-                        <i class="bi bi-sliders me-2" style="color: var(--jena-orange);"></i>Administrar Inicio
+                    <h1 class="heading-jena-fluid">
+                        <i class="bi bi-sliders me-2 text-accent"></i>Administrar Inicio
                     </h1>
-                    <p class="text-muted mb-0" style="font-family: var(--font-primary); font-size: 0.95rem;">
+                    <p class="text-muted mb-0 text-jena-body">
                         Gestione el contenido de la página pública. Las tarjetas son fijas y solo se pueden editar.
                     </p>
                 </div>
                 <a href="@Url.Action("Index", "Home")" target="_blank"
-                   class="btn-action text-decoration-none"
-                   style="width: auto; padding: 10px 24px; white-space: nowrap;">
+                   class="btn-action text-decoration-none btn-action-md-nowrap">
                     <i class="bi bi-box-arrow-up-right"></i>Ver página pública
                 </a>
             </div>
-            <hr style="border-color: var(--jena-orange); border-width: 2px; opacity: 1; margin-top: 1.25rem;" />
+            <hr class="hr-jena-orange" />
         </div>
     </div>
 
     <div class="action-buttons-card mb-4">
         <h5>
-            <i class="bi bi-image-fill me-2" style="color: var(--jena-orange);"></i>Sección Hero
+            <i class="bi bi-image-fill me-2 text-accent"></i>Sección Hero
         </h5>
 
         @if (!seccionHero.Any())
@@ -135,26 +85,22 @@
                         @if (!string.IsNullOrEmpty(item.UrlImagen))
                         {
                             <div class="col-12 col-md-auto">
-                                <label class="form-label fw-semibold d-block"
-                                       style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                <label class="form-label fw-semibold d-block form-label-jena">
                                     Imagen actual
                                 </label>
-                                <div style="position: relative; display: inline-block;">
+                                <div class="pos-rel-inline">
                                     <img src="@item.UrlImagen"
                                          alt="Fondo Hero actual"
-                                         class="img-thumbnail"
-                                         style="width: 200px; height: 120px; object-fit: cover; border-radius: 10px; border: 2px solid var(--jena-light-blue);" />
-                                    <span class="badge position-absolute top-0 start-0 m-1"
-                                          style="background: var(--jena-navy); font-size: 0.7rem;">FONDO</span>
+                                         class="img-thumbnail img-card-thumb" />
+                                    <span class="badge position-absolute top-0 start-0 m-1 badge-navy">FONDO</span>
                                 </div>
                             </div>
                         }
 
                         <div class="col-12 col-md">
                             <div class="mb-3">
-                                <label class="form-label fw-semibold"
-                                       style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
-                                    Título principal <span style="color: var(--jena-orange);">*</span>
+                                <label class="form-label fw-semibold form-label-jena">
+                                    Título principal <span class="text-accent">*</span>
                                 </label>
                                 <input type="text"
                                        name="TextoPrincipal"
@@ -164,8 +110,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label fw-semibold"
-                                       style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                <label class="form-label fw-semibold form-label-jena">
                                     Descripción / Subtítulo
                                 </label>
                                 <textarea name="TextoSecundario"
@@ -174,9 +119,8 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label fw-semibold"
-                                       style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
-                                    <i class="bi bi-upload me-1" style="color: var(--jena-orange);"></i>Reemplazar imagen de fondo
+                                <label class="form-label fw-semibold form-label-jena">
+                                    <i class="bi bi-upload me-1 text-accent"></i>Reemplazar imagen de fondo
                                 </label>
                                 <input type="file"
                                        name="ArchivoImagen"
@@ -188,11 +132,11 @@
                             </div>
 
                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-1">
-                                <small class="text-muted" style="font-family: var(--font-primary); font-size: 0.78rem;">
+                                <small class="text-muted text-jena-xs">
                                     <i class="bi bi-clock me-1"></i>
                                     Última modificación: @(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yyyy HH:mm") : "-")
                                 </small>
-                                <button type="submit" class="btn-action" style="width: auto; padding: 10px 28px;">
+                                <button type="submit" class="btn-action btn-action-lg">
                                     <i class="bi bi-save-fill"></i>Guardar Hero
                                 </button>
                             </div>
@@ -205,7 +149,7 @@
 
     <div class="action-buttons-card mb-4">
         <h5>
-            <i class="bi bi-collection-fill me-2" style="color: var(--jena-orange);"></i>Nuestras Clases
+            <i class="bi bi-collection-fill me-2 text-accent"></i>Nuestras Clases
         </h5>
 
         <div class="alert alert-info">
@@ -222,24 +166,20 @@
                     string iconoActual = esIconoBI ? item.UrlImagen : "bi-star-fill";
 
                     <div class="col-12 col-lg-4 @(item.Estado ? "" : "card-inactiva")">
-                        <div class="h-100"
-                             style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+                        <div class="h-100 card-jena-bordered-sm">
 
-                            <div class="d-flex align-items-center justify-content-between px-3 py-2"
-                                 style="background: var(--jena-navy);">
-                                <span class="text-uppercase fw-bold"
-                                      style="color: var(--jena-white); font-family: var(--font-primary); font-size: 0.78rem; letter-spacing: 1.5px;">
+                            <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-navy">
+                                <span class="text-uppercase fw-bold text-jena-white-spaced">
                                     Tarjeta de clase
                                 </span>
 
-                                <span class="rounded-circle d-flex align-items-center justify-content-center"
-                                      style="width:36px; height:36px; background: var(--jena-orange);">
-                                    <i class="bi @iconoActual text-white" style="font-size: 1.1rem;"></i>
+                                <span class="rounded-circle d-flex align-items-center justify-content-center icon-badge-orange">
+                                    <i class="bi @iconoActual text-white text-jena-sm"></i>
                                 </span>
                             </div>
 
                             <div class="p-3">
-                                <fieldset @Html.Raw(!item.Estado ? "disabled" : "") style="border:none;padding:0;margin:0;">
+                                <fieldset @Html.Raw(!item.Estado ? "disabled" : "") class="btn-borderless">
                                 <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
                                       method="post">
                                     @Html.AntiForgeryToken()
@@ -247,9 +187,8 @@
                                     <input type="hidden" name="Clave" value="@item.Clave" />
 
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold"
-                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
-                                            Nombre de la clase <span style="color: var(--jena-orange);">*</span>
+                                        <label class="form-label fw-semibold form-label-jena-sm">
+                                            Nombre de la clase <span class="text-accent">*</span>
                                         </label>
                                         <input type="text"
                                                name="TextoPrincipal"
@@ -259,8 +198,7 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold"
-                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+                                        <label class="form-label fw-semibold form-label-jena-sm">
                                             Descripción
                                         </label>
                                         <textarea name="TextoSecundario"
@@ -269,13 +207,11 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold"
-                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
-                                            <i class="bi bi-palette-fill me-1" style="color: var(--jena-orange);"></i>Ícono
+                                        <label class="form-label fw-semibold form-label-jena-sm">
+                                            <i class="bi bi-palette-fill me-1 text-accent"></i>Ícono
                                         </label>
                                         <div class="input-group">
-                                            <span class="input-group-text px-3"
-                                                  style="background: var(--jena-navy); border-color: var(--jena-navy); min-width:52px; font-size:1.4rem;">
+                                            <span class="input-group-text px-3 btn-jena-nav-lg">
                                                 <i class="bi @iconoActual text-white" id="icono-i-@item.Id"></i>
                                             </span>
                                             <select name="UrlImagen" class="form-select"
@@ -301,16 +237,16 @@
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
-                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                        <small class="text-muted text-jena-mini">
                                             <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
                                         </small>
-                                        <button type="submit" class="btn-action" style="width: auto; padding: 8px 20px; font-size: 0.85rem; margin-bottom: 0;">
+                                        <button type="submit" class="btn-action btn-action-sm">
                                             <i class="bi bi-save-fill"></i>Guardar
                                         </button>
                                     </div>
                                 </form>
                                 </fieldset>
-                                <hr class="my-2" style="border-color: var(--jena-light-blue);" />
+                                <hr class="my-2 border-light-blue" />
                                 <form action="@Url.Action("ToggleEstado", "SeccionesHome")" method="post" class="toggle-form mb-0">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@item.Id" />
@@ -334,7 +270,7 @@
 
     <div class="action-buttons-card mb-4">
         <h5>
-            <i class="bi bi-chat-quote-fill me-2" style="color: var(--jena-orange);"></i>Testimonios de Clientes
+            <i class="bi bi-chat-quote-fill me-2 text-accent"></i>Testimonios de Clientes
         </h5>
 
         <div class="alert alert-info">
@@ -361,13 +297,10 @@
                     }
 
                     <div class="col-12 col-lg-4 @(item.Estado ? "" : "card-inactiva")">
-                        <div class="h-100"
-                             style="border: 1px solid var(--jena-light-blue); border-radius: 15px; overflow: hidden; background: var(--jena-white); box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+                        <div class="h-100 card-jena-bordered-sm">
 
-                            <div class="d-flex align-items-center justify-content-between px-3 py-2"
-                                 style="background: #293039;">
-                                <span class="fw-bold"
-                                      style="color: #FF6600; font-family: var(--font-primary); font-size: 0.78rem; letter-spacing: 1px;">
+                            <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-dark-jena">
+                                <span class="fw-bold text-accent-xs">
                                     <i class="bi bi-quote me-1"></i>Tarjeta de testimonio
                                 </span>
 
@@ -375,19 +308,18 @@
                                 {
                                     <img src="@item.UrlImagen"
                                          alt="Avatar @item.TextoPrincipal"
-                                         style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%; border: 2px solid #FF6600;" />
+                                         class="avatar-sm-accent" />
                                 }
                                 else
                                 {
-                                    <span class="rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                          style="width:36px; height:36px; background: #FF6600; color: #fff; font-size: 0.85rem;">
+                                    <span class="rounded-circle d-flex align-items-center justify-content-center fw-bold avatar-sm-orange">
                                         @iniciales
                                     </span>
                                 }
                             </div>
 
                             <div class="p-3">
-                                <fieldset @Html.Raw(!item.Estado ? "disabled" : "") style="border:none;padding:0;margin:0;">
+                                <fieldset @Html.Raw(!item.Estado ? "disabled" : "") class="btn-borderless">
                                 <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
                                       method="post"
                                       enctype="multipart/form-data">
@@ -396,9 +328,8 @@
                                     <input type="hidden" name="Clave" value="@item.Clave" />
 
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold"
-                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
-                                            Nombre del cliente <span style="color: var(--jena-orange);">*</span>
+                                        <label class="form-label fw-semibold form-label-jena-sm">
+                                            Nombre del cliente <span class="text-accent">*</span>
                                         </label>
                                         <input type="text"
                                                name="TextoPrincipal"
@@ -408,8 +339,7 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold"
-                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+                                        <label class="form-label fw-semibold form-label-jena-sm">
                                             Testimonio / Cita
                                         </label>
                                         <textarea name="TextoSecundario"
@@ -418,9 +348,8 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold"
-                                               style="color: var(--jena-navy); font-family: var(--font-primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
-                                            <i class="bi bi-upload me-1" style="color: var(--jena-orange);"></i>Avatar
+                                        <label class="form-label fw-semibold form-label-jena-sm">
+                                            <i class="bi bi-upload me-1 text-accent"></i>Avatar
                                         </label>
                                         <input type="file"
                                                name="ArchivoImagen"
@@ -429,16 +358,16 @@
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
-                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                        <small class="text-muted text-jena-mini">
                                             <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
                                         </small>
-                                        <button type="submit" class="btn-action" style="width: auto; padding: 8px 20px; font-size: 0.85rem; margin-bottom: 0;">
+                                        <button type="submit" class="btn-action btn-action-sm">
                                             <i class="bi bi-save-fill"></i>Guardar
                                         </button>
                                     </div>
                                 </form>
                                 </fieldset>
-                                <hr class="my-2" style="border-color: var(--jena-light-blue);" />
+                                <hr class="my-2 border-light-blue" />
                                 <form action="@Url.Action("ToggleEstado", "SeccionesHome")" method="post" class="toggle-form mb-0">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@item.Id" />

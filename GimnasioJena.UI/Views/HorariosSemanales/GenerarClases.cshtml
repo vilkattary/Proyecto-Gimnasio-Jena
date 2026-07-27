@@ -1,0 +1,212 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.HorariosSemanales.GenerarClasesProgramadasDto
+
+@{
+    ViewBag.Title = "Generar clases programadas";
+}
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card-jena-info">
+
+                <div class="card-header bg-white py-3">
+                    <h1 class="page-title">
+                        Generar clases programadas
+                    </h1>
+
+                    <p class="text-muted mb-0">
+                        Crea automáticamente las clases a partir de los
+                        horarios semanales activos.
+                    </p>
+                </div>
+
+                <div class="card-body p-4">
+
+                    @using (
+                        Html.BeginForm(
+                            "GenerarClases",
+                            "HorariosSemanales",
+                            FormMethod.Post,
+                            new { @class = "needs-validation" }
+                        )
+                    )
+                    {
+                        @Html.AntiForgeryToken()
+
+                        if (!ViewData.ModelState.IsValid)
+                        {
+                            @Html.ValidationSummary(
+                                false,
+                                "",
+                                new { @class = "alert alert-danger" }
+                            )
+                        }
+
+                        <div class="alert alert-info">
+                            <strong>Importante:</strong>
+                            el sistema solamente generará clases para los
+                            horarios semanales que se encuentren activos.
+                            Las clases que ya existan serán omitidas.
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                @Html.LabelFor(
+                                    modelo => modelo.fechaInicio,
+                                    "Fecha inicial",
+                                    new { @class = "form-label fw-semibold" }
+                                )
+
+                                @Html.TextBoxFor(
+                                    modelo => modelo.fechaInicio,
+                                    "{0:yyyy-MM-dd}",
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "date",
+                                        min = DateTime.Now.ToString("yyyy-MM-dd")
+                                    }
+                                )
+
+                                @Html.ValidationMessageFor(
+                                    modelo => modelo.fechaInicio,
+                                    "",
+                                    new { @class = "text-danger small" }
+                                )
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                @Html.LabelFor(
+                                    modelo => modelo.fechaFin,
+                                    "Fecha final",
+                                    new { @class = "form-label fw-semibold" }
+                                )
+
+                                @Html.TextBoxFor(
+                                    modelo => modelo.fechaFin,
+                                    "{0:yyyy-MM-dd}",
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "date",
+                                        min = DateTime.Now.ToString("yyyy-MM-dd")
+                                    }
+                                )
+
+                                @Html.ValidationMessageFor(
+                                    modelo => modelo.fechaFin,
+                                    "",
+                                    new { @class = "text-danger small" }
+                                )
+
+                            </div>
+
+                        </div>
+
+                        <div class="border rounded p-3 mb-4 bg-light">
+
+                            <h2>
+                                ¿Qué realizará el sistema?
+                            </h2>
+
+                            <ul class="mb-0">
+                                <li>
+                                    Revisará todos los horarios semanales activos.
+                                </li>
+
+                                <li>
+                                    Identificará los días correspondientes
+                                    dentro del periodo seleccionado.
+                                </li>
+
+                                <li>
+                                    Creará las clases con estado
+                                    <strong>Activa</strong>.
+                                </li>
+
+                                <li>
+                                    Evitará insertar clases duplicadas.
+                                </li>
+
+                                <li>
+                                    No generará clases en fechas anteriores
+                                    al día actual.
+                                </li>
+                            </ul>
+
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+
+                            @Html.ActionLink(
+                                "Volver al listado",
+                                "Index",
+                                "HorariosSemanales",
+                                null,
+                                new
+                                {
+                                    @class = "btn btn-outline-secondary"
+                                }
+                            )
+
+                            <button type="submit"
+                                    class="btn btn-primary"
+                                    id="btnGenerarClases">
+
+                                <i class="bi bi-calendar-plus me-1"></i>
+                                Generar clases
+
+                            </button>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const formulario =
+                document.querySelector("form");
+
+            const botonGenerar =
+                document.getElementById("btnGenerarClases");
+
+            if (!formulario || !botonGenerar) {
+                return;
+            }
+
+            formulario.addEventListener("submit", function () {
+
+                if (!formulario.checkValidity()) {
+                    return;
+                }
+
+                botonGenerar.disabled = true;
+
+                botonGenerar.innerHTML =
+                    '<span class="spinner-border spinner-border-sm me-2" ' +
+                    'role="status" aria-hidden="true"></span>' +
+                    'Generando...';
+            });
+
+        });
+    </script>
+}
