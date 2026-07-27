@@ -6,3 +6,4 @@
     CONSTRAINT [PK_dbo.__MigrationHistory] PRIMARY KEY CLUSTERED ([MigrationId] ASC, [ContextKey] ASC)
 );
 
+--cambio minimo
