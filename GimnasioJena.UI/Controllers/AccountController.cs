@@ -94,8 +94,7 @@ namespace GimnasioJena.UI.Controllers
                         {
                             var usuarioPerfil = ctx.Usuarios.FirstOrDefault(u => u.identityUserId == appUser.Id);
                             if (usuarioPerfil != null)
-                                nombreCompleto = string.Join(" ", new[] { usuarioPerfil.nombre, usuarioPerfil.apellido1}
-                                    .Where(s => !string.IsNullOrWhiteSpace(s)));
+                                nombreCompleto = usuarioPerfil.nombre;
                         }
                         var identity = await appUser.GenerateUserIdentityAsync(UserManager, nombreCompleto);
                         var authManager = HttpContext.GetOwinContext().Authentication;
