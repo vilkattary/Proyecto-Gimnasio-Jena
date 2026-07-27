@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Panel de Administración";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+    var nombreClaim = claimsIdentity != null ? claimsIdentity.FindFirst("NombreCompleto") : null;
+    var nombreAdmin = (nombreClaim != null && !string.IsNullOrEmpty(nombreClaim.Value))
+        ? nombreClaim.Value
+        : User.Identity.Name;
+}
+
+<section class="dashboard-hero">
+    <div class="container-jena">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <div class="dashboard-avatar">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <div>
+                <p class="dashboard-saludo mb-0">Bienvenido de nuevo,</p>
+                <h2 class="dashboard-nombre">@nombreAdmin</h2>
+            </div>
+        </div>
+        <p class="dashboard-fecha mt-3 mb-0">
+            <i class="bi bi-calendar3 me-2"></i>@DateTime.Now.ToString("dddd, d 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"))
+        </p>
+    </div>
+</section>
+
+<section class="dashboard-modules py-5">
+    <div class="container-jena">
+
+        <h1 class="section-title-admin">Módulos de Gestión</h1>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+            
+            <div class="col">
+                <div class="admin-card h-100">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+                    <h3 class="admin-card-title">Clases y Horarios</h3>
+                    <p class="admin-card-desc">
+                        Crea, edita y organiza todas las clases del gimnasio. Gestiona la programación semanal y asigna entrenadores.
+                    </p>
+                    <div class="admin-card-actions">
+                        <a href="@Url.Action("Index", "HorariosSemanales")" class="btn btn-jena-primary">
+                            <i class="bi bi-gear me-1"></i>Administrar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col">
+                <div class="admin-card h-100">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h3 class="admin-card-title">Usuarios y Clientes</h3>
+                    <p class="admin-card-desc">
+                        Administra cuentas de usuarios, perfiles de clientes y entrenadores. Asigna roles y permisos de acceso.
+                    </p>
+                    <div class="admin-card-actions">
+                        <a href="@Url.Action("Index", "Usuarios")" class="btn btn-jena-primary">
+                            <i class="bi bi-gear me-1"></i>Administrar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col">
+                <div class="admin-card h-100">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+                    <h3 class="admin-card-title">Membresías y Pagos</h3>
+                    <p class="admin-card-desc">
+                        Controla los planes de membresía activos, registra pagos y genera reportes financieros del gimnasio.
+                    </p>
+                    <div class="admin-card-actions">
+                        <a href="@Url.Action("Index", "Membresias")" class="btn btn-jena-primary">
+                            <i class="bi bi-gear me-1"></i>Administrar
+                        </a>
+                        <a href="@Url.Action("Index", "Pagos")" class="btn btn-jena-outline ms-2">
+                            Pagos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col">
+                <div class="admin-card h-100">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-layout-text-window-reverse"></i>
+                    </div>
+                    <h3 class="admin-card-title">Home y Contenido Web</h3>
+                    <p class="admin-card-desc">
+                        Edita las secciones dinámicas del sitio: banners, sección Nosotros, textos promocionales y más.
+                    </p>
+                    <div class="admin-card-actions">
+                        <a href="@Url.Action("AdminIndex", "Home")" class="btn btn-jena-primary">
+                            <i class="bi bi-gear me-1"></i>Administrar
+                        </a>
+                        <a href="@Url.Action("Index", "SeccionesNosotros")" class="btn btn-jena-outline ms-2">
+                            Nosotros
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col">
+                <div class="admin-card h-100">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-bar-chart-line"></i>
+                    </div>
+                    <h3 class="admin-card-title">Reportes y Estadísticas</h3>
+                    <p class="admin-card-desc">
+                        Visualiza estadísticas de asistencia, rendimiento de clases y métricas clave del gimnasio en tiempo real.
+                    </p>
+                    <div class="admin-card-actions">
+                        <a href="@Url.Action("Index", "Bitacoras")" class="btn btn-jena-primary">
+                            <i class="bi bi-gear me-1"></i>Administrar
+                        </a>
+                        <a href="@Url.Action("Administrar", "Reservas")" class="btn btn-jena-outline ms-2">
+                            Reservas
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+

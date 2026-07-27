@@ -9,17 +9,11 @@
 
     <div class="text-center mb-5">
         <div class="d-flex justify-content-center align-items-center mb-3">
-            <div style="width:60px;height:60px;border-radius:50%;
-                        background-color:var(--jena-orange);
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        margin-right:20px;
-                        box-shadow:0 4px 15px rgba(255,107,53,0.4);">
-                <i class="bi bi-calendar3" style="font-size:1.8rem;color:#fff;"></i>
+            <div class="icon-circle-header">
+                <i class="bi bi-calendar3 icon-jena-lg text-white"></i>
             </div>
 
-            <h1 class="page-title mb-0">Registrar Clase</h1>
+            <h1 class="page-title">Registrar Clase</h1>
         </div>
     </div>
 
@@ -40,7 +34,7 @@
                 <div class="info-card">
 
                     <h5 class="mb-4">
-                        <i class="bi bi-list-check me-2" style="color:var(--jena-orange);"></i>
+                        <i class="bi bi-list-check me-2 text-accent"></i>
                         Datos de la Clase
                     </h5>
 
@@ -140,14 +134,13 @@
                             @class = "form-control",
                             rows = "10",
                             placeholder = "Escribe alguna observación o detalle adicional sobre la clase...",
-                            style = "resize:vertical;border-radius:12px;"
+                            class="textarea-rounded"
                         })
                         @Html.ValidationMessageFor(m => m.observaciones, "", new { @class = "text-danger small" })
                     </div>
                 </div>
 
-                <button type="submit" class="btn-orange w-100"
-                        style="font-size:1rem; letter-spacing:1px; padding:16px 30px; border-radius:50px;">
+                <button type="submit" class="btn-orange w-100 btn-pill-lg">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     Registrar Clase
                 </button>

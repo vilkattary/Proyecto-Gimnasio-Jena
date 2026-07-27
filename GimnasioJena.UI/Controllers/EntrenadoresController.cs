@@ -257,6 +257,9 @@ namespace GimnasioJena.UI.Controllers
                 estado = entrenador.estado
             };
 
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView(modelo);
+
             return View(modelo);
         }
 

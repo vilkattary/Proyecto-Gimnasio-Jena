@@ -8,12 +8,12 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
 
-            <div class="card shadow-sm rounded-4" style="border-top:4px solid var(--gym-orange);">
+            <div class="card-jena-info card-top-accent">
                 <div class="card-body p-4">
 
-                    <h2 class="fw-bold mb-4" style="color:var(--gym-dark);">
+                    <h1 class="page-title">
                         Editar perfil
-                    </h2>
+                    </h1>
 
                     @using (Html.BeginForm("EditarPerfil", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
@@ -69,8 +69,7 @@
                                 {
                                     <div class="mb-2">
                                         <img src="@Url.Content(Model.fotoPerfil)"
-                                             class="rounded-circle"
-                                             style="width:90px;height:90px;object-fit:cover;" />
+                                             class="rounded-circle avatar-profile" />
                                     </div>
                                 }
 
@@ -109,9 +108,29 @@
                                 Guardar cambios
                             </button>
 
-                            <a href="@Url.Action("Index", "Manage")" class="btn btn-outline-gym">
-                                Cancelar
+                            <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
+                                <i class="bi bi-key me-1"></i>
+                                Cambiar contraseña
                             </a>
+
+                            @if (User.IsInRole("CLIENTE"))
+                            {
+                                <a href="@Url.Action("MiPerfil", "Clientes")" class="btn btn-outline-gym">
+                                    Cancelar
+                                </a>
+                            }
+                            else if (User.IsInRole("ENTRENADOR"))
+                            {
+                                <a href="@Url.Action("Index", "Entrenadores")" class="btn btn-outline-gym">
+                                    Cancelar
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Index", "Manage")" class="btn btn-outline-gym">
+                                    Cancelar
+                                </a>
+                            }
                         </div>
                     }
 

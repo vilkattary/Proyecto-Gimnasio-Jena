@@ -64,8 +64,7 @@
                             {
                                 <img src="@Url.Content(Model.Usuario.fotoPerfil)"
                                      alt="Foto del entrenador"
-                                     class="rounded-circle"
-                                     style="width:120px;height:120px;object-fit:cover;border:3px solid var(--jena-orange);" />
+                                     class="rounded-circle avatar-trainer" />
                             }
                             else
                             {
@@ -150,29 +149,29 @@
             </div>
 
             <div class="info-card">
-                <h5 class="text-center mb-3" style="color: var(--jena-navy); font-weight: 800;">
-                    <i class="bi bi-star-fill" style="color: var(--jena-orange);"></i>
+                <h5 class="text-center mb-3 title-inline-jena">
+                    <i class="bi bi-star-fill text-accent"></i>
                     Estado de Cuenta
                 </h5>
 
                 <div class="text-center">
                     <div class="mb-3">
-                        <span style="font-size: 2rem; font-weight: 800; color: var(--jena-orange);">
+                        <span class="title-stat-jena">
                             @(Model.estado ? "Activo" : "Inactivo")
                         </span>
                     </div>
 
-                    <div class="info-item" style="border: none; padding: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <div class="info-item btn-link-jena">
                         <i class="bi bi-award"></i>
-                        <div class="info-content" style="text-align: left;">
+                        <div class="info-content text-start">
                             <div class="info-label">Especialidad</div>
                             <div class="info-value">@Model.especialidad</div>
                         </div>
                     </div>
 
-                    <div class="info-item" style="border: none; padding: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <div class="info-item btn-link-jena">
                         <i class="bi bi-calendar-check"></i>
-                        <div class="info-content" style="text-align: left;">
+                        <div class="info-content text-start">
                             <div class="info-label">Fecha de Contratación</div>
                             <div class="info-value">@Model.fechaContratacion.ToString("dd/MM/yyyy")</div>
                         </div>
