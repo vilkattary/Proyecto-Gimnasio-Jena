@@ -101,12 +101,18 @@ namespace GimnasioJena.UI.Controllers
                         authManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                         authManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties { IsPersistent = model.RememberMe }, identity);
 
-                        // Redirigir al Dashboard si es Administrador (User.IsInRole no aplica aún en este request)
+                        // Redirigir según rol (User.IsInRole no aplica aún en este request)
                         if (!Url.IsLocalUrl(returnUrl))
                         {
-                            bool esAdmin = await UserManager.IsInRoleAsync(appUser.Id, "ADMINISTRADOR");
+                            bool esAdmin       = await UserManager.IsInRoleAsync(appUser.Id, "ADMINISTRADOR");
+                            bool esCliente     = await UserManager.IsInRoleAsync(appUser.Id, "CLIENTE");
+                            bool esEntrenador  = await UserManager.IsInRoleAsync(appUser.Id, "ENTRENADOR");
                             if (esAdmin)
                                 return RedirectToAction("Dashboard", "Admin");
+                            if (esCliente)
+                                return RedirectToAction("MiPerfil", "Clientes");
+                            if (esEntrenador)
+                                return RedirectToAction("Index", "Entrenadores");
                         }
                     }
                     return RedirectToLocal(returnUrl);
