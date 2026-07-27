@@ -30,21 +30,40 @@ namespace GimnasioJena.AccesoADatos.Clases.ObtenerTodasLasClases
                      select new ClaseListadoDto
                      {
                          idClaseProgramada = clase.idClaseProgramada,
+
+                         idTipoClase = clase.idTipoClase,
+                         idUsuarioEntrenador = clase.idUsuarioEntrenador,
+                         idEstadoClase = clase.idEstadoClase,
+
                          nombreClase = tipo.nombreClase,
-                         nombreEntrenador = entrenadorUsuario.nombre + " " + entrenadorUsuario.apellido1 + " " + entrenadorUsuario.apellido2,
+
+                         nombreEntrenador =
+        entrenadorUsuario.nombre + " " +
+        entrenadorUsuario.apellido1 + " " +
+        entrenadorUsuario.apellido2,
+
                          estadoClase = estado.nombreEstado,
+
                          fechaClase = clase.fechaClase,
                          horaInicio = clase.horaInicio,
                          horaFin = clase.horaFin,
-                         cupoMaximo = clase.cupoMaximo,
-                         cuposReservados = _elContexto.Reservas.Count(r =>
-    r.idClaseProgramada == clase.idClaseProgramada &&
-    r.idEstadoReserva == 1),
 
-                         cuposDisponibles = clase.cupoMaximo - _elContexto.Reservas.Count(r =>
+                         cupoMaximo = clase.cupoMaximo,
+
+                         cuposReservados = _elContexto.Reservas.Count(r =>
                              r.idClaseProgramada == clase.idClaseProgramada &&
                              r.idEstadoReserva == 1),
-                         ubicacion = clase.ubicacion
+
+                         cuposDisponibles = clase.cupoMaximo -
+        _elContexto.Reservas.Count(r =>
+            r.idClaseProgramada == clase.idClaseProgramada &&
+            r.idEstadoReserva == 1),
+
+                         ubicacion = clase.ubicacion,
+                         observaciones = clase.observaciones,
+
+                         fechaCreacion = clase.fechaCreacion,
+                         fechaModificacion = clase.fechaModificacion
                      }).ToList();
 
                 return listaDeClases;

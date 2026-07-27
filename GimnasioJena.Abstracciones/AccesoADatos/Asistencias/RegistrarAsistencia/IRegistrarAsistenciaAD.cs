@@ -5,5 +5,9 @@ namespace GimnasioJena.Abstracciones.AccesoADatos.Asistencias.RegistrarAsistenci
     public interface IRegistrarAsistenciaAD
     {
         int RegistrarAsistencia(AsistenciaCrearDto asistencia);
+
+        AsistenciaValidacionDto ObtenerAsistenciaParaValidacion(
+            int idReserva
+        );
     }
 }

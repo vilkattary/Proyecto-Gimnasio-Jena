@@ -4,6 +4,8 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.RegistrarReserva
 {
     public interface IRegistrarReservaLN
     {
-        bool RegistrarReserva(ReservaCrearDto reserva);
+        ResultadoReservaDto RegistrarReserva(
+            ReservaCrearDto reserva
+        );
     }
 }

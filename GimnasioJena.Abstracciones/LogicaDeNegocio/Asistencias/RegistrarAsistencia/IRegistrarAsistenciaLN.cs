@@ -4,6 +4,9 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Asistencias.RegistrarAsiste
 {
     public interface IRegistrarAsistenciaLN
     {
-        bool RegistrarAsistencia(AsistenciaCrearDto asistencia);
+        ResultadoAsistenciaDto RegistrarAsistencia(
+            AsistenciaCrearDto asistencia,
+            int idClaseProgramada
+        );
     }
 }
