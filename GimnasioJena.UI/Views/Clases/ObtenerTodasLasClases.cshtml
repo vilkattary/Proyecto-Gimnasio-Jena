@@ -10,15 +10,10 @@
         : "Gestión de Clases";
 }
 
-<div class="container-fluid p-4">
+<div class="container py-5">
 
     <!-- Encabezado -->
     <div class="welcome-section mb-4">
-        <div class="logo-circular">
-            <i class="bi bi-tree"></i>
-            <span class="letter-j">J</span>
-        </div>
-
         <div class="welcome-text">
             @if (esVistaCliente)
             {
@@ -192,8 +187,7 @@
         {
             <div class="info-card text-center py-5">
 
-                <i class="bi bi-calendar-x"
-                   style="font-size:3rem; color:var(--jena-orange);">
+                <i class="bi bi-calendar-x icon-jena-3xl">
                 </i>
 
                 @if (esVistaCliente)
@@ -265,12 +259,6 @@
                     esActiva
                         ? "bi-check-circle"
                         : "bi-x-circle";
-
-                string badgeColor =
-                    esActiva
-                        ? "background:rgba(28,200,138,.15); color:#1c7a55;"
-                        : "background:rgba(220,53,69,.12); color:#a71d2a;";
-
                 <div class="clase-item mb-3"
                      data-tipo="@tipoLower"
                      data-estado="@estadoLower"
@@ -282,34 +270,22 @@
                         <div class="row g-0 align-items-stretch">
 
                             <!-- Ícono -->
-                            <div class="col-md-2 d-flex
+                            <div class="col-3 col-md-2 d-flex
                                         align-items-center
-                                        justify-content-center"
-                                 style="background:var(--jena-navy);
-                                        min-height:140px;
-                                        border-radius:18px 0 0 18px;">
+                                        justify-content-center card-panel-navy">
 
-                                <i class="bi @iconoClase"
-                                   style="font-size:3rem;
-                                          color:var(--jena-orange);">
+                                <i class="bi @iconoClase icon-jena-3xl">
                                 </i>
 
                             </div>
 
                             <!-- Información -->
-                            <div class="col-md-8 p-3">
+                            <div class="col-9 col-md-8 p-3">
 
                                 <div class="d-flex flex-wrap gap-2 mb-2">
 
                                     <!-- Estado -->
-                                    <span style="@badgeColor
-                                                 font-size:.8rem;
-                                                 font-weight:700;
-                                                 padding:4px 14px;
-                                                 border-radius:50px;
-                                                 display:inline-flex;
-                                                 align-items:center;
-                                                 gap:5px;">
+                                    <span class="@(esActiva ? "badge-activa" : "badge-inactiva")">
 
                                         <i class="bi @badgeIcono"></i>
                                         @badgeTexto
@@ -319,15 +295,7 @@
                                     <!-- Cupos -->
                                     @if (item.cuposDisponibles > 0)
                                     {
-                                        <span style="background:rgba(108,142,164,.15);
-                                                     color:var(--jena-navy);
-                                                     font-size:.8rem;
-                                                     font-weight:700;
-                                                     padding:4px 14px;
-                                                     border-radius:50px;
-                                                     display:inline-flex;
-                                                     align-items:center;
-                                                     gap:5px;">
+                                        <span class="badge-disponible">
 
                                             <i class="bi bi-people"></i>
 
@@ -340,15 +308,7 @@
                                     }
                                     else
                                     {
-                                        <span style="background:rgba(220,53,69,.12);
-                                                     color:#a71d2a;
-                                                     font-size:.8rem;
-                                                     font-weight:700;
-                                                     padding:4px 14px;
-                                                     border-radius:50px;
-                                                     display:inline-flex;
-                                                     align-items:center;
-                                                     gap:5px;">
+                                        <span class="badge-llena">
 
                                             <i class="bi bi-x-circle"></i>
                                             Sin cupos
@@ -358,23 +318,17 @@
 
                                 </div>
 
-                                <h5 style="color:var(--jena-navy);
-                                           font-family:'Audiowide',sans-serif;
-                                           letter-spacing:1px;
-                                           margin-bottom:12px;">
+                                <h5 class="card-clase-title">
 
                                     @item.nombreClase
 
                                 </h5>
 
-                                <div class="row g-2"
-                                     style="font-size:.88rem;
-                                            color:var(--jena-navy);">
+                                <div class="row g-2 text-clase-body">
 
                                     <!-- Entrenador -->
                                     <div class="col-12 col-sm-6 col-lg-3">
-                                        <i class="bi bi-person-badge"
-                                           style="color:var(--jena-orange);">
+                                        <i class="bi bi-person-badge text-accent">
                                         </i>
 
                                         @item.nombreEntrenador
@@ -384,8 +338,7 @@
                                     @if (!esVistaCliente)
                                     {
                                         <div class="col-12 col-sm-6 col-lg-3">
-                                            <i class="bi bi-geo-alt"
-                                               style="color:var(--jena-orange);">
+                                            <i class="bi bi-geo-alt text-accent">
                                             </i>
 
                                             @(string.IsNullOrWhiteSpace(item.ubicacion)
@@ -396,8 +349,7 @@
 
                                     <!-- Cupos -->
                                     <div class="col-12 col-sm-6 col-lg-3">
-                                        <i class="bi bi-people"
-                                           style="color:var(--jena-orange);">
+                                        <i class="bi bi-people text-accent">
                                         </i>
 
                                         @if (esVistaCliente)
@@ -416,8 +368,7 @@
 
                                     <!-- Fecha -->
                                     <div class="col-12 col-sm-6 col-lg-3">
-                                        <i class="bi bi-calendar-date"
-                                           style="color:var(--jena-orange);">
+                                        <i class="bi bi-calendar-date text-accent">
                                         </i>
 
                                         @item.fechaClase.ToString("dd/MM/yyyy")
@@ -425,8 +376,7 @@
 
                                     <!-- Horario -->
                                     <div class="col-12 col-sm-6 col-lg-3">
-                                        <i class="bi bi-clock"
-                                           style="color:var(--jena-orange);">
+                                        <i class="bi bi-clock text-accent">
                                         </i>
 
                                         @item.horaInicio.ToString(@"hh\:mm")
@@ -442,26 +392,17 @@
                                     <div class="mt-3">
 
                                         <div class="d-flex
-                                                    justify-content-between"
-                                             style="font-size:.8rem;
-                                                    color:var(--jena-light-blue);
-                                                    margin-bottom:4px;">
+                                                    justify-content-between text-clase-label">
 
                                             <span>Ocupación</span>
                                             <span>@pctOcupado%</span>
 
                                         </div>
 
-                                        <div style="background:var(--jena-light-gray);
-                                                    border-radius:10px;
-                                                    height:6px;
-                                                    overflow:hidden;">
+                                        <div class="progress-bar-bg">
 
-                                            <div style="width:@pctOcupado%;
-                                                        height:100%;
-                                                        background:@colorBarra;
-                                                        border-radius:10px;
-                                                        transition:width .4s ease;">
+                                            <div class="progress-bar-fill"
+                                                 style="--bar-w: @(pctOcupado)%; --bar-col: @colorBarra;">
                                             </div>
 
                                         </div>
@@ -472,8 +413,8 @@
                             </div>
 
                             <!-- Acciones -->
-                            <div class="col-md-2 d-flex
-                                        flex-column
+                            <div class="col-12 col-md-2 clase-acciones d-flex
+                                        flex-row flex-md-column
                                         align-items-center
                                         justify-content-center
                                         p-3
@@ -540,11 +481,122 @@
 
     </div>
 
+    <div id="paginacionClases" class="mt-3 mb-2"></div>
+
 </div>
 
-@if (!esVistaCliente)
-{
-    @section Scripts {
-        @Scripts.Render("~/Content/script/ObtenerTodasLasClases.js")
+<script>
+(function () {
+    var ITEMS_DESKTOP = 5;
+    var ITEMS_MOBILE  = 1;
+    var paginaActual  = 1;
+
+    function getItemsPorPagina() {
+        return window.innerWidth <= 768 ? ITEMS_MOBILE : ITEMS_DESKTOP;
     }
-}
+
+    window.aplicarFiltros = function () {
+        var filtroTipoEl   = document.getElementById('filtroTipo');
+        var filtroEstadoEl = document.getElementById('filtroEstado');
+        var filtroOrdenEl  = document.getElementById('filtroOrden');
+
+        var tipo   = filtroTipoEl   ? filtroTipoEl.value.toLowerCase()   : '';
+        var estado = filtroEstadoEl ? filtroEstadoEl.value.toLowerCase() : '';
+        var orden  = filtroOrdenEl  ? filtroOrdenEl.value                : '';
+
+        var items = Array.from(document.querySelectorAll('.clase-item'));
+
+        items.forEach(function (item) {
+            var matchTipo   = !tipo   || item.dataset.tipo.includes(tipo);
+            var matchEstado = !estado || item.dataset.estado === estado;
+            item.dataset.visible = (matchTipo && matchEstado) ? '1' : '0';
+        });
+
+        if (orden) {
+            var contenedor = document.getElementById('listaClases');
+            var vis = items.filter(function (i) { return i.dataset.visible === '1'; });
+            vis.sort(function (a, b) {
+                if (orden === 'instructor') return a.dataset.instructor.localeCompare(b.dataset.instructor);
+                if (orden === 'cupos')      return parseInt(b.dataset.cupos) - parseInt(a.dataset.cupos);
+                return 0;
+            });
+            vis.forEach(function (item) { contenedor.appendChild(item); });
+        }
+
+        paginaActual = 1;
+        renderPagina();
+    };
+
+    function renderPagina() {
+        var items        = Array.from(document.querySelectorAll('.clase-item'));
+        var visibles     = items.filter(function (i) { return i.dataset.visible !== '0'; });
+        var porPagina    = getItemsPorPagina();
+        var totalPaginas = Math.max(1, Math.ceil(visibles.length / porPagina));
+
+        if (paginaActual > totalPaginas) { paginaActual = totalPaginas; }
+
+        var inicio = (paginaActual - 1) * porPagina;
+        var fin    = inicio + porPagina;
+
+        items.forEach(function (item) { item.style.display = 'none'; });
+        visibles.forEach(function (item, idx) {
+            item.style.display = (idx >= inicio && idx < fin) ? '' : 'none';
+        });
+
+        renderControlesPaginacion(totalPaginas, visibles.length);
+    }
+
+    function renderControlesPaginacion(totalPaginas, totalItems) {
+        var contenedor = document.getElementById('paginacionClases');
+        if (!contenedor) { return; }
+
+        if (totalPaginas <= 1) {
+            contenedor.innerHTML = '';
+            return;
+        }
+
+        var html = '<nav aria-label="Paginacion"><ul class="pagination justify-content-center flex-wrap mb-0">';
+
+        html += '<li class="page-item' + (paginaActual === 1 ? ' disabled' : '') + '">' +
+                '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + (paginaActual - 1) + ')">' +
+                '<i class="bi bi-chevron-left"></i></a></li>';
+
+        for (var p = 1; p <= totalPaginas; p++) {
+            html += '<li class="page-item' + (p === paginaActual ? ' active' : '') + '">' +
+                    '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + p + ')">' +
+                    p + '</a></li>';
+        }
+
+        html += '<li class="page-item' + (paginaActual === totalPaginas ? ' disabled' : '') + '">' +
+                '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + (paginaActual + 1) + ')">' +
+                '<i class="bi bi-chevron-right"></i></a></li>';
+
+        html += '</ul></nav>';
+        contenedor.innerHTML = html;
+    }
+
+    window.cambiarPagina = function (pagina) {
+        var items        = Array.from(document.querySelectorAll('.clase-item'));
+        var visibles     = items.filter(function (i) { return i.dataset.visible !== '0'; });
+        var porPagina    = getItemsPorPagina();
+        var totalPaginas = Math.max(1, Math.ceil(visibles.length / porPagina));
+        if (pagina < 1 || pagina > totalPaginas) { return; }
+        paginaActual = pagina;
+        renderPagina();
+        var lista = document.getElementById('listaClases');
+        if (lista) { lista.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    };
+
+    // Iniciar: el DOM ya está renderizado porque este script está al final del body
+    Array.from(document.querySelectorAll('.clase-item')).forEach(function (item) {
+        item.dataset.visible = '1';
+    });
+    renderPagina();
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(renderPagina, 150);
+    });
+}());
+</script>

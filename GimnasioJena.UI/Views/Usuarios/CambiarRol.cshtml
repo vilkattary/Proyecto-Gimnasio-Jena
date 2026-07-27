@@ -5,7 +5,7 @@
 }
 
 <div class="container py-4">
-    <h2 class="mb-4">Cambiar rol de usuario</h2>
+    <h1 class="page-title">Cambiar rol de usuario</h1>
 
     @if (TempData["MensajeError"] != null)
     {
@@ -14,7 +14,7 @@
         </div>
     }
 
-    <div class="card shadow-sm">
+    <div class="card-jena-info">
         <div class="card-body">
             @using (Html.BeginForm("CambiarRol", "Usuarios", FormMethod.Post))
             {

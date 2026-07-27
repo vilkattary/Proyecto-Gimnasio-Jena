@@ -10,8 +10,7 @@
         @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
         {
             <img src="@Url.Content(Model.fotoPerfil)"
-                 class="rounded-circle"
-                 style="width:90px;height:90px;object-fit:cover;border:3px solid var(--jena-orange);" />
+                 class="rounded-circle avatar-profile-b" />
         }
         else
         {
@@ -62,8 +61,7 @@
                         @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
                         {
                             <img src="@Url.Content(Model.fotoPerfil)"
-                                 class="profile-avatar mx-auto"
-                                 style="object-fit:cover;" />
+                                 class="profile-avatar mx-auto img-cover" />
                         }
                         else
                         {
@@ -152,8 +150,8 @@
             </div>
 
             <div class="info-card">
-                <h5 class="text-center mb-3" style="color: var(--jena-navy); font-weight: 800;">
-                    <i class="bi bi-star-fill" style="color: var(--jena-orange);"></i>
+                <h5 class="text-center mb-3 title-inline-jena">
+                    <i class="bi bi-star-fill text-accent"></i>
                     Membresía Activa
                 </h5>
 
@@ -161,22 +159,22 @@
                 {
                     <div class="text-center">
                         <div class="mb-3">
-                            <span style="font-size: 2rem; font-weight: 800; color: var(--jena-orange);">
+                            <span class="title-stat-jena">
                                 @Model.Membresia.nombrePlan
                             </span>
                         </div>
 
-                        <div class="info-item justify-content-center" style="border: none; padding: 0;">
+                        <div class="info-item justify-content-center btn-borderless">
                             <i class="bi bi-calendar-event"></i>
-                            <div class="info-content" style="text-align: center;">
+                            <div class="info-content text-center">
                                 <div class="info-label">Estado</div>
                                 <div class="info-value">@Model.Membresia.estadoMembresia</div>
                             </div>
                         </div>
 
-                        <div class="info-item justify-content-center" style="border: none; padding: 0;">
+                        <div class="info-item justify-content-center btn-borderless">
                             <i class="bi bi-calendar-check"></i>
-                            <div class="info-content" style="text-align: center;">
+                            <div class="info-content text-center">
                                 <div class="info-label">Válida Hasta</div>
                                 <div class="info-value">@Model.Membresia.fechaFin.ToString("dd/MM/yyyy")</div>
                             </div>
@@ -184,9 +182,9 @@
 
                         @if (Model.Membresia.clasesDisponibles.HasValue)
                         {
-                            <div class="info-item justify-content-center" style="border: none; padding: 0;">
+                            <div class="info-item justify-content-center btn-borderless">
                                 <i class="bi bi-activity"></i>
-                                <div class="info-content" style="text-align: center;">
+                                <div class="info-content text-center">
                                     <div class="info-label">Clases Disponibles</div>
                                     <div class="info-value">@Model.Membresia.clasesDisponibles</div>
                                 </div>
@@ -197,8 +195,8 @@
                 else
                 {
                     <div class="text-center">
-                        <i class="bi bi-x-circle" style="font-size: 2rem; color: #ccc;"></i>
-                        <p class="mt-2" style="color: #999;">No tienes una membresía activa.</p>
+                        <i class="bi bi-x-circle text-jena-sm text-muted-light"></i>
+                        <p class="mt-2 text-gray-999">No tienes una membresía activa.</p>
 
                         <a href="@Url.Action("Planes", "Home")" class="btn btn-action mt-2">
                             <i class="bi bi-plus-circle"></i>
