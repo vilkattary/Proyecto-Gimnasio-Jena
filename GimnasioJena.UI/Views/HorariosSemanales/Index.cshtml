@@ -16,6 +16,37 @@
         })
         .OrderBy(g => g.Key.diaSemana)
         .ToList();
+
+    int indiceDia = 0;
+
+    // Calcular la próxima fecha de cada día (diaSemana: 1=Lunes … 7=Domingo)
+    // DayOfWeek: Sunday=0, Monday=1 … Saturday=6
+    var mapDiaSemana = new System.Collections.Generic.Dictionary<int, System.DayOfWeek>
+    {
+        { 1, System.DayOfWeek.Monday    },
+        { 2, System.DayOfWeek.Tuesday   },
+        { 3, System.DayOfWeek.Wednesday },
+        { 4, System.DayOfWeek.Thursday  },
+        { 5, System.DayOfWeek.Friday    },
+        { 6, System.DayOfWeek.Saturday  },
+        { 7, System.DayOfWeek.Sunday    }
+    };
+
+    var mesesEs = new[]
+    {
+        "", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    };
+
+    System.DateTime hoy = System.DateTime.Today;
+
+    Func<int, System.DateTime> proximaFecha = (numDia) =>
+    {
+        if (!mapDiaSemana.ContainsKey(numDia)) { return hoy; }
+        System.DayOfWeek objetivo = mapDiaSemana[numDia];
+        int diff = ((int)objetivo - (int)hoy.DayOfWeek + 7) % 7;
+        return hoy.AddDays(diff == 0 ? 0 : diff);
+    };
 }
 
 <section class="horarios-page">
@@ -110,15 +141,70 @@
                 desde estos horarios.
             </div>
 
-            foreach (var dia in dias)
+            <div class="info-card mb-4">
+
+                <div class="row align-items-end g-3">
+
+                    <div class="col-md-4">
+                        <label class="info-label mb-1">
+                            <i class="bi bi-funnel me-1"></i>
+                            Tipo de clase
+                        </label>
+                        <select class="form-select" id="filtroClaseHorario">
+                            <option value="">Todas las clases</option>
+                            @foreach (var nombre in horarios
+                                .Where(h => !string.IsNullOrWhiteSpace(h.nombreClase))
+                                .Select(h => h.nombreClase)
+                                .Distinct()
+                                .OrderBy(n => n))
+                            {
+                                <option value="@nombre.ToLower()">@nombre</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="info-label mb-1">
+                            <i class="bi bi-toggle-on me-1"></i>
+                            Estado
+                        </label>
+                        <select class="form-select" id="filtroEstadoHorario">
+                            <option value="">Todos</option>
+                            <option value="activo">Activos</option>
+                            <option value="inactivo">Inactivos</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button type="button" class="btn-orange w-100" onclick="aplicarFiltrosHorario()">
+                            <i class="bi bi-search me-2"></i>
+                            Buscar
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="contenedor-dias-paginado">
+
+            @foreach (var dia in dias)
             {
-                <div class="dia-card">
+                <div class="dia-card" data-dia-index="@indiceDia">
+                @{ indiceDia++; }
 
                     <div class="dia-card-header">
+                        @{
+                            var fechaDia  = proximaFecha(dia.Key.diaSemana);
+                            var numDiaFecha = fechaDia.Day;
+                            var mesNombre = mesesEs[fechaDia.Month];
+                        }
 
                         <h2>
-                            <i class="bi bi-calendar-day me-2"></i>
-                            @dia.Key.nombreDia
+                            <i class="bi bi-calendar-check"></i>
+                            @* Desktop: Lunes 30 de Junio *@
+                            <span class="dia-header-desktop">@dia.Key.nombreDia @numDiaFecha de @mesNombre</span>
+                            @* Mobile: 30 Junio *@
+                            <span class="dia-header-mobile">@numDiaFecha @mesNombre</span>
                         </h2>
 
                         <span>
@@ -137,10 +223,10 @@
                                     <th>Horario</th>
                                     <th>Clase</th>
                                     <th>Entrenador</th>
-                                    <th>Cupo</th>
-                                    <th>Ubicación</th>
-                                    <th>Estado</th>
-                                    <th class="text-end">Acciones</th>
+                                    <th class="col-mobile-oculto">Cupo</th>
+                                    <th class="col-mobile-oculto">Ubicación</th>
+                                    <th class="col-mobile-oculto">Estado</th>
+                                    <th class="col-mobile-oculto text-end">Acciones</th>
                                 </tr>
                             </thead>
 
@@ -151,7 +237,8 @@
                                         .OrderBy(h => h.horaInicio)
                                 )
                                 {
-                                    <tr>
+                                    <tr data-clase="@((horario.nombreClase ?? "").ToLower())"
+                                        data-estado="@(horario.estado ? "activo" : "inactivo")">
 
                                         <td>
                                             <div class="horario-principal">
@@ -160,10 +247,6 @@
                                                 @horario.horaInicio.ToString(@"hh\:mm")
                                                 -
                                                 @horario.horaFin.ToString(@"hh\:mm")
-                                            </div>
-
-                                            <div class="dato-secundario">
-                                                ID: @horario.idHorario
                                             </div>
                                         </td>
 
@@ -179,7 +262,7 @@
                                             </div>
                                         </td>
 
-                                        <td>
+                                        <td class="col-mobile-oculto">
                                             <strong>
                                                 @horario.cupoMaximo
                                             </strong>
@@ -189,11 +272,11 @@
                                             </span>
                                         </td>
 
-                                        <td>
+                                        <td class="col-mobile-oculto">
                                             @horario.ubicacion
                                         </td>
 
-                                        <td>
+                                        <td class="col-mobile-oculto">
                                             <span class="estado-badge
                                                 @(horario.estado
                                                     ? "estado-activo"
@@ -209,7 +292,7 @@
                                             </span>
                                         </td>
 
-                                        <td>
+                                        <td class="col-mobile-oculto">
                                             <div class="acciones-horario">
 
                                                 <a href="@Url.Action(
@@ -273,6 +356,22 @@
                     </div>
                 </div>
             }
+
+            </div>@* fin contenedor-dias-paginado *@
+
+            <div id="paginacion-dias" class="paginacion-dias" aria-label="Paginación de días">
+
+                <button type="button" id="btn-anterior-dia" class="btn-pag-dia" aria-label="Día anterior">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+
+                <span id="pag-indicador-dia" class="pag-indicador-dia"></span>
+
+                <button type="button" id="btn-siguiente-dia" class="btn-pag-dia" aria-label="Día siguiente">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+            </div>
         }
         else
         {
@@ -303,3 +402,128 @@
 
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        (function () {
+
+            var CARDS_DESKTOP = 7;
+            var CARDS_MOBILE  = 1;
+            var BREAKPOINT    = 768;
+
+            var contenedor   = document.getElementById('contenedor-dias-paginado');
+            var paginacion   = document.getElementById('paginacion-dias');
+            var btnAnterior  = document.getElementById('btn-anterior-dia');
+            var btnSiguiente = document.getElementById('btn-siguiente-dia');
+            var indicador    = document.getElementById('pag-indicador-dia');
+
+            if (!contenedor) { return; }
+
+            var todasLasCards = Array.prototype.slice.call(
+                contenedor.querySelectorAll('.dia-card')
+            );
+
+            var paginaActual = 0;
+
+            /* ---- FILTRADO ---- */
+            function aplicarFiltrosHorario() {
+
+                var filtroClase  = document.getElementById('filtroClaseHorario').value.toLowerCase();
+                var filtroEstado = document.getElementById('filtroEstadoHorario').value.toLowerCase();
+
+                todasLasCards.forEach(function (card) {
+
+                    var filas = Array.prototype.slice.call(
+                        card.querySelectorAll('tbody tr')
+                    );
+
+                    var hayFilasVisibles = false;
+
+                    filas.forEach(function (fila) {
+                        var clase  = (fila.getAttribute('data-clase')  || '').toLowerCase();
+                        var estado = (fila.getAttribute('data-estado') || '').toLowerCase();
+
+                        var coincide =
+                            (!filtroClase  || clase  === filtroClase)  &&
+                            (!filtroEstado || estado === filtroEstado);
+
+                        fila.style.display = coincide ? '' : 'none';
+
+                        if (coincide) { hayFilasVisibles = true; }
+                    });
+
+                    // Marcar card como filtrada (no eliminarla, solo marcarla)
+                    card.setAttribute('data-filtrado', hayFilasVisibles ? 'visible' : 'oculto');
+                });
+
+                paginaActual = 0;
+                mostrar();
+            }
+
+            window.aplicarFiltrosHorario = aplicarFiltrosHorario;
+
+            /* ---- PAGINACIÓN ---- */
+            function cardsVisibles() {
+                return todasLasCards.filter(function (c) {
+                    return c.getAttribute('data-filtrado') !== 'oculto';
+                });
+            }
+
+            function porPagina() {
+                return window.innerWidth >= BREAKPOINT ? CARDS_DESKTOP : CARDS_MOBILE;
+            }
+
+            function totalPaginas() {
+                return Math.max(1, Math.ceil(cardsVisibles().length / porPagina()));
+            }
+
+            function mostrar() {
+                var visibles = cardsVisibles();
+                var pp       = porPagina();
+                var total    = totalPaginas();
+
+                if (paginaActual >= total) { paginaActual = total - 1; }
+                if (paginaActual < 0)      { paginaActual = 0; }
+
+                var inicio = paginaActual * pp;
+                var fin    = inicio + pp;
+
+                // Ocultar todas primero
+                todasLasCards.forEach(function (card) {
+                    card.style.display = 'none';
+                });
+
+                // Mostrar solo las de la página actual dentro de las visibles
+                visibles.forEach(function (card, idx) {
+                    card.style.display = (idx >= inicio && idx < fin) ? '' : 'none';
+                });
+
+                if (total > 1) {
+                    paginacion.style.display = '';
+                    indicador.textContent    = (paginaActual + 1) + ' / ' + total;
+                    btnAnterior.disabled     = paginaActual === 0;
+                    btnSiguiente.disabled    = paginaActual === total - 1;
+                } else {
+                    paginacion.style.display = 'none';
+                }
+            }
+
+            btnAnterior.addEventListener('click', function () {
+                if (paginaActual > 0) { paginaActual--; mostrar(); }
+            });
+
+            btnSiguiente.addEventListener('click', function () {
+                if (paginaActual < totalPaginas() - 1) { paginaActual++; mostrar(); }
+            });
+
+            window.addEventListener('resize', function () { mostrar(); });
+
+            // Inicializar: marcar todas como visibles
+            todasLasCards.forEach(function (c) {
+                c.setAttribute('data-filtrado', 'visible');
+            });
+
+            mostrar();
+        })();
+    </script>
+}

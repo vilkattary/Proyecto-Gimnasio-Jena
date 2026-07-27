@@ -21,6 +21,7 @@
     --font-small: 0.875rem; /* 14px mínimo accesibilidad */
     /* -- Paleta de Colores JÉNA -- */
     --jena-navy: #2C3E50; /* Texto principal */
+    --jena-navy-rgb: 44, 62, 80; /* Canales RGB de --jena-navy para uso en rgba() */
     --jena-dark-navy: #1A2332; /* Fondos oscuros / Logo J */
     --jena-orange: #FF6B35; /* Acento principal */
     --jena-dark-orange: #D95F31; /* Hover / Activo */
@@ -1088,18 +1089,14 @@ footer .copyright {
     padding: 25px;
     text-align: center;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-    border-color: var(--jena-orange);
-    transform: translateY(-5px);
 }
 
 .stat-card i {
     font-size: 3rem;
     color: var(--jena-orange);
     margin-bottom: 15px;
+    display: block;
+    text-align: center;
 }
 
 .stat-card h3 {
@@ -1107,6 +1104,7 @@ footer .copyright {
     font-weight: 800;
     font-size: 2rem;
     margin-bottom: 8px;
+    text-align: center !important;
 }
 
 .stat-card p {
@@ -1116,6 +1114,7 @@ footer .copyright {
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-align: center;
 }
 
 /* ============================================
@@ -1175,7 +1174,12 @@ footer .copyright {
     }
 
     .stats-grid {
-        grid-template-columns: 1fr;
+        display: none;
+    }
+
+    .welcome-text h3,
+    .welcome-text p {
+        text-align: center;
     }
 }
 
@@ -1961,18 +1965,14 @@ footer .copyright {
     padding: 20px;
     text-align: center;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-    border-color: var(--jena-orange);
-    transform: translateY(-5px);
 }
 
 .stat-card i {
     font-size: 2.5rem;
     color: var(--jena-orange);
     margin-bottom: 10px;
+    display: block;
+    text-align: center;
 }
 
 .stat-card h3 {
@@ -1980,6 +1980,7 @@ footer .copyright {
     font-weight: 800;
     font-size: 2rem;
     margin-bottom: 5px;
+    text-align: center !important;
 }
 
 .stat-card p {
@@ -1989,6 +1990,7 @@ footer .copyright {
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-align: center;
 }
 
 /* ============================================
@@ -3456,7 +3458,7 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 .horarios-page {
         min-height: 100vh;
         padding: 40px 0 60px;
-        background: linear-gradient( 135deg, rgba(44, 62, 80, .05), rgba(255, 107, 53, .04) );
+        background: linear-gradient( 135deg, rgba(var(--jena-navy-rgb), .05), rgba(255, 107, 53, .04) );
     }
 
     .horarios-header {
@@ -3549,7 +3551,7 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
     .resumen-card {
         padding: 18px 20px;
-        border: 1px solid var(--jena-border);
+        border: 2px solid var(--jena-light-blue);
         border-radius: 14px;
         background: white;
         box-shadow: 0 8px 24px rgba(26, 35, 50, .06);
@@ -3580,7 +3582,7 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     .dia-card {
         overflow: hidden;
         margin-bottom: 22px;
-        border: 0;
+        border: 2px solid var(--jena-light-blue);
         border-radius: 16px;
         background: white;
         box-shadow: 0 10px 30px rgba(26, 35, 50, .08);
@@ -3591,22 +3593,38 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         justify-content: space-between;
         align-items: center;
         gap: 12px;
-        padding: 18px 22px;
-        color: white;
-        background: linear-gradient( 135deg, var(--jena-navy), var(--jena-dark-navy) );
+        padding: 14px 22px;
+        color: var(--jena-navy);
+        background: var(--jena-white);
+        border-bottom: 2px solid var(--jena-light-blue);
     }
 
         .dia-card-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             margin: 0;
             font-size: 1.2rem;
             font-weight: 800;
+            color: var(--jena-navy);
         }
 
+        .dia-card-header h2 i {
+            font-size: 1.15rem;
+            color: var(--jena-orange);
+            flex-shrink: 0;
+        }
+
+    /* Formato de fecha en cabecera de día */
+    .dia-header-mobile  { display: none; }
+    .dia-header-desktop { display: inline; }
+
         .dia-card-header span {
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
-            color: white;
-            background: rgba(255, 255, 255, .15);
+            color: var(--jena-navy);
+            background: var(--jena-light-gray);
+            border: 1px solid var(--jena-light-blue);
             font-size: .84rem;
             font-weight: 700;
         }
@@ -3617,7 +3635,9 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
         .tabla-horarios thead th {
             padding: 14px 16px;
-            border-bottom: 1px solid var(--jena-border);
+            border: none;
+            border-right: 1px solid var(--jena-light-gray);
+            border-bottom: 2px solid var(--jena-light-blue);
             color: var(--jena-navy);
             background: var(--jena-light-gray);
             font-size: .84rem;
@@ -3627,10 +3647,14 @@ section.hero-apex a.btn.btn-apex-primary:hover {
             white-space: nowrap;
         }
 
+        .tabla-horarios thead th:last-child {
+            border-right: none;
+        }
+
         .tabla-horarios tbody td {
             padding: 16px;
-            border-color: #EDF0F2;
-            color: #344054;
+            border-color: var(--jena-light-blue);
+            color: var(--jena-navy);
             vertical-align: middle;
         }
 
@@ -3704,7 +3728,7 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         height: 38px;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--jena-border);
+        border: 1px solid var(--jena-light-blue);
         border-radius: 9px;
         color: var(--jena-navy);
         background: white;
@@ -3725,7 +3749,7 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
     .estado-vacio {
         padding: 60px 25px;
-        border: 1px dashed var(--jena-border);
+        border: 1px dashed var(--jena-light-blue);
         border-radius: 16px;
         background: white;
         text-align: center;
@@ -3757,6 +3781,50 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         border-radius: 13px;
         color: var(--jena-navy);
         background: rgba(255, 107, 53, .07);
+    }
+
+    /* ---- Paginación de dia-cards ---- */
+    .paginacion-dias {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 10px;
+        margin-bottom: 24px;
+    }
+
+    .btn-pag-dia {
+        display: inline-flex;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--jena-light-blue);
+        border-radius: 10px;
+        color: var(--jena-navy);
+        background: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+    .btn-pag-dia:hover:not(:disabled) {
+        border-color: var(--jena-navy);
+        color: white;
+        background: var(--jena-navy);
+    }
+
+    .btn-pag-dia:disabled {
+        opacity: .35;
+        cursor: default;
+    }
+
+    .pag-indicador-dia {
+        min-width: 56px;
+        color: var(--jena-navy);
+        font-size: .9rem;
+        font-weight: 800;
+        text-align: center;
     }
 
     @media (max-width: 991px) {
@@ -3793,12 +3861,52 @@ section.hero-apex a.btn.btn-apex-primary:hover {
             width: 100%;
         }
 
-        .dia-card {
-            overflow-x: auto;
+        /* Ocultar resumen de stats en mobile */
+        .resumen-programacion {
+            display: none;
         }
 
+        /* Formato de fecha: mostrar versión corta en mobile */
+        .dia-header-desktop { display: none; }
+        .dia-header-mobile  { display: inline; }
+
+        /* Ocultar columnas no esenciales: sólo Horario, Clase y Entrenador */
+        .col-mobile-oculto {
+            display: none;
+        }
+
+        /* La tabla ocupa el ancho disponible sin scroll horizontal */
+        .dia-card {
+            overflow-x: unset;
+        }
+
+        /* Tabla vertical en mobile: cada fila se apila como bloque */
         .tabla-horarios {
-            min-width: 920px;
+            min-width: unset;
+            width: 100%;
+        }
+
+        .tabla-horarios thead {
+            display: none;
+        }
+
+        .tabla-horarios tbody tr {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 14px 16px;
+            border: none;
+            border-bottom: 1px solid var(--jena-light-gray);
+        }
+
+        .tabla-horarios tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .tabla-horarios tbody td {
+            display: block;
+            padding: 2px 0;
+            border: none !important;
         }
     }
 
@@ -3845,6 +3953,7 @@ section.hero-apex a.btn.btn-apex-primary:hover {
             margin: 0 0 6px;
             font-size: 1.35rem;
             font-weight: 700;
+            color: var(--jena-light-gray);
         }
 
         .programacion-card-header p {
@@ -4840,12 +4949,54 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 	border-radius: 18px 0 0 18px;
 }
 
+@media (max-width: 767.98px) {
+	.card-panel-navy {
+		min-height: 0;
+		border-radius: 12px 0 0 12px;
+		padding: 8px 0;
+	}
+	.card-panel-navy .icon-jena-3xl {
+		font-size: 1.4rem;
+	}
+	.card-clase-title {
+		font-size: 0.95rem;
+		margin-bottom: 6px;
+		word-break: break-word;
+	}
+	.col-9.col-md-8.p-3 {
+		padding: 8px !important;
+	}
+	.clase-acciones {
+		border-top: 1px solid var(--jena-light-gray);
+		justify-content: flex-start !important;
+		padding: 10px 12px !important;
+	}
+}
+
 /* Clases: heading inside card */
 .card-clase-title {
 	color: var(--jena-navy);
 	font-family: var(--font-headings);
 	letter-spacing: 1px;
 	margin-bottom: 12px;
+}
+
+/* ============================================
+   PAGINACIÓN — colores Jena (override Bootstrap)
+============================================ */
+.pagination {
+	--bs-pagination-color:               var(--jena-navy);
+	--bs-pagination-hover-color:         var(--jena-orange);
+	--bs-pagination-hover-bg:            rgba(255,107,53,0.08);
+	--bs-pagination-hover-border-color:  var(--jena-orange);
+	--bs-pagination-active-color:        var(--jena-white);
+	--bs-pagination-active-bg:           var(--jena-navy);
+	--bs-pagination-active-border-color: var(--jena-navy);
+	--bs-pagination-focus-color:         var(--jena-navy);
+	--bs-pagination-focus-box-shadow:    0 0 0 .2rem rgba(44,62,80,.25);
+	--bs-pagination-disabled-color:      var(--jena-dark-gray);
+	--bs-pagination-border-color:        var(--jena-light-blue);
+	--bs-pagination-bg:                  var(--jena-white);
 }
 
 /* Clases: text helpers */

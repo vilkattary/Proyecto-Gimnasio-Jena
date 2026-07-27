@@ -28,7 +28,6 @@ namespace GimnasioJena.Abstracciones.Modelos.HorariosSemanales
         [Display(Name = "Cupo máximo")]
         public int cupoMaximo { get; set; }
 
-        [Required(ErrorMessage = "Debe indicar la ubicación.")]
         [StringLength(
             100,
             ErrorMessage = "La ubicación no puede superar los 100 caracteres."
