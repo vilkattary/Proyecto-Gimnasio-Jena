@@ -1,0 +1,1065 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.HorariosSemanales.HorarioSemanalMultipleCrearDto
+
+@{
+    ViewBag.Title = "Programación semanal";
+
+    int diaSeleccionado = Model != null && Model.diaSemana >= 1
+        ? Model.diaSemana
+        : 1;
+}
+
+<style>
+    :root {
+        --jena-navy: #2C3E50;
+        --jena-dark-navy: #1A2332;
+        --jena-orange: #FF6B35;
+        --jena-dark-orange: #D95F31;
+        --jena-light-blue: #6C8EA4;
+        --jena-white: #FFFFFF;
+        --jena-light-gray: #F8F9FA;
+        --jena-border: #DEE2E6;
+        --jena-danger: #DC3545;
+        --jena-success: #198754;
+    }
+
+    .programacion-page {
+        min-height: 100vh;
+        padding: 35px 0 55px;
+        background: linear-gradient( 135deg, rgba(44, 62, 80, .06), rgba(255, 107, 53, .05) );
+    }
+
+    .programacion-header {
+        margin-bottom: 25px;
+    }
+
+        .programacion-header h1 {
+            margin-bottom: 8px;
+            color: var(--jena-navy);
+            font-weight: 800;
+        }
+
+        .programacion-header p {
+            margin: 0;
+            color: #6C757D;
+            font-size: 1rem;
+        }
+
+    .programacion-card {
+        overflow: hidden;
+        border: 0;
+        border-radius: 18px;
+        background: var(--jena-white);
+        box-shadow: 0 12px 35px rgba(26, 35, 50, .10);
+    }
+
+    .programacion-card-header {
+        padding: 24px 28px;
+        color: var(--jena-white);
+        background: linear-gradient( 135deg, var(--jena-navy), var(--jena-dark-navy) );
+    }
+
+        .programacion-card-header h2 {
+            margin: 0 0 6px;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .programacion-card-header p {
+            margin: 0;
+            color: rgba(255, 255, 255, .78);
+        }
+
+    .programacion-card-body {
+        padding: 30px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--jena-navy);
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    .section-number {
+        display: inline-flex;
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: white;
+        background: var(--jena-orange);
+        font-size: .9rem;
+    }
+
+    .form-label {
+        margin-bottom: 7px;
+        color: var(--jena-navy);
+        font-weight: 700;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 46px;
+        border: 1px solid var(--jena-border);
+        border-radius: 10px;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--jena-orange);
+            box-shadow: 0 0 0 .2rem rgba(255, 107, 53, .15);
+        }
+
+    /* =========================================
+       SELECTOR DE DÍAS
+       ========================================= */
+
+    .dias-selector {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(90px, 1fr));
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .dia-button {
+        position: relative;
+        min-height: 55px;
+        padding: 8px 12px;
+        border: 1px solid var(--jena-border);
+        border-radius: 12px;
+        color: var(--jena-navy);
+        background: white;
+        font-weight: 700;
+        transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+
+        .dia-button:hover {
+            border-color: var(--jena-orange);
+            color: var(--jena-orange);
+            background: #FFF8F5;
+            transform: translateY(-1px);
+        }
+
+    /*
+     * Se usa una regla más específica para garantizar
+     * que otros estilos globales no eliminen el estado activo.
+     */
+    .dias-selector .dia-button.activo,
+    .dias-selector .dia-button.activo:hover,
+    .dias-selector .dia-button.activo:focus,
+    .dias-selector .dia-button[aria-pressed="true"] {
+        border-color: var(--jena-orange) !important;
+        color: white !important;
+        background: linear-gradient( 135deg, var(--jena-orange), var(--jena-dark-orange) ) !important;
+        box-shadow: 0 7px 18px rgba(255, 107, 53, .30);
+        transform: translateY(-1px);
+    }
+
+    .dia-button .dia-check {
+        display: none;
+        margin-right: 6px;
+        font-size: .9rem;
+    }
+
+    .dia-button.activo .dia-check,
+    .dia-button[aria-pressed="true"] .dia-check {
+        display: inline-block;
+    }
+
+    .dia-seleccionado-resumen {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 46px;
+        margin-bottom: 22px;
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 107, 53, .25);
+        border-radius: 11px;
+        color: var(--jena-navy);
+        background: rgba(255, 107, 53, .07);
+    }
+
+        .dia-seleccionado-resumen i {
+            color: var(--jena-orange);
+            font-size: 1.15rem;
+        }
+
+        .dia-seleccionado-resumen strong {
+            color: var(--jena-orange);
+        }
+
+    /* =========================================
+       HORARIOS
+       ========================================= */
+
+    .horarios-panel {
+        padding: 20px;
+        border: 1px solid var(--jena-border);
+        border-radius: 14px;
+        background: var(--jena-light-gray);
+    }
+
+    .horario-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 14px;
+        align-items: end;
+        margin-bottom: 14px;
+        padding: 16px;
+        border: 1px solid #E9ECEF;
+        border-radius: 12px;
+        background: white;
+    }
+
+        .horario-row:last-child {
+            margin-bottom: 0;
+        }
+
+    .btn-agregar {
+        border: 1px dashed var(--jena-orange);
+        border-radius: 10px;
+        color: var(--jena-orange);
+        background: white;
+        font-weight: 700;
+    }
+
+        .btn-agregar:hover {
+            color: white;
+            background: var(--jena-orange);
+        }
+
+    .btn-eliminar-horario {
+        width: 46px;
+        height: 46px;
+        border: 0;
+        border-radius: 10px;
+        color: white;
+        background: var(--jena-danger);
+    }
+
+        .btn-eliminar-horario:hover {
+            opacity: .88;
+        }
+
+    /* =========================================
+       ACCIONES
+       ========================================= */
+
+    .acciones-formulario {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 28px;
+        padding-top: 24px;
+        border-top: 1px solid var(--jena-border);
+    }
+
+    .btn-volver {
+        min-width: 130px;
+        border-radius: 10px;
+        color: var(--jena-navy);
+        background: #E9ECEF;
+        font-weight: 700;
+    }
+
+    .btn-guardar {
+        min-width: 220px;
+        border: 0;
+        border-radius: 10px;
+        color: white;
+        background: linear-gradient( 135deg, var(--jena-orange), var(--jena-dark-orange) );
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(255, 107, 53, .25);
+    }
+
+        .btn-guardar:hover {
+            color: white;
+            transform: translateY(-1px);
+        }
+
+    /* =========================================
+       VALIDACIONES
+       ========================================= */
+
+    .validation-summary-valid {
+        display: none;
+    }
+
+    .validation-summary-errors {
+        margin-bottom: 22px;
+        padding: 16px 18px;
+        border: 1px solid rgba(220, 53, 69, .25);
+        border-radius: 12px;
+        color: #842029;
+        background: #F8D7DA;
+    }
+
+        .validation-summary-errors ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+    .text-danger {
+        display: block;
+        margin-top: 5px;
+        font-size: .85rem;
+    }
+
+    @@media (max-width: 991px) {
+        .dias-selector {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .programacion-card-body {
+            padding: 20px;
+        }
+
+        .dias-selector {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .horario-row {
+            grid-template-columns: 1fr;
+        }
+
+        .btn-eliminar-horario {
+            width: 100%;
+        }
+
+        .acciones-formulario {
+            flex-direction: column-reverse;
+        }
+
+        .btn-volver,
+        .btn-guardar {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="programacion-page">
+    <div class="container">
+
+        <div class="programacion-header">
+            <h1>
+                <i class="bi bi-calendar-week me-2"></i>
+                Programación semanal
+            </h1>
+
+            <p>
+                Configure varios horarios recurrentes para un mismo
+                día, tipo de clase y entrenador.
+            </p>
+        </div>
+
+        <div class="programacion-card">
+
+            <div class="programacion-card-header">
+                <h2>Nueva programación</h2>
+
+                <p>
+                    Cada rango agregado se convertirá en un horario
+                    semanal independiente.
+                </p>
+            </div>
+
+            <div class="programacion-card-body">
+
+                @using (
+                    Html.BeginForm(
+                        "Registrar",
+                        "HorariosSemanales",
+                        FormMethod.Post,
+                        new
+                        {
+                            id = "formHorarioSemanal",
+                            autocomplete = "off"
+                        }
+                    )
+                )
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(
+                        true,
+                        "",
+                        new { @class = "validation-summary-errors" }
+                    )
+
+                    @Html.HiddenFor(
+                        model => model.diaSemana,
+                        new { id = "diaSemanaSeleccionado" }
+                    )
+
+                    <div class="section-title">
+                        <span class="section-number">1</span>
+                        Seleccione el día
+                    </div>
+
+                    <div class="dias-selector"
+                         role="group"
+                         aria-label="Seleccione un día de la semana">
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 1 ? "activo" : "")"
+                                data-dia="1"
+                                data-nombre="Lunes"
+                                aria-pressed="@(diaSeleccionado == 1 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Lunes
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 2 ? "activo" : "")"
+                                data-dia="2"
+                                data-nombre="Martes"
+                                aria-pressed="@(diaSeleccionado == 2 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Martes
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 3 ? "activo" : "")"
+                                data-dia="3"
+                                data-nombre="Miércoles"
+                                aria-pressed="@(diaSeleccionado == 3 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Miércoles
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 4 ? "activo" : "")"
+                                data-dia="4"
+                                data-nombre="Jueves"
+                                aria-pressed="@(diaSeleccionado == 4 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Jueves
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 5 ? "activo" : "")"
+                                data-dia="5"
+                                data-nombre="Viernes"
+                                aria-pressed="@(diaSeleccionado == 5 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Viernes
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 6 ? "activo" : "")"
+                                data-dia="6"
+                                data-nombre="Sábado"
+                                aria-pressed="@(diaSeleccionado == 6 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Sábado
+                        </button>
+
+                        <button type="button"
+                                class="dia-button @(diaSeleccionado == 7 ? "activo" : "")"
+                                data-dia="7"
+                                data-nombre="Domingo"
+                                aria-pressed="@(diaSeleccionado == 7 ? "true" : "false")">
+                            <i class="bi bi-check-circle-fill dia-check"></i>
+                            Domingo
+                        </button>
+
+                    </div>
+
+                    <div class="dia-seleccionado-resumen"
+                         id="resumenDiaSeleccionado">
+
+                        <i class="bi bi-calendar-check"></i>
+
+                        <span>
+                            Día seleccionado:
+                            <strong id="nombreDiaSeleccionado">
+                                @(diaSeleccionado == 1 ? "Lunes" :
+                                  diaSeleccionado == 2 ? "Martes" :
+                                  diaSeleccionado == 3 ? "Miércoles" :
+                                  diaSeleccionado == 4 ? "Jueves" :
+                                  diaSeleccionado == 5 ? "Viernes" :
+                                  diaSeleccionado == 6 ? "Sábado" :
+                                  diaSeleccionado == 7 ? "Domingo" :
+                                  "Lunes")
+                            </strong>
+                        </span>
+                    </div>
+
+                    @Html.ValidationMessageFor(
+                        model => model.diaSemana,
+                        "",
+                        new { @class = "text-danger" }
+                    )
+
+                    <div class="section-title mt-4">
+                        <span class="section-number">2</span>
+                        Información general
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(
+                                model => model.idTipoClase,
+                                new { @class = "form-label" }
+                            )
+
+                            @Html.DropDownListFor(
+                                model => model.idTipoClase,
+                                ViewBag.TiposClase
+                                    as IEnumerable<SelectListItem>,
+                                "Seleccione el tipo de clase",
+                                new { @class = "form-select" }
+                            )
+
+                            @Html.ValidationMessageFor(
+                                model => model.idTipoClase,
+                                "",
+                                new { @class = "text-danger" }
+                            )
+                        </div>
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(
+                                model => model.idUsuarioEntrenador,
+                                new { @class = "form-label" }
+                            )
+
+                            @Html.DropDownListFor(
+                                model => model.idUsuarioEntrenador,
+                                ViewBag.Entrenadores
+                                    as IEnumerable<SelectListItem>,
+                                "Seleccione el entrenador",
+                                new { @class = "form-select" }
+                            )
+
+                            @Html.ValidationMessageFor(
+                                model => model.idUsuarioEntrenador,
+                                "",
+                                new { @class = "text-danger" }
+                            )
+                        </div>
+
+                        <div class="col-md-4">
+                            @Html.LabelFor(
+                                model => model.cupoMaximo,
+                                new { @class = "form-label" }
+                            )
+
+                            @Html.TextBoxFor(
+                                model => model.cupoMaximo,
+                                new
+                                {
+                                    @class = "form-control",
+                                    type = "number",
+                                    min = "1",
+                                    max = "30"
+                                }
+                            )
+
+                            @Html.ValidationMessageFor(
+                                model => model.cupoMaximo,
+                                "",
+                                new { @class = "text-danger" }
+                            )
+                        </div>
+
+
+                    </div>
+
+                    <div class="section-title mt-5">
+                        <span class="section-number">3</span>
+                        Rangos horarios
+                    </div>
+
+                    <div class="horarios-panel">
+
+                        <div id="contenedorHorarios">
+
+                            @if (
+                                Model.horarios != null &&
+                                Model.horarios.Any()
+                            )
+                            {
+                                for (
+                                    int i = 0;
+                                    i < Model.horarios.Count;
+                                    i++
+                                )
+                                {
+                                    <div class="horario-row"
+                                         data-index="@i">
+
+                                        <div>
+                                            <label class="form-label">
+                                                Hora de inicio
+                                            </label>
+
+                                            @Html.TextBoxFor(
+                                                model =>
+                                                    model.horarios[i]
+                                                        .horaInicio,
+                                                new
+                                                {
+                                                    @class =
+                                                        "form-control hora-inicio",
+                                                    type = "time",
+                                                    step = "300"
+                                                }
+                                            )
+
+                                            @Html.ValidationMessageFor(
+                                                model =>
+                                                    model.horarios[i]
+                                                        .horaInicio,
+                                                "",
+                                                new
+                                                {
+                                                    @class = "text-danger"
+                                                }
+                                            )
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label">
+                                                Hora de finalización
+                                            </label>
+
+                                            @Html.TextBoxFor(
+                                                model =>
+                                                    model.horarios[i]
+                                                        .horaFin,
+                                                new
+                                                {
+                                                    @class =
+                                                        "form-control hora-fin",
+                                                    type = "time",
+                                                    step = "300"
+                                                }
+                                            )
+
+                                            @Html.ValidationMessageFor(
+                                                model =>
+                                                    model.horarios[i]
+                                                        .horaFin,
+                                                "",
+                                                new
+                                                {
+                                                    @class = "text-danger"
+                                                }
+                                            )
+                                        </div>
+
+                                        <button type="button"
+                                                class="btn-eliminar-horario"
+                                                title="Eliminar horario">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                        <button type="button"
+                                id="btnAgregarHorario"
+                                class="btn btn-agregar w-100 mt-3">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Agregar otro horario
+                        </button>
+                    </div>
+
+                    <div class="acciones-formulario">
+
+                        <a href="@Url.Action(
+                                "Index",
+                                "HorariosSemanales"
+                            )"
+                           class="btn btn-volver">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Volver
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-guardar">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Guardar programación
+                        </button>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const inputDia =
+                document.getElementById("diaSemanaSeleccionado");
+
+            const botonesDia =
+                document.querySelectorAll(".dia-button");
+
+            const nombreDiaSeleccionado =
+                document.getElementById("nombreDiaSeleccionado");
+
+            const contenedorHorarios =
+                document.getElementById("contenedorHorarios");
+
+            const botonAgregarHorario =
+                document.getElementById("btnAgregarHorario");
+
+            const formulario =
+                document.getElementById("formHorarioSemanal");
+
+            /* ==========================================
+               SELECCIÓN DEL DÍA
+               ========================================== */
+
+            function seleccionarDia(boton) {
+
+                if (!boton) {
+                    return;
+                }
+
+                const dia =
+                    boton.getAttribute("data-dia");
+
+                const nombreDia =
+                    boton.getAttribute("data-nombre");
+
+                inputDia.value = dia;
+
+                botonesDia.forEach(function (elemento) {
+
+                    elemento.classList.remove("activo");
+
+                    elemento.setAttribute(
+                        "aria-pressed",
+                        "false"
+                    );
+                });
+
+                boton.classList.add("activo");
+
+                boton.setAttribute(
+                    "aria-pressed",
+                    "true"
+                );
+
+                if (nombreDiaSeleccionado) {
+                    nombreDiaSeleccionado.textContent =
+                        nombreDia;
+                }
+            }
+
+            botonesDia.forEach(function (boton) {
+
+                boton.addEventListener(
+                    "click",
+                    function () {
+                        seleccionarDia(boton);
+                    }
+                );
+            });
+
+            function activarDiaInicial() {
+
+                let diaActual =
+                    inputDia.value;
+
+                if (
+                    !diaActual ||
+                    diaActual === "0"
+                ) {
+                    diaActual = "1";
+                    inputDia.value = "1";
+                }
+
+                const botonInicial =
+                    document.querySelector(
+                        '.dia-button[data-dia="' +
+                        diaActual +
+                        '"]'
+                    );
+
+                seleccionarDia(botonInicial);
+            }
+
+            activarDiaInicial();
+
+            /* ==========================================
+               AGREGAR HORARIOS
+               ========================================== */
+
+            botonAgregarHorario.addEventListener(
+                "click",
+                function () {
+
+                    const filas =
+                        contenedorHorarios.querySelectorAll(
+                            ".horario-row"
+                        );
+
+                    let horaInicioSugerida = "05:00";
+                    let horaFinSugerida = "06:00";
+
+                    if (filas.length > 0) {
+
+                        const ultimaFila =
+                            filas[filas.length - 1];
+
+                        const ultimaHoraFin =
+                            ultimaFila.querySelector(
+                                ".hora-fin"
+                            ).value;
+
+                        if (ultimaHoraFin) {
+
+                            horaInicioSugerida =
+                                ultimaHoraFin;
+
+                            horaFinSugerida =
+                                sumarUnaHora(
+                                    ultimaHoraFin
+                                );
+                        }
+                    }
+
+                    const nuevaFila =
+                        document.createElement("div");
+
+                    nuevaFila.className =
+                        "horario-row";
+
+                    nuevaFila.innerHTML = `
+                            <div>
+                                <label class="form-label">
+                                    Hora de inicio
+                                </label>
+
+                                <input
+                                    type="time"
+                                    step="300"
+                                    class="form-control hora-inicio"
+                                    value="${horaInicioSugerida}" />
+                            </div>
+
+                            <div>
+                                <label class="form-label">
+                                    Hora de finalización
+                                </label>
+
+                                <input
+                                    type="time"
+                                    step="300"
+                                    class="form-control hora-fin"
+                                    value="${horaFinSugerida}" />
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn-eliminar-horario"
+                                title="Eliminar horario">
+
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        `;
+
+                    contenedorHorarios.appendChild(
+                        nuevaFila
+                    );
+
+                    reasignarIndices();
+                }
+            );
+
+            /* ==========================================
+               ELIMINAR HORARIOS
+               ========================================== */
+
+            contenedorHorarios.addEventListener(
+                "click",
+                function (evento) {
+
+                    const botonEliminar =
+                        evento.target.closest(
+                            ".btn-eliminar-horario"
+                        );
+
+                    if (!botonEliminar) {
+                        return;
+                    }
+
+                    const filas =
+                        contenedorHorarios.querySelectorAll(
+                            ".horario-row"
+                        );
+
+                    if (filas.length <= 1) {
+
+                        alert(
+                            "Debe conservar al menos un rango horario."
+                        );
+
+                        return;
+                    }
+
+                    botonEliminar
+                        .closest(".horario-row")
+                        .remove();
+
+                    reasignarIndices();
+                }
+            );
+
+            /* ==========================================
+               VALIDACIÓN DEL FORMULARIO
+               ========================================== */
+
+            formulario.addEventListener(
+                "submit",
+                function (evento) {
+
+                    if (
+                        !inputDia.value ||
+                        inputDia.value === "0"
+                    ) {
+                        evento.preventDefault();
+
+                        alert(
+                            "Debe seleccionar el día de la semana."
+                        );
+
+                        return;
+                    }
+
+                    const filas =
+                        contenedorHorarios.querySelectorAll(
+                            ".horario-row"
+                        );
+
+                    if (filas.length === 0) {
+
+                        evento.preventDefault();
+
+                        alert(
+                            "Debe agregar al menos un rango horario."
+                        );
+
+                        return;
+                    }
+
+                    reasignarIndices();
+                }
+            );
+
+            /* ==========================================
+               REASIGNACIÓN DE ÍNDICES MVC
+               ========================================== */
+
+            function reasignarIndices() {
+
+                const filas =
+                    contenedorHorarios.querySelectorAll(
+                        ".horario-row"
+                    );
+
+                filas.forEach(
+                    function (fila, indice) {
+
+                        fila.setAttribute(
+                            "data-index",
+                            indice
+                        );
+
+                        const horaInicio =
+                            fila.querySelector(
+                                ".hora-inicio"
+                            );
+
+                        const horaFin =
+                            fila.querySelector(
+                                ".hora-fin"
+                            );
+
+                        horaInicio.name =
+                            "horarios[" +
+                            indice +
+                            "].horaInicio";
+
+                        horaInicio.id =
+                            "horarios_" +
+                            indice +
+                            "__horaInicio";
+
+                        horaFin.name =
+                            "horarios[" +
+                            indice +
+                            "].horaFin";
+
+                        horaFin.id =
+                            "horarios_" +
+                            indice +
+                            "__horaFin";
+                    }
+                );
+            }
+
+            reasignarIndices();
+
+            /* ==========================================
+               SUMAR UNA HORA
+               ========================================== */
+
+            function sumarUnaHora(horaTexto) {
+
+                const partes =
+                    horaTexto.split(":");
+
+                let horas =
+                    parseInt(partes[0], 10);
+
+                let minutos =
+                    parseInt(partes[1], 10);
+
+                horas++;
+
+                if (horas >= 24) {
+                    horas = 23;
+                    minutos = 59;
+                }
+
+                const horasTexto =
+                    horas
+                        .toString()
+                        .padStart(2, "0");
+
+                const minutosTexto =
+                    minutos
+                        .toString()
+                        .padStart(2, "0");
+
+                return (
+                    horasTexto +
+                    ":" +
+                    minutosTexto
+                );
+            }
+        });
+    </script>
+}

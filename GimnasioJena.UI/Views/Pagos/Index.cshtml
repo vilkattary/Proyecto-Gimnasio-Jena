@@ -1,0 +1,112 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Pagos.PagoListadoDto>
+
+@{
+    ViewBag.Title = "Pagos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="page-title">Administración de Pagos</h1>
+        <p class="text-muted">
+            Consulta y administra los pagos registrados en el sistema.
+        </p>
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+        <a href="@Url.Action("Create", "Pagos")" class="btn btn-action">
+            <i class="bi bi-plus-circle me-1"></i>
+            Registrar pago
+        </a>
+    </div>
+
+    <div class="info-card">
+
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["MensajeError"]
+            </div>
+        }
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info">
+                No hay pagos registrados.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Plan</th>
+                            <th>Método</th>
+                            <th>Estado</th>
+                            <th>Monto</th>
+                            <th>Fecha</th>
+                            <th>Referencia</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var pago in Model)
+                        {
+                            <tr>
+                                <td>@pago.idPago</td>
+                                <td>@pago.nombreCliente</td>
+                                <td>@pago.nombrePlan</td>
+                                <td>@pago.metodoPago</td>
+
+                                <td>
+                                    @if (pago.estadoPago == "Pagado")
+                                    {
+                                        <span class="badge bg-success">
+                                            @pago.estadoPago
+                                        </span>
+                                    }
+                                    else if (pago.estadoPago == "Pendiente")
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            @pago.estadoPago
+                                        </span>
+                                    }
+                                    else if (pago.estadoPago == "Rechazado")
+                                    {
+                                        <span class="badge bg-danger">
+                                            @pago.estadoPago
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @pago.estadoPago
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>₡ @pago.monto.ToString("N2")</td>
+                                <td>@pago.fechaPago.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    @(string.IsNullOrWhiteSpace(pago.referenciaPago)
+                                        ? "-"
+                                        : pago.referenciaPago)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

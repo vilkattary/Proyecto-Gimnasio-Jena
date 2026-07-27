@@ -1,22 +1,45 @@
 ﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Clases.ClaseListadoDto>
 
 @{
-    ViewBag.Title = "Gestión de Clases";
+    bool esVistaCliente =
+        ViewBag.EsVistaCliente != null &&
+        (bool)ViewBag.EsVistaCliente;
+
+    ViewBag.Title = esVistaCliente
+        ? "Próximas Clases"
+        : "Gestión de Clases";
 }
 
 <div class="container-fluid p-4">
 
+    <!-- Encabezado -->
     <div class="welcome-section mb-4">
         <div class="logo-circular">
             <i class="bi bi-tree"></i>
             <span class="letter-j">J</span>
         </div>
+
         <div class="welcome-text">
-            <h3>Gestión de Clases</h3>
-            <p>Listado completo de todas las clases programadas en el sistema</p>
+            @if (esVistaCliente)
+            {
+                <h3>Próximas Clases</h3>
+                <p>
+                    Consulta las próximas clases disponibles.
+                    Las reservas se habilitan 24 horas antes y se cierran
+                    10 minutos antes del inicio.
+                </p>
+            }
+            else
+            {
+                <h3>Gestión de Clases</h3>
+                <p>
+                    Listado completo de todas las clases programadas en el sistema.
+                </p>
+            }
         </div>
     </div>
 
+    <!-- Mensajes -->
     @if (TempData["MensajeExito"] != null)
     {
         <div class="alert alert-success">
@@ -31,109 +54,165 @@
         </div>
     }
 
-    @{
+    <!-- Información administrativa -->
+    @if (!esVistaCliente)
+    {
         int statTotal = Model != null ? Model.Count() : 0;
-        int statCupos = Model != null ? Model.Sum(c => c.cuposDisponibles) : 0;
-        int statActivas = Model != null ? Model.Count(c => c.estadoClase == "Activa") : 0;
-        int statInstructores = Model != null ? Model.Select(c => c.nombreEntrenador).Distinct().Count() : 0;
+
+        int statCupos = Model != null
+            ? Model.Sum(c => c.cuposDisponibles)
+            : 0;
+
+        int statActivas = Model != null
+            ? Model.Count(c => c.estadoClase == "Activa")
+            : 0;
+
+        int statInstructores = Model != null
+            ? Model
+                .Where(c => !string.IsNullOrWhiteSpace(c.nombreEntrenador))
+                .Select(c => c.nombreEntrenador)
+                .Distinct()
+                .Count()
+            : 0;
+
+        <div class="stats-grid mb-4">
+
+            <div class="stat-card">
+                <i class="bi bi-calendar-check"></i>
+                <h3>@statTotal</h3>
+                <p>Total clases</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="bi bi-people"></i>
+                <h3>@statCupos</h3>
+                <p>Cupos disponibles</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="bi bi-check-circle"></i>
+                <h3>@statActivas</h3>
+                <p>Clases activas</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="bi bi-person-badge"></i>
+                <h3>@statInstructores</h3>
+                <p>Entrenadores</p>
+            </div>
+
+        </div>
+
+        <!-- Filtros administrativos -->
+        <div class="info-card mb-4">
+
+            <div class="row align-items-end g-3">
+
+                <div class="col-md-3">
+                    <label class="info-label mb-1">
+                        <i class="bi bi-funnel me-1"></i>
+                        Tipo de clase
+                    </label>
+
+                    <select class="form-select" id="filtroTipo">
+                        <option value="">Todas las clases</option>
+
+                        @if (Model != null)
+                        {
+                            foreach (var nombre in Model
+                                .Where(c => !string.IsNullOrWhiteSpace(c.nombreClase))
+                                .Select(c => c.nombreClase)
+                                .Distinct()
+                                .OrderBy(n => n))
+                            {
+                                <option value="@nombre.ToLower()">
+                                    @nombre
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="info-label mb-1">
+                        <i class="bi bi-toggle-on me-1"></i>
+                        Estado
+                    </label>
+
+                    <select class="form-select" id="filtroEstado">
+                        <option value="">Todos</option>
+                        <option value="activa">Activas</option>
+                        <option value="inactiva">Inactivas</option>
+                        <option value="cancelada">Canceladas</option>
+                        <option value="finalizada">Finalizadas</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="info-label mb-1">
+                        <i class="bi bi-sort-down me-1"></i>
+                        Ordenar por
+                    </label>
+
+                    <select class="form-select" id="filtroOrden">
+                        <option value="">Seleccionar</option>
+                        <option value="instructor">Entrenador</option>
+                        <option value="cupos">Cupos disponibles</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="button"
+                            class="btn-orange w-100"
+                            onclick="aplicarFiltros()">
+                        <i class="bi bi-search me-2"></i>
+                        Buscar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Crear clase -->
+        <div class="mb-4 d-flex justify-content-end">
+            @Html.ActionLink(
+                "+ Crear nueva clase",
+                "RegistrarClase",
+                "Clases",
+                null,
+                new { @class = "btn-orange" }
+            )
+        </div>
     }
 
-    <div class="stats-grid mb-4">
-        <div class="stat-card">
-            <i class="bi bi-calendar-check"></i>
-            <h3>@statTotal</h3>
-            <p>Total Clases</p>
-        </div>
-
-        <div class="stat-card">
-            <i class="bi bi-people"></i>
-            <h3>@statCupos</h3>
-            <p>Cupos Disponibles</p>
-        </div>
-
-        <div class="stat-card">
-            <i class="bi bi-check-circle"></i>
-            <h3>@statActivas</h3>
-            <p>Clases Activas</p>
-        </div>
-
-        <div class="stat-card">
-            <i class="bi bi-person-badge"></i>
-            <h3>@statInstructores</h3>
-            <p>Instructores</p>
-        </div>
-    </div>
-
-    <div class="info-card mb-4">
-        <div class="row align-items-end g-3">
-
-            <div class="col-md-3">
-                <label class="info-label mb-1">
-                    <i class="bi bi-funnel me-1"></i> Tipo de Clase
-                </label>
-
-                <select class="form-select" id="filtroTipo">
-                    <option value="">Todas las clases</option>
-
-                    @if (Model != null)
-                    {
-                        foreach (var nombre in Model.Select(c => c.nombreClase).Distinct().Where(t => t != null).OrderBy(n => n))
-                        {
-                            <option value="@nombre.ToLower()">@nombre</option>
-                        }
-                    }
-                </select>
-            </div>
-
-            <div class="col-md-3">
-                <label class="info-label mb-1">
-                    <i class="bi bi-toggle-on me-1"></i> Estado
-                </label>
-
-                <select class="form-select" id="filtroEstado">
-                    <option value="">Todos</option>
-                    <option value="activa">Clases Activas</option>
-                    <option value="inactiva">Clases Inactivas</option>
-                    <option value="cancelada">Clases Canceladas</option>
-                    <option value="finalizada">Clases Finalizadas</option>
-                </select>
-            </div>
-
-            <div class="col-md-3">
-                <label class="info-label mb-1">
-                    <i class="bi bi-sort-down me-1"></i> Ordenar Por
-                </label>
-
-                <select class="form-select" id="filtroOrden">
-                    <option value="">Seleccionar</option>
-                    <option value="instructor">Instructor</option>
-                    <option value="cupos">Cupos disponibles</option>
-                </select>
-            </div>
-
-            <div class="col-md-3">
-                <button class="btn-orange w-100" onclick="aplicarFiltros()">
-                    <i class="bi bi-search me-2"></i>Buscar
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="mb-4 d-flex justify-content-end">
-        @if (User.IsInRole("ADMINISTRADOR"))
-        {
-            @Html.ActionLink("+ Crear Nueva Clase", "RegistrarClase", null, new { @class = "btn-orange" })
-        }
-    </div>
-
+    <!-- Lista de clases -->
     <div id="listaClases">
+
         @if (Model == null || !Model.Any())
         {
             <div class="info-card text-center py-5">
-                <i class="bi bi-calendar-x" style="font-size:3rem; color:var(--jena-orange);"></i>
-                <h4 class="mt-3">No hay clases registradas</h4>
-                <p>Actualmente no existen clases programadas en el sistema.</p>
+
+                <i class="bi bi-calendar-x"
+                   style="font-size:3rem; color:var(--jena-orange);">
+                </i>
+
+                @if (esVistaCliente)
+                {
+                    <h4 class="mt-3">No hay próximas clases disponibles</h4>
+
+                    <p class="mb-0">
+                        Actualmente no existen clases futuras programadas.
+                    </p>
+                }
+                else
+                {
+                    <h4 class="mt-3">No hay clases registradas</h4>
+
+                    <p class="mb-0">
+                        Actualmente no existen clases programadas en el sistema.
+                    </p>
+                }
+
             </div>
         }
         else
@@ -142,30 +221,55 @@
             {
                 string tipo = item.nombreClase ?? "";
                 string tipoLower = tipo.ToLower();
-                string estadoLower = item.estadoClase != null ? item.estadoClase.ToLower() : "";
 
-                var iconoClase = tipoLower.Contains("spinning") ? "bi-bicycle"
-                               : tipoLower.Contains("yoga") ? "bi-heart-pulse"
-                               : tipoLower.Contains("box") ? "bi-trophy"
-                               : tipoLower.Contains("crossfit") ? "bi-lightning-charge"
-                               : tipoLower.Contains("hiit") ? "bi-fire"
-                               : "bi-calendar-event";
+                string estadoLower =
+                    !string.IsNullOrWhiteSpace(item.estadoClase)
+                        ? item.estadoClase.ToLower()
+                        : "";
 
-                var pctOcupado = item.cupoMaximo > 0
-                    ? (int)Math.Round((double)item.cuposReservados / item.cupoMaximo * 100)
+                string iconoClase =
+                    tipoLower.Contains("fuerza")
+                        ? "bi-lightning-charge"
+                        : tipoLower.Contains("acondicionamiento")
+                            ? "bi-activity"
+                            : tipoLower.Contains("cruzado")
+                                ? "bi-trophy"
+                                : tipoLower.Contains("hiit")
+                                    ? "bi-fire"
+                                    : tipoLower.Contains("movilidad")
+                                        ? "bi-person-arms-up"
+                                        : "bi-calendar-event";
+
+                int pctOcupado = item.cupoMaximo > 0
+                    ? (int)Math.Round(
+                        (double)item.cuposReservados /
+                        item.cupoMaximo * 100)
                     : 0;
 
-                var colorBarra = pctOcupado >= 80 ? "var(--jena-orange)"
-                               : pctOcupado >= 50 ? "#f0ad4e"
-                               : "var(--jena-light-blue)";
+                string colorBarra =
+                    pctOcupado >= 80
+                        ? "var(--jena-orange)"
+                        : pctOcupado >= 50
+                            ? "#f0ad4e"
+                            : "var(--jena-light-blue)";
 
-                var esActiva = item.estadoClase == "Activa";
+                bool esActiva =
+                    item.estadoClase == "Activa";
 
-                var badgeTexto = !string.IsNullOrWhiteSpace(item.estadoClase) ? item.estadoClase : "Sin estado";
-                var badgeIcono = esActiva ? "bi-check-circle" : "bi-x-circle";
-                var badgeColor = esActiva
-                    ? "background:rgba(28,200,138,.15);color:#1c7a55;"
-                    : "background:rgba(220,53,69,.12);color:#a71d2a;";
+                string badgeTexto =
+                    !string.IsNullOrWhiteSpace(item.estadoClase)
+                        ? item.estadoClase
+                        : "Sin estado";
+
+                string badgeIcono =
+                    esActiva
+                        ? "bi-check-circle"
+                        : "bi-x-circle";
+
+                string badgeColor =
+                    esActiva
+                        ? "background:rgba(28,200,138,.15); color:#1c7a55;"
+                        : "background:rgba(220,53,69,.12); color:#a71d2a;";
 
                 <div class="clase-item mb-3"
                      data-tipo="@tipoLower"
@@ -174,108 +278,273 @@
                      data-cupos="@item.cuposDisponibles">
 
                     <div class="info-card p-0 overflow-hidden">
+
                         <div class="row g-0 align-items-stretch">
 
-                            <div class="col-md-2 d-flex align-items-center justify-content-center"
-                                 style="background:var(--jena-navy); min-height:140px; border-radius:18px 0 0 18px;">
-                                <i class="bi @iconoClase" style="font-size:3rem; color:var(--jena-orange);"></i>
+                            <!-- Ícono -->
+                            <div class="col-md-2 d-flex
+                                        align-items-center
+                                        justify-content-center"
+                                 style="background:var(--jena-navy);
+                                        min-height:140px;
+                                        border-radius:18px 0 0 18px;">
+
+                                <i class="bi @iconoClase"
+                                   style="font-size:3rem;
+                                          color:var(--jena-orange);">
+                                </i>
+
                             </div>
 
+                            <!-- Información -->
                             <div class="col-md-8 p-3">
 
                                 <div class="d-flex flex-wrap gap-2 mb-2">
-                                    <span style="@badgeColor font-size:.8rem; font-weight:700; padding:4px 14px; border-radius:50px; display:inline-flex; align-items:center; gap:5px;">
-                                        <i class="bi @badgeIcono"></i> @badgeTexto
+
+                                    <!-- Estado -->
+                                    <span style="@badgeColor
+                                                 font-size:.8rem;
+                                                 font-weight:700;
+                                                 padding:4px 14px;
+                                                 border-radius:50px;
+                                                 display:inline-flex;
+                                                 align-items:center;
+                                                 gap:5px;">
+
+                                        <i class="bi @badgeIcono"></i>
+                                        @badgeTexto
+
                                     </span>
 
+                                    <!-- Cupos -->
                                     @if (item.cuposDisponibles > 0)
                                     {
-                                        <span style="background:rgba(108,142,164,.15); color:var(--jena-navy); font-size:.8rem; font-weight:700; padding:4px 14px; border-radius:50px; display:inline-flex; align-items:center; gap:5px;">
-                                            <i class="bi bi-people"></i> @item.cuposDisponibles plazas
+                                        <span style="background:rgba(108,142,164,.15);
+                                                     color:var(--jena-navy);
+                                                     font-size:.8rem;
+                                                     font-weight:700;
+                                                     padding:4px 14px;
+                                                     border-radius:50px;
+                                                     display:inline-flex;
+                                                     align-items:center;
+                                                     gap:5px;">
+
+                                            <i class="bi bi-people"></i>
+
+                                            @item.cuposDisponibles
+                                            @(item.cuposDisponibles == 1
+                                                ? "cupo disponible"
+                                                : "cupos disponibles")
+
                                         </span>
                                     }
                                     else
                                     {
-                                        <span style="background:rgba(220,53,69,.12); color:#a71d2a; font-size:.8rem; font-weight:700; padding:4px 14px; border-radius:50px; display:inline-flex; align-items:center; gap:5px;">
-                                            <i class="bi bi-x-circle"></i> Lleno
+                                        <span style="background:rgba(220,53,69,.12);
+                                                     color:#a71d2a;
+                                                     font-size:.8rem;
+                                                     font-weight:700;
+                                                     padding:4px 14px;
+                                                     border-radius:50px;
+                                                     display:inline-flex;
+                                                     align-items:center;
+                                                     gap:5px;">
+
+                                            <i class="bi bi-x-circle"></i>
+                                            Sin cupos
+
                                         </span>
                                     }
 
-                                    <span style="background:rgba(255,107,53,.12); color:var(--jena-dark-orange); font-size:.8rem; font-weight:700; padding:4px 14px; border-radius:50px;">
-                                        @item.nombreClase
-                                    </span>
                                 </div>
 
-                                <h5 style="color:var(--jena-navy); font-family:'Audiowide',sans-serif; letter-spacing:1px; margin-bottom:10px;">
+                                <h5 style="color:var(--jena-navy);
+                                           font-family:'Audiowide',sans-serif;
+                                           letter-spacing:1px;
+                                           margin-bottom:12px;">
+
                                     @item.nombreClase
+
                                 </h5>
 
-                                <div class="row g-1" style="font-size:.88rem; color:var(--jena-navy);">
-                                    <div class="col-6 col-md-2">
-                                        <i class="bi bi-hash" style="color:var(--jena-orange);"></i>
-                                        <strong>#@item.idClaseProgramada</strong>
-                                    </div>
+                                <div class="row g-2"
+                                     style="font-size:.88rem;
+                                            color:var(--jena-navy);">
 
-                                    <div class="col-6 col-md-2">
-                                        <i class="bi bi-person-badge" style="color:var(--jena-orange);"></i>
+                                    <!-- Entrenador -->
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <i class="bi bi-person-badge"
+                                           style="color:var(--jena-orange);">
+                                        </i>
+
                                         @item.nombreEntrenador
                                     </div>
 
-                                    <div class="col-6 col-md-2">
-                                        <i class="bi bi-geo-alt" style="color:var(--jena-orange);"></i>
-                                        @item.ubicacion
+                                    <!-- Ubicación solamente para admin -->
+                                    @if (!esVistaCliente)
+                                    {
+                                        <div class="col-12 col-sm-6 col-lg-3">
+                                            <i class="bi bi-geo-alt"
+                                               style="color:var(--jena-orange);">
+                                            </i>
+
+                                            @(string.IsNullOrWhiteSpace(item.ubicacion)
+                                                ? "Sin ubicación"
+                                                : item.ubicacion)
+                                        </div>
+                                    }
+
+                                    <!-- Cupos -->
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <i class="bi bi-people"
+                                           style="color:var(--jena-orange);">
+                                        </i>
+
+                                        @if (esVistaCliente)
+                                        {
+                                            <span>
+                                                @item.cuposDisponibles disponibles
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                @item.cuposReservados de @item.cupoMaximo reservados
+                                            </span>
+                                        }
                                     </div>
 
-                                    <div class="col-6 col-md-2">
-                                        <i class="bi bi-people" style="color:var(--jena-orange);"></i>
-                                        @item.cuposReservados / @item.cupoMaximo
-                                    </div>
+                                    <!-- Fecha -->
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <i class="bi bi-calendar-date"
+                                           style="color:var(--jena-orange);">
+                                        </i>
 
-                                    <div class="col-6 col-md-2">
-                                        <i class="bi bi-calendar-date" style="color:var(--jena-orange);"></i>
                                         @item.fechaClase.ToString("dd/MM/yyyy")
                                     </div>
 
-                                    <div class="col-6 col-md-2">
-                                        <i class="bi bi-clock" style="color:var(--jena-orange);"></i>
-                                        @item.horaInicio.ToString(@"hh\:mm") - @item.horaFin.ToString(@"hh\:mm")
+                                    <!-- Horario -->
+                                    <div class="col-12 col-sm-6 col-lg-3">
+                                        <i class="bi bi-clock"
+                                           style="color:var(--jena-orange);">
+                                        </i>
+
+                                        @item.horaInicio.ToString(@"hh\:mm")
+                                        -
+                                        @item.horaFin.ToString(@"hh\:mm")
                                     </div>
+
                                 </div>
 
-                                <div class="mt-3">
-                                    <div class="d-flex justify-content-between" style="font-size:.8rem; color:var(--jena-light-blue); margin-bottom:4px;">
-                                        <span>Ocupación</span>
-                                        <span>@pctOcupado%</span>
-                                    </div>
+                                <!-- Ocupación solo para administrador -->
+                                @if (!esVistaCliente)
+                                {
+                                    <div class="mt-3">
 
-                                    <div style="background:var(--jena-light-gray); border-radius:10px; height:6px; overflow:hidden;">
-                                        <div style="width:@pctOcupado%; height:100%; background:@colorBarra; border-radius:10px; transition:width .4s ease;"></div>
+                                        <div class="d-flex
+                                                    justify-content-between"
+                                             style="font-size:.8rem;
+                                                    color:var(--jena-light-blue);
+                                                    margin-bottom:4px;">
+
+                                            <span>Ocupación</span>
+                                            <span>@pctOcupado%</span>
+
+                                        </div>
+
+                                        <div style="background:var(--jena-light-gray);
+                                                    border-radius:10px;
+                                                    height:6px;
+                                                    overflow:hidden;">
+
+                                            <div style="width:@pctOcupado%;
+                                                        height:100%;
+                                                        background:@colorBarra;
+                                                        border-radius:10px;
+                                                        transition:width .4s ease;">
+                                            </div>
+
+                                        </div>
+
                                     </div>
-                                </div>
+                                }
 
                             </div>
 
-                            <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
+                            <!-- Acciones -->
+                            <div class="col-md-2 d-flex
+                                        flex-column
+                                        align-items-center
+                                        justify-content-center
+                                        p-3
+                                        gap-2">
+
                                 @if (User.IsInRole("ADMINISTRADOR"))
                                 {
-                                    @Html.ActionLink("Editar", "EditarClase", new { id = item.idClaseProgramada }, new { @class = "btn-action" })
+                                    @Html.ActionLink(
+                                        "Editar",
+                                        "EditarClase",
+                                        "Clases",
+                                        new
+                                        {
+                                            id = item.idClaseProgramada
+                                        },
+                                        new
+                                        {
+                                            @class = "btn-action"
+                                        }
+                                    )
                                 }
 
-                                @if (User.IsInRole("CLIENTE"))
+                                @if (esVistaCliente)
                                 {
-                                    @Html.ActionLink("Reservar Clase", "ReservarClase", "Reservas", new { id = item.idClaseProgramada }, new { @class = "btn-action" })
+                                    if (item.reservaHabilitada)
+                                    {
+                                        @Html.ActionLink(
+                                            "Reservar clase",
+                                            "ReservarClase",
+                                            "Reservas",
+                                            new
+                                            {
+                                                id = item.idClaseProgramada
+                                            },
+                                            new
+                                            {
+                                                @class = "btn-action"
+                                            }
+                                        )
+                                    }
+                                    else
+                                    {
+                                        <button type="button"
+                                                class="btn btn-secondary"
+                                                disabled>
+                                            No disponible
+                                        </button>
+                                    }
+
+                                    <small class="text-center text-muted">
+                                        @item.mensajeReserva
+                                    </small>
                                 }
+
                             </div>
 
                         </div>
+
                     </div>
+
                 </div>
             }
         }
+
     </div>
 
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/Content/script/ObtenerTodasLasClases.js")
+@if (!esVistaCliente)
+{
+    @section Scripts {
+        @Scripts.Render("~/Content/script/ObtenerTodasLasClases.js")
+    }
 }

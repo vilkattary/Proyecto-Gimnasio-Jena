@@ -27,5 +27,16 @@ namespace GimnasioJena.Abstracciones.Modelos.Clases
 
         public DateTime? fechaCreacion { get; set; }
         public DateTime? fechaModificacion { get; set; }
+        public bool reservaHabilitada { get; set; }
+
+        public string mensajeReserva { get; set; }
+
+        public DateTime fechaHoraInicio
+        {
+            get
+            {
+                return fechaClase.Date.Add(horaInicio);
+            }
+        }
     }
 }
