@@ -5,4 +5,4 @@
     [ProductVersion] NVARCHAR (32)   NOT NULL,
     CONSTRAINT [PK_dbo.__MigrationHistory] PRIMARY KEY CLUSTERED ([MigrationId] ASC, [ContextKey] ASC)
 );
-
+--PRUEBA
