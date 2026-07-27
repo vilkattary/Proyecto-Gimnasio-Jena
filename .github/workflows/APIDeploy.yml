@@ -24,7 +24,7 @@ jobs:
         uses: NuGet/setup-nuget@v1
 
       - name: Restore NuGet Packages
-        run: nuget restore ./GimnasioJena.UI.sln
+        run: nuget restore ./GimnasioJena.sln
 
       - name: Replace connection string in Web.config
         uses: microsoft/variable-substitution@v1
