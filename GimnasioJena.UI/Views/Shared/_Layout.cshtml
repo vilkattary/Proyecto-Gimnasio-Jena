@@ -126,9 +126,16 @@
                             ? nombreClaim.Value
                             : User.Identity.Name;
                         <li class="nav-item">
-                            @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
-                                routeValues: null,
-                                htmlAttributes: new { @class = "nav-link text-accent" })
+                            @if (User.IsInRole("CLIENTE") || User.IsInRole("ENTRENADOR"))
+                            {
+                                <span class="nav-link text-accent">Hola, @nombreMostrar</span>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
+                                    routeValues: null,
+                                    htmlAttributes: new { @class = "nav-link text-accent" })
+                            }
                         </li>
                         <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
                             @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "d-inline" }))

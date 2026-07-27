@@ -108,9 +108,29 @@
                                 Guardar cambios
                             </button>
 
-                            <a href="@Url.Action("Index", "Manage")" class="btn btn-outline-gym">
-                                Cancelar
+                            <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
+                                <i class="bi bi-key me-1"></i>
+                                Cambiar contraseña
                             </a>
+
+                            @if (User.IsInRole("CLIENTE"))
+                            {
+                                <a href="@Url.Action("MiPerfil", "Clientes")" class="btn btn-outline-gym">
+                                    Cancelar
+                                </a>
+                            }
+                            else if (User.IsInRole("ENTRENADOR"))
+                            {
+                                <a href="@Url.Action("Index", "Entrenadores")" class="btn btn-outline-gym">
+                                    Cancelar
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Index", "Manage")" class="btn btn-outline-gym">
+                                    Cancelar
+                                </a>
+                            }
                         </div>
                     }
 
