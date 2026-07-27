@@ -3908,6 +3908,35 @@ section.hero-apex a.btn.btn-apex-primary:hover {
             padding: 2px 0;
             border: none !important;
         }
+
+        /* Tabla membresías en mobile: misma estructura que tabla-horarios */
+        .tabla-membresias {
+            min-width: unset;
+            width: 100%;
+        }
+
+        .tabla-membresias thead {
+            display: none;
+        }
+
+        .tabla-membresias tbody tr {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 14px 16px;
+            border: none;
+            border-bottom: 1px solid var(--jena-light-gray);
+        }
+
+        .tabla-membresias tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .tabla-membresias tbody td {
+            display: block;
+            padding: 2px 0;
+            border: none !important;
+        }
     }
 
 /* ============================================
