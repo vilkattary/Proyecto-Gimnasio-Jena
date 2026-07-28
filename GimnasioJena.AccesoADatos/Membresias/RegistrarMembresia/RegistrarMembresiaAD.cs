@@ -43,5 +43,22 @@ namespace GimnasioJena.AccesoADatos.Membresias.RegistrarMembresia
                 m.fechaInicio <= hoy &&
                 m.fechaFin >= hoy);
         }
+
+        public PlanMembresiaDatosDto ObtenerDatosPlan(int idPlanMembresia)
+        {
+            return _contexto.PlanesMembresia
+                .Where(p =>
+                    p.idPlanMembresia == idPlanMembresia &&
+                    p.estado)
+                .Select(p => new PlanMembresiaDatosDto
+                {
+                    idPlanMembresia = p.idPlanMembresia,
+                    cantidadClases = p.cantidadClases,
+                    duracionDias = p.duracionDias,
+                    precio = p.precio,
+                    estado = p.estado
+                })
+                .FirstOrDefault();
+        }
     }
 }
