@@ -311,6 +311,7 @@
     <Compile Include="Modelos\Membresias\MembresiaEditarDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaListadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaRenovarDto.cs" />
+    <Compile Include="Modelos\Membresias\PlanMembresiaDatosDto.cs" />
     <Compile Include="Modelos\Pagos\PagoActualizarEstadoDto.cs" />
     <Compile Include="Modelos\Pagos\PagoCrearDto.cs" />
     <Compile Include="Modelos\Pagos\PagoDetalleDto.cs" />

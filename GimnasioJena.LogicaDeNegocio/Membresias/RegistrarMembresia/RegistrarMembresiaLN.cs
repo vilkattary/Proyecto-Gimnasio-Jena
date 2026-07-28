@@ -2,6 +2,7 @@
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Membresias.RegistrarMembresia;
 using GimnasioJena.Abstracciones.Modelos.Membresias;
 using GimnasioJena.AccesoADatos.Membresias.RegistrarMembresia;
+using System;
 
 namespace GimnasioJena.LogicaDeNegocio.Membresias.RegistrarMembresia
 {
@@ -25,21 +26,37 @@ namespace GimnasioJena.LogicaDeNegocio.Membresias.RegistrarMembresia
             if (membresia.idPlanMembresia <= 0)
                 return false;
 
+            if (membresia.fechaInicio == default(DateTime))
+                return false;
+
             if (membresia.idEstadoMembresia <= 0)
                 membresia.idEstadoMembresia = 1;
 
-            if (membresia.fechaInicio == default || membresia.fechaFin == default)
+            var plan = _registrarMembresiaAD
+                .ObtenerDatosPlan(membresia.idPlanMembresia);
+
+            if (plan == null)
                 return false;
 
-            if (membresia.fechaFin < membresia.fechaInicio)
+            if (plan.duracionDias <= 0)
                 return false;
 
-            bool yaTieneActiva = _registrarMembresiaAD.UsuarioTieneMembresiaActiva(membresia.idUsuario);
+            bool yaTieneActiva =
+                _registrarMembresiaAD
+                    .UsuarioTieneMembresiaActiva(membresia.idUsuario);
 
             if (yaTieneActiva)
                 return false;
 
-            return _registrarMembresiaAD.RegistrarMembresia(membresia) > 0;
+            membresia.fechaFin =
+                membresia.fechaInicio
+                    .AddDays(plan.duracionDias - 1);
+
+            membresia.clasesDisponibles =
+                plan.cantidadClases;
+
+            return _registrarMembresiaAD
+                .RegistrarMembresia(membresia) > 0;
         }
     }
 }

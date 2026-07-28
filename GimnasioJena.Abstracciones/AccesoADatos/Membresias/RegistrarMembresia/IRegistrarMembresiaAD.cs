@@ -1,10 +1,20 @@
 ﻿using GimnasioJena.Abstracciones.Modelos.Membresias;
 
-namespace GimnasioJena.Abstracciones.AccesoADatos.Membresias.RegistrarMembresia
+namespace GimnasioJena.Abstracciones.AccesoADatos
+    .Membresias.RegistrarMembresia
 {
     public interface IRegistrarMembresiaAD
     {
-        int RegistrarMembresia(MembresiaCrearDto membresia);
-        bool UsuarioTieneMembresiaActiva(int idUsuario);
+        int RegistrarMembresia(
+            MembresiaCrearDto membresia
+        );
+
+        bool UsuarioTieneMembresiaActiva(
+            int idUsuario
+        );
+
+        PlanMembresiaDatosDto ObtenerDatosPlan(
+            int idPlanMembresia
+        );
     }
 }

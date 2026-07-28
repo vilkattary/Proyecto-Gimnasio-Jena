@@ -17,28 +17,71 @@ namespace GimnasioJena.AccesoADatos.Membresias.RenovarMembresia
         public bool RenovarMembresia(MembresiaRenovarDto modelo)
         {
             var membresia = _contexto.Membresias
-                .FirstOrDefault(m => m.idMembresiaCliente == modelo.idMembresiaCliente);
+                .FirstOrDefault(m =>
+                    m.idMembresiaCliente ==
+                    modelo.idMembresiaCliente);
 
             if (membresia == null)
                 return false;
 
             var plan = _contexto.PlanesMembresia
-                .FirstOrDefault(p => p.idPlanMembresia == membresia.idPlanMembresia);
+                .FirstOrDefault(p =>
+                    p.idPlanMembresia ==
+                    membresia.idPlanMembresia);
 
             if (plan == null)
                 return false;
 
-            membresia.fechaInicio = DateTime.Today;
+            if (plan.duracionDias <= 0)
+                return false;
 
-            membresia.fechaFin = DateTime.Today.AddDays(plan.duracionDias);
+            DateTime hoy = DateTime.Today;
 
-            membresia.clasesDisponibles = plan.cantidadClases;
+            /*
+             * Solo se permite renovar
+             * el día del vencimiento
+             * o después.
+             */
+            if (membresia.fechaFin > hoy)
+            {
+                return false;
+            }
+
+            DateTime nuevaFechaInicio = hoy;
+
+            DateTime nuevaFechaFin =
+                nuevaFechaInicio
+                    .AddDays(plan.duracionDias - 1);
+
+            membresia.fechaInicio =
+                nuevaFechaInicio;
+
+            membresia.fechaFin =
+                nuevaFechaFin;
+
+            membresia.clasesDisponibles =
+                plan.cantidadClases;
 
             membresia.idEstadoMembresia = 1;
 
-            membresia.observaciones =
-                "Membresía renovada el " +
-                DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            string notaRenovacion =
+                $"Membresía renovada el {DateTime.Now:dd/MM/yyyy HH:mm}. " +
+                $"Nuevo periodo: {nuevaFechaInicio:dd/MM/yyyy} " +
+                $"al {nuevaFechaFin:dd/MM/yyyy}.";
+
+            if (string.IsNullOrWhiteSpace(membresia.observaciones))
+            {
+                membresia.observaciones =
+                    notaRenovacion;
+            }
+            else
+            {
+                membresia.observaciones =
+                    membresia.observaciones.Trim() +
+                    Environment.NewLine +
+                    Environment.NewLine +
+                    notaRenovacion;
+            }
 
             return _contexto.SaveChanges() > 0;
         }
