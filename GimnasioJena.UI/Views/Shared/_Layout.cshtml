@@ -29,59 +29,47 @@
 
                     @if (User.IsInRole("ADMINISTRADOR"))
                     {
-                        @* ── ADMINISTRADOR: sin Inicio ni Sobre Nosotros ── *@
+                        @* ── ADMINISTRADOR: Dashboard + 3 Dropdowns ── *@
                         <li class="nav-item">
-                            @Html.ActionLink("Página de Inicio", "AdminIndex", "Home",
-                                 new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Página Nosotros", "Index", "SeccionesNosotros",
-                                 new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Usuarios", "Index", "Usuarios",
-                                 new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Entrenadores", "Administrar", "Entrenadores",
-                                 new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Clases", "ObtenerTodasLasClases", "Clases",
-                                 new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink(
-                                "Programación Semanal",
-                                "Index",
-                                "HorariosSemanales",
-                                new { area = "" },
-                                new { @class = "nav-link" })
+                            @Html.ActionLink("Dashboard", "Dashboard", "Admin",
+                                new { area = "" }, new { @class = "nav-link" })
                         </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink(
-                                "Registrar Clase",
-                                "RegistrarClase",
-                                "Clases",
-                                new { area = "" },
-                                new { @class = "nav-link" })
+                        @* Dropdown 1: Gestión Operativa *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-calendar3 me-1"></i>Gestión Operativa
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-admin">
+                                <li>@Html.ActionLink("Programación Semanal", "Index", "HorariosSemanales", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>@Html.ActionLink("Membresías", "Index", "Membresias", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                <li>@Html.ActionLink("Pagos", "Index", "Pagos", new { area = "" }, new { @class = "dropdown-item" })</li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Reservas", "Administrar", "Reservas",
-                                 new { area = "" }, new { @class = "nav-link" })
+
+                        @* Dropdown 2: Administración *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-people me-1"></i>Administración
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-admin">
+                                <li>@Html.ActionLink("Usuarios", "Index", "Usuarios", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                <li>@Html.ActionLink("Reservas", "Administrar", "Reservas", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>@Html.ActionLink("Bitácora", "Index", "Bitacoras", new { area = "" }, new { @class = "dropdown-item" })</li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Bitácora", "Index", "Bitacoras",
-                                 new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink(
-                                "Pagos",
-                                "Index",
-                                "Pagos",
-                                new { area = "" },
-                                new { @class = "nav-link" })
+
+                        @* Dropdown 3: Contenido Web *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-layout-text-window me-1"></i>Contenido Web
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-admin">
+                                <li>@Html.ActionLink("Home Dinámico", "AdminIndex", "Home", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                <li>@Html.ActionLink("Secciones Nosotros", "Index", "SeccionesNosotros", new { area = "" }, new { @class = "dropdown-item" })</li>
+                            </ul>
                         </li>
                     }
                     else
@@ -128,13 +116,6 @@
 
 
 
-                    @* ── MEMBRESÍA  ── *@
-                    @if (User.IsInRole("ADMINISTRADOR"))
-                    {
-                        <li class="nav-item">
-                            @Html.ActionLink("Membresía", "Index", "Membresias", new { area = "" }, new { @class = "nav-link" })
-                        </li>
-                    }
 
 
                     @if (Request.IsAuthenticated)
@@ -145,9 +126,16 @@
                             ? nombreClaim.Value
                             : User.Identity.Name;
                         <li class="nav-item">
-                            @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
-                                routeValues: null,
-                                htmlAttributes: new { @class = "nav-link", style = "color: var(--jena-orange) !important;" })
+                            @if (User.IsInRole("CLIENTE") || User.IsInRole("ENTRENADOR"))
+                            {
+                                <span class="nav-link text-accent">Hola, @nombreMostrar</span>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Hola, " + nombreMostrar, "Index", "Manage",
+                                    routeValues: null,
+                                    htmlAttributes: new { @class = "nav-link text-accent" })
+                            }
                         </li>
                         <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
                             @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "d-inline" }))
@@ -175,14 +163,16 @@
         </div>
     </nav>
 
-    @RenderBody()
+    <main>
+        @RenderBody()
+    </main>
 
     <footer>
         <div class="container">
             <div class="row gy-4">
                 <div class="col-lg-4">
                     <div class="footer-logo mb-3">Jéna Training Methodology</div>
-                    <p class="mb-3" style="color: #ccc;">
+                    <p class="mb-3 text-muted-light">
                         Transforma tu cuerpo y tu mente. Únete a nosotros y alcanza tus metas fitness con el mejor equipo y entrenadores.
                     </p>
                     <div class="social-links">
@@ -216,10 +206,10 @@
                 <div class="col-lg-3 col-md-4">
                     <h5>Contacto</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><i class="bi bi-geo-alt-fill me-2" style="color: var(--gym-accent);"></i>Calle Principal 123</li>
-                        <li class="mb-2"><i class="bi bi-telephone-fill me-2" style="color: var(--gym-accent);"></i>+57 300 123 4567</li>
-                        <li class="mb-2"><i class="bi bi-envelope-fill me-2" style="color: var(--gym-accent);"></i>info@gimnasiojena.com</li>
-                        <li class="mb-2"><i class="bi bi-clock-fill me-2" style="color: var(--gym-accent);"></i>Lun-Sáb: 5AM - 10PM</li>
+                        <li class="mb-2"><i class="bi bi-geo-alt-fill me-2 text-accent"></i>Calle Principal 123</li>
+                        <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-accent"></i>+57 300 123 4567</li>
+                        <li class="mb-2"><i class="bi bi-envelope-fill me-2 text-accent"></i>info@gimnasiojena.com</li>
+                        <li class="mb-2"><i class="bi bi-clock-fill me-2 text-accent"></i>Lun-Sáb: 5AM - 10PM</li>
                     </ul>
                 </div>
             </div>
@@ -231,6 +221,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.1.min.js"></script>
 
     @RenderSection("scripts", required: false)
 

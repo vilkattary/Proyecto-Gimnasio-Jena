@@ -1,6 +1,8 @@
-﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
+﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEntrenadores;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
 using GimnasioJena.Abstracciones.Modelos.Usuarios;
+using GimnasioJena.LogicaDeNegocio.Entrenadores.ObtenerTodosLosEntrenadores;
 using GimnasioJena.LogicaDeNegocio.Usuarios.CambiarRolUsuario;
 using GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
 using Microsoft.AspNet.Identity;
@@ -14,16 +16,20 @@ namespace GimnasioJena.UI.Controllers
     {
         private readonly IObtenerTodosLosUsuariosLN _obtenerTodosLosUsuariosLN;
         private readonly ICambiarRolUsuarioLN _cambiarRolUsuarioLN;
+        private readonly IObtenerTodosLosEntrenadoresLN _obtenerTodosLosEntrenadoresLN;
 
         public UsuariosController()
         {
             _obtenerTodosLosUsuariosLN = new ObtenerTodosLosUsuariosLN();
             _cambiarRolUsuarioLN = new CambiarRolUsuarioLN();
+            _obtenerTodosLosEntrenadoresLN = new ObtenerTodosLosEntrenadoresLN();
         }
 
         public ActionResult Index()
         {
             var usuarios = _obtenerTodosLosUsuariosLN.ObtenerTodosLosUsuarios();
+            var entrenadores = _obtenerTodosLosEntrenadoresLN.ObtenerTodosLosEntrenadores();
+            ViewBag.Entrenadores = entrenadores;
             return View(usuarios);
         }
 
@@ -53,6 +59,9 @@ namespace GimnasioJena.UI.Controllers
             };
 
             CargarRoles(modelo.rolNuevo);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView(modelo);
 
             return View(modelo);
         }

@@ -192,6 +192,10 @@ namespace GimnasioJena.UI.Controllers
             }
 
             TempData["MensajeExito"] = "Tu información personal se actualizó correctamente.";
+            if (User.IsInRole("CLIENTE"))
+                return RedirectToAction("MiPerfil", "Clientes");
+            if (User.IsInRole("ENTRENADOR"))
+                return RedirectToAction("Index", "Entrenadores");
             return RedirectToAction("Index");
         }
         //
@@ -357,6 +361,10 @@ namespace GimnasioJena.UI.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
+                if (User.IsInRole("CLIENTE"))
+                    return RedirectToAction("MiPerfil", "Clientes");
+                if (User.IsInRole("ENTRENADOR"))
+                    return RedirectToAction("Index", "Entrenadores");
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);

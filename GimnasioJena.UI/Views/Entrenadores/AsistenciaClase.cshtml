@@ -8,7 +8,7 @@
 <link href="@(Url.Content("~/Content/estilo/estilo.css"))" rel="stylesheet" />
 
 <section class="container py-5">
-    <h2 class="fw-bold mb-4" style="color:var(--gym-dark);">
+    <h2 class="text-navy">
         Registrar asistencia
     </h2>
 
@@ -26,7 +26,7 @@
         </div>
     }
 
-    <div class="card shadow-sm rounded-4">
+    <div class="card-jena-info">
         <div class="card-body p-4">
 
             @if (Model == null || !Model.Any())
@@ -38,7 +38,7 @@
             else
             {
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table-jena">
                         <thead>
                             <tr>
                                 <th>Cliente</th>
@@ -114,3 +114,4 @@
         </div>
     </div>
 </section>
+
