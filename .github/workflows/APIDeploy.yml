@@ -1,8 +1,10 @@
-name: Deploy API
+name:  Deploy API
 
 env:
   AZURE_WEBAPP_NAME: gimnasiojena
-  PROJECT_PATH: './GimnasioJena.UI'
+  AZURE_WEBAPP_PACKAGE_PATH: './GimnasioJena.UI'
+  DOTNET_VERSION: '8.0'
+
 on:
   push:
     branches: [ "main" ]
@@ -10,46 +12,38 @@ on:
       - 'BD/**'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build-and-deploy:
-    runs-on: windows-latest 
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1
+      - name: Replace connection string in appsettings.json
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/appsettings.json'
+        env:
+          ConnectionStrings.BD: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
 
-      - name: Restore NuGet Packages
-        run: nuget restore ./GimnasioJena.sln
-
-      - name: Replace connection string in Web.config
-        shell: powershell
+      - name: Restore, Build and Publish
         run: |
-          $configPath = "./GimnasioJena.UI/Web.config"
-          $secretConn = "${{ secrets.AZURE_SQL_CONNECTION_STRING }}"
-          
-          if (Test-Path $configPath) {
-              $content = Get-Content $configPath -Raw
-              # Reemplaza dinámicamente cualquier texto dentro de connectionString="..." por el secreto de Azure
-              $content = $content -replace 'connectionString="[^"]+"', ('connectionString="' + $secretConn + '"')
-              Set-Content -Path $configPath -Value $content
-              Write-Host "Cadena de conexión reemplazada con éxito en Web.config."
-          } else {
-              Write-Error "No se encontró el archivo Web.config en la ruta especificada."
-              exit 1
-          }
-
-      - name: Build and Package Web App
-        run: |
-          msbuild ${{ env.PROJECT_PATH }} /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:OutDir=./build_output
+          dotnet restore ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release --no-restore
+          dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -c Release -o ./publish --no-restore
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: './build_output/_PublishedWebsites/GimnasioJena.UI'
+          package: ./publish
+ esto es bien asi?
