@@ -3,14 +3,14 @@
 @{
     ViewBag.Title = "Sobre Nosotros";
 
-    var header       = Model.FirstOrDefault(x => x.Seccion == "Header");
-    var historia1    = Model.FirstOrDefault(x => x.Clave == "nosotros-historia");
-    var historia2    = Model.FirstOrDefault(x => x.Clave == "nosotros-historia-p2");
-    var stats        = Model.Where(x => x.Seccion == "Stats").OrderBy(x => x.Orden).ToList();
+    var header = Model.FirstOrDefault(x => x.Seccion == "Header");
+    var historia1 = Model.FirstOrDefault(x => x.Clave == "nosotros-historia");
+    var historia2 = Model.FirstOrDefault(x => x.Clave == "nosotros-historia-p2");
+    var stats = Model.Where(x => x.Seccion == "Stats").OrderBy(x => x.Orden).ToList();
     var misionVision = Model.Where(x => x.Seccion == "MisionVision").OrderBy(x => x.Orden).ToList();
-    var valorTitulo  = Model.FirstOrDefault(x => x.Clave == "valores-titulo");
-    var valores      = Model.Where(x => x.Seccion == "Valores" && x.Clave != "valores-titulo").OrderBy(x => x.Orden).ToList();
-    var cta          = Model.FirstOrDefault(x => x.Seccion == "CTA");
+    var valorTitulo = Model.FirstOrDefault(x => x.Clave == "valores-titulo");
+    var valores = Model.Where(x => x.Seccion == "Valores" && x.Clave != "valores-titulo").OrderBy(x => x.Orden).ToList();
+    var cta = Model.FirstOrDefault(x => x.Seccion == "CTA");
 }
 
 <!-- ═══════════════════ HERO HEADER ═══════════════════ -->
@@ -21,18 +21,7 @@
 
     var nosotrosImagenUrl = nosotrosImagen.StartsWith("http") ? nosotrosImagen : Url.Content(nosotrosImagen);
 }
-<section class="hero-nosotros" style="--hero-bg: url('@nosotrosImagenUrl')">
-    <div class="container">
-        <div class="col-lg-8 mx-auto text-center">
-            <p class="mb-2 text-uppercase eyebrow-jena-primary">
-                @(header != null ? header.TextoSecundario : "Quiénes somos")
-            </p>
-            <h1 class="text-white">
-                @(header != null ? header.TextoPrincipal : "SOBRE NOSOTROS")
-            </h1>
-        </div>
-    </div>
-</section>
+
 
 <!-- ═══════════════════ NUESTRA HISTORIA ═══════════════════ -->
 @if (historia1 != null)
@@ -150,7 +139,7 @@
     </section>
 }
 
-<!-- ═══════════════════ CTA ═══════════════════ -->
+<!-- ═══════════════════ CTA ═══════════════════-->
 @if (cta != null)
 {
     <section class="cta-nosotros">
@@ -163,3 +152,4 @@
         </div>
     </section>
 }
+
