@@ -2,6 +2,7 @@
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Membresias.EditarMembresia;
 using GimnasioJena.Abstracciones.Modelos.Membresias;
 using GimnasioJena.AccesoADatos.Membresias.EditarMembresia;
+using System;
 
 namespace GimnasioJena.LogicaDeNegocio.Membresias.EditarMembresia
 {
@@ -22,19 +23,14 @@ namespace GimnasioJena.LogicaDeNegocio.Membresias.EditarMembresia
             if (membresia.idMembresiaCliente <= 0)
                 return false;
 
-            if (membresia.idUsuario <= 0)
-                return false;
-
-            if (membresia.idPlanMembresia <= 0)
-                return false;
-
             if (membresia.idEstadoMembresia <= 0)
                 return false;
 
-            if (membresia.fechaFin < membresia.fechaInicio)
+            if (membresia.fechaInicio == default(DateTime))
                 return false;
 
-            return _editarMembresiaAD.EditarMembresia(membresia) > 0;
+            return _editarMembresiaAD
+                .EditarMembresia(membresia) > 0;
         }
     }
 }
