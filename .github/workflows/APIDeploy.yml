@@ -2,7 +2,8 @@ name: Deploy API
 
 env:
   AZURE_WEBAPP_NAME: gimnasiojena
-  AZURE_WEBAPP_PACKAGE_PATH: './GimnasioJena.UI'
+  SOLUTION_PATH: './GimnasioJena.sln'
+  PROJECT_PATH: './GimnasioJena.UI'
 
 on:
   push:
@@ -29,13 +30,13 @@ jobs:
         uses: NuGet/setup-nuget@v2
 
       - name: Restore NuGet packages
-        run: nuget restore ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        run: nuget restore ${{ env.SOLUTION_PATH }}
 
       - name: Build with MSBuild
-        run: msbuild ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} /p:Configuration=Release
+        run: msbuild ${{ env.PROJECT_PATH }} /p:Configuration=Release
 
       - name: Publish with MSBuild
-        run: msbuild ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="${{ github.workspace }}/publish"
+        run: msbuild ${{ env.PROJECT_PATH }} /p:Configuration=Release /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="${{ github.workspace }}/publish"
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
