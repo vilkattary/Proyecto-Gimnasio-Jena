@@ -121,8 +121,11 @@
     <Compile Include="HorariosSemanales\RegistrarHorariosSemanales\RegistrarHorariosSemanalesLN.cs" />
     <Compile Include="Membresias\CambiarEstadoMembresia\CambiarEstadoMembresiaLN.cs" />
     <Compile Include="Membresias\EditarMembresia\EditarMembresiaLN.cs" />
+    <Compile Include="Membresias\EditarPrecioPlan\EditarPrecioPlanLN.cs" />
     <Compile Include="Membresias\ObtenerMembresiaPorCliente\ObtenerMembresiaPorClienteLN.cs" />
     <Compile Include="Membresias\ObtenerMembresiaPorId\ObtenerMembresiaPorIdLN.cs" />
+    <Compile Include="Membresias\ObtenerPlanesMembresia\ObtenerPlanesMembresiaLN.cs" />
+    <Compile Include="Membresias\ObtenerPlanMembresiaPorId\ObtenerPlanMembresiaPorIdLN.cs" />
     <Compile Include="Membresias\ObtenerTodasLasMembresias\ObtenerTodasLasMembresiasLN.cs" />
     <Compile Include="Membresias\RegistrarMembresia\RegistrarMembresiaLN.cs" />
     <Compile Include="Membresias\RenovarMembresia\RenovarMembresiaLN.cs" />

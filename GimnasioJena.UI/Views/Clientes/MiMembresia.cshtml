@@ -1,4 +1,5 @@
-﻿@model GimnasioJena.Abstracciones.Modelos.Membresias.MembresiaClienteDto
+﻿@using System.Linq
+@model GimnasioJena.Abstracciones.Modelos.Membresias.MiMembresiaViewModel
 
 @{
     ViewBag.Title = "Mi Membresía";
@@ -6,37 +7,61 @@
 
     DateTime hoy = DateTime.Today;
 
-    bool tieneMembresia = Model != null;
+    var planesDisponibles =
+        Model != null && Model.planesDisponibles != null
+            ? Model.planesDisponibles
+            : new List<GimnasioJena.Abstracciones.Modelos.Membresias.PlanMembresiaListadoDto>();
+
+    bool tieneMembresia =
+        Model != null &&
+        Model.membresiaActual != null;
 
     bool esVigente =
         tieneMembresia &&
-        Model.estadoMembresia == "Activa" &&
-        Model.fechaInicio.Date <= hoy &&
-        Model.fechaFin.Date >= hoy;
+        Model.membresiaActual.estadoMembresia == "Activa" &&
+        Model.membresiaActual.fechaInicio.Date <= hoy &&
+        Model.membresiaActual.fechaFin.Date >= hoy;
 
     bool puedeRenovarOCambiar =
         tieneMembresia &&
-        Model.fechaFin.Date <= hoy;
+        Model.membresiaActual.fechaFin.Date <= hoy;
 
     bool esTop =
         tieneMembresia &&
-        !String.IsNullOrWhiteSpace(Model.nombrePlan) &&
-        Model.nombrePlan.ToUpper().Contains("TOP");
+        !String.IsNullOrWhiteSpace(
+            Model.membresiaActual.nombrePlan) &&
+        Model.membresiaActual.nombrePlan
+            .ToUpper()
+            .Contains("TOP");
 
     bool esRoot =
         tieneMembresia &&
-        !String.IsNullOrWhiteSpace(Model.nombrePlan) &&
-        Model.nombrePlan.ToUpper().Contains("ROOT");
+        !String.IsNullOrWhiteSpace(
+            Model.membresiaActual.nombrePlan) &&
+        Model.membresiaActual.nombrePlan
+            .ToUpper()
+            .Contains("ROOT");
+
+    var planActual =
+        tieneMembresia
+            ? planesDisponibles.FirstOrDefault(
+                p => p.idPlanMembresia ==
+                     Model.membresiaActual.idPlanMembresia)
+            : null;
 }
 
 <div class="container py-5">
 
     <div class="text-center mb-5">
-        <h1 class="page-title">Mi Membresía</h1>
+
+        <h1 class="page-title">
+            Mi Membresía
+        </h1>
 
         <p class="text-muted">
             Consulta la información de tu plan actual y su periodo de vigencia.
         </p>
+
     </div>
 
     @if (TempData["MensajeExito"] != null)
@@ -58,7 +83,9 @@
         <div class="info-card text-center">
 
             <div class="mb-4">
+
                 <i class="bi bi-person-badge display-4 text-muted"></i>
+
             </div>
 
             <h3 class="mb-3">
@@ -70,61 +97,75 @@
                 primero debes adquirir uno de nuestros planes.
             </p>
 
-            <div class="row justify-content-center">
+            @if (planesDisponibles.Any())
+            {
+                <div class="row justify-content-center">
 
-                <div class="col-md-5 mb-3">
-                    <div class="border rounded-4 p-4 h-100">
+                    @foreach (var plan in planesDisponibles)
+                    {
+                        <div class="col-md-5 mb-3">
 
-                        <h4 class="fw-bold">
-                            Jéna COLLECTIVE CNS ROOT
-                        </h4>
+                            <div class="border rounded-4 p-4 h-100">
 
-                        <p class="text-muted">
-                            Plan de 31 días con 12 clases disponibles.
-                        </p>
+                                <h4 class="fw-bold">
+                                    @plan.nombrePlan
+                                </h4>
 
-                        <h3 class="info-value">
-                            ₡31,900.00
-                        </h3>
+                                <p class="text-muted">
 
-                        <button type="button"
-                                class="btn btn-action mt-3"
-                                disabled
-                                title="Disponible próximamente con el módulo de pagos">
-                            <i class="bi bi-cart-plus me-1"></i>
-                            Comprar próximamente
-                        </button>
+                                    Plan de @plan.duracionDias días con
 
-                    </div>
+                                    @if (plan.cantidadClases.HasValue)
+                                    {
+                                        <span>
+                                            @plan.cantidadClases.Value clases disponibles.
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            clases ilimitadas.
+                                        </span>
+                                    }
+
+                                </p>
+
+                                <h3 class="info-value">
+                                    ₡@plan.precio.ToString("N2")
+                                </h3>
+
+                                <a href="@Url.Action(
+                                             "ConfirmarCompra",
+                                             "Clientes",
+                                             new
+                                             {
+                                                 idPlan =
+                                                     plan.idPlanMembresia
+                                             })"
+                                   class="btn btn-action mt-3">
+
+                                    <i class="bi bi-cart-plus me-1"></i>
+                                    Comprar plan
+
+                                </a>
+
+                            </div>
+
+                        </div>
+                    }
+
                 </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
 
-                <div class="col-md-5 mb-3">
-                    <div class="border rounded-4 p-4 h-100">
+                    <i class="bi bi-info-circle me-1"></i>
 
-                        <h4 class="fw-bold">
-                            Jéna COLLECTIVE CNS TOP
-                        </h4>
+                    En este momento no hay planes disponibles para comprar.
 
-                        <p class="text-muted">
-                            Plan de 31 días con clases ilimitadas.
-                        </p>
-
-                        <h3 class="info-value">
-                            ₡36,900.00
-                        </h3>
-
-                        <button type="button"
-                                class="btn btn-action mt-3"
-                                disabled
-                                title="Disponible próximamente con el módulo de pagos">
-                            <i class="bi bi-cart-plus me-1"></i>
-                            Comprar próximamente
-                        </button>
-
-                    </div>
                 </div>
-
-            </div>
+            }
 
         </div>
     }
@@ -138,59 +179,91 @@
 
                     <div class="d-flex align-items-center gap-2 mb-3">
 
-                        @if (Model.estadoMembresia == "Activa")
+                        @if (Model.membresiaActual.estadoMembresia == "Activa")
                         {
                             <span class="badge bg-success fs-6">
+
                                 <i class="bi bi-check-circle me-1"></i>
                                 Activa
+
                             </span>
                         }
-                        else if (Model.estadoMembresia == "Vencida")
+                        else if (Model.membresiaActual.estadoMembresia == "Vencida")
                         {
                             <span class="badge bg-danger fs-6">
+
                                 <i class="bi bi-x-circle me-1"></i>
                                 Vencida
+
                             </span>
                         }
-                        else if (Model.estadoMembresia == "Suspendida")
+                        else if (Model.membresiaActual.estadoMembresia == "Suspendida")
                         {
                             <span class="badge bg-warning text-dark fs-6">
+
                                 <i class="bi bi-pause-circle me-1"></i>
                                 Suspendida
+
                             </span>
                         }
-                        else if (Model.estadoMembresia == "Inactiva")
+                        else if (Model.membresiaActual.estadoMembresia == "Inactiva")
                         {
                             <span class="badge bg-secondary fs-6">
+
                                 <i class="bi bi-dash-circle me-1"></i>
                                 Inactiva
+
                             </span>
                         }
                         else
                         {
                             <span class="badge bg-dark fs-6">
-                                @Model.estadoMembresia
+
+                                @Model.membresiaActual.estadoMembresia
+
                             </span>
                         }
 
                     </div>
 
                     <h2 class="info-value mb-3">
-                        @Model.nombrePlan
+                        @Model.membresiaActual.nombrePlan
                     </h2>
 
-                    @if (esRoot)
+                    @if (planActual != null)
                     {
                         <p class="text-muted">
-                            Tu plan ROOT incluye 12 clases para utilizar
-                            durante un periodo de 31 días.
+
+                            Tu plan tiene una duración de
+                            @planActual.duracionDias días e incluye
+
+                            @if (planActual.cantidadClases.HasValue)
+                            {
+                                <span>
+                                    @planActual.cantidadClases.Value clases.
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    clases ilimitadas.
+                                </span>
+                            }
+
+                        </p>
+                    }
+                    else if (esRoot)
+                    {
+                        <p class="text-muted">
+                            Tu plan ROOT incluye clases para utilizar durante
+                            su periodo de vigencia.
                         </p>
                     }
                     else if (esTop)
                     {
                         <p class="text-muted">
                             Tu plan TOP permite reservar clases de forma
-                            ilimitada durante un periodo de 31 días.
+                            ilimitada durante su periodo de vigencia.
                         </p>
                     }
                     else
@@ -203,50 +276,73 @@
                     <div class="row mt-4">
 
                         <div class="col-md-6 mb-3">
+
                             <label class="fw-bold text-muted">
                                 Fecha de inicio
                             </label>
 
                             <div class="fs-5">
+
                                 <i class="bi bi-calendar-check me-1"></i>
-                                @Model.fechaInicio.ToString("dd/MM/yyyy")
+
+                                @(Model.membresiaActual.fechaInicio.ToString("dd/MM/yyyy"))
+
                             </div>
+
                         </div>
 
                         <div class="col-md-6 mb-3">
+
                             <label class="fw-bold text-muted">
                                 Fecha de vencimiento
                             </label>
 
                             <div class="fs-5">
+
                                 <i class="bi bi-calendar-x me-1"></i>
-                                @Model.fechaFin.ToString("dd/MM/yyyy")
+
+                                @(Model.membresiaActual.fechaFin.ToString("dd/MM/yyyy"))
+
                             </div>
+
                         </div>
 
                         <div class="col-md-6 mb-3">
+
                             <label class="fw-bold text-muted">
                                 Precio del plan
                             </label>
 
                             <div class="fs-5">
-                                ₡ @Model.precio.ToString("N2")
+                                ₡@Model.membresiaActual.precio.ToString("N2")
                             </div>
+
                         </div>
 
                         <div class="col-md-6 mb-3">
+
                             <label class="fw-bold text-muted">
                                 Clases disponibles
                             </label>
 
                             <div class="fs-5">
 
-                                @if (Model.clasesDisponibles.HasValue)
+                                @if (Model.membresiaActual
+                                          .clasesDisponibles
+                                          .HasValue)
                                 {
                                     <i class="bi bi-ticket-perforated me-1"></i>
 
                                     <span>
-                                        @Model.clasesDisponibles.Value de 12
+                                        @Model.membresiaActual.clasesDisponibles.Value
+
+                                        @if (planActual != null &&
+                                             planActual.cantidadClases.HasValue)
+                                        {
+                                            <text>
+                                                de @planActual.cantidadClases.Value
+                                            </text>
+                                        }
                                     </span>
                                 }
                                 else
@@ -259,11 +355,13 @@
                                 }
 
                             </div>
+
                         </div>
 
                     </div>
 
-                    @if (!String.IsNullOrWhiteSpace(Model.observaciones))
+                    @if (!String.IsNullOrWhiteSpace(
+                        Model.membresiaActual.observaciones))
                     {
                         <div class="mt-3">
 
@@ -272,7 +370,9 @@
                             </label>
 
                             <div class="border rounded p-3 bg-light mt-1">
-                                @Model.observaciones
+
+                                @Model.membresiaActual.observaciones
+
                             </div>
 
                         </div>
@@ -307,30 +407,28 @@
 
                             </a>
 
-                            if (Model.fechaFin.Date > hoy)
+                            if (Model.membresiaActual.fechaFin.Date > hoy)
                             {
                                 <button type="button"
-                                        class="btn btn-outline-secondary w-100"
-                                        disabled>
+                                     class="btn btn-outline-secondary w-100"
+                                     disabled>
 
-                                    <i class="bi bi-clock me-1"></i>
+                                      <i class="bi bi-clock me-1"></i>
 
                                     Renovación disponible el
-                                    @Model.fechaFin.ToString("dd/MM/yyyy")
+                                    @(Model.membresiaActual.fechaFin.ToString("dd/MM/yyyy"))
 
                                 </button>
                             }
                             else
                             {
-                                <button type="button"
-                                        class="btn btn-outline-success w-100"
-                                        disabled
-                                        title="Se habilitará con el módulo de pagos">
+                                <a href="#planesDisponibles"
+                                   class="btn btn-outline-success w-100">
 
                                     <i class="bi bi-arrow-clockwise me-1"></i>
-                                    Renovar o cambiar plan próximamente
+                                    Renovar o cambiar plan
 
-                                </button>
+                                </a>
                             }
                         }
                         else if (puedeRenovarOCambiar)
@@ -346,15 +444,13 @@
                                 otro plan para el siguiente periodo.
                             </p>
 
-                            <button type="button"
-                                    class="btn btn-action w-100"
-                                    disabled
-                                    title="Se habilitará con el módulo de pagos">
+                            <a href="#planesDisponibles"
+                               class="btn btn-action w-100">
 
                                 <i class="bi bi-arrow-clockwise me-1"></i>
-                                Renovar o cambiar plan próximamente
+                                Renovar o cambiar plan
 
-                            </button>
+                            </a>
                         }
                         else
                         {
@@ -365,10 +461,16 @@
                             </h4>
 
                             <p class="text-muted">
+
                                 Tu membresía se encuentra
-                                @Model.estadoMembresia.ToLower().
+
+                                @Model.membresiaActual
+                                .estadoMembresia
+                                .ToLower().
+
                                 Comunícate con la administración para obtener
                                 más información.
+
                             </p>
                         }
 
@@ -380,126 +482,135 @@
 
         </div>
 
-        <div class="info-card mt-4">
+        <div id="planesDisponibles"
+             class="info-card mt-4">
 
             <div class="text-center mb-4">
-                <h3>Planes Jéna</h3>
+
+                <h3>
+                    Planes Jéna
+                </h3>
 
                 <p class="text-muted">
-                    Podrás cambiar de plan el día del vencimiento de tu
-                    membresía o después.
+                    Podrás renovar o cambiar de plan el día del vencimiento
+                    de tu membresía o después.
                 </p>
-            </div>
-
-            <div class="row justify-content-center">
-
-                <div class="col-md-5 mb-3">
-
-                    <div class="border rounded-4 p-4 h-100">
-
-                        <h4 class="fw-bold">
-                            Jéna COLLECTIVE CNS ROOT
-                        </h4>
-
-                        <p class="text-muted">
-                            12 clases disponibles durante 31 días.
-                        </p>
-
-                        <h3 class="info-value">
-                            ₡31,900.00
-                        </h3>
-
-                        @if (esRoot && esVigente)
-                        {
-                            <button type="button"
-                                    class="btn btn-outline-secondary w-100"
-                                    disabled>
-
-                                <i class="bi bi-check-circle me-1"></i>
-                                Plan actual
-
-                            </button>
-                        }
-                        else if (!puedeRenovarOCambiar)
-                        {
-                            <button type="button"
-                                    class="btn btn-outline-secondary w-100"
-                                    disabled>
-
-                                Disponible al vencer tu membresía
-
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="button"
-                                    class="btn btn-outline-gym w-100"
-                                    disabled
-                                    title="Se habilitará con el módulo de pagos">
-
-                                Seleccionar próximamente
-
-                            </button>
-                        }
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-5 mb-3">
-
-                    <div class="border rounded-4 p-4 h-100">
-
-                        <h4 class="fw-bold">
-                            Jéna COLLECTIVE CNS TOP
-                        </h4>
-
-                        <p class="text-muted">
-                            Clases ilimitadas durante 31 días.
-                        </p>
-
-                        <h3 class="info-value">
-                            ₡36,900.00
-                        </h3>
-
-                        @if (esTop && esVigente)
-                        {
-                            <button type="button"
-                                    class="btn btn-outline-secondary w-100"
-                                    disabled>
-
-                                <i class="bi bi-check-circle me-1"></i>
-                                Plan actual
-
-                            </button>
-                        }
-                        else if (!puedeRenovarOCambiar)
-                        {
-                            <button type="button"
-                                    class="btn btn-outline-secondary w-100"
-                                    disabled>
-
-                                Disponible al vencer tu membresía
-
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="button"
-                                    class="btn btn-outline-gym w-100"
-                                    disabled
-                                    title="Se habilitará con el módulo de pagos">
-
-                                Seleccionar próximamente
-
-                            </button>
-                        }
-
-                    </div>
-
-                </div>
 
             </div>
+
+            @if (planesDisponibles.Any())
+            {
+                <div class="row justify-content-center">
+
+                    @foreach (var plan in planesDisponibles)
+                    {
+                        bool esPlanActual =
+                            plan.idPlanMembresia ==
+                            Model.membresiaActual.idPlanMembresia;
+
+                        <div class="col-md-5 mb-3">
+
+                            <div class="border rounded-4 p-4 h-100">
+
+                                <h4 class="fw-bold">
+                                    @plan.nombrePlan
+                                </h4>
+
+                                <p class="text-muted">
+
+                                    @if (plan.cantidadClases.HasValue)
+                                    {
+                                        <span>
+                                            @plan.cantidadClases.Value clases
+                                            disponibles durante
+                                            @plan.duracionDias días.
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            Clases ilimitadas durante
+                                            @plan.duracionDias días.
+                                        </span>
+                                    }
+
+                                </p>
+
+                                <h3 class="info-value">
+                                    ₡@plan.precio.ToString("N2")
+                                </h3>
+
+                                @if (esPlanActual && esVigente)
+                                {
+                                    <button type="button"
+                                            class="btn btn-outline-secondary w-100"
+                                            disabled>
+
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Plan actual
+
+                                    </button>
+                                }
+                                else if (!puedeRenovarOCambiar)
+                                {
+                                    <button type="button"
+                                            class="btn btn-outline-secondary w-100"
+                                            disabled>
+
+                                        <i class="bi bi-clock me-1"></i>
+                                        Disponible al vencer tu membresía
+
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action(
+                                                 "ConfirmarCompra",
+                                                 "Clientes",
+                                                 new
+                                                 {
+                                                     idPlan =
+                                                         plan.idPlanMembresia
+                                                 })"
+                                       class="btn btn-outline-gym w-100">
+
+                                        @if (esPlanActual)
+                                        {
+                                            <i class="bi bi-arrow-clockwise me-1"></i>
+
+                                            <text>
+                                                Renovar plan
+                                            </text>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-arrow-left-right me-1"></i>
+
+                                            <text>
+                                                Seleccionar plan
+                                            </text>
+                                        }
+
+                                    </a>
+                                }
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center mb-0">
+
+                    <i class="bi bi-info-circle me-1"></i>
+
+                    En este momento no hay planes disponibles.
+
+                </div>
+            }
 
         </div>
     }
