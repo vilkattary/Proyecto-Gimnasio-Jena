@@ -5,21 +5,36 @@ using GimnasioJena.AccesoADatos.Membresias.ObtenerMembresiaPorCliente;
 
 namespace GimnasioJena.LogicaDeNegocio.Membresias.ObtenerMembresiaPorCliente
 {
-    public class ObtenerMembresiaPorClienteLN : IObtenerMembresiaPorClienteLN
+    public class ObtenerMembresiaPorClienteLN :
+        IObtenerMembresiaPorClienteLN
     {
-        private readonly IObtenerMembresiaPorClienteAD _obtenerMembresiaPorClienteAD;
+        private readonly IObtenerMembresiaPorClienteAD
+            _obtenerMembresiaPorClienteAD;
 
         public ObtenerMembresiaPorClienteLN()
         {
-            _obtenerMembresiaPorClienteAD = new ObtenerMembresiaPorClienteAD();
+            _obtenerMembresiaPorClienteAD =
+                new ObtenerMembresiaPorClienteAD();
         }
 
-        public MembresiaClienteDto ObtenerMembresiaActivaPorCliente(int idUsuario)
+        public MembresiaClienteDto ObtenerMembresiaActivaPorCliente(
+            int idUsuario)
         {
             if (idUsuario <= 0)
                 return null;
 
-            return _obtenerMembresiaPorClienteAD.ObtenerMembresiaActivaPorCliente(idUsuario);
+            return _obtenerMembresiaPorClienteAD
+                .ObtenerMembresiaActivaPorCliente(idUsuario);
+        }
+
+        public MembresiaClienteDto ObtenerUltimaMembresiaPorCliente(
+            int idUsuario)
+        {
+            if (idUsuario <= 0)
+                return null;
+
+            return _obtenerMembresiaPorClienteAD
+                .ObtenerUltimaMembresiaPorCliente(idUsuario);
         }
     }
 }

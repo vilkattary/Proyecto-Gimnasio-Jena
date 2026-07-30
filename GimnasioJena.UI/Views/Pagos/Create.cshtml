@@ -68,23 +68,7 @@
                     new { @class = "text-danger" })
             </div>
 
-            <div class="mb-3">
-                @Html.LabelFor(
-                    m => m.idEstadoPago,
-                    "Estado del pago",
-                    new { @class = "form-label fw-bold" })
-
-                @Html.DropDownListFor(
-                    m => m.idEstadoPago,
-                    (IEnumerable<SelectListItem>)ViewBag.EstadosPago,
-                    "Seleccione un estado",
-                    new { @class = "form-select" })
-
-                @Html.ValidationMessageFor(
-                    m => m.idEstadoPago,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
+            
 
             <div class="row">
                 <div class="col-md-6 mb-3">

@@ -21,15 +21,21 @@ namespace GimnasioJena.AccesoADatos.Usuarios.ObtenerUsuarioPorId
 
         public async Task<UsuarioPerfilDto> ObtenerUsuarioPorId(string identityUserId)
         {
+            DateTime hoy = DateTime.Today;
+
             var usuario = await _contexto.Usuarios
                 .FirstOrDefaultAsync(u => u.identityUserId == identityUserId);
 
-            if (usuario == null) return null;
+            if (usuario == null)
+                return null;
 
             var membresia = await _contexto.Membresias
                 .Include(m => m.EstadoMembresia)
                 .Include(m => m.PlanMembresia)
-                .FirstOrDefaultAsync(m => m.idUsuario == usuario.idUsuario);
+                .Where(m => m.idUsuario == usuario.idUsuario)
+                .OrderByDescending(m => m.fechaFin)
+                .ThenByDescending(m => m.idMembresiaCliente)
+                .FirstOrDefaultAsync();
 
             MembresiaClienteDto membresiaDto = null;
 
@@ -38,14 +44,30 @@ namespace GimnasioJena.AccesoADatos.Usuarios.ObtenerUsuarioPorId
                 membresiaDto = new MembresiaClienteDto
                 {
                     idMembresiaCliente = membresia.idMembresiaCliente,
+
                     idUsuario = membresia.idUsuario,
-                    nombreCliente = usuario.nombre + " " + usuario.apellido1,
+
+                    nombreCliente =
+                        usuario.nombre + " " +
+                        usuario.apellido1 + " " +
+                        usuario.apellido2,
+
                     nombrePlan = membresia.PlanMembresia.nombrePlan,
-                    estadoMembresia = membresia.EstadoMembresia.nombreEstado,
+
+                    estadoMembresia =
+                        membresia.idEstadoMembresia == 1 &&
+                        membresia.fechaFin < hoy
+                            ? "Vencida"
+                            : membresia.EstadoMembresia.nombreEstado,
+
                     fechaInicio = membresia.fechaInicio,
+
                     fechaFin = membresia.fechaFin,
+
                     clasesDisponibles = membresia.clasesDisponibles,
+
                     observaciones = membresia.observaciones,
+
                     precio = membresia.PlanMembresia.precio
                 };
             }
