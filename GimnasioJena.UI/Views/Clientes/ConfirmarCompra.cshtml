@@ -268,12 +268,21 @@
                         Volver
                     </a>
 
-                    <button type="button"
-                            class="btn-continuar"
-                            disabled
-                            title="La conexión con la pasarela de pago se agregará en el siguiente paso.">
-                        Continuar con el pago
-                    </button>
+                    @using (Html.BeginForm(
+                        "IniciarPago",
+                        "Clientes",
+                        FormMethod.Post,
+                        new { @class = "d-inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(modelo => modelo.idPlan)
+
+                        <button type="submit"
+                                class="btn-continuar">
+                            Continuar con el pago
+                        </button>
+                    }
 
                 </div>
 

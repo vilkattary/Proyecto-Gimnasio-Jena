@@ -107,7 +107,8 @@ namespace GimnasioJena.UI.Controllers
                 return View(modelo);
             }
 
-            bool resultado = _registrarMembresiaLN.RegistrarMembresia(modelo);
+            bool resultado =
+                 _registrarMembresiaLN.RegistrarMembresia(modelo);
 
             if (resultado)
             {
