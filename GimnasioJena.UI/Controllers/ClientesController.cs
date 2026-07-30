@@ -94,13 +94,47 @@ namespace GimnasioJena.UI.Controllers
         [HttpGet]
         public async Task<ActionResult> ConfirmarCompra(int idPlan)
         {
-            if (idPlan <= 0)
+            var modelo = await PrepararOperacionMembresia(idPlan);
+
+            if (modelo == null)
             {
                 TempData["MensajeError"] =
-                    "El plan seleccionado no es válido.";
+                    "No fue posible preparar la operación de la membresía.";
 
                 return RedirectToAction("MiMembresia");
             }
+
+            return View(modelo);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> IniciarPago(int idPlan)
+        {
+            var operacion = await PrepararOperacionMembresia(idPlan);
+
+            if (operacion == null)
+            {
+                TempData["MensajeError"] =
+                    "No fue posible iniciar el proceso de pago.";
+
+                return RedirectToAction("MiMembresia");
+            }
+
+            /*
+             * Aquí inicia la integración con Tilopay.
+             */
+
+            TempData["MensajeExito"] =
+                "La operación fue validada correctamente. La integración con Tilopay se implementará en este punto.";
+
+            return RedirectToAction("MiMembresia");
+        }
+
+        private async Task<OperacionMembresiaDto> PrepararOperacionMembresia(int idPlan)
+        {
+            if (idPlan <= 0)
+                return null;
 
             var identityUserId = User.Identity.GetUserId();
 
@@ -109,24 +143,14 @@ namespace GimnasioJena.UI.Controllers
                     .ObtenerUsuarioPorId(identityUserId);
 
             if (perfil == null)
-            {
-                TempData["MensajeError"] =
-                    "No se encontró la información del usuario.";
-
-                return RedirectToAction("MiPerfil");
-            }
+                return null;
 
             var plan =
                 _obtenerPlanMembresiaPorIdServicio
                     .ObtenerPlanMembresiaPorId(idPlan);
 
             if (plan == null)
-            {
-                TempData["MensajeError"] =
-                    "El plan seleccionado no existe o no se encuentra disponible.";
-
-                return RedirectToAction("MiMembresia");
-            }
+                return null;
 
             var membresiaActual =
                 _obtenerMembresiaPorClienteServicio
@@ -138,11 +162,7 @@ namespace GimnasioJena.UI.Controllers
             if (membresiaActual != null &&
                 membresiaActual.fechaFin.Date > hoy)
             {
-                TempData["MensajeError"] =
-                    "Podrás renovar o cambiar de plan a partir del " +
-                    membresiaActual.fechaFin.ToString("dd/MM/yyyy") + ".";
-
-                return RedirectToAction("MiMembresia");
+                return null;
             }
 
             string tipoOperacion;
@@ -151,9 +171,8 @@ namespace GimnasioJena.UI.Controllers
             {
                 tipoOperacion = "Adquisición";
             }
-            else if (
-                membresiaActual.idPlanMembresia ==
-                plan.idPlanMembresia)
+            else if (membresiaActual.idPlanMembresia ==
+                     plan.idPlanMembresia)
             {
                 tipoOperacion = "Renovación";
             }
@@ -162,48 +181,22 @@ namespace GimnasioJena.UI.Controllers
                 tipoOperacion = "Cambio de plan";
             }
 
-            var modelo = new OperacionMembresiaDto
+            return new OperacionMembresiaDto
             {
-                idUsuario =
-                    perfil.idUsuario,
-
-                idPlan =
-                    plan.idPlanMembresia,
-
-                nombrePlan =
-                    plan.nombrePlan,
-
-                precio =
-                    plan.precio,
-
-                duracionDias =
-                    plan.duracionDias,
-
-                tipoOperacion =
-                    tipoOperacion,
-
-                fechaInicioPropuesta =
-                    hoy,
-
-                fechaFinPropuesta =
-                    hoy.AddDays(plan.duracionDias - 1),
-
-                clasesAsignadas =
-                    plan.cantidadClases,
-
+                idUsuario = perfil.idUsuario,
+                idPlan = plan.idPlanMembresia,
+                nombrePlan = plan.nombrePlan,
+                precio = plan.precio,
+                duracionDias = plan.duracionDias,
+                tipoOperacion = tipoOperacion,
+                fechaInicioPropuesta = hoy,
+                fechaFinPropuesta = hoy.AddDays(plan.duracionDias - 1),
+                clasesAsignadas = plan.cantidadClases,
                 descripcionPlan =
                     plan.cantidadClases.HasValue
-                        ? "Incluye " +
-                          plan.cantidadClases.Value +
-                          " clases durante " +
-                          plan.duracionDias +
-                          " días."
-                        : "Incluye clases ilimitadas durante " +
-                          plan.duracionDias +
-                          " días."
+                    ? $"Incluye {plan.cantidadClases.Value} clases durante {plan.duracionDias} días."
+                    : $"Incluye clases ilimitadas durante {plan.duracionDias} días."
             };
-
-            return View(modelo);
         }
         public ActionResult ReservarClases()
         {
