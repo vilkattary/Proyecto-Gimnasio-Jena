@@ -48,6 +48,9 @@ namespace GimnasioJena.AccesoADatos.Membresias.ObtenerMembresiaPorCliente
                      nombrePlan =
                          p.nombrePlan,
 
+                     idPlanMembresia =
+                        m.idPlanMembresia,
+
                      estadoMembresia =
                          e.nombreEstado,
 
@@ -102,6 +105,9 @@ namespace GimnasioJena.AccesoADatos.Membresias.ObtenerMembresiaPorCliente
 
                      nombrePlan =
                          p.nombrePlan,
+
+                     idPlanMembresia =
+                         m.idPlanMembresia,
 
                      estadoMembresia =
                          m.idEstadoMembresia == 1 &&

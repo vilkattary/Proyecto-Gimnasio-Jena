@@ -1,6 +1,6 @@
 ﻿namespace GimnasioJena.Abstracciones.Modelos.Membresias
 {
-    public class PlanMembresiaDatosDto
+    public class PlanMembresiaListadoDto
     {
         public int idPlanMembresia { get; set; }
 

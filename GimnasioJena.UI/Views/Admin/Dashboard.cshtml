@@ -80,11 +80,19 @@
                         Controla los planes de membresía activos, registra pagos y genera reportes financieros del gimnasio.
                     </p>
                     <div class="admin-card-actions">
-                        <a href="@Url.Action("Index", "Membresias")" class="btn btn-jena-primary">
+                        <a href="@Url.Action("Index", "Membresias")"
+                           class="btn btn-jena-primary">
                             <i class="bi bi-gear me-1"></i>Administrar
                         </a>
-                        <a href="@Url.Action("Index", "Pagos")" class="btn btn-jena-outline ms-2">
+
+                        <a href="@Url.Action("Index", "Pagos")"
+                           class="btn btn-jena-outline ms-2">
                             Pagos
+                        </a>
+
+                        <a href="@Url.Action("PlanesMembresia", "Admin")"
+                           class="btn btn-jena-outline ms-2">
+                            Planes
                         </a>
                     </div>
                 </div>
