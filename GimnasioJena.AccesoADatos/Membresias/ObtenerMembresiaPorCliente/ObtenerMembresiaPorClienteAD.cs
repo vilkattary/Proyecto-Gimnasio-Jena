@@ -14,7 +14,8 @@ namespace GimnasioJena.AccesoADatos.Membresias.ObtenerMembresiaPorCliente
             _contexto = new Contexto();
         }
 
-        public MembresiaClienteDto ObtenerMembresiaActivaPorCliente(int idUsuario)
+        public MembresiaClienteDto ObtenerMembresiaActivaPorCliente(
+            int idUsuario)
         {
             DateTime hoy = DateTime.Today;
 
@@ -33,16 +34,95 @@ namespace GimnasioJena.AccesoADatos.Membresias.ObtenerMembresiaPorCliente
                  orderby m.fechaFin descending
                  select new MembresiaClienteDto
                  {
-                     idMembresiaCliente = m.idMembresiaCliente,
-                     idUsuario = m.idUsuario,
-                     nombreCliente = u.nombre + " " + u.apellido1 + " " + u.apellido2,
-                     nombrePlan = p.nombrePlan,
-                     estadoMembresia = e.nombreEstado,
-                     fechaInicio = m.fechaInicio,
-                     fechaFin = m.fechaFin,
-                     clasesDisponibles = m.clasesDisponibles,
-                     observaciones = m.observaciones,
-                     precio = p.precio
+                     idMembresiaCliente =
+                         m.idMembresiaCliente,
+
+                     idUsuario =
+                         m.idUsuario,
+
+                     nombreCliente =
+                         u.nombre + " " +
+                         u.apellido1 + " " +
+                         u.apellido2,
+
+                     nombrePlan =
+                         p.nombrePlan,
+
+                     estadoMembresia =
+                         e.nombreEstado,
+
+                     fechaInicio =
+                         m.fechaInicio,
+
+                     fechaFin =
+                         m.fechaFin,
+
+                     clasesDisponibles =
+                         m.clasesDisponibles,
+
+                     observaciones =
+                         m.observaciones,
+
+                     precio =
+                         p.precio
+                 })
+                .FirstOrDefault();
+
+            return membresia;
+        }
+
+        public MembresiaClienteDto ObtenerUltimaMembresiaPorCliente(
+            int idUsuario)
+        {
+            DateTime hoy = DateTime.Today;
+
+            var membresia =
+                (from m in _contexto.Membresias
+                 join u in _contexto.Usuarios
+                    on m.idUsuario equals u.idUsuario
+                 join p in _contexto.PlanesMembresia
+                    on m.idPlanMembresia equals p.idPlanMembresia
+                 join e in _contexto.EstadoMembresias
+                    on m.idEstadoMembresia equals e.idEstadoMembresia
+                 where m.idUsuario == idUsuario
+                 orderby m.fechaFin descending,
+                         m.idMembresiaCliente descending
+                 select new MembresiaClienteDto
+                 {
+                     idMembresiaCliente =
+                         m.idMembresiaCliente,
+
+                     idUsuario =
+                         m.idUsuario,
+
+                     nombreCliente =
+                         u.nombre + " " +
+                         u.apellido1 + " " +
+                         u.apellido2,
+
+                     nombrePlan =
+                         p.nombrePlan,
+
+                     estadoMembresia =
+                         m.idEstadoMembresia == 1 &&
+                         m.fechaFin < hoy
+                             ? "Vencida"
+                             : e.nombreEstado,
+
+                     fechaInicio =
+                         m.fechaInicio,
+
+                     fechaFin =
+                         m.fechaFin,
+
+                     clasesDisponibles =
+                         m.clasesDisponibles,
+
+                     observaciones =
+                         m.observaciones,
+
+                     precio =
+                         p.precio
                  })
                 .FirstOrDefault();
 

@@ -48,16 +48,23 @@ namespace GimnasioJena.UI.Controllers
         public async Task<ActionResult> MiMembresia()
         {
             var identityUserId = User.Identity.GetUserId();
-            var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
+
+            var perfil =
+                await _obtenerUsuarioServicio
+                    .ObtenerUsuarioPorId(identityUserId);
 
             if (perfil == null)
             {
-                TempData["MensajeError"] = "No se encontró la información del usuario.";
+                TempData["MensajeError"] =
+                    "No se encontró la información del usuario.";
+
                 return RedirectToAction("MiPerfil");
             }
 
-            var membresia = _obtenerMembresiaPorClienteServicio
-                .ObtenerMembresiaActivaPorCliente(perfil.idUsuario);
+            var membresia =
+                _obtenerMembresiaPorClienteServicio
+                    .ObtenerUltimaMembresiaPorCliente(
+                        perfil.idUsuario);
 
             return View(membresia);
         }
