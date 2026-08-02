@@ -7,14 +7,9 @@
 
 <div class="container py-5">
 
-    <div class="text-center mb-5">
-        <div class="d-flex justify-content-center align-items-center mb-3">
-            <div class="icon-circle-header">
-                <i class="bi bi-pencil-square icon-jena-lg text-white"></i>
-            </div>
-
-            <h1 class="page-title">Editar Clase</h1>
-        </div>
+    <div class="mb-5">
+        <h1 class="page-title">Editar Clase</h1>
+        <p class="text-muted">Modifica los datos de la clase programada seleccionada.</p>
     </div>
 
     @if (TempData["MensajeError"] != null)
@@ -104,8 +99,8 @@
                                 @class = "form-control mt-1",
                                 type = "number",
                                 min = "1",
-                                max = "12",
-                                placeholder = "12"
+                                max = "30",
+                                placeholder = "30"
                             })
                             @Html.ValidationMessageFor(m => m.cupoMaximo, "", new { @class = "text-danger small" })
                         </div>
@@ -132,10 +127,9 @@
                         @Html.LabelFor(m => m.observaciones, "Observaciones", new { @class = "info-label mb-2 d-block" })
                         @Html.TextAreaFor(m => m.observaciones, new
                         {
-                            @class = "form-control",
+                            @class = "form-control textarea-rounded",
                             rows = "10",
-                            placeholder = "Escribe alguna observación o detalle adicional sobre la clase...",
-                            class="textarea-rounded"
+                            placeholder = "Escribe alguna observación o detalle adicional sobre la clase..."
                         })
                         @Html.ValidationMessageFor(m => m.observaciones, "", new { @class = "text-danger small" })
                     </div>

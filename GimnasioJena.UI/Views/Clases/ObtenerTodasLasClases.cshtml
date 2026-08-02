@@ -5,7 +5,15 @@
         ViewBag.EsVistaCliente != null &&
         (bool)ViewBag.EsVistaCliente;
 
-    ViewBag.Title = esVistaCliente
+    bool esVistaPublica =
+        ViewBag.EsVistaPublica != null &&
+        (bool)ViewBag.EsVistaPublica;
+
+    var horariosSemanales = ViewBag.HorariosSemanales as
+        List<GimnasioJena.Abstracciones.Modelos.HorariosSemanales.HorarioSemanalListadoDto>
+        ?? new List<GimnasioJena.Abstracciones.Modelos.HorariosSemanales.HorarioSemanalListadoDto>();
+
+    ViewBag.Title = (esVistaCliente || esVistaPublica)
         ? "Próximas Clases"
         : "Gestión de Clases";
 }
@@ -13,25 +21,37 @@
 <div class="container py-5">
 
     <!-- Encabezado -->
-    <div class="welcome-section mb-4">
-        <div class="welcome-text">
-            @if (esVistaCliente)
+    <div class="mb-5">
+        <h1 class="page-title">
+            @if (esVistaPublica || esVistaCliente)
             {
-                <h3>Próximas Clases</h3>
-                <p>
-                    Consulta las próximas clases disponibles.
-                    Las reservas se habilitan 24 horas antes y se cierran
-                    10 minutos antes del inicio.
-                </p>
+                <text>Próximas Clases</text>
             }
             else
             {
-                <h3>Gestión de Clases</h3>
-                <p>
-                    Listado completo de todas las clases programadas en el sistema.
-                </p>
+                <text>Gestión de Clases</text>
             }
-        </div>
+        </h1>
+        @if (esVistaPublica)
+        {
+            <p class="text-muted">
+                Consulta las próximas clases disponibles. Para reservar un lugar,
+                <a href="@Url.Action("Login", "Account")">inicia sesión</a>
+                o <a href="@Url.Action("Register", "Account")">crea una cuenta</a>.
+            </p>
+        }
+        else if (esVistaCliente)
+        {
+            <p class="text-muted">
+                Consulta las próximas clases disponibles y reserva tu lugar.
+            </p>
+        }
+        else
+        {
+            <p class="text-muted">
+                Listado completo de todas las clases programadas en el sistema.
+            </p>
+        }
     </div>
 
     <!-- Mensajes -->
@@ -50,7 +70,7 @@
     }
 
     <!-- Información administrativa -->
-    @if (!esVistaCliente)
+    @if (!esVistaCliente && !esVistaPublica)
     {
         int statTotal = Model != null ? Model.Count() : 0;
 
@@ -59,7 +79,7 @@
             : 0;
 
         int statActivas = Model != null
-            ? Model.Count(c => c.estadoClase == "Activa")
+            ? Model.Count(c => c.estadoClase == "Activo")
             : 0;
 
         int statInstructores = Model != null
@@ -190,7 +210,7 @@
                 <i class="bi bi-calendar-x icon-jena-3xl">
                 </i>
 
-                @if (esVistaCliente)
+                @if (esVistaCliente || esVistaPublica)
                 {
                     <h4 class="mt-3">No hay próximas clases disponibles</h4>
 
@@ -248,7 +268,7 @@
                             : "var(--jena-light-blue)";
 
                 bool esActiva =
-                    item.estadoClase == "Activa";
+                    item.estadoClase == "Activo";
 
                 string badgeTexto =
                     !string.IsNullOrWhiteSpace(item.estadoClase)
@@ -259,6 +279,8 @@
                     esActiva
                         ? "bi-check-circle"
                         : "bi-x-circle";
+
+                if (esVistaPublica) { continue; }
                 <div class="clase-item mb-3"
                      data-tipo="@tipoLower"
                      data-estado="@estadoLower"
@@ -335,7 +357,7 @@
                                     </div>
 
                                     <!-- Ubicación solamente para admin -->
-                                    @if (!esVistaCliente)
+                                    @if (!esVistaCliente && !esVistaPublica)
                                     {
                                         <div class="col-12 col-sm-6 col-lg-3">
                                             <i class="bi bi-geo-alt text-accent">
@@ -352,7 +374,7 @@
                                         <i class="bi bi-people text-accent">
                                         </i>
 
-                                        @if (esVistaCliente)
+                                        @if (esVistaCliente || esVistaPublica)
                                         {
                                             <span>
                                                 @item.cuposDisponibles disponibles
@@ -387,7 +409,7 @@
                                 </div>
 
                                 <!-- Ocupación solo para administrador -->
-                                @if (!esVistaCliente)
+                                @if (!esVistaCliente && !esVistaPublica)
                                 {
                                     <div class="mt-3">
 
@@ -420,7 +442,7 @@
                                         p-3
                                         gap-2">
 
-                                @if (User.IsInRole("ADMINISTRADOR"))
+                                @if (!esVistaPublica && User.IsInRole("ADMINISTRADOR"))
                                 {
                                     @Html.ActionLink(
                                         "Editar",
@@ -437,36 +459,45 @@
                                     )
                                 }
 
-                                @if (esVistaCliente)
+                                @if (!esVistaPublica && esVistaCliente)
                                 {
-                                    if (item.reservaHabilitada)
+                                    var reservasActivas = ViewBag.ReservasActivas as Dictionary<int, int>
+                                        ?? new Dictionary<int, int>();
+
+                                    bool yaReservada = reservasActivas.ContainsKey(item.idClaseProgramada);
+                                    int idReservaActiva = yaReservada ? reservasActivas[item.idClaseProgramada] : 0;
+
+                                    if (yaReservada)
                                     {
-                                        @Html.ActionLink(
-                                            "Reservar clase",
-                                            "ReservarClase",
-                                            "Reservas",
-                                            new
-                                            {
-                                                id = item.idClaseProgramada
-                                            },
-                                            new
-                                            {
-                                                @class = "btn-action"
-                                            }
-                                        )
+                                        using (Html.BeginForm("CancelarDesdeClases", "Reservas", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="idReserva" value="@idReservaActiva" />
+                                            <button type="submit" class="btn-cancelar-reserva">
+                                                Cancelar reserva
+                                            </button>
+                                        }
+                                    }
+                                    else if (item.reservaHabilitada)
+                                    {
+                                        using (Html.BeginForm("ReservarDirecta", "Reservas", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="idClaseProgramada" value="@item.idClaseProgramada" />
+                                            <button type="submit" class="btn-action">
+                                                Reservar clase
+                                            </button>
+                                        }
                                     }
                                     else
                                     {
-                                        <button type="button"
-                                                class="btn btn-secondary"
-                                                disabled>
+                                        <button type="button" class="btn btn-secondary" disabled>
                                             No disponible
                                         </button>
+                                        <small class="text-center text-muted">
+                                            @item.mensajeReserva
+                                        </small>
                                     }
-
-                                    <small class="text-center text-muted">
-                                        @item.mensajeReserva
-                                    </small>
                                 }
 
                             </div>
@@ -482,6 +513,93 @@
     </div>
 
     <div id="paginacionClases" class="mt-3 mb-2"></div>
+
+    @* Sección de Programación Semanal — visible para usuario público y cliente *@
+    @if (esVistaPublica && horariosSemanales.Any())
+    {
+        var diasAgrupados = horariosSemanales
+            .GroupBy(h => new { h.diaSemana, h.nombreDia })
+            .OrderBy(g => g.Key.diaSemana)
+            .ToList();
+
+        <div class="mt-5">
+
+            <div class="welcome-section mb-4">
+                <div class="welcome-text">
+                    <h3>
+                        <i class="bi bi-calendar-week me-2"></i>
+                        Programación semanal
+                    </h3>
+                    <p>
+                        Estos son los horarios recurrentes del gimnasio.
+                        Las clases con fecha específica se generan a partir de esta programación.
+                    </p>
+                </div>
+            </div>
+
+            @foreach (var grupo in diasAgrupados)
+            {
+                <div class="info-card mb-3">
+
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-calendar-day text-accent fs-5"></i>
+                        <h5 class="mb-0 fw-semibold">@grupo.Key.nombreDia</h5>
+                        <span class="badge bg-secondary ms-auto">
+                            @grupo.Count()
+                            @(grupo.Count() == 1 ? "clase" : "clases")
+                        </span>
+                    </div>
+
+                    <div class="row g-3">
+                        @foreach (var h in grupo.OrderBy(x => x.horaInicio))
+                        {
+                            <div class="col-12 col-sm-6 col-lg-4">
+
+                                <div class="p-3 rounded border h-100"
+                                     style="border-color: var(--jena-light-blue) !important;">
+
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="bi bi-clock text-accent"></i>
+                                        <span class="fw-semibold">
+                                            @h.horaInicio.ToString(@"hh\:mm")
+                                            –
+                                            @h.horaFin.ToString(@"hh\:mm")
+                                        </span>
+                                    </div>
+
+                                    <div class="text-clase-body">
+                                        <div>
+                                            <i class="bi bi-tag text-accent me-1"></i>
+                                            @h.nombreClase
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-person-badge text-accent me-1"></i>
+                                            @h.nombreEntrenador
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-people text-accent me-1"></i>
+                                            Cupo: @h.cupoMaximo
+                                        </div>
+                                        @if (!string.IsNullOrWhiteSpace(h.ubicacion))
+                                        {
+                                            <div>
+                                                <i class="bi bi-geo-alt text-accent me-1"></i>
+                                                @h.ubicacion
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
 
 </div>
 

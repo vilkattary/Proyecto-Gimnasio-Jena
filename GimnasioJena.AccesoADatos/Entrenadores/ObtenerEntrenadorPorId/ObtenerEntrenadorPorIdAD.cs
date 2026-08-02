@@ -1,5 +1,6 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId;
 using GimnasioJena.Abstracciones.Modelos.Entrenadores;
+using GimnasioJena.Abstracciones.Modelos.Usuarios;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +42,12 @@ namespace GimnasioJena.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId
 
                     fechaContratacion = e.fechaContratacion,
 
-                    estado = e.estado
+                    estado = e.estado,
+
+                    Usuario = new UsuarioPerfilDto
+                    {
+                        fotoPerfil = e.Usuario.fotoPerfil
+                    }
 
                 })
                 .FirstOrDefaultAsync();
@@ -67,7 +73,11 @@ namespace GimnasioJena.AccesoADatos.Entrenadores.ObtenerEntrenadorPorId
                     especialidad = e.especialidad,
                     descripcion = e.descripcion,
                     fechaContratacion = e.fechaContratacion,
-                    estado = e.estado
+                    estado = e.estado,
+                    Usuario = new UsuarioPerfilDto
+                    {
+                        fotoPerfil = e.Usuario.fotoPerfil
+                    }
                 })
                 .FirstOrDefault();
 

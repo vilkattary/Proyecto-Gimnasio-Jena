@@ -1,11 +1,15 @@
 ﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerTodasLasReservas;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.RegistrarReserva;
 using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Reservas;
 using GimnasioJena.AccesoADatos;
 using GimnasioJena.LogicaDeNegocio.Bitacora;
+using GimnasioJena.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerTodasLasReservas;
+using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using GimnasioJena.LogicaDeNegocio.Reservas.RegistrarReserva;
 using Microsoft.AspNet.Identity;
 using System;
@@ -20,12 +24,16 @@ namespace GimnasioJena.UI.Controllers
         private readonly IRegistrarReservaLN _registrarReservaServicio;
         private readonly IObtenerTodasLasReservasLN _obtenerTodasLasReservasServicio;
         private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
+        private readonly ICancelarReservaLN _cancelarReservaServicio;
+        private readonly IObtenerReservasPorUsuarioLN _obtenerReservasPorUsuarioServicio;
 
         public ReservasController()
         {
             _registrarReservaServicio = new RegistrarReservaLN();
             _obtenerTodasLasReservasServicio = new ObtenerTodasLasReservasLN();
             _registrarBitacoraLN = new RegistrarBitacoraLN();
+            _cancelarReservaServicio = new CancelarReservaLN();
+            _obtenerReservasPorUsuarioServicio = new ObtenerReservasPorUsuarioLN();
         }
 
         [Authorize(Roles = "ADMINISTRADOR")]
@@ -111,6 +119,98 @@ namespace GimnasioJena.UI.Controllers
                 return View(modelo);
             }
         }
+        // Reserva directa desde el listado de clases (sin pantalla intermedia)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "CLIENTE")]
+        public ActionResult ReservarDirecta(int idClaseProgramada)
+        {
+            using (var contexto = new Contexto())
+            {
+                var identityUserId = User.Identity.GetUserId();
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                if (usuario == null)
+                {
+                    TempData["MensajeError"] = "No se encontró el usuario actual.";
+                    return RedirectToAction("ObtenerTodasLasClases", "Clases");
+                }
+
+                var modelo = new ReservaCrearDto
+                {
+                    idClaseProgramada = idClaseProgramada,
+                    idUsuario = usuario.idUsuario,
+                    idEstadoReserva = 1
+                };
+
+                var resultado = _registrarReservaServicio.RegistrarReserva(modelo);
+
+                if (resultado.fueExitosa)
+                {
+                    RegistrarBitacora(
+                        "Reserva",
+                        "INSERT",
+                        idClaseProgramada,
+                        "El cliente " + usuario.idUsuario + " reservó la clase " + idClaseProgramada
+                    );
+                    TempData["MensajeExito"] = resultado.mensaje;
+                }
+                else
+                {
+                    TempData["MensajeError"] = resultado.mensaje;
+                }
+
+                return RedirectToAction("ObtenerTodasLasClases", "Clases");
+            }
+        }
+
+        // Cancelar reserva desde el listado de clases
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "CLIENTE")]
+        public ActionResult CancelarDesdeClases(int idReserva)
+        {
+            var identityUserId = User.Identity.GetUserId();
+
+            using (var contexto = new Contexto())
+            {
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                if (usuario == null)
+                {
+                    TempData["MensajeError"] = "No se encontró el usuario actual.";
+                    return RedirectToAction("ObtenerTodasLasClases", "Clases");
+                }
+
+                var dto = new ReservaCancelarDto
+                {
+                    idReserva = idReserva,
+                    motivoCancelacion = "Cancelación desde listado de clases"
+                };
+
+                bool ok = _cancelarReservaServicio.CancelarReserva(dto, usuario.idUsuario);
+
+                if (ok)
+                {
+                    RegistrarBitacora(
+                        "Reserva",
+                        "UPDATE",
+                        idReserva,
+                        "El cliente " + usuario.idUsuario + " canceló la reserva " + idReserva
+                    );
+                    TempData["MensajeExito"] = "Reserva cancelada correctamente.";
+                }
+                else
+                {
+                    TempData["MensajeError"] = "No se pudo cancelar la reserva.";
+                }
+
+                return RedirectToAction("ObtenerTodasLasClases", "Clases");
+            }
+        }
+
         private int? ObtenerIdUsuarioActual()
         {
             var identityUserId = User.Identity.GetUserId();

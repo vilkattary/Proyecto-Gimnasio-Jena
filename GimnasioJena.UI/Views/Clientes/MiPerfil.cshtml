@@ -1,8 +1,31 @@
-﻿@model GimnasioJena.Abstracciones.Modelos.Usuarios.UsuarioPerfilDto
+﻿@using System.Linq
+@using System.Web.Helpers
+@using GimnasioJena.Abstracciones.Modelos.Reservas
+@model GimnasioJena.Abstracciones.Modelos.Usuarios.UsuarioPerfilDto
 
 @{
     ViewBag.Title = "MiPerfil";
+    var reservas = ViewBag.Reservas as IEnumerable<ReservaListadoDto> ?? Enumerable.Empty<ReservaListadoDto>();
+
+    var reservasOrdenadas = reservas
+        .OrderBy(r => r.fechaClase)
+        .ThenBy(r => r.horaInicio)
+        .ToList();
+
+    var eventosCalendario = reservasOrdenadas
+        .Select(r => new
+        {
+            title      = r.nombreClase,
+            start      = r.fechaClase.ToString("yyyy-MM-dd") + "T" + r.horaInicio.ToString(),
+            end        = r.fechaClase.ToString("yyyy-MM-dd") + "T" + r.horaFin.ToString(),
+            entrenador = r.nombreEntrenador,
+            estado     = r.estadoReserva,
+            ubicacion  = r.ubicacion
+        })
+        .ToList();
 }
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 
 <div class="container-fluid p-4 page-mi-perfil">
 
@@ -178,11 +201,6 @@
                     <span>Reservar Clase</span>
                 </a>
 
-                <a href="@Url.Action("MisReservas", "Clientes")" class="btn btn-action">
-                    <i class="bi bi-list-check"></i>
-                    <span>Mis Reservas</span>
-                </a>
-
                 <a href="@Url.Action("EditarPerfil", "Manage")" class="btn btn-action">
                     <i class="bi bi-pencil-square"></i>
                     <span>Editar Perfil</span>
@@ -190,4 +208,165 @@
             </div>
         </div>
     </div>
+
+    <!-- =============================================
+         SECCIÓN MIS RESERVAS
+         Desktop → FullCalendar  |  Mobile → Cards
+         ============================================= -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="action-buttons-card">
+                <h2><i class="bi bi-calendar3 me-2"></i>Mis Reservas</h2>
+
+                <!-- DESKTOP: Calendario FullCalendar (≥ 768px) -->
+                <div class="d-none d-md-block">
+                    <div class="calendar-wrapper">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+
+                <!-- MOBILE: Cards paginadas (< 768px) -->
+                <div class="d-md-none">
+                    @if (!reservasOrdenadas.Any())
+                    {
+                        <div class="empty-state text-center p-4">
+                            <i class="bi bi-calendar-x"></i>
+                            <h4>Sin reservas activas</h4>
+                            <p>Reserva una clase para verla aquí.</p>
+                            <a href="@Url.Action("ObtenerTodasLasClases", "Clases")" class="btn btn-action mt-2">
+                                <i class="bi bi-calendar-plus"></i>
+                                <span>Reservar clase</span>
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="reservas-mobile-list">
+                            @foreach (var r in reservasOrdenadas)
+                            {
+                                <div class="reserva-card-mobile @(r.idEstadoReserva == 1 ? "reserva-activa" : "reserva-inactiva")">
+                                    <div class="reserva-fecha-badge">
+                                        <span class="reserva-dia">@r.fechaClase.ToString("dd")</span>
+                                        <span class="reserva-mes">@r.fechaClase.ToString("MMM").ToUpper()</span>
+                                    </div>
+
+                                    <div class="reserva-info">
+                                        <p class="reserva-clase">@r.nombreClase</p>
+                                        <div class="reserva-meta">
+                                            <span class="reserva-meta-item">
+                                                <i class="bi bi-clock"></i>
+                                                @r.horaInicio.ToString(@"hh\:mm") – @r.horaFin.ToString(@"hh\:mm")
+                                            </span>
+                                            <span class="reserva-meta-item">
+                                                <i class="bi bi-person-badge"></i>
+                                                @r.nombreEntrenador
+                                            </span>
+                                            <span class="reserva-meta-item">
+                                                <i class="bi bi-geo-alt"></i>
+                                                @r.ubicacion
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="reserva-acciones">
+                                        <span class="reserva-badge @(r.idEstadoReserva == 1 ? "reserva-badge-activa" : "reserva-badge-inactiva")">
+                                            @r.estadoReserva
+                                        </span>
+                                        <a href="@Url.Action("DetalleReserva", "Clientes", new { id = r.idReserva })"
+                                           class="reserva-btn-detalle"
+                                           aria-label="Ver detalle de @r.nombreClase">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Paginación -->
+                        <nav class="reservas-paginacion" aria-label="Paginación de reservas">
+                            <button id="btn-reservas-prev"
+                                    class="btn-pag"
+                                    aria-label="Página anterior"
+                                    disabled>
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <span id="reservas-page-info" class="page-info" aria-live="polite"></span>
+                            <button id="btn-reservas-next"
+                                    class="btn-pag"
+                                    aria-label="Página siguiente">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </nav>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* ── FullCalendar solo en desktop ─────────────────────── */
+        if (window.innerWidth >= 768) {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                headerToolbar: {
+                    left:   'prev,next today',
+                    center: 'title',
+                    right:  'dayGridMonth,listMonth'
+                },
+                buttonText: { today: 'Hoy', month: 'Mes', list: 'Lista' },
+                events: @Html.Raw(Json.Encode(eventosCalendario)),
+                eventClick: function (info) {
+                    alert(
+                        'Clase: '       + info.event.title +
+                        '\nEntrenador: ' + info.event.extendedProps.entrenador +
+                        '\nEstado: '     + info.event.extendedProps.estado +
+                        '\nLugar: '      + info.event.extendedProps.ubicacion +
+                        '\nFecha: '      + info.event.start.toLocaleDateString('es-ES')
+                    );
+                }
+            });
+            calendar.render();
+        }
+
+        /* ── Paginación mobile ────────────────────────────────── */
+        var PAGE_SIZE = 5;
+        var currentPage = 0;
+        var cards = document.querySelectorAll('#reservas-mobile-list .reserva-card-mobile');
+        var totalPages = Math.ceil(cards.length / PAGE_SIZE);
+        var btnPrev    = document.getElementById('btn-reservas-prev');
+        var btnNext    = document.getElementById('btn-reservas-next');
+        var pageInfo   = document.getElementById('reservas-page-info');
+
+        function mostrarPagina(page) {
+            var start = page * PAGE_SIZE;
+            var end   = start + PAGE_SIZE;
+
+            cards.forEach(function (card, i) {
+                card.style.display = (i >= start && i < end) ? '' : 'none';
+            });
+
+            if (pageInfo) pageInfo.textContent = 'Página ' + (page + 1) + ' de ' + totalPages;
+            if (btnPrev)  btnPrev.disabled  = (page === 0);
+            if (btnNext)  btnNext.disabled  = (page >= totalPages - 1);
+        }
+
+        if (cards.length > 0) {
+            mostrarPagina(0);
+
+            if (btnPrev) btnPrev.addEventListener('click', function () {
+                if (currentPage > 0) { currentPage--; mostrarPagina(currentPage); }
+            });
+
+            if (btnNext) btnNext.addEventListener('click', function () {
+                if (currentPage < totalPages - 1) { currentPage++; mostrarPagina(currentPage); }
+            });
+        }
+    });
+</script>
