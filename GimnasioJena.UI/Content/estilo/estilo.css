@@ -111,7 +111,7 @@ main .container {
     }
 }
 .welcome-section {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 20px;
     margin-bottom: 30px;
@@ -764,7 +764,7 @@ footer .copyright {
 }
 
 .welcome-section {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 20px;
     margin-bottom: 30px;
@@ -964,7 +964,7 @@ footer .copyright {
     margin-bottom: 30px;
 }
 
-.description-card h5 {
+.description-card h2 {
     color: var(--jena-navy);
     font-weight: 800;
     text-transform: uppercase;
@@ -974,7 +974,7 @@ footer .copyright {
     padding-bottom: 12px;
 }
 
-.description-card h5::after {
+.description-card h2::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -1003,7 +1003,7 @@ footer .copyright {
     margin-bottom: 30px;
 }
 
-.action-buttons-card h5 {
+.action-buttons-card h2 {
     color: var(--jena-navy);
     font-weight: 800;
     text-transform: uppercase;
@@ -1014,7 +1014,7 @@ footer .copyright {
     padding-bottom: 12px;
 }
 
-.action-buttons-card h5::after {
+.action-buttons-card h2::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -1058,6 +1058,28 @@ footer .copyright {
     box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
 }
 
+/* Cancelar reserva desde listado de clases */
+.btn-cancelar-reserva {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--jena-danger, #dc3545);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: opacity 0.2s ease;
+}
+
+.btn-cancelar-reserva:hover {
+    opacity: 0.75;
+}
+
 .btn-action:active {
     transform: translateY(-1px);
 }
@@ -1099,7 +1121,7 @@ footer .copyright {
     text-align: center;
 }
 
-.stat-card h3 {
+.stat-card h2 {
     color: var(--jena-navy);
     font-weight: 800;
     font-size: 2rem;
@@ -1136,21 +1158,32 @@ footer .copyright {
     }
 
     .welcome-section {
+        display: flex;
         flex-direction: column;
+        align-items: center;
         text-align: center;
-        padding: 15px;
+        padding: 20px 15px;
+    }
+
+    .welcome-section .profile-avatar {
+        width: 88px;
+        height: 88px;
+        font-size: 2.2rem;
+        border-width: 3px;
+        margin-bottom: 12px;
+    }
+
+    .desktop-page-title {
+        display: none;
+    }
+
+    .page-mi-perfil .info-card {
+        display: none;
     }
 
     .page-title {
         font-size: clamp(1.4rem, 4vw, 1.8rem) !important;
-        display:   block;
-    }
-
-    .profile-avatar {
-        width: 150px;
-        height: 150px;
-        font-size: 4rem;
-        margin: 0 auto 20px;
+        display: block;
     }
 
     .info-card,
@@ -1187,7 +1220,7 @@ footer .copyright {
        SECCIÓN DE BIENVENIDA CON LOGO
 ============================================ */
 .welcome-section {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 20px;
     margin-bottom: 30px;
@@ -1627,14 +1660,32 @@ footer .copyright {
     }
 
     .welcome-section {
+        display: flex;
         flex-direction: column;
+        align-items: center;
         text-align: center;
-        padding: 15px;
+        padding: 20px 15px;
+    }
+
+    .welcome-section .profile-avatar {
+        width: 88px;
+        height: 88px;
+        font-size: 2.2rem;
+        border-width: 3px;
+        margin-bottom: 12px;
+    }
+
+    .desktop-page-title {
+        display: none;
+    }
+
+    .page-mi-perfil .info-card {
+        display: none;
     }
 
     .page-title {
         font-size: clamp(1.4rem, 4vw, 1.8rem) !important;
-        display:   block;
+        display: block;
     }
 
     .current-membership-card {
@@ -2056,51 +2107,6 @@ footer .copyright {
     color: var(--jena-navy);
     margin-bottom: 25px;
 }
-
-/* Ajustes específicos para MisReservas */
-.welcome-section {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 24px;
-}
-
-.logo-circular {
-    width: 88px;
-    height: 88px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--jena-orange), var(--jena-dark-orange));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--jena-white);
-    font-size: 2.25rem;
-    position: relative;
-    flex-shrink: 0;
-    border: 4px solid rgba(255,255,255,0.12);
-    box-shadow: 0 8px 22px rgba(41,48,57,0.06);
-}
-
-    .logo-circular .letter-j {
-        font-family: 'Audiowide', sans-serif;
-        font-size: 1.8rem;
-        margin-left: 6px;
-        font-weight: 700;
-    }
-
-.welcome-text h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: var(--jena-navy);
-    font-weight: 800;
-}
-
-.welcome-text p {
-    margin: 0;
-    color: var(--jena-navy);
-    font-size: 0.95rem;
-}
-
 
 /* Tarjetas de reserva (similar a info-card) */
 .reservation-card {
@@ -3511,6 +3517,10 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     }
 
     .btn-nueva-programacion {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
         min-height: 46px;
         padding: 11px 20px;
         border: 2px solid var(--jena-orange);
@@ -3521,10 +3531,21 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         box-shadow: 0 8px 20px rgba(255, 107, 53, .25);
     }
 
-        .btn-nueva-programacion:hover {
+        .btn-nueva-programacion i {
+            color: var(--jena-orange);
+            line-height: 1;
+        }
+
+        .btn-nueva-programacion:hover,
+        .btn-nueva-programacion:focus {
             color: white;
             background: var(--jena-orange);
             transform: translateY(-1px);
+        }
+
+        .btn-nueva-programacion:hover i,
+        .btn-nueva-programacion:focus i {
+            color: white !important;
         }
 
     .btn-generar {
@@ -3763,15 +3784,28 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         }
 
         .estado-vacio h3 {
-            margin-bottom: 8px;
+            margin: 0 auto 8px;
             color: var(--jena-navy);
             font-weight: 800;
+            text-align: center;
+            width: 100%;
         }
 
         .estado-vacio p {
             max-width: 560px;
             margin: 0 auto 22px;
             color: var(--jena-muted);
+        }
+
+        .estado-vacio .btn-nueva-programacion {
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .estado-vacio .btn-nueva-programacion i {
+            font-size: 1.4rem;
+            line-height: 1;
         }
 
     .alerta-programacion {
@@ -4259,6 +4293,92 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         .btn-guardar {
             width: 100%;
         }
+
+        .toggle-recurrente-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+
+    /* =========================================
+       TOGGLE CLASE ÚNICA / RECURRENTE
+       ========================================= */
+
+    .toggle-recurrente-wrap {
+        margin-bottom: 28px;
+        padding: 16px 20px;
+        border: 1px solid var(--jena-border);
+        border-radius: 14px;
+        background: var(--jena-light-gray);
+    }
+
+    .toggle-recurrente-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .toggle-recurrente-label {
+        display: flex;
+        align-items: center;
+        color: var(--jena-navy);
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+        .toggle-recurrente-label i {
+            color: var(--jena-orange);
+            font-size: 1.1rem;
+        }
+
+    .toggle-recurrente-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .toggle-opcion {
+        font-size: .93rem;
+        font-weight: 600;
+        color: #9CA3AF;
+        transition: color .2s;
+    }
+
+        .toggle-opcion.activa {
+            color: var(--jena-orange);
+        }
+
+    .toggle-switch-jena .form-check-input {
+        width: 3rem;
+        height: 1.55rem;
+        cursor: pointer;
+        background-color: var(--jena-border);
+        border-color: var(--jena-border);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+    }
+
+        .toggle-switch-jena .form-check-input:checked {
+            background-color: var(--jena-orange);
+            border-color: var(--jena-orange);
+        }
+
+        .toggle-switch-jena .form-check-input:focus {
+            box-shadow: 0 0 0 .2rem rgba(255, 107, 53, .25);
+            border-color: var(--jena-orange);
+        }
+
+    /* =========================================
+       RECURRENTE RANGO DATE
+       ========================================= */
+
+    .recurrente-rango {
+        padding: 18px 20px;
+        border: 1px solid rgba(255, 107, 53, .30);
+        border-radius: 14px;
+        background: rgba(255, 107, 53, .04);
     }
 
 /* ============================================
@@ -5135,6 +5255,199 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 }
 
 /* ============================================
+   MODAL JENA (genérico, reutilizable)
+============================================ */
+.modal-jena-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    background: rgba(41, 48, 57, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    backdrop-filter: blur(3px);
+    animation: modalFadeIn 0.2s ease;
+}
+
+.modal-jena-overlay[hidden] {
+    display: none;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.modal-jena-box {
+    background: var(--jena-white);
+    border-radius: 20px;
+    border: 2px solid var(--jena-light-blue);
+    box-shadow: 0 20px 60px rgba(41, 48, 57, 0.25);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    animation: modalSlideUp 0.25s ease;
+    overflow: hidden;
+}
+
+@keyframes modalSlideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal-jena-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 2px solid var(--jena-light-blue);
+    flex-shrink: 0;
+}
+
+.modal-jena-close {
+    background: none;
+    border: none;
+    color: var(--jena-navy);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    line-height: 1;
+    transition: background 0.2s;
+    min-height: auto;
+}
+
+.modal-jena-close:hover {
+    background: rgba(41, 48, 57, 0.08);
+}
+
+.modal-jena-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+}
+
+.modal-jena-footer {
+    padding: 16px 24px 20px;
+    border-top: 2px solid var(--jena-light-blue);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.modal-jena-footer .btn-action,
+.modal-jena-footer-inline .btn-action {
+    flex: 1 1 140px;
+    width: auto;
+    margin-bottom: 0;
+}
+
+.modal-jena-footer-inline {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-top: 2px solid var(--jena-light-blue);
+    padding-top: 16px;
+}
+
+/* Bloquea scroll del body cuando el modal está abierto */
+body.modal-jena-open {
+    overflow: hidden;
+}
+
+/* Spinner con color Jena */
+.spinner-border.text-jena {
+    color: var(--jena-orange) !important;
+}
+
+@media (max-width: 768px) {
+    .modal-jena-box {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        max-height: 95vh;
+        margin-top: auto;
+    }
+
+    .modal-jena-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .modal-jena-footer .btn-action,
+    .modal-jena-footer-inline .btn-action {
+        flex: 1 1 100%;
+    }
+}
+
+/* ============================================
+   EDITAR PERFIL
+============================================ */
+.info-card-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--jena-navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--jena-light-blue);
+    padding-bottom: 10px;
+}
+
+.info-card-section-title i {
+    color: var(--jena-orange);
+}
+
+.editar-perfil-readonly {
+    background-color: rgba(41, 48, 57, 0.04) !important;
+    color: var(--jena-navy) !important;
+    cursor: not-allowed;
+    border-color: var(--jena-light-blue) !important;
+}
+
+.editar-perfil-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.editar-perfil-actions .btn-action {
+    width: auto;
+    flex: 1 1 180px;
+    margin-bottom: 0;
+}
+
+.editar-perfil-cancel {
+    border-color: var(--jena-light-blue) !important;
+    color: var(--jena-navy) !important;
+}
+
+.editar-perfil-cancel i {
+    color: var(--jena-navy) !important;
+}
+
+.editar-perfil-cancel:hover {
+    background-color: var(--jena-navy) !important;
+    border-color: var(--jena-navy) !important;
+    color: var(--jena-white) !important;
+}
+
+.editar-perfil-cancel:hover i {
+    color: var(--jena-white) !important;
+}
+
+@media (max-width: 768px) {
+    .editar-perfil-actions .btn-action {
+        flex: 1 1 100%;
+    }
+}
+
+/* ============================================
    TABLA CORPORATIVA JÉNA (.table-jena)
 ============================================ */
 
@@ -5462,6 +5775,50 @@ section.hero-apex a.btn.btn-apex-primary:hover {
    Estilos para Nosotros/Index
    ========================== */
 
+/* ── Hero Header ── */
+.hero-nosotros {
+    position: relative;
+    width: 100%;
+    min-height: 420px;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-nosotros .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.52);
+}
+
+.hero-nosotros .hero-content {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    padding: 3rem 1rem;
+}
+
+.hero-nosotros .hero-subtitle {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--jena-orange, #f97316);
+    margin-bottom: 0.75rem;
+}
+
+.hero-nosotros .hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0;
+    color: #fff;
+}
+
 .historia-section {
     padding: 2rem 0;
 }
@@ -5488,9 +5845,65 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     margin-bottom: 0.75rem;
 }
 
+/* ===== Misión & Visión ===== */
+.mision-vision-section {
+    background-color: var(--jena-dark-navy);
+    padding: 5rem 0;
+}
+
+.heading-nosotros-lg {
+    font-size: var(--font-h2);
+    color: var(--jena-white);
+    font-weight: 700;
+}
+
+.mv-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 2rem;
+    min-height: 220px;
+    height: 100%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    border-left: 4px solid var(--jena-orange);
+}
+
+.mv-card h3 {
+    color: var(--jena-white);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.mv-card p {
+    color: var(--jena-light-gray);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.mv-icon-wrap {
+    width: 62px;
+    height: 62px;
+    border-radius: 12px;
+    background: rgba(255, 107, 53, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+    .mv-icon-wrap i {
+        font-size: 1.6rem;
+        color: var(--jena-orange);
+    }
+
 /* ===== Estadísticas ===== */
 .stats-section {
-    padding: 2rem 0;
+    background-color: var(--jena-white);
+    padding: 5rem 0;
 }
 
     .stats-section .container {
@@ -5498,29 +5911,23 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     }
 
 .stat-item {
-    background: linear-gradient(180deg, var(--jena-white), #ffffff);
-    border-radius: 12px;
-    padding: 1.4rem 1rem;
+    background-color: var(--jena-white);
+    border-radius: 15px;
+    padding: 2rem 1rem;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(11,11,11,0.04);
-    transition: transform 180ms ease, box-shadow 180ms ease;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.6rem;
-    border: 1px solid rgba(41,48,57,0.04);
+    border-left: 4px solid var(--jena-orange);
 }
-
-    .stat-item:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 18px 40px rgba(11,11,11,0.06);
-    }
 
 .stat-icon i {
     font-size: 2.1rem;
-    color: var(--jena-accent, var(--jena-orange));
-    background: rgba(255,107,53,0.08);
+    color: var(--jena-orange);
+    background: rgba(255, 107, 53, 0.08);
     padding: 12px;
     border-radius: 12px;
 }
@@ -5533,53 +5940,9 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 }
 
 .stat-label {
-    color: rgba(41,48,57,0.7);
+    color: rgba(41, 48, 57, 0.7);
     font-size: 0.95rem;
 }
-
-/* ===== Misión & Visión ===== */
-.mision-vision-section {
-    padding: 3rem 0;
-}
-
-.heading-nosotros-lg {
-    font-size: var(--font-h2);
-    color: var(--jena-navy);
-    font-weight: 700;
-}
-
-.mv-card {
-    background: linear-gradient(180deg, #FFFFFF, #FBFCFD);
-    border-radius: 12px;
-    padding: 1.4rem;
-    min-height: 220px;
-    box-shadow: 0 12px 30px rgba(41,48,57,0.04);
-    transition: transform 200ms ease, box-shadow 200ms ease;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-    .mv-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 22px 48px rgba(41,48,57,0.06);
-    }
-
-.mv-icon-wrap {
-    width: 62px;
-    height: 62px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(108,142,164,0.08), rgba(255,107,53,0.06));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0.5rem;
-}
-
-    .mv-icon-wrap i {
-        font-size: 1.6rem;
-        color: var(--jena-orange);
-    }
 
 /* ===== Valores ===== */
 .valores-section {
@@ -5588,24 +5951,24 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
 .valor-card {
     background: var(--jena-white);
-    border-radius: 12px;
-    padding: 1.2rem;
+    border-radius: 15px;
+    padding: 2rem 1.2rem;
     text-align: center;
-    box-shadow: 0 10px 28px rgba(11,11,11,0.04);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     height: 100%;
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
     align-items: center;
     justify-content: flex-start;
-    border: 1px solid rgba(41,48,57,0.03);
+    border-left: 4px solid var(--jena-light-blue);
 }
 
 .valor-icon {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: linear-gradient(180deg, rgba(255,107,53,0.06), rgba(108,142,164,0.04));
+    background: rgba(108, 142, 164, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -5614,7 +5977,7 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
     .valor-icon i {
         font-size: 1.5rem;
-        color: var(--jena-orange);
+        color: var(--jena-light-blue);
     }
 
 .valor-card h4 {
@@ -5632,31 +5995,33 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
 /* ===== CTA ===== */
 .cta-nosotros {
-    margin-top: 2rem;
-    padding: 2.2rem 0;
-    background: linear-gradient(90deg, rgba(255,107,53,0.06), rgba(44,62,80,0.02));
-    border-radius: 12px;
+    margin-top: 0;
+    padding: 5rem 0;
+    background-color: var(--jena-dark-navy);
     text-align: center;
-    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.3);
 }
 
     .cta-nosotros .container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.6rem;
+        gap: 0.75rem;
     }
 
     .cta-nosotros h2 {
-        font-size: 1.4rem;
-        color: var(--jena-navy);
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+        color: var(--jena-white);
         margin-bottom: 0;
-        font-weight: 700;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
     }
 
     .cta-nosotros p {
-        color: rgba(41,48,57,0.8);
-        margin-bottom: 0.6rem;
+        color: var(--jena-light-gray);
+        margin-bottom: 0.5rem;
+        max-width: 600px;
+        line-height: 1.7;
     }
 
 /* Botón CTA */
@@ -5686,6 +6051,14 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     }
 
 /* ===== Helpers y responsividad ===== */
+
+/* Desktop: hero 10 px más alto */
+@media (min-width: 992px) {
+    .hero-nosotros {
+        min-height: 430px;
+    }
+}
+
 @media (max-width: 991.98px) {
     .historia-section .container {
         padding: 1rem;
@@ -5694,9 +6067,19 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     .mv-card {
         min-height: unset;
     }
+
+    /* Gap vertical cuando las stat-cards se apilan en tablet/mobile */
+    .stats-section .row {
+        row-gap: 1.25rem;
+    }
 }
 
 @media (max-width: 575.98px) {
+    /* Gap más generoso en mobile pequeño */
+    .stats-section .row {
+        row-gap: 1rem;
+    }
+
     .logo-circular {
         width: 110px;
         height: 110px;
@@ -5713,4 +6096,240 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     .heading-nosotros-lg {
         font-size: clamp(1.1rem, 6vw, 1.4rem);
     }
+
+/* ============================================================
+   MOBILE RESERVATION CARDS — MiPerfil
+   Buenas prácticas UX/UI:
+   · Touch targets mínimo 44×44 px (Apple HIG / WCAG 2.5.5)
+   · Escaneo en F-pattern: fecha prominente, título, metadata
+   · Contraste de texto ≥ 4.5:1 (WCAG AA)
+   · Estados visuales diferenciados (activa / cancelada)
+   · Paginación accesible con aria-live y aria-label
+============================================================ */
+
+/* Card contenedor */
+.reserva-card-mobile {
+    display:        flex;
+    align-items:    center;
+    gap:            14px;
+    background:     var(--jena-white);
+    border:         2px solid var(--jena-light-blue);
+    border-radius:  16px;
+    padding:        14px 16px;
+    margin-bottom:  10px;
+    box-shadow:     0 3px 10px rgba(0, 0, 0, 0.06);
+    transition:     transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    position:       relative;
+    overflow:       hidden;
+}
+
+.reserva-card-mobile::before {
+    content:        '';
+    position:       absolute;
+    top:            0;
+    left:           0;
+    width:          4px;
+    height:         100%;
+    background:     var(--jena-light-blue);
+    border-radius:  16px 0 0 16px;
+    transition:     background .18s ease;
+}
+
+.reserva-card-mobile.reserva-activa::before {
+    background: var(--jena-orange);
+}
+
+.reserva-card-mobile:active {
+    transform:  scale(0.98);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Badge de fecha (día + mes) */
+.reserva-fecha-badge {
+    display:         flex;
+    flex-direction:  column;
+    align-items:     center;
+    justify-content: center;
+    min-width:       52px;
+    height:          60px;
+    background:      linear-gradient(135deg, var(--jena-orange), var(--jena-dark-orange));
+    border-radius:   12px;
+    color:           var(--jena-white);
+    flex-shrink:     0;
+    box-shadow:      0 4px 10px rgba(255, 107, 53, 0.35);
+}
+
+.reserva-card-mobile.reserva-inactiva .reserva-fecha-badge {
+    background:  var(--jena-light-blue);
+    box-shadow:  none;
+    opacity:     0.75;
+}
+
+.reserva-dia {
+    font-size:   1.4rem;
+    font-weight: 800;
+    line-height: 1;
+    font-family: var(--font-primary);
+}
+
+.reserva-mes {
+    font-size:      0.58rem;
+    font-weight:    700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top:     2px;
+    opacity:        0.9;
+}
+
+/* Bloque de información */
+.reserva-info {
+    flex:      1;
+    min-width: 0; /* evita overflow de texto */
+}
+
+.reserva-clase {
+    font-size:      0.95rem;
+    font-weight:    800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color:          var(--jena-navy);
+    margin:         0 0 6px 0;
+    white-space:    nowrap;
+    overflow:       hidden;
+    text-overflow:  ellipsis;
+}
+
+.reserva-meta {
+    display:        flex;
+    flex-direction: column;
+    gap:            3px;
+}
+
+.reserva-meta-item {
+    display:     flex;
+    align-items: center;
+    gap:         5px;
+    font-size:   0.78rem;
+    font-weight: 500;
+    color:       var(--jena-light-blue);
+    white-space: nowrap;
+    overflow:    hidden;
+    text-overflow: ellipsis;
+}
+
+.reserva-meta-item i {
+    color:       var(--jena-orange);
+    font-size:   0.8rem;
+    flex-shrink: 0;
+}
+
+/* Columna derecha: badge estado + botón detalle */
+.reserva-acciones {
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    gap:            8px;
+    flex-shrink:    0;
+}
+
+.reserva-badge {
+    display:        inline-block;
+    font-size:      0.65rem;
+    font-weight:    700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding:        3px 8px;
+    border-radius:  20px;
+    white-space:    nowrap;
+}
+
+.reserva-badge-activa {
+    background: rgba(255, 107, 53, 0.12);
+    color:      var(--jena-orange);
+    border:     1px solid rgba(255, 107, 53, 0.3);
+}
+
+.reserva-badge-inactiva {
+    background: rgba(108, 142, 164, 0.12);
+    color:      var(--jena-light-blue);
+    border:     1px solid rgba(108, 142, 164, 0.3);
+}
+
+/* Botón detalle — touch target 44×44 px mínimo */
+.reserva-btn-detalle {
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    width:           36px;
+    height:          36px;
+    min-width:       44px;  /* área táctil ampliada */
+    min-height:      44px;
+    border-radius:   10px;
+    border:          2px solid var(--jena-orange);
+    background:      var(--jena-white);
+    color:           var(--jena-orange);
+    font-size:       1rem;
+    text-decoration: none;
+    transition:      background .18s ease, color .18s ease, transform .18s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.reserva-btn-detalle:hover,
+.reserva-btn-detalle:active {
+    background:  var(--jena-orange);
+    color:       var(--jena-white);
+    transform:   scale(1.05);
+    text-decoration: none;
+}
+
+/* ── Paginación ─────────────────────────────────────────── */
+.reservas-paginacion {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    margin-top:      18px;
+    gap:             8px;
+}
+
+/* Botones prev/next — touch target ≥ 44×44 px */
+.reservas-paginacion .btn-pag {
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    width:           44px;
+    height:          44px;
+    border-radius:   12px;
+    border:          2px solid var(--jena-orange);
+    background:      var(--jena-white);
+    color:           var(--jena-orange);
+    font-size:       1.1rem;
+    font-weight:     700;
+    cursor:          pointer;
+    transition:      background .18s ease, color .18s ease, transform .18s ease, opacity .18s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select:     none;
+}
+
+.reservas-paginacion .btn-pag:not(:disabled):hover,
+.reservas-paginacion .btn-pag:not(:disabled):active {
+    background:  var(--jena-orange);
+    color:       var(--jena-white);
+    transform:   scale(1.05);
+}
+
+.reservas-paginacion .btn-pag:disabled {
+    opacity:        0.35;
+    cursor:         not-allowed;
+    pointer-events: none;
+}
+
+.reservas-paginacion .page-info {
+    font-size:      0.82rem;
+    font-weight:    700;
+    color:          var(--jena-navy);
+    text-align:     center;
+    flex:           1;
+    letter-spacing: 0.3px;
+    font-family:    var(--font-primary);
+}
 }

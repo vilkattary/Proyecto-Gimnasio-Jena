@@ -37,7 +37,7 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales.GenerarClasesProgramadas
                         contexto.EstadoClases
                             .Where(e =>
                                 e.estado &&
-                                e.nombreEstado == "Activa"
+                                e.nombreEstado == "Activo"
                             )
                             .Select(e =>
                                 (int?)e.idEstadoClase
@@ -49,7 +49,7 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales.GenerarClasesProgramadas
                         transaccion.Rollback();
 
                         return CrearResultadoError(
-                            "No existe un estado de clase activo con el nombre 'Activa'.",
+                            "No existe un estado de clase activo con el nombre 'Activo'.",
                             fechaInicio,
                             fechaFin,
                             diasProcesados

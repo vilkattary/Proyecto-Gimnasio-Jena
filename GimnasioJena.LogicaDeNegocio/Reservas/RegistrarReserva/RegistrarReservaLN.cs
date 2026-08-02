@@ -70,21 +70,22 @@ namespace GimnasioJena.LogicaDeNegocio.Reservas.RegistrarReserva
             DateTime cierreReserva =
                 fechaHoraClase.AddMinutes(-10);
 
-            if (ahora < aperturaReserva)
-            {
-                return CrearResultadoError(
-                    "La reserva todavía no está habilitada. " +
-                    "Podrás reservar a partir de 24 horas antes del inicio de la clase."
-                );
-            }
+            // TESTING: validaciones de ventana horaria deshabilitadas temporalmente
+            //if (ahora < aperturaReserva)
+            //{
+            //    return CrearResultadoError(
+            //        "La reserva todavía no está habilitada. " +
+            //        "Podrás reservar a partir de 24 horas antes del inicio de la clase."
+            //    );
+            //}
 
-            if (ahora >= cierreReserva)
-            {
-                return CrearResultadoError(
-                    "El periodo para reservar esta clase ya finalizó. " +
-                    "Las reservas cierran 10 minutos antes del inicio."
-                );
-            }
+            //if (ahora >= cierreReserva)
+            //{
+            //    return CrearResultadoError(
+            //        "El periodo para reservar esta clase ya finalizó. " +
+            //        "Las reservas cierran 10 minutos antes del inicio."
+            //    );
+            //}
 
             var membresia =
                 _obtenerMembresiaPorClienteLN

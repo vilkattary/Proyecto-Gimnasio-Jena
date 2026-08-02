@@ -339,11 +339,11 @@
     <Content Include="Views\HorariosSemanales\Index.cshtml" />
     <Content Include="Views\HorariosSemanales\GenerarClases.cshtml" />
     <Content Include="Views\HorariosSemanales\Editar.cshtml" />
-    <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Clientes\ConfirmarCompra.cshtml" />
     <Content Include="Views\Admin\PlanesMembresia.cshtml" />
     <Content Include="Views\Admin\EditarPrecioPlan.cshtml" />
+    <Content Include="Views\Manage\_ChangePasswordPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

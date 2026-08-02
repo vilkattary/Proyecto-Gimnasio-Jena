@@ -1,4 +1,6 @@
 ﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.RegistrarClase;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.CambiarEstadoHorarioSemanal;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.EditarHorarioSemanal;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.GenerarClasesProgramadas;
@@ -6,9 +8,12 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.ObtenerHorari
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.RegistrarHorariosSemanales;
 using GimnasioJena.Abstracciones.Modelos.Bitacora;
+using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.Abstracciones.Modelos.HorariosSemanales;
 using GimnasioJena.AccesoADatos;
 using GimnasioJena.LogicaDeNegocio.Bitacora;
+using GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
+using GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.CambiarEstadoHorarioSemanal;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.EditarHorarioSemanal;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.GenerarClasesProgramadas;
@@ -48,6 +53,12 @@ namespace GimnasioJena.UI.Controllers
         private readonly ICambiarEstadoHorarioSemanalLN
              _cambiarEstadoHorarioSemanalLN;
 
+        private readonly IRegistrarClaseLN
+             _registrarClaseLN;
+
+        private readonly IObtenerTodasLasClasesLN
+             _obtenerTodasLasClasesLN;
+
         public HorariosSemanalesController()
         {
             _obtenerHorariosSemanalesLN =
@@ -70,6 +81,12 @@ namespace GimnasioJena.UI.Controllers
 
             _cambiarEstadoHorarioSemanalLN =
                 new CambiarEstadoHorarioSemanalLN();
+
+            _registrarClaseLN =
+                new RegistrarClaseLN();
+
+            _obtenerTodasLasClasesLN =
+                new ObtenerTodasLasClasesLN();
         }
 
         // GET: HorariosSemanales
@@ -81,6 +98,17 @@ namespace GimnasioJena.UI.Controllers
                 List<HorarioSemanalListadoDto> horarios =
                     _obtenerHorariosSemanalesLN
                         .ObtenerHorariosSemanales();
+
+                DateTime hoy = DateTime.Today;
+
+                ViewBag.ClasesUnicas =
+                    _obtenerTodasLasClasesLN
+                        .ObtenerTodasLasClases()
+                        .Where(c =>
+                            !c.idHorario.HasValue &&
+                            c.fechaClase >= hoy)
+                        .OrderBy(c => c.fechaHoraInicio)
+                        .ToList();
 
                 return View(horarios);
             }
@@ -223,7 +251,97 @@ namespace GimnasioJena.UI.Controllers
 
             try
             {
-                LimpiarFilasVacias(modelo);
+                // ── Clase única (no recurrente) ──────────────────────────
+                if (!modelo.esRecurrente)
+                {
+                    if (!modelo.fechaClase.HasValue)
+                    {
+                        ModelState.AddModelError(
+                            "fechaClase",
+                            "Debe indicar la fecha de la clase."
+                        );
+                    }
+
+                    if (modelo.idTipoClase <= 0)
+                        ModelState.AddModelError("idTipoClase", "Debe seleccionar el tipo de clase.");
+
+                    if (modelo.idUsuarioEntrenador <= 0)
+                        ModelState.AddModelError("idUsuarioEntrenador", "Debe seleccionar un entrenador.");
+
+                    if (modelo.cupoMaximo < 1 || modelo.cupoMaximo > 30)
+                        ModelState.AddModelError("cupoMaximo", "El cupo debe encontrarse entre 1 y 30.");
+
+                    LimpiarFilasVacias(modelo);
+
+                    if (modelo.horarios == null || modelo.horarios.Count == 0)
+                    {
+                        ModelState.AddModelError(
+                            "",
+                            "Debe agregar al menos un rango horario."
+                        );
+                    }
+                    else if (modelo.horarios[0].horaFin <= modelo.horarios[0].horaInicio)
+                    {
+                        ModelState.AddModelError(
+                            "",
+                            "La hora de finalización debe ser mayor que la hora de inicio."
+                        );
+                    }
+
+                    if (!ModelState.IsValid)
+                    {
+                        PrepararVistaRegistrar(modelo);
+                        return View(modelo);
+                    }
+
+                    ClaseCrearDto claseUnica = new ClaseCrearDto
+                    {
+                        idTipoClase          = modelo.idTipoClase,
+                        idUsuarioEntrenador  = modelo.idUsuarioEntrenador,
+                        idEstadoClase        = 1,
+                        fechaClase           = modelo.fechaClase.Value,
+                        horaInicio           = modelo.horarios[0].horaInicio,
+                        horaFin              = modelo.horarios[0].horaFin,
+                        cupoMaximo           = modelo.cupoMaximo,
+                        ubicacion            = modelo.ubicacion,
+                        fechaCreacion        = DateTime.Now
+                    };
+
+                    bool seAgrego = _registrarClaseLN.RegistrarClase(claseUnica);
+
+                    if (seAgrego)
+                    {
+                        RegistrarBitacoraSegura(
+                            "ClaseProgramada",
+                            "INSERT",
+                            null,
+                            "Se registró una clase única programada."
+                        );
+
+                        TempData["MensajeExito"] =
+                            "La clase se registró correctamente.";
+
+                        return RedirectToAction("Index");
+                    }
+
+                    ModelState.AddModelError(
+                        "",
+                        "No se pudo registrar la clase."
+                    );
+
+                    PrepararVistaRegistrar(modelo);
+                    return View(modelo);
+                }
+
+                // ── Clase recurrente: crear HorarioSemanal + generar ─────
+
+                if (!modelo.fechaFin.HasValue)
+                {
+                    ModelState.AddModelError(
+                        "fechaFin",
+                        "Para programación recurrente debe indicar una fecha hasta la que generar las clases."
+                    );
+                }
 
                 ValidarDatosDelFormulario(modelo);
 
@@ -250,11 +368,18 @@ namespace GimnasioJena.UI.Controllers
                     return View(modelo);
                 }
 
-                /*
-                 * La operación principal ya terminó correctamente.
-                 * La bitácora se registra de forma separada para evitar
-                 * mostrar un falso error si únicamente falla la auditoría.
-                 */
+                // Generar instancias en el rango indicado
+                GenerarClasesProgramadasDto generarDto =
+                    new GenerarClasesProgramadasDto
+                    {
+                        fechaInicio = DateTime.Now.Date,
+                        fechaFin    = modelo.fechaFin.Value
+                    };
+
+                ResultadoGeneracionClasesDto resultadoGenerar =
+                    _generarClasesProgramadasLN
+                        .GenerarClasesProgramadas(generarDto);
+
                 RegistrarBitacoraSegura(
                     "HorarioSemanal",
                     "INSERT",
@@ -265,8 +390,9 @@ namespace GimnasioJena.UI.Controllers
                     )
                 );
 
-                TempData["MensajeExito"] =
-                    resultado.mensaje;
+                TempData["MensajeExito"] = resultadoGenerar.fueExitosa
+                    ? resultado.mensaje + " " + resultadoGenerar.mensaje
+                    : resultado.mensaje;
 
                 return RedirectToAction("Index");
             }
@@ -424,9 +550,7 @@ namespace GimnasioJena.UI.Controllers
 
                 RegistrarBitacoraSegura(
                     "HorarioSemanal",
-                    nuevoEstado
-                        ? "ACTIVAR"
-                        : "DESACTIVAR",
+                    "CAMBIO_ESTADO",
                     idHorario,
                     nuevoEstado
                         ? "Se activó un horario semanal."
@@ -448,7 +572,8 @@ namespace GimnasioJena.UI.Controllers
                 );
 
                 TempData["MensajeError"] =
-                    "No fue posible cambiar el estado de la programación semanal.";
+                    "No fue posible cambiar el estado de la programación semanal: " +
+                    ObtenerMensajeCompleto(ex);
 
                 return RedirectToAction("Index");
             }
@@ -829,6 +954,25 @@ namespace GimnasioJena.UI.Controllers
                 $"entre el {resultado.fechaInicioGenerada:dd/MM/yyyy} " +
                 $"y el {resultado.fechaFinGenerada:dd/MM/yyyy}. " +
                 $"Se omitieron {resultado.clasesOmitidas} clases porque ya existían.";
+        }
+
+        private static string ObtenerMensajeCompleto(Exception ex)
+        {
+            var mensajes = new List<string>();
+            Exception actual = ex;
+
+            while (actual != null)
+            {
+                if (!string.IsNullOrWhiteSpace(actual.Message) &&
+                    !mensajes.Contains(actual.Message))
+                {
+                    mensajes.Add(actual.Message);
+                }
+
+                actual = actual.InnerException;
+            }
+
+            return string.Join(" | ", mensajes);
         }
 
     }

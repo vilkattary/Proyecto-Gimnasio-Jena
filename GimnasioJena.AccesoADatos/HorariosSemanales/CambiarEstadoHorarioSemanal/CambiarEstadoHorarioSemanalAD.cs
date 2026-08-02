@@ -2,6 +2,9 @@
     .HorariosSemanales.CambiarEstadoHorarioSemanal;
 using GimnasioJena.AccesoADatos.Entidades.HorariosSemanales;
 using System;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Linq;
 
 namespace GimnasioJena.AccesoADatos.HorariosSemanales
     .CambiarEstadoHorarioSemanal
@@ -37,7 +40,40 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales
             horario.fechaModificacion =
                 DateTime.Now;
 
-            _contexto.SaveChanges();
+            try
+            {
+                _contexto.SaveChanges();
+            }
+            catch (DbEntityValidationException exValidacion)
+            {
+                string errores = string.Join(
+                    " | ",
+                    exValidacion.EntityValidationErrors
+                        .SelectMany(e => e.ValidationErrors)
+                        .Select(e => e.PropertyName + ": " + e.ErrorMessage)
+                );
+
+                throw new Exception(
+                    "No fue posible guardar el cambio de estado del horario (validación): " +
+                    errores,
+                    exValidacion
+                );
+            }
+            catch (DbUpdateException ex)
+            {
+                Exception masProfunda = ex;
+
+                while (masProfunda.InnerException != null)
+                {
+                    masProfunda = masProfunda.InnerException;
+                }
+
+                throw new Exception(
+                    "No fue posible guardar el cambio de estado del horario: " +
+                    masProfunda.Message,
+                    ex
+                );
+            }
 
             return horario.estado;
         }

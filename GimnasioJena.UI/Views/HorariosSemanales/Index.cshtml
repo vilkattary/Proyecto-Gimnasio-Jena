@@ -71,6 +71,8 @@
 
             </div>
 
+            @if (horarios.Any())
+            {
             <div class="horarios-actions">
 
                 <a href="@Url.Action(
@@ -83,17 +85,8 @@
                     Nueva programación
                 </a>
 
-                <a href="@Url.Action(
-                        "GenerarClases",
-                        "HorariosSemanales"
-                    )"
-                   class="btn btn-generar">
-
-                    <i class="bi bi-calendar-plus me-2"></i>
-                    Generar próximas clases
-                </a>
-
             </div>
+            }
         </div>
 
         @if (TempData["MensajeExito"] != null)
@@ -396,6 +389,147 @@
                     <i class="bi bi-plus-circle me-2"></i>
                     Crear primera programación
                 </a>
+
+            </div>
+        }
+
+        @{
+            var clasesUnicas = ViewBag.ClasesUnicas as
+                List<GimnasioJena.Abstracciones.Modelos.Clases.ClaseListadoDto>
+                ?? new List<GimnasioJena.Abstracciones.Modelos.Clases.ClaseListadoDto>();
+        }
+
+        @if (clasesUnicas.Any())
+        {
+            <div class="alerta-programacion mt-4">
+                <i class="bi bi-info-circle-fill me-2 text-accent"></i>
+                Las siguientes clases se registraron como <strong>clases únicas</strong>
+                (fecha específica, no recurrentes), por lo que no forman parte de la
+                programación semanal anterior. Para editarlas o verlas en detalle,
+                use la sección
+                @Html.ActionLink("Gestión de Clases", "ObtenerTodasLasClases", "Clases")
+                .
+            </div>
+
+            <div class="dia-card">
+
+                <div class="dia-card-header">
+                    <h2>
+                        <i class="bi bi-calendar-event"></i>
+                        <span>Clases únicas próximas</span>
+                    </h2>
+
+                    <span>
+                        @clasesUnicas.Count
+                        @(clasesUnicas.Count == 1 ? "clase" : "clases")
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table tabla-horarios">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Horario</th>
+                                <th>Clase</th>
+                                <th>Entrenador</th>
+                                <th class="col-mobile-oculto">Cupo</th>
+                                <th class="col-mobile-oculto">Estado</th>
+                                <th class="col-mobile-oculto text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var clase in clasesUnicas)
+                            {
+                                <tr>
+                                    <td>@clase.fechaClase.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @clase.horaInicio.ToString(@"hh\:mm")
+                                        -
+                                        @clase.horaFin.ToString(@"hh\:mm")
+                                    </td>
+                                    <td>@clase.nombreClase</td>
+                                    <td>@clase.nombreEntrenador</td>
+                                    <td class="col-mobile-oculto">@clase.cupoMaximo</td>
+
+                                    <td class="col-mobile-oculto">
+                                        <span class="estado-badge
+                                            @(clase.estadoClase == "Activo"
+                                                ? "estado-activo"
+                                                : "estado-inactivo")">
+
+                                            <i class="bi
+                                                @(clase.estadoClase == "Activo"
+                                                    ? "bi-check-circle-fill"
+                                                    : "bi-x-circle-fill")">
+                                            </i>
+
+                                            @clase.estadoClase
+                                        </span>
+                                    </td>
+                                    <td class="col-mobile-oculto text-end">
+                                        <div class="acciones-horario">
+
+                                            <a href="@Url.Action(
+                    "EditarClase",
+                    "Clases",
+                    new
+                    {
+                        id = clase.idClaseProgramada
+                    }
+                )"
+                                               class="btn-accion"
+                                               title="Editar clase">
+
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+
+                                            @using (
+                                                Html.BeginForm(
+                                                    "CambiarEstado",
+                                                    "Clases",
+                                                    FormMethod.Post,
+                                                    new
+                                                    {
+                                                        @class = "form-cambiar-estado"
+                                                    }
+                                                )
+                                            )
+                                            {
+                                                @Html.AntiForgeryToken()
+
+                                                @Html.Hidden(
+                                                    "idClaseProgramada",
+                                                    clase.idClaseProgramada
+                                                )
+
+                                                @Html.Hidden(
+                                                    "returnUrl",
+                                                    Url.Action("Index", "HorariosSemanales")
+                                                )
+
+                                                <button type="submit"
+                                                        class="btn-accion estado"
+                                                        title="@(clase.estadoClase == "Activo"
+                    ? "Desactivar clase"
+                    : "Activar clase")">
+
+                                                    <i class="bi
+                    @(clase.estadoClase == "Activo"
+                        ? "bi-toggle-on"
+                        : "bi-toggle-off")">
+                                                    </i>
+
+                                                </button>
+                                            }
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
         }

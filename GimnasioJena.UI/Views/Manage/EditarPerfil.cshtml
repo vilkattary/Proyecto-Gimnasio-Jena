@@ -4,143 +4,292 @@
     ViewBag.Title = "Editar perfil";
 }
 
-<section class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
+<div class="container-fluid p-4">
 
-            <div class="card-jena-info card-top-accent">
-                <div class="card-body p-4">
+    <div class="text-center mb-5 desktop-page-title">
+        <h1 class="page-title">Editar Perfil</h1>
+    </div>
 
-                    <h1 class="page-title">
-                        Editar perfil
-                    </h1>
+    @using (Html.BeginForm("EditarPerfil", "Manage", FormMethod.Post, new { enctype = "multipart/form-data", id = "form-editar-perfil" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.idUsuario)
+        @Html.HiddenFor(m => m.identityUserId)
+        @Html.HiddenFor(m => m.fotoPerfil)
+        @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
 
-                    @using (Html.BeginForm("EditarPerfil", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        @Html.AntiForgeryToken()
+        <div class="row g-4 justify-content-center">
 
-                        @Html.HiddenFor(m => m.idUsuario)
-                        @Html.HiddenFor(m => m.identityUserId)
-                        @Html.HiddenFor(m => m.fotoPerfil)
+            @* Columna foto de perfil *@
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="info-card text-center">
+                    <h2 class="info-card-section-title mb-4">
+                        <i class="bi bi-person-circle me-2"></i>Foto de perfil
+                    </h2>
 
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
-
-                        <div class="row g-3">
-
-                            <div class="col-md-6">
-                                @Html.LabelFor(m => m.nombre, new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.nombre, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.nombre, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6">
-                                @Html.LabelFor(m => m.apellido1, new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.apellido1, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.apellido1, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6">
-                                @Html.LabelFor(m => m.apellido2, new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.apellido2, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.apellido2, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6">
-                                @Html.LabelFor(m => m.telefono, new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.telefono, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.telefono, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-12">
-                                @Html.LabelFor(m => m.direccion, new { @class = "form-label" })
-                                @Html.TextAreaFor(m => m.direccion, new
-                                {
-                                    @class = "form-control",
-                                    rows = "3",
-                                    placeholder = "Ingrese su dirección"
-                                })
-                                @Html.ValidationMessageFor(m => m.direccion, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-12">
-                                @Html.LabelFor(m => m.archivoFotoPerfil, new { @class = "form-label" })
-
-                                @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
-                                {
-                                    <div class="mb-2">
-                                        <img src="@Url.Content(Model.fotoPerfil)"
-                                             class="rounded-circle avatar-profile" />
-                                    </div>
-                                }
-
-                                <input type="file"
-                                       name="archivoFotoPerfil"
-                                       class="form-control"
-                                       accept=".jpg,.jpeg,.png,.webp" />
-
-                                <small class="text-muted">
-                                    Formatos permitidos: JPG, JPEG, PNG o WEBP.
-                                </small>
-
-                                @Html.ValidationMessageFor(m => m.archivoFotoPerfil, "", new { @class = "text-danger d-block" })
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Correo electrónico</label>
-                                <input type="text"
-                                       class="form-control"
-                                       value="@Model.correo"
-                                       readonly />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Identificación</label>
-                                <input type="text"
-                                       class="form-control"
-                                       value="@Model.identificacion"
-                                       readonly />
-                            </div>
-
-                        </div>
-
-                        <div class="d-flex gap-2 mt-4">
-                            <button type="submit" class="btn btn-action">
-                                Guardar cambios
-                            </button>
-
-                            <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
-                                <i class="bi bi-key me-1"></i>
-                                Cambiar contraseña
-                            </a>
-
-                            @if (User.IsInRole("CLIENTE"))
+                    <div class="d-flex justify-content-center mb-3">
+                        <div id="avatar-preview-wrapper">
+                            @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
                             {
-                                <a href="@Url.Action("MiPerfil", "Clientes")" class="btn btn-outline-gym">
-                                    Cancelar
-                                </a>
-                            }
-                            else if (User.IsInRole("ENTRENADOR"))
-                            {
-                                <a href="@Url.Action("Index", "Entrenadores")" class="btn btn-outline-gym">
-                                    Cancelar
-                                </a>
+                                <img id="avatar-preview"
+                                     src="@Url.Content(Model.fotoPerfil)"
+                                     class="profile-avatar mx-auto img-cover" />
                             }
                             else
                             {
-                                <a href="@Url.Action("Index", "Manage")" class="btn btn-outline-gym">
-                                    Cancelar
-                                </a>
+                                <div id="avatar-preview" class="profile-avatar mx-auto">
+                                    <span class="initials">
+                                        @Model.nombre.Substring(0, 1)@Model.apellido1.Substring(0, 1)
+                                    </span>
+                                </div>
                             }
                         </div>
-                    }
+                    </div>
 
+                    <label class="form-label fw-semibold">Cambiar foto</label>
+                    <input type="file"
+                           id="archivoFotoPerfil"
+                           name="archivoFotoPerfil"
+                           class="form-control"
+                           accept=".jpg,.jpeg,.png,.webp" />
+                    <small class="text-muted d-block mt-1">JPG, JPEG, PNG o WEBP</small>
+                    @Html.ValidationMessageFor(m => m.archivoFotoPerfil, "", new { @class = "text-danger d-block mt-1" })
+                </div>
+            </div>
+
+            @* Columna datos personales *@
+            <div class="col-12 col-md-8 col-lg-7">
+                <div class="info-card">
+                    <h2 class="info-card-section-title mb-4">
+                        <i class="bi bi-person-lines-fill me-2"></i>Datos personales
+                    </h2>
+
+                    <div class="row g-3">
+
+                        <div class="col-12 col-sm-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-person me-1 text-jena-orange"></i>Nombre
+                            </label>
+                            @Html.TextBoxFor(m => m.nombre, new { @class = "form-control", placeholder = "Nombre" })
+                            @Html.ValidationMessageFor(m => m.nombre, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-person me-1 text-jena-orange"></i>Primer apellido
+                            </label>
+                            @Html.TextBoxFor(m => m.apellido1, new { @class = "form-control", placeholder = "Primer apellido" })
+                            @Html.ValidationMessageFor(m => m.apellido1, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-person me-1 text-jena-orange"></i>Segundo apellido
+                            </label>
+                            @Html.TextBoxFor(m => m.apellido2, new { @class = "form-control", placeholder = "Segundo apellido" })
+                            @Html.ValidationMessageFor(m => m.apellido2, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-telephone me-1 text-jena-orange"></i>Teléfono
+                            </label>
+                            @Html.TextBoxFor(m => m.telefono, new { @class = "form-control", placeholder = "Teléfono" })
+                            @Html.ValidationMessageFor(m => m.telefono, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-geo-alt me-1 text-jena-orange"></i>Dirección
+                            </label>
+                            @Html.TextAreaFor(m => m.direccion, new { @class = "form-control", rows = "2", placeholder = "Dirección" })
+                            @Html.ValidationMessageFor(m => m.direccion, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-envelope me-1 text-jena-orange"></i>Correo electrónico
+                            </label>
+                            <input type="text" class="form-control editar-perfil-readonly"
+                                   value="@Model.correo" readonly />
+                            <small class="text-muted">No editable</small>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-card-text me-1 text-jena-orange"></i>Identificación
+                            </label>
+                            <input type="text" class="form-control editar-perfil-readonly"
+                                   value="@Model.identificacion" readonly />
+                            <small class="text-muted">No editable</small>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
         </div>
+
+        @* Barra de acciones *@
+        <div class="editar-perfil-actions mt-4">
+            <button type="submit" class="btn-action">
+                <i class="bi bi-check-circle"></i>
+                Guardar cambios
+            </button>
+
+            <a href="@Url.Action("ChangePassword", "Manage")"
+               id="btn-abrir-cambiar-password"
+               class="btn-action"
+               data-modal-target="modal-change-password">
+                <i class="bi bi-key"></i>
+                Cambiar contraseña
+            </a>
+
+            @if (User.IsInRole("CLIENTE"))
+            {
+                <a href="@Url.Action("MiPerfil", "Clientes")" class="btn-action editar-perfil-cancel">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+            }
+            else if (User.IsInRole("ENTRENADOR"))
+            {
+                <a href="@Url.Action("Index", "Entrenadores")" class="btn-action editar-perfil-cancel">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Manage")" class="btn-action editar-perfil-cancel">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+            }
+        </div>
+    }
+
+</div>
+
+@* ===== MODAL CAMBIAR CONTRASEÑA ===== *@
+<div id="modal-change-password" class="modal-jena-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-cp-title" hidden>
+    <div class="modal-jena-box">
+        <div class="modal-jena-header">
+            <h2 id="modal-cp-title" class="info-card-section-title mb-0">
+                <i class="bi bi-shield-lock me-2"></i>Cambiar contraseña
+            </h2>
+            <button type="button" class="modal-jena-close" id="btn-cerrar-modal-cp" aria-label="Cerrar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="modal-jena-body">
+            @Html.Partial("_ChangePasswordPartial", new GimnasioJena.UI.Models.ChangePasswordViewModel())
+            <div class="modal-jena-footer-inline mt-4">
+                <button type="submit" form="form-change-password" class="btn-action" id="btn-submit-cp">
+                    <i class="bi bi-shield-check"></i>
+                    Cambiar contraseña
+                </button>
+                <button type="button" class="btn-action editar-perfil-cancel" id="btn-cancelar-modal-cp">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
     </div>
-</section>
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        // ── Preview foto de perfil ──────────────────────────────────────────
+        document.getElementById('archivoFotoPerfil').addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                var wrapper = document.getElementById('avatar-preview-wrapper');
+                wrapper.innerHTML = '<img id="avatar-preview" src="' + ev.target.result + '" class="profile-avatar mx-auto img-cover" />';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ── Modal cambiar contraseña ────────────────────────────────────────
+        var modal     = document.getElementById('modal-change-password');
+        var btnOpen   = document.getElementById('btn-abrir-cambiar-password');
+        var btnClose  = document.getElementById('btn-cerrar-modal-cp');
+        var btnCancel = document.getElementById('btn-cancelar-modal-cp');
+
+        function abrirModal() {
+            modal.removeAttribute('hidden');
+            document.body.classList.add('modal-jena-open');
+        }
+
+        function cerrarModal() {
+            modal.setAttribute('hidden', '');
+            document.body.classList.remove('modal-jena-open');
+            // Limpia los campos y errores al cerrar
+            document.getElementById('form-change-password').reset();
+            $('#form-change-password').find('.text-danger').text('');
+        }
+
+        btnOpen.addEventListener('click', function (e) {
+            e.preventDefault();
+            abrirModal();
+        });
+
+        btnClose.addEventListener('click', cerrarModal);
+        btnCancel.addEventListener('click', cerrarModal);
+
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) cerrarModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !modal.hasAttribute('hidden')) cerrarModal();
+        });
+
+        // ── Submit AJAX ─────────────────────────────────────────────────────
+        $('#form-change-password').on('submit', function (e) {
+            e.preventDefault();
+            if (!$(this).valid()) return;
+
+            var btn = document.getElementById('btn-submit-cp');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Guardando...';
+
+            $.ajax({
+                url: '@Url.Action("ChangePassword", "Manage")',
+                type: 'POST',
+                data: $(this).serialize(),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                success: function (response) {
+                    if (response && response.success) {
+                        cerrarModal();
+                        var alertEl = document.createElement('div');
+                        alertEl.className = 'alert alert-success text-center mt-3';
+                        alertEl.innerHTML = '<i class="bi bi-check-circle me-2"></i>' + response.message;
+                        document.querySelector('.editar-perfil-actions').insertAdjacentElement('afterend', alertEl);
+                        setTimeout(function () { alertEl.remove(); }, 4000);
+                    } else {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="bi bi-shield-check"></i> Cambiar contraseña';
+                    }
+                },
+                error: function (xhr) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-shield-check"></i> Cambiar contraseña';
+                    // Muestra errores de validación del servidor dentro del modal
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        var summary = $('#form-change-password .validation-summary-errors');
+                        if (summary.length) {
+                            summary.show().find('ul').html('');
+                            $.each(xhr.responseJSON.errors, function (i, msg) {
+                                summary.find('ul').append('<li>' + msg + '</li>');
+                            });
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 }
