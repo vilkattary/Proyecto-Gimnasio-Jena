@@ -21,45 +21,56 @@
         else
         {
             <!-- FILTROS -->
-            <div class="row g-2 mb-3 align-items-end">
-                <div class="col-md-4">
-                    <label class="form-label">Usuario</label>
-                    <select id="filterUsuario" class="form-select">
-                        <option value="">Todos</option>
-                        @{
-                            var usuarios = Model.Select(x => x.nombreUsuario ?? "").Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderBy(s => s);
-                            foreach (var u in usuarios)
-                            {
-                                <option value="@u">@u</option>
-                            }
-                        }
-                    </select>
-                </div>
+    <div class="row g-2 mb-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Usuario</label>
+            <select id="filterUsuario" class="form-select">
+                <option value="">Todos</option>
+                @{
+                    var usuarios = Model.Select(x => x.nombreUsuario ?? "").Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderBy(s => s);
+                    foreach (var u in usuarios)
+                    {
+                        <option value="@u">@u</option>
+                    }
+                }
+            </select>
+        </div>
 
-                <div class="col-md-3">
-                    <label class="form-label">Acción</label>
-                    <select id="filterAccion" class="form-select">
-                        <option value="">Todas</option>
-                        @{
-                            var acciones = Model.Select(x => x.accionRealizada ?? "").Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderBy(s => s);
-                            foreach (var a in acciones)
-                            {
-                                <option value="@a">@a</option>
-                            }
-                        }
-                    </select>
-                </div>
+        <div class="col-md-3">
+            <label class="form-label">Acción</label>
+            <select id="filterAccion" class="form-select">
+                <option value="">Todas</option>
+                @{
+                    var acciones = Model.Select(x => x.accionRealizada ?? "").Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderBy(s => s);
+                    foreach (var a in acciones)
+                    {
+                        <option value="@a">@a</option>
+                    }
+                }
+            </select>
+        </div>
 
-                <div class="col-md-5">
-                    <label class="form-label">Fecha (desde / hasta)</label>
-                    <div class="d-flex gap-2">
-                        <input id="filterFechaDesde" type="date" class="form-control" />
-                        <input id="filterFechaHasta" type="date" class="form-control" />
-                        <button id="btnFilterApply" class="btn btn-primary">Aplicar</button>
-                        <button id="btnFilterReset" class="btn btn-outline-secondary">Limpiar</button>
-                    </div>
-                </div>
+        <div class="col-md-6">
+            <label class="form-label">Fecha (desde / hasta)</label>
+
+            <!-- Fechas -->
+            <div class="d-flex gap-2 mb-2">
+                <input id="filterFechaDesde" type="date" class="form-control" />
+                <input id="filterFechaHasta" type="date" class="form-control" />
             </div>
+
+
+        </div>
+        <!-- Botones -->
+        <div class="d-flex justify-content-end gap-2 mt-2">
+            <button id="btnFilterApply" class="btn-orange w-100">
+                Aplicar
+            </button>
+            <button id="btnFilterReset" class="btn-orange w-100">
+                Limpiar
+            </button>
+        </div>
+    </div>
 
             <div class="table-responsive">
                 <table class="table-jena table table-striped">

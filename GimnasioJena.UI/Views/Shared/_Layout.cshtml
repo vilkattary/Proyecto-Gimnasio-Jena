@@ -106,6 +106,12 @@
                                 @Html.ActionLink("Mi membresia", "MiMembresia", "Clientes",
                                     new { area = "" }, new { @class = "nav-link" })
                             </li>
+
+                            <li class="nav-item">
+                                @Html.ActionLink("Reservar Clase", "ObtenerTodasLasClases", "Clases",
+                                    new { area = "" }, new { @class = "nav-link" })
+                            </li>
+
                         }
 
                         if (!User.IsInRole("ENTRENADOR") && !User.IsInRole("CLIENTE"))

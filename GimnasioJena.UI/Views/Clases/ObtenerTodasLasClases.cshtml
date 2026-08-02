@@ -18,7 +18,12 @@
         : "Gestión de Clases";
 }
 
+
 <div class="container py-5">
+    
+    <a href="javascript:history.back()" class="btn btn-volver" aria-label="Volver">
+        <i class="bi bi-arrow-left"></i> Atrás
+    </a>
 
     <!-- Encabezado -->
     <div class="mb-5">
@@ -230,6 +235,7 @@
         </div>
 
     }
+
 
     <!-- Lista de clases -->
     <div id="listaClases" class="@((esVistaCliente || esVistaPublica) ? "d-none" : "")">
@@ -600,119 +606,119 @@
 }
 
 <script>
-(function () {
-    var ITEMS_DESKTOP = 5;
-    var ITEMS_MOBILE  = 1;
-    var paginaActual  = 1;
+    (function () {
+        var ITEMS_DESKTOP = 5;
+        var ITEMS_MOBILE = 1;
+        var paginaActual = 1;
 
-    function getItemsPorPagina() {
-        return window.innerWidth <= 768 ? ITEMS_MOBILE : ITEMS_DESKTOP;
-    }
+        function getItemsPorPagina() {
+            return window.innerWidth <= 768 ? ITEMS_MOBILE : ITEMS_DESKTOP;
+        }
 
-    window.aplicarFiltros = function () {
-        var filtroTipoEl   = document.getElementById('filtroTipo');
-        var filtroEstadoEl = document.getElementById('filtroEstado');
-        var filtroOrdenEl  = document.getElementById('filtroOrden');
+        window.aplicarFiltros = function () {
+            var filtroTipoEl = document.getElementById('filtroTipo');
+            var filtroEstadoEl = document.getElementById('filtroEstado');
+            var filtroOrdenEl = document.getElementById('filtroOrden');
 
-        var tipo   = filtroTipoEl   ? filtroTipoEl.value.toLowerCase()   : '';
-        var estado = filtroEstadoEl ? filtroEstadoEl.value.toLowerCase() : '';
-        var orden  = filtroOrdenEl  ? filtroOrdenEl.value                : '';
+            var tipo = filtroTipoEl ? filtroTipoEl.value.toLowerCase() : '';
+            var estado = filtroEstadoEl ? filtroEstadoEl.value.toLowerCase() : '';
+            var orden = filtroOrdenEl ? filtroOrdenEl.value : '';
 
-        var items = Array.from(document.querySelectorAll('.clase-item'));
+            var items = Array.from(document.querySelectorAll('.clase-item'));
 
-        items.forEach(function (item) {
-            var matchTipo   = !tipo   || item.dataset.tipo.includes(tipo);
-            var matchEstado = !estado || item.dataset.estado === estado;
-            item.dataset.visible = (matchTipo && matchEstado) ? '1' : '0';
-        });
-
-        if (orden) {
-            var contenedor = document.getElementById('listaClases');
-            var vis = items.filter(function (i) { return i.dataset.visible === '1'; });
-            vis.sort(function (a, b) {
-                if (orden === 'instructor') return a.dataset.instructor.localeCompare(b.dataset.instructor);
-                if (orden === 'cupos')      return parseInt(b.dataset.cupos) - parseInt(a.dataset.cupos);
-                return 0;
+            items.forEach(function (item) {
+                var matchTipo = !tipo || item.dataset.tipo.includes(tipo);
+                var matchEstado = !estado || item.dataset.estado === estado;
+                item.dataset.visible = (matchTipo && matchEstado) ? '1' : '0';
             });
-            vis.forEach(function (item) { contenedor.appendChild(item); });
+
+            if (orden) {
+                var contenedor = document.getElementById('listaClases');
+                var vis = items.filter(function (i) { return i.dataset.visible === '1'; });
+                vis.sort(function (a, b) {
+                    if (orden === 'instructor') return a.dataset.instructor.localeCompare(b.dataset.instructor);
+                    if (orden === 'cupos') return parseInt(b.dataset.cupos) - parseInt(a.dataset.cupos);
+                    return 0;
+                });
+                vis.forEach(function (item) { contenedor.appendChild(item); });
+            }
+
+            paginaActual = 1;
+            renderPagina();
+        };
+
+        function renderPagina() {
+            var items = Array.from(document.querySelectorAll('.clase-item'));
+            var visibles = items.filter(function (i) { return i.dataset.visible !== '0'; });
+            var porPagina = getItemsPorPagina();
+            var totalPaginas = Math.max(1, Math.ceil(visibles.length / porPagina));
+
+            if (paginaActual > totalPaginas) { paginaActual = totalPaginas; }
+
+            var inicio = (paginaActual - 1) * porPagina;
+            var fin = inicio + porPagina;
+
+            items.forEach(function (item) { item.style.display = 'none'; });
+            visibles.forEach(function (item, idx) {
+                item.style.display = (idx >= inicio && idx < fin) ? '' : 'none';
+            });
+
+            renderControlesPaginacion(totalPaginas, visibles.length);
         }
 
-        paginaActual = 1;
-        renderPagina();
-    };
+        function renderControlesPaginacion(totalPaginas, totalItems) {
+            var contenedor = document.getElementById('paginacionClases');
+            if (!contenedor) { return; }
 
-    function renderPagina() {
-        var items        = Array.from(document.querySelectorAll('.clase-item'));
-        var visibles     = items.filter(function (i) { return i.dataset.visible !== '0'; });
-        var porPagina    = getItemsPorPagina();
-        var totalPaginas = Math.max(1, Math.ceil(visibles.length / porPagina));
+            if (totalPaginas <= 1) {
+                contenedor.innerHTML = '';
+                return;
+            }
 
-        if (paginaActual > totalPaginas) { paginaActual = totalPaginas; }
+            var html = '<nav aria-label="Paginacion"><ul class="pagination justify-content-center flex-wrap mb-0">';
 
-        var inicio = (paginaActual - 1) * porPagina;
-        var fin    = inicio + porPagina;
-
-        items.forEach(function (item) { item.style.display = 'none'; });
-        visibles.forEach(function (item, idx) {
-            item.style.display = (idx >= inicio && idx < fin) ? '' : 'none';
-        });
-
-        renderControlesPaginacion(totalPaginas, visibles.length);
-    }
-
-    function renderControlesPaginacion(totalPaginas, totalItems) {
-        var contenedor = document.getElementById('paginacionClases');
-        if (!contenedor) { return; }
-
-        if (totalPaginas <= 1) {
-            contenedor.innerHTML = '';
-            return;
-        }
-
-        var html = '<nav aria-label="Paginacion"><ul class="pagination justify-content-center flex-wrap mb-0">';
-
-        html += '<li class="page-item' + (paginaActual === 1 ? ' disabled' : '') + '">' +
+            html += '<li class="page-item' + (paginaActual === 1 ? ' disabled' : '') + '">' +
                 '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + (paginaActual - 1) + ')">' +
                 '<i class="bi bi-chevron-left"></i></a></li>';
 
-        for (var p = 1; p <= totalPaginas; p++) {
-            html += '<li class="page-item' + (p === paginaActual ? ' active' : '') + '">' +
+            for (var p = 1; p <= totalPaginas; p++) {
+                html += '<li class="page-item' + (p === paginaActual ? ' active' : '') + '">' +
                     '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + p + ')">' +
                     p + '</a></li>';
-        }
+            }
 
-        html += '<li class="page-item' + (paginaActual === totalPaginas ? ' disabled' : '') + '">' +
+            html += '<li class="page-item' + (paginaActual === totalPaginas ? ' disabled' : '') + '">' +
                 '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + (paginaActual + 1) + ')">' +
                 '<i class="bi bi-chevron-right"></i></a></li>';
 
-        html += '</ul></nav>';
-        contenedor.innerHTML = html;
-    }
+            html += '</ul></nav>';
+            contenedor.innerHTML = html;
+        }
 
-    window.cambiarPagina = function (pagina) {
-        var items        = Array.from(document.querySelectorAll('.clase-item'));
-        var visibles     = items.filter(function (i) { return i.dataset.visible !== '0'; });
-        var porPagina    = getItemsPorPagina();
-        var totalPaginas = Math.max(1, Math.ceil(visibles.length / porPagina));
-        if (pagina < 1 || pagina > totalPaginas) { return; }
-        paginaActual = pagina;
+        window.cambiarPagina = function (pagina) {
+            var items = Array.from(document.querySelectorAll('.clase-item'));
+            var visibles = items.filter(function (i) { return i.dataset.visible !== '0'; });
+            var porPagina = getItemsPorPagina();
+            var totalPaginas = Math.max(1, Math.ceil(visibles.length / porPagina));
+            if (pagina < 1 || pagina > totalPaginas) { return; }
+            paginaActual = pagina;
+            renderPagina();
+            var lista = document.getElementById('listaClases');
+            if (lista) { lista.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        };
+
+        // Iniciar: el DOM ya está renderizado porque este script está al final del body
+        Array.from(document.querySelectorAll('.clase-item')).forEach(function (item) {
+            item.dataset.visible = '1';
+        });
         renderPagina();
-        var lista = document.getElementById('listaClases');
-        if (lista) { lista.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    };
 
-    // Iniciar: el DOM ya está renderizado porque este script está al final del body
-    Array.from(document.querySelectorAll('.clase-item')).forEach(function (item) {
-        item.dataset.visible = '1';
-    });
-    renderPagina();
-
-    var resizeTimer;
-    window.addEventListener('resize', function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(renderPagina, 150);
-    });
-}());
+        var resizeTimer;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(renderPagina, 150);
+        });
+    }());
 </script>
 
 @if (esVistaCliente || esVistaPublica)
