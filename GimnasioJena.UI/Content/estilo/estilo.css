@@ -1081,7 +1081,7 @@ footer {
     letter-spacing: 1px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(255, 107, 53, 0.15);
-    width: 100%;
+    
     margin-bottom: 15px;
     text-decoration: none;
     display: flex;
@@ -3352,6 +3352,7 @@ section.hero-apex a.btn.btn-apex-primary {
     }
 
 .class-card {
+    display: grid;
     background-color: var(--jena-white);
     border-radius: 20px;
     padding: 2.5rem 2rem;
