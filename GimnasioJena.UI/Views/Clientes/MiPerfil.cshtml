@@ -4,33 +4,32 @@
     ViewBag.Title = "MiPerfil";
 }
 
-<div class="container-fluid p-4">
+<div class="container-fluid p-4 page-mi-perfil">
 
+    @* Solo visible en mobile *@
     <div class="welcome-section">
         @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
         {
             <img src="@Url.Content(Model.fotoPerfil)"
-                 class="rounded-circle avatar-profile-b" />
+                 class="profile-avatar mx-auto img-cover" />
         }
         else
         {
-            <div class="logo-circular">
-                <i class="bi bi-tree"></i>
+            <div class="profile-avatar mx-auto">
                 <span class="initials">
                     @Model.nombre.Substring(0, 1)@Model.apellido1.Substring(0, 1)
                 </span>
+                <div class="verified-badge">
+                    <i class="bi bi-check-lg"></i>
+                </div>
             </div>
         }
-
-        <div class="welcome-text">
-            <h3>Mi Perfil Personal</h3>
-            <div class="info-value">@Model.nombre @Model.apellido1 @Model.apellido2</div>
-            <p>Gestiona tu información y preferencias del gimnasio</p>
-        </div>
+        <h1 class="page-title mt-3">Mi Perfil</h1>
     </div>
 
-    <div class="text-center mb-5">
-        <h2 class="page-title">Mi Perfil</h2>
+    @* Solo visible en desktop *@
+    <div class="text-center mb-5 desktop-page-title">
+        <h1 class="page-title">Mi Perfil</h1>
     </div>
 
     <div class="stats-grid">
@@ -38,9 +37,9 @@
         <div class="stat-card">
             <i class="bi bi-person-check"></i>
 
-            <h3>
+            <h2>
                 @(Model.estado ? "Activo" : "Inactivo")
-            </h3>
+            </h2>
 
             <p>Estado del Perfil</p>
         </div>
@@ -48,7 +47,7 @@
         <div class="stat-card">
             <i class="bi bi-credit-card"></i>
 
-            <h3>
+            <h2>
                 @if (Model.Membresia != null)
                 {
                     @Model.Membresia.estadoMembresia
@@ -57,7 +56,7 @@
                 {
                     @:Sin plan
                 }
-            </h3>
+            </h2>
 
             <p>Estado de Membresía</p>
         </div>
@@ -65,7 +64,7 @@
         <div class="stat-card">
             <i class="bi bi-star-fill"></i>
 
-            <h3>
+            <h2>
                 @if (Model.Membresia != null)
                 {
                     if (!string.IsNullOrWhiteSpace(Model.Membresia.nombrePlan) &&
@@ -87,7 +86,7 @@
                 {
                     @:Ninguna
                 }
-            </h3>
+            </h2>
 
             <p>Plan Actual</p>
         </div>
@@ -156,7 +155,7 @@
             </div>
 
             <div class="description-card">
-                <h5><i class="bi bi-info-circle me-2"></i>Sobre Mí</h5>
+                <h2><i class="bi bi-info-circle me-2"></i>Sobre Mí</h2>
                 <p>
                     Apasionado por el fitness y el bienestar. Disfruto ayudando a otros a alcanzar sus metas.
                     Me especializo en entrenamiento de fuerza y resistencia. Creo firmemente que la constancia
@@ -167,7 +166,7 @@
 
         <div class="col-lg-5">
             <div class="action-buttons-card">
-                <h5><i class="bi bi-lightning-charge me-2"></i>Acciones Rápidas</h5>
+                <h2><i class="bi bi-lightning-charge me-2"></i>Acciones Rápidas</h2>
 
                 <a href="@Url.Action("MiMembresia", "Clientes")" class="btn btn-action">
                     <i class="bi bi-credit-card"></i>
@@ -188,63 +187,6 @@
                     <i class="bi bi-pencil-square"></i>
                     <span>Editar Perfil</span>
                 </a>
-            </div>
-
-            <div class="info-card">
-                <h5 class="text-center mb-3 title-inline-jena">
-                    <i class="bi bi-star-fill text-accent"></i>
-                    Membresía Activa
-                </h5>
-
-                @if (Model.Membresia != null)
-                {
-                    <div class="text-center">
-                        <div class="mb-3">
-                            <span class="title-stat-jena">
-                                @Model.Membresia.nombrePlan
-                            </span>
-                        </div>
-
-                        <div class="info-item justify-content-center btn-borderless">
-                            <i class="bi bi-calendar-event"></i>
-                            <div class="info-content text-center">
-                                <div class="info-label">Estado</div>
-                                <div class="info-value">@Model.Membresia.estadoMembresia</div>
-                            </div>
-                        </div>
-
-                        <div class="info-item justify-content-center btn-borderless">
-                            <i class="bi bi-calendar-check"></i>
-                            <div class="info-content text-center">
-                                <div class="info-label">Válida Hasta</div>
-                                <div class="info-value">@Model.Membresia.fechaFin.ToString("dd/MM/yyyy")</div>
-                            </div>
-                        </div>
-
-                        @if (Model.Membresia.clasesDisponibles.HasValue)
-                        {
-                            <div class="info-item justify-content-center btn-borderless">
-                                <i class="bi bi-activity"></i>
-                                <div class="info-content text-center">
-                                    <div class="info-label">Clases Disponibles</div>
-                                    <div class="info-value">@Model.Membresia.clasesDisponibles</div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <div class="text-center">
-                        <i class="bi bi-x-circle text-jena-sm text-muted-light"></i>
-                        <p class="mt-2 text-gray-999">No tienes una membresía activa.</p>
-
-                        <a href="@Url.Action("Planes", "Home")" class="btn btn-action mt-2">
-                            <i class="bi bi-plus-circle"></i>
-                            <span>Ver Planes</span>
-                        </a>
-                    </div>
-                }
             </div>
         </div>
     </div>

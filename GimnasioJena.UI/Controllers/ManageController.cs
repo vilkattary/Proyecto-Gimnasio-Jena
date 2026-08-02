@@ -344,15 +344,27 @@ namespace GimnasioJena.UI.Controllers
         }
 
         //
+        // GET: /Manage/ChangePasswordPartial  (para modal AJAX)
+        public ActionResult ChangePasswordPartial()
+        {
+            return PartialView("_ChangePasswordPartial", new ChangePasswordViewModel());
+        }
+
+        //
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
+            bool isAjax = Request.IsAjaxRequest();
+
             if (!ModelState.IsValid)
             {
+                if (isAjax)
+                    return PartialView("_ChangePasswordPartial", model);
                 return View(model);
             }
+
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
@@ -361,13 +373,22 @@ namespace GimnasioJena.UI.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
+
+                if (isAjax)
+                    return Json(new { success = true, message = "Contraseña actualizada correctamente." });
+
                 if (User.IsInRole("CLIENTE"))
                     return RedirectToAction("MiPerfil", "Clientes");
                 if (User.IsInRole("ENTRENADOR"))
                     return RedirectToAction("Index", "Entrenadores");
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
+
             AddErrors(result);
+
+            if (isAjax)
+                return PartialView("_ChangePasswordPartial", model);
+
             return View(model);
         }
 
