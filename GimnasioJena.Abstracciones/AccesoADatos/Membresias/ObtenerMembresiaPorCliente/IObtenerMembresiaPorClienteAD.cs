@@ -5,5 +5,7 @@ namespace GimnasioJena.Abstracciones.AccesoADatos.Membresias.ObtenerMembresiaPor
     public interface IObtenerMembresiaPorClienteAD
     {
         MembresiaClienteDto ObtenerMembresiaActivaPorCliente(int idUsuario);
+
+        MembresiaClienteDto ObtenerUltimaMembresiaPorCliente(int idUsuario);
     }
 }

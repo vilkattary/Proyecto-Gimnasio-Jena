@@ -81,6 +81,9 @@ namespace GimnasioJena.AccesoADatos.Membresias.ObtenerMembresiaPorId
                      nombrePlan =
                          p.nombrePlan,
 
+                     idPlanMembresia =
+                         m.idPlanMembresia,
+
                      estadoMembresia =
                          m.idEstadoMembresia == 1 &&
                          m.fechaFin < hoy

@@ -1,0 +1,297 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Membresias.OperacionMembresiaDto
+
+@{
+    ViewBag.Title = "Confirmar membresía";
+}
+
+<style>
+    .confirmacion-container {
+        max-width: 850px;
+        margin: 0 auto;
+    }
+
+    .confirmacion-card {
+        background-color: #ffffff;
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .confirmacion-header {
+        background-color: #2C3E50;
+        color: #ffffff;
+        padding: 28px;
+    }
+
+        .confirmacion-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .confirmacion-header p {
+            margin: 8px 0 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+    .confirmacion-body {
+        padding: 30px;
+    }
+
+    .tipo-operacion {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 20px;
+        background-color: #FFF1EB;
+        color: #D95F31;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+    .detalle-fila {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 14px 0;
+        border-bottom: 1px solid #E9ECEF;
+    }
+
+    .detalle-etiqueta {
+        color: #6C757D;
+        font-weight: 600;
+    }
+
+    .detalle-valor {
+        color: #2C3E50;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    .precio-total {
+        margin-top: 24px;
+        padding: 20px;
+        border-radius: 14px;
+        background-color: #F8F9FA;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .precio-total span {
+            color: #2C3E50;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .precio-total strong {
+            color: #FF6B35;
+            font-size: 28px;
+        }
+
+    .descripcion-plan {
+        margin-top: 22px;
+        padding: 16px;
+        border-left: 4px solid #FF6B35;
+        background-color: #FFF8F5;
+        color: #495057;
+        border-radius: 6px;
+    }
+
+    .acciones-confirmacion {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 28px;
+        flex-wrap: wrap;
+    }
+
+    .btn-volver {
+        border: 1px solid #6C757D;
+        color: #495057;
+        background-color: #ffffff;
+        padding: 10px 22px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .btn-volver:hover {
+            background-color: #F1F3F5;
+            color: #2C3E50;
+            text-decoration: none;
+        }
+
+    .btn-continuar {
+        border: none;
+        color: #ffffff;
+        background-color: #FF6B35;
+        padding: 10px 24px;
+        border-radius: 9px;
+        font-weight: 700;
+    }
+
+        .btn-continuar:hover {
+            background-color: #D95F31;
+        }
+
+    .nota-seguridad {
+        margin-top: 18px;
+        color: #6C757D;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    @@media (max-width: 576px) {
+        .confirmacion-body {
+            padding: 22px;
+        }
+
+        .detalle-fila {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detalle-valor {
+            text-align: left;
+        }
+
+        .precio-total {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .acciones-confirmacion {
+            flex-direction: column-reverse;
+        }
+
+        .btn-volver,
+        .btn-continuar {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<section class="container py-5">
+    <div class="confirmacion-container">
+
+        <div class="confirmacion-card shadow-sm">
+
+            <div class="confirmacion-header">
+                <h2>Confirmar membresía</h2>
+
+                <p>
+                    Revisa los datos de la operación antes de continuar.
+                </p>
+            </div>
+
+            <div class="confirmacion-body">
+
+                <span class="tipo-operacion">
+                    @Model.tipoOperacion
+                </span>
+
+                <div class="detalle-fila">
+                    <span class="detalle-etiqueta">
+                        Plan seleccionado
+                    </span>
+
+                    <span class="detalle-valor">
+                        @Model.nombrePlan
+                    </span>
+                </div>
+
+                <div class="detalle-fila">
+                    <span class="detalle-etiqueta">
+                        Duración
+                    </span>
+
+                    <span class="detalle-valor">
+                        @Model.duracionDias días
+                    </span>
+                </div>
+
+                <div class="detalle-fila">
+                    <span class="detalle-etiqueta">
+                        Clases incluidas
+                    </span>
+
+                    <span class="detalle-valor">
+                        @if (Model.clasesAsignadas.HasValue)
+                        {
+                            @Model.clasesAsignadas.Value
+                        }
+                        else
+                        {
+                            <text>Ilimitadas</text>
+                        }
+                    </span>
+                </div>
+
+                <div class="detalle-fila">
+                    <span class="detalle-etiqueta">
+                        Fecha de inicio
+                    </span>
+
+                    <span class="detalle-valor">
+                        @Model.fechaInicioPropuesta.ToString("dd/MM/yyyy")
+                    </span>
+                </div>
+
+                <div class="detalle-fila">
+                    <span class="detalle-etiqueta">
+                        Fecha de finalización
+                    </span>
+
+                    <span class="detalle-valor">
+                        @Model.fechaFinPropuesta.ToString("dd/MM/yyyy")
+                    </span>
+                </div>
+
+                <div class="descripcion-plan">
+                    @Model.descripcionPlan
+                </div>
+
+                <div class="precio-total">
+                    <span>Total a pagar</span>
+
+                    <strong>
+                        ₡@Model.precio.ToString("N2")
+                    </strong>
+                </div>
+
+                <div class="acciones-confirmacion">
+
+                    <a href="@Url.Action("MiMembresia", "Clientes")"
+                       class="btn-volver">
+                        Volver
+                    </a>
+
+                    @using (Html.BeginForm(
+                        "IniciarPago",
+                        "Clientes",
+                        FormMethod.Post,
+                        new { @class = "d-inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(modelo => modelo.idPlan)
+
+                        <button type="submit"
+                                class="btn-continuar">
+                            Continuar con el pago
+                        </button>
+                    }
+
+                </div>
+
+                <div class="nota-seguridad">
+                    El precio y las condiciones del plan fueron verificados
+                    directamente por el sistema.
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
