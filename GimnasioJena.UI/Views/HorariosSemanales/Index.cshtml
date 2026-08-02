@@ -71,6 +71,8 @@
 
             </div>
 
+            @if (horarios.Any())
+            {
             <div class="horarios-actions">
 
                 <a href="@Url.Action(
@@ -94,6 +96,7 @@
                 </a>
 
             </div>
+            }
         </div>
 
         @if (TempData["MensajeExito"] != null)

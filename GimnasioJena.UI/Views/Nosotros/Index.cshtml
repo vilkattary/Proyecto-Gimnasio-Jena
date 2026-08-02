@@ -22,6 +22,22 @@
     var nosotrosImagenUrl = nosotrosImagen.StartsWith("http") ? nosotrosImagen : Url.Content(nosotrosImagen);
 }
 
+@if (header != null)
+{
+    <section class="hero-nosotros" style="background-image: url('@nosotrosImagenUrl');">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content text-center">
+            @if (!string.IsNullOrEmpty(header.TextoSecundario))
+            {
+                <span class="hero-subtitle">@header.TextoSecundario</span>
+            }
+            @if (!string.IsNullOrEmpty(header.TextoPrincipal))
+            {
+                <h1 class="hero-title">@header.TextoPrincipal</h1>
+            }
+        </div>
+    </section>
+}
 
 <!-- ═══════════════════ NUESTRA HISTORIA ═══════════════════ -->
 @if (historia1 != null)
@@ -52,41 +68,11 @@
     </section>
 }
 
-<!-- ═══════════════════ ESTADÍSTICAS ═══════════════════ -->
-@if (stats.Any())
-{
-    <section class="stats-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                @foreach (var stat in stats)
-                {
-                    if (!stat.Estado) { continue; }
-                    <div class="col-lg-4 col-md-4 col-sm-12">
-                        <div class="stat-item">
-                            @if (!string.IsNullOrEmpty(stat.UrlImagen))
-                            {
-                                <div class="stat-icon"><i class="bi @stat.UrlImagen"></i></div>
-                            }
-                            <div class="stat-number">@stat.TextoPrincipal</div>
-                            <div class="stat-label">@stat.TextoSecundario</div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </section>
-}
-
 <!-- ═══════════════════ MISIÓN Y VISIÓN ═══════════════════ -->
 @if (misionVision.Any())
 {
     <section class="mision-vision-section">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="heading-nosotros-lg">
-                    Misión &amp; Visión
-                </h2>
-            </div>
             <div class="row g-4 justify-content-center">
                 @foreach (var item in misionVision)
                 {
@@ -131,6 +117,31 @@
                             </div>
                             <h4>@valor.TextoPrincipal</h4>
                             <p>@valor.TextoSecundario</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ═══════════════════ ESTADÍSTICAS ═══════════════════ -->
+@if (stats.Any())
+{
+    <section class="stats-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                @foreach (var stat in stats)
+                {
+                    if (!stat.Estado) { continue; }
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="stat-item">
+                            @if (!string.IsNullOrEmpty(stat.UrlImagen))
+                            {
+                                <div class="stat-icon"><i class="bi @stat.UrlImagen"></i></div>
+                            }
+                            <div class="stat-number">@stat.TextoPrincipal</div>
+                            <div class="stat-label">@stat.TextoSecundario</div>
                         </div>
                     </div>
                 }
