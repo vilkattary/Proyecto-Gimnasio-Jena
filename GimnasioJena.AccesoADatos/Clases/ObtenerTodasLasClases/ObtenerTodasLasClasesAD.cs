@@ -63,7 +63,8 @@ namespace GimnasioJena.AccesoADatos.Clases.ObtenerTodasLasClases
                          observaciones = clase.observaciones,
 
                          fechaCreacion = clase.fechaCreacion,
-                         fechaModificacion = clase.fechaModificacion
+                         fechaModificacion = clase.fechaModificacion,
+                         idHorario = clase.idHorario
                      }).ToList();
 
                 return listaDeClases;

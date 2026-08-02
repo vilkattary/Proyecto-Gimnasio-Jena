@@ -211,6 +211,105 @@ namespace GimnasioJena.UI.Controllers
             }
         }
 
+        // Reserva desde el calendario (AJAX, sin recargar la pagina)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "CLIENTE")]
+        public JsonResult ReservarAjax(int idClaseProgramada)
+        {
+            using (var contexto = new Contexto())
+            {
+                var identityUserId = User.Identity.GetUserId();
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                if (usuario == null)
+                {
+                    return Json(new { exito = false, mensaje = "No se encontro el usuario actual." });
+                }
+
+                var modelo = new ReservaCrearDto
+                {
+                    idClaseProgramada = idClaseProgramada,
+                    idUsuario = usuario.idUsuario,
+                    idEstadoReserva = 1
+                };
+
+                var resultado = _registrarReservaServicio.RegistrarReserva(modelo);
+
+                if (resultado.fueExitosa)
+                {
+                    RegistrarBitacora(
+                        "Reserva",
+                        "INSERT",
+                        idClaseProgramada,
+                        "El cliente " + usuario.idUsuario + " reservo la clase " + idClaseProgramada + " desde el calendario"
+                    );
+                }
+
+                int idReservaActiva = 0;
+                if (resultado.fueExitosa)
+                {
+                    idReservaActiva = contexto.Reservas
+                        .Where(r => r.idClaseProgramada == idClaseProgramada
+                            && r.idUsuario == usuario.idUsuario
+                            && r.idEstadoReserva == 1)
+                        .OrderByDescending(r => r.idReserva)
+                        .Select(r => r.idReserva)
+                        .FirstOrDefault();
+                }
+
+                return Json(new
+                {
+                    exito = resultado.fueExitosa,
+                    mensaje = resultado.mensaje,
+                    idReservaActiva
+                });
+            }
+        }
+
+        // Cancelacion desde el calendario (AJAX, sin recargar la pagina)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "CLIENTE")]
+        public JsonResult CancelarAjax(int idReserva)
+        {
+            var identityUserId = User.Identity.GetUserId();
+
+            using (var contexto = new Contexto())
+            {
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                if (usuario == null)
+                {
+                    return Json(new { exito = false, mensaje = "No se encontro el usuario actual." });
+                }
+
+                var dto = new ReservaCancelarDto
+                {
+                    idReserva = idReserva,
+                    motivoCancelacion = "Cancelacion desde el calendario"
+                };
+
+                bool ok = _cancelarReservaServicio.CancelarReserva(dto, usuario.idUsuario);
+
+                if (ok)
+                {
+                    RegistrarBitacora(
+                        "Reserva",
+                        "UPDATE",
+                        idReserva,
+                        "El cliente " + usuario.idUsuario + " cancelo la reserva " + idReserva + " desde el calendario"
+                    );
+
+                    return Json(new { exito = true, mensaje = "Reserva cancelada correctamente." });
+                }
+
+                return Json(new { exito = false, mensaje = "No se pudo cancelar la reserva." });
+            }
+        }
+
         private int? ObtenerIdUsuarioActual()
         {
             var identityUserId = User.Identity.GetUserId();
