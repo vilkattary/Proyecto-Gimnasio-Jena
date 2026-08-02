@@ -20,8 +20,49 @@
         }
         else
         {
+            <!-- FILTROS -->
+            <div class="row g-2 mb-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Usuario</label>
+                    <select id="filterUsuario" class="form-select">
+                        <option value="">Todos</option>
+                        @{
+                            var usuarios = Model.Select(x => x.nombreUsuario ?? "").Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderBy(s => s);
+                            foreach (var u in usuarios)
+                            {
+                                <option value="@u">@u</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Acción</label>
+                    <select id="filterAccion" class="form-select">
+                        <option value="">Todas</option>
+                        @{
+                            var acciones = Model.Select(x => x.accionRealizada ?? "").Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderBy(s => s);
+                            foreach (var a in acciones)
+                            {
+                                <option value="@a">@a</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label">Fecha (desde / hasta)</label>
+                    <div class="d-flex gap-2">
+                        <input id="filterFechaDesde" type="date" class="form-control" />
+                        <input id="filterFechaHasta" type="date" class="form-control" />
+                        <button id="btnFilterApply" class="btn btn-primary">Aplicar</button>
+                        <button id="btnFilterReset" class="btn btn-outline-secondary">Limpiar</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="table-responsive">
-                <table class="table-jena">
+                <table class="table-jena table table-striped">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -36,9 +77,12 @@
                     <tbody id="cuerpoTablaBitacora">
                         @foreach (var b in Model)
                         {
-                            <tr>
+                            var usuarioSafe = b.nombreUsuario ?? "";
+                            var accionSafe = b.accionRealizada ?? "";
+                            var fechaIso = b.fechaAccion.ToString("yyyy-MM-ddTHH:mm:ss");
+                            <tr data-user="@usuarioSafe" data-action="@accionSafe" data-fecha="@fechaIso" data-filtered="false">
                                 <td>@b.idBitacora</td>
-                                <td>@b.nombreUsuario</td>
+                                <td>@usuarioSafe</td>
                                 <td>@b.tablaAfectada</td>
                                 <td>
                                     @if (b.accionRealizada == "CREAR")
@@ -79,20 +123,23 @@
 
 @section Scripts {
 <script>
-    /* ── Paginación mobile – Bitácora ───────────────────────── */
     (function () {
+        /* ── Paginación + Filtros mobile – Bitácora ───────────────────────── */
         var POR_PAGINA = 5;
         var paginaActual = 1;
 
         function esMobile() { return window.innerWidth < 768; }
 
+        // filas consideradas por paginación: solo aquellas que no están filtradas
         function filas() {
-            return Array.from(document.querySelectorAll('#cuerpoTablaBitacora tr'));
+            return Array.from(document.querySelectorAll('#cuerpoTablaBitacora tr')).filter(function (r) {
+                return r.dataset.filtered !== 'true';
+            });
         }
 
         function renderPaginacion(totalPaginas) {
             var container = document.getElementById('paginacion-mobile-bitacora');
-            var info      = document.getElementById('paginacionInfoBitacora');
+            var info = document.getElementById('paginacionInfoBitacora');
             if (!container) return;
 
             if (!esMobile() || totalPaginas <= 1) {
@@ -111,17 +158,17 @@
             var html = '<ul class="pagination-jena">';
 
             html += '<li class="page-jena-item' + (paginaActual === 1 ? ' disabled' : '') + '">'
-                  + '<button class="page-jena-btn" data-p="' + (paginaActual - 1) + '" aria-label="Anterior">'
-                  + '<i class="bi bi-chevron-left"></i></button></li>';
+                + '<button class="page-jena-btn" data-p="' + (paginaActual - 1) + '" aria-label="Anterior">'
+                + '<i class="bi bi-chevron-left"></i></button></li>';
 
             for (var i = 1; i <= totalPaginas; i++) {
                 html += '<li class="page-jena-item' + (i === paginaActual ? ' active' : '') + '">'
-                      + '<button class="page-jena-btn" data-p="' + i + '">' + i + '</button></li>';
+                    + '<button class="page-jena-btn" data-p="' + i + '">' + i + '</button></li>';
             }
 
             html += '<li class="page-jena-item' + (paginaActual === totalPaginas ? ' disabled' : '') + '">'
-                  + '<button class="page-jena-btn" data-p="' + (paginaActual + 1) + '" aria-label="Siguiente">'
-                  + '<i class="bi bi-chevron-right"></i></button></li>';
+                + '<button class="page-jena-btn" data-p="' + (paginaActual + 1) + '" aria-label="Siguiente">'
+                + '<i class="bi bi-chevron-right"></i></button></li>';
 
             html += '</ul>';
             container.innerHTML = html;
@@ -135,18 +182,26 @@
         }
 
         function irAPagina(p) {
-            var total = Math.ceil(filas().length / POR_PAGINA);
+            var total = Math.ceil(filas().length / POR_PAGINA) || 1;
             if (p < 1 || p > total) return;
             paginaActual = p;
             aplicar();
         }
 
         function aplicar() {
-            var rows  = filas();
-            var total = Math.ceil(rows.length / POR_PAGINA);
+            var allRows = Array.from(document.querySelectorAll('#cuerpoTablaBitacora tr'));
+            var visibleRows = filas();
+            var total = Math.ceil(visibleRows.length / POR_PAGINA) || 1;
 
             if (!esMobile()) {
-                rows.forEach(function (r) { r.style.display = ''; });
+                // en desktop mostramos todas las filas que no están filtradas
+                allRows.forEach(function (r) {
+                    if (r.dataset.filtered === 'true') {
+                        r.style.display = 'none';
+                    } else {
+                        r.style.display = '';
+                    }
+                });
                 var c = document.getElementById('paginacion-mobile-bitacora');
                 var i = document.getElementById('paginacionInfoBitacora');
                 if (c) c.style.display = 'none';
@@ -154,14 +209,85 @@
                 return;
             }
 
+            // mobile: paginación sobre filas visibles
             var desde = (paginaActual - 1) * POR_PAGINA;
             var hasta = desde + POR_PAGINA;
-            rows.forEach(function (r, idx) {
+            visibleRows.forEach(function (r, idx) {
                 r.style.display = (idx >= desde && idx < hasta) ? '' : 'none';
             });
+
+            // asegurarse que filas filtradas sigan ocultas
+            allRows.filter(function (r) { return r.dataset.filtered === 'true'; }).forEach(function (r) {
+                r.style.display = 'none';
+            });
+
             renderPaginacion(total);
         }
 
+        /* ── Filtrado ───────────────────────── */
+        function aplicarFiltros() {
+            var usuario = document.getElementById('filterUsuario').value;
+            var accion = document.getElementById('filterAccion').value;
+            var desdeVal = document.getElementById('filterFechaDesde').value;
+            var hastaVal = document.getElementById('filterFechaHasta').value;
+
+            var desdeDate = desdeVal ? new Date(desdeVal + 'T00:00:00') : null;
+            var hastaDate = hastaVal ? new Date(hastaVal + 'T23:59:59') : null;
+
+            var rows = Array.from(document.querySelectorAll('#cuerpoTablaBitacora tr'));
+            rows.forEach(function (r) {
+                var ru = (r.dataset.user || '').trim();
+                var ra = (r.dataset.action || '').trim();
+                var rf = r.dataset.fecha ? new Date(r.dataset.fecha) : null;
+
+                var ocultar = false;
+
+                if (usuario && ru !== usuario) ocultar = true;
+                if (accion && ra !== accion) ocultar = true;
+                if (desdeDate && rf && rf < desdeDate) ocultar = true;
+                if (hastaDate && rf && rf > hastaDate) ocultar = true;
+
+                r.dataset.filtered = ocultar ? 'true' : 'false';
+                if (ocultar) {
+                    r.style.display = 'none';
+                } else {
+                    // dejar que aplicar() controle visibilidad por paginación
+                    r.style.display = '';
+                }
+            });
+
+            paginaActual = 1;
+            aplicar();
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('filterUsuario').value = '';
+            document.getElementById('filterAccion').value = '';
+            document.getElementById('filterFechaDesde').value = '';
+            document.getElementById('filterFechaHasta').value = '';
+
+            var rows = Array.from(document.querySelectorAll('#cuerpoTablaBitacora tr'));
+            rows.forEach(function (r) {
+                r.dataset.filtered = 'false';
+                r.style.display = '';
+            });
+
+            paginaActual = 1;
+            aplicar();
+        }
+
+        // enlazar eventos
+        document.getElementById('btnFilterApply').addEventListener('click', function (e) {
+            e.preventDefault();
+            aplicarFiltros();
+        });
+
+        document.getElementById('btnFilterReset').addEventListener('click', function (e) {
+            e.preventDefault();
+            limpiarFiltros();
+        });
+
+        // aplicar comportamiento inicial
         aplicar();
 
         var resizeTimer;
