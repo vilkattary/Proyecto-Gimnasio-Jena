@@ -34,23 +34,64 @@
     </div>
 
     <div class="stats-grid">
+
         <div class="stat-card">
-            <i class="bi bi-calendar-check"></i>
-            <h3>15</h3>
-            <p>Clases Tomadas</p>
+            <i class="bi bi-person-check"></i>
+
+            <h3>
+                @(Model.estado ? "Activo" : "Inactivo")
+            </h3>
+
+            <p>Estado del Perfil</p>
         </div>
 
         <div class="stat-card">
-            <i class="bi bi-trophy"></i>
-            <h3>3</h3>
-            <p>Logros</p>
+            <i class="bi bi-credit-card"></i>
+
+            <h3>
+                @if (Model.Membresia != null)
+                {
+                    @Model.Membresia.estadoMembresia
+                }
+                else
+                {
+                    @:Sin plan
+                }
+            </h3>
+
+            <p>Estado de Membresía</p>
         </div>
 
         <div class="stat-card">
             <i class="bi bi-star-fill"></i>
-            <h3>Gold</h3>
-            <p>Membresía</p>
+
+            <h3>
+                @if (Model.Membresia != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(Model.Membresia.nombrePlan) &&
+                        Model.Membresia.nombrePlan.ToUpper().Contains("ROOT"))
+                    {
+                        @:ROOT
+                    }
+                    else if (!string.IsNullOrWhiteSpace(Model.Membresia.nombrePlan) &&
+                             Model.Membresia.nombrePlan.ToUpper().Contains("TOP"))
+                    {
+                        @:TOP
+                    }
+                    else
+                    {
+                        @Model.Membresia.nombrePlan
+                    }
+                }
+                else
+                {
+                    @:Ninguna
+                }
+            </h3>
+
+            <p>Plan Actual</p>
         </div>
+
     </div>
 
     <div class="row">

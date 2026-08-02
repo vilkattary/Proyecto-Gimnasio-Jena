@@ -15,6 +15,7 @@ using GimnasioJena.LogicaDeNegocio.Membresias.RegistrarMembresia;
 using GimnasioJena.LogicaDeNegocio.Membresias.RenovarMembresia;
 using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -29,7 +30,6 @@ namespace GimnasioJena.UI.Controllers
         private readonly IEditarMembresiaLN _editarMembresiaLN;
         private readonly IRenovarMembresiaLN _renovarMembresiaLN;
         private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
-
 
 
         public MembresiasController()
@@ -91,7 +91,6 @@ namespace GimnasioJena.UI.Controllers
             var modelo = new MembresiaCrearDto
             {
                 fechaInicio = DateTime.Today,
-                fechaFin = DateTime.Today.AddMonths(1),
                 idEstadoMembresia = 1
             };
 
@@ -108,13 +107,14 @@ namespace GimnasioJena.UI.Controllers
                 return View(modelo);
             }
 
-            bool resultado = _registrarMembresiaLN.RegistrarMembresia(modelo);
+            bool resultado =
+                 _registrarMembresiaLN.RegistrarMembresia(modelo);
 
             if (resultado)
             {
                 RegistrarBitacora(
                     "MembresiaCliente",
-                    "CREATE",
+                    "INSERT",
                     modelo.idUsuario,
                     "Se registró una membresía para el cliente con idUsuario: " + modelo.idUsuario
                 );
@@ -131,15 +131,35 @@ namespace GimnasioJena.UI.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var membresia = _obtenerMembresiaPorIdLN.ObtenerMembresiaPorId(id);
+            var membresia =
+                _obtenerMembresiaPorIdLN.ObtenerMembresiaPorId(id);
 
             if (membresia == null)
             {
-                TempData["MensajeError"] = "No se encontró la membresía solicitada.";
+                TempData["MensajeError"] =
+                    "No se encontró la membresía solicitada.";
+
                 return RedirectToAction("Index");
             }
 
             CargarCombos();
+
+            var usuarios =
+                ViewBag.Usuarios as IEnumerable<SelectListItem>;
+
+            var planes =
+                ViewBag.Planes as IEnumerable<SelectListItem>;
+
+            ViewBag.NombreCliente = usuarios?
+                .FirstOrDefault(u =>
+                    u.Value == membresia.idUsuario.ToString())
+                ?.Text ?? "Cliente no disponible";
+
+            ViewBag.NombrePlan = planes?
+                .FirstOrDefault(p =>
+                    p.Value == membresia.idPlanMembresia.ToString())
+                ?.Text ?? "Plan no disponible";
+
             return View(membresia);
         }
 
@@ -153,24 +173,41 @@ namespace GimnasioJena.UI.Controllers
                 return View(modelo);
             }
 
-            bool resultado = _editarMembresiaLN.EditarMembresia(modelo);
-
-            if (resultado)
+            try
             {
-                RegistrarBitacora(
-                    "MembresiaCliente",
-                    "UPDATE",
-                    modelo.idMembresiaCliente,
-                    "Se actualizó la membresía con id: " + modelo.idMembresiaCliente
-                );
+                bool resultado = _editarMembresiaLN.EditarMembresia(modelo);
 
-                TempData["MensajeExito"] = "Membresía actualizada correctamente.";
-                return RedirectToAction("Index");
+                if (resultado)
+                {
+                    RegistrarBitacora(
+                        "MembresiaCliente",
+                        "UPDATE",
+                        modelo.idMembresiaCliente,
+                        $"Se actualizó la membresía con id: {modelo.idMembresiaCliente}"
+                    );
+
+                    TempData["MensajeExito"] =
+                        "Membresía actualizada correctamente.";
+
+                    return RedirectToAction("Index");
+                }
+
+                TempData["MensajeError"] =
+                    "No fue posible actualizar la membresía.";
+
+                CargarCombos();
+
+                return View(modelo);
             }
+            catch (Exception)
+            {
+                TempData["MensajeError"] =
+                    "Ocurrió un error inesperado al actualizar la membresía.";
 
-            TempData["MensajeError"] = "No se pudo actualizar la membresía. Verifica los datos ingresados.";
-            CargarCombos();
-            return View(modelo);
+                CargarCombos();
+
+                return View(modelo);
+            }
         }
         public ActionResult Details(int id)
         {

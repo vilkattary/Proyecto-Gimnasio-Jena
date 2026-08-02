@@ -18,6 +18,7 @@ namespace GimnasioJena.UI.Controllers
     [Authorize(Roles = "ADMINISTRADOR")]
     public class PagosController : Controller
     {
+        private const int ESTADO_PAGO_PAGADO = 2;
         private readonly IObtenerTodosLosPagosLN _obtenerTodosLosPagosLN;
         private readonly IRegistrarPagoLN _registrarPagoLN;
         private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
@@ -53,6 +54,25 @@ namespace GimnasioJena.UI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(PagoCrearDto modelo)
         {
+            /*
+             * Los pagos administrativos solamente se registran
+             * cuando el dinero ya fue recibido y verificado.
+             */
+            modelo.idEstadoPago = ESTADO_PAGO_PAGADO;
+
+            /*
+             * Como idEstadoPago ya no aparece en el formulario,
+             * eliminamos cualquier validación previa asociada
+             * al valor recibido desde el navegador.
+             */
+            ModelState.Remove("idEstadoPago");
+
+            /*
+             * Volvemos a validar el modelo después de asignar
+             * el estado oficial en el servidor.
+             */
+            TryValidateModel(modelo);
+
             if (!ModelState.IsValid)
             {
                 CargarCombos();
@@ -64,7 +84,8 @@ namespace GimnasioJena.UI.Controllers
 
             if (idPagoRegistrado > 0)
             {
-                string nombreEstadoPago = ObtenerNombreEstadoPago(modelo.idEstadoPago);
+                string nombreEstadoPago =
+                    ObtenerNombreEstadoPago(modelo.idEstadoPago);
 
                 RegistrarBitacoraPago(
                     idPagoRegistrado,
@@ -73,15 +94,13 @@ namespace GimnasioJena.UI.Controllers
                 );
 
                 TempData["MensajeExito"] =
-                    modelo.idEstadoPago == 2
-                        ? "Pago registrado correctamente y membresía actualizada."
-                        : "Pago registrado correctamente.";
+                    "Pago registrado correctamente y membresía actualizada.";
 
                 return RedirectToAction("Index");
             }
 
             TempData["MensajeError"] =
-                "No se pudo registrar el pago. Verifica la información ingresada.";
+                "No se pudo registrar el pago. La membresía puede seguir vigente o la información ingresada no es válida.";
 
             CargarCombos();
             return View(modelo);
@@ -172,15 +191,7 @@ namespace GimnasioJena.UI.Controllers
                     })
                     .ToList();
 
-                ViewBag.EstadosPago = contexto.EstadoPagos
-                    .Where(e => e.estado)
-                    .OrderBy(e => e.idEstadoPago)
-                    .Select(e => new SelectListItem
-                    {
-                        Value = e.idEstadoPago.ToString(),
-                        Text = e.nombreEstado
-                    })
-                    .ToList();
+                
             }
         }
         private int? ObtenerIdUsuarioActual()

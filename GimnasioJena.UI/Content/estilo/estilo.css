@@ -5456,3 +5456,261 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     box-shadow: 0 0 0 2px rgba(var(--jena-orange-rgb, 230, 100, 30), 0.3);
 }
 @media (max-width:991.98px) { .navbar-admin .navbar-collapse { background:var(--jena-white); padding:1rem; border-top:1px solid rgba(0,0,0,0.06); max-height:calc(100vh - 72px); overflow-y:auto; } .navbar-admin .nav-link { padding:0.65rem 0.5rem; border-bottom:1px solid rgba(0,0,0,0.04); } .btn-admin-back { display:inline-flex !important; margin-bottom:0.75rem; } }
+
+
+/* ==========================
+   Estilos para Nosotros/Index
+   ========================== */
+
+.historia-section {
+    padding: 2rem 0;
+}
+
+    .historia-section .container {
+        background: var(--jena-white);
+        border-radius: 14px;
+        padding: 1.6rem;
+        box-shadow: 0 12px 30px rgba(var(--jena-navy-rgb), 0.06);
+        border: 1px solid rgba(44,62,80,0.04);
+    }
+
+.historia-title-col .heading-nosotros-md {
+    font-size: var(--font-h2);
+    color: var(--jena-navy);
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.text-body-jena {
+    color: rgba(var(--jena-navy-rgb), 0.92);
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+/* ===== Estadísticas ===== */
+.stats-section {
+    padding: 2rem 0;
+}
+
+    .stats-section .container {
+        max-width: var(--container-max-width);
+    }
+
+.stat-item {
+    background: linear-gradient(180deg, var(--jena-white), #ffffff);
+    border-radius: 12px;
+    padding: 1.4rem 1rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(11,11,11,0.04);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    border: 1px solid rgba(41,48,57,0.04);
+}
+
+    .stat-item:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 40px rgba(11,11,11,0.06);
+    }
+
+.stat-icon i {
+    font-size: 2.1rem;
+    color: var(--jena-accent, var(--jena-orange));
+    background: rgba(255,107,53,0.08);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.stat-number {
+    font-family: var(--font-headings);
+    font-size: 1.6rem;
+    color: var(--jena-navy);
+    font-weight: 700;
+}
+
+.stat-label {
+    color: rgba(41,48,57,0.7);
+    font-size: 0.95rem;
+}
+
+/* ===== Misión & Visión ===== */
+.mision-vision-section {
+    padding: 3rem 0;
+}
+
+.heading-nosotros-lg {
+    font-size: var(--font-h2);
+    color: var(--jena-navy);
+    font-weight: 700;
+}
+
+.mv-card {
+    background: linear-gradient(180deg, #FFFFFF, #FBFCFD);
+    border-radius: 12px;
+    padding: 1.4rem;
+    min-height: 220px;
+    box-shadow: 0 12px 30px rgba(41,48,57,0.04);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+    .mv-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 22px 48px rgba(41,48,57,0.06);
+    }
+
+.mv-icon-wrap {
+    width: 62px;
+    height: 62px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(108,142,164,0.08), rgba(255,107,53,0.06));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+    .mv-icon-wrap i {
+        font-size: 1.6rem;
+        color: var(--jena-orange);
+    }
+
+/* ===== Valores ===== */
+.valores-section {
+    padding: 2.4rem 0;
+}
+
+.valor-card {
+    background: var(--jena-white);
+    border-radius: 12px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(11,11,11,0.04);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: center;
+    justify-content: flex-start;
+    border: 1px solid rgba(41,48,57,0.03);
+}
+
+.valor-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255,107,53,0.06), rgba(108,142,164,0.04));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+    .valor-icon i {
+        font-size: 1.5rem;
+        color: var(--jena-orange);
+    }
+
+.valor-card h4 {
+    font-size: 1rem;
+    color: var(--jena-navy);
+    margin: 0;
+    font-weight: 700;
+}
+
+.valor-card p {
+    color: rgba(41,48,57,0.75);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ===== CTA ===== */
+.cta-nosotros {
+    margin-top: 2rem;
+    padding: 2.2rem 0;
+    background: linear-gradient(90deg, rgba(255,107,53,0.06), rgba(44,62,80,0.02));
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.3);
+}
+
+    .cta-nosotros .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .cta-nosotros h2 {
+        font-size: 1.4rem;
+        color: var(--jena-navy);
+        margin-bottom: 0;
+        font-weight: 700;
+    }
+
+    .cta-nosotros p {
+        color: rgba(41,48,57,0.8);
+        margin-bottom: 0.6rem;
+    }
+
+/* Botón CTA */
+.btn-cta-nosotros {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--jena-orange);
+    color: var(--white);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(255,107,53,0.18);
+    transition: transform 160ms ease, box-shadow 160ms ease, background 120ms ease;
+}
+
+    .btn-cta-nosotros i {
+        font-size: 1rem;
+    }
+
+    .btn-cta-nosotros:hover,
+    .btn-cta-nosotros:focus {
+        background: var(--jena-dark-orange);
+        transform: translateY(-3px);
+        box-shadow: 0 18px 44px rgba(217,95,49,0.18);
+    }
+
+/* ===== Helpers y responsividad ===== */
+@media (max-width: 991.98px) {
+    .historia-section .container {
+        padding: 1rem;
+    }
+
+    .mv-card {
+        min-height: unset;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .logo-circular {
+        width: 110px;
+        height: 110px;
+    }
+
+        .logo-circular .letter-j {
+            font-size: 3.6rem;
+        }
+
+    .stat-number {
+        font-size: 1.35rem;
+    }
+
+    .heading-nosotros-lg {
+        font-size: clamp(1.1rem, 6vw, 1.4rem);
+    }
+}

@@ -16,18 +16,43 @@ namespace GimnasioJena.AccesoADatos.Membresias.EditarMembresia
         public int EditarMembresia(MembresiaEditarDto membresia)
         {
             var membresiaBD = _contexto.Membresias
-                .FirstOrDefault(m => m.idMembresiaCliente == membresia.idMembresiaCliente);
+                .FirstOrDefault(m =>
+                    m.idMembresiaCliente ==
+                    membresia.idMembresiaCliente);
 
             if (membresiaBD == null)
                 return 0;
 
-            membresiaBD.idUsuario = membresia.idUsuario;
-            membresiaBD.idPlanMembresia = membresia.idPlanMembresia;
-            membresiaBD.idEstadoMembresia = membresia.idEstadoMembresia;
-            membresiaBD.fechaInicio = membresia.fechaInicio;
-            membresiaBD.fechaFin = membresia.fechaFin;
-            membresiaBD.clasesDisponibles = membresia.clasesDisponibles;
-            membresiaBD.observaciones = membresia.observaciones;
+            var planBD = _contexto.PlanesMembresia
+                .FirstOrDefault(p =>
+                    p.idPlanMembresia ==
+                    membresiaBD.idPlanMembresia);
+
+            if (planBD == null)
+                return 0;
+
+            if (planBD.duracionDias <= 0)
+                return 0;
+
+            /*
+             * Únicamente se permite editar:
+             * - Estado
+             * - Fecha de inicio
+             * - Observaciones
+             */
+
+            membresiaBD.idEstadoMembresia =
+                membresia.idEstadoMembresia;
+
+            membresiaBD.fechaInicio =
+                membresia.fechaInicio;
+
+            membresiaBD.fechaFin =
+                membresia.fechaInicio
+                    .AddDays(planBD.duracionDias - 1);
+
+            membresiaBD.observaciones =
+                membresia.observaciones;
 
             return _contexto.SaveChanges();
         }

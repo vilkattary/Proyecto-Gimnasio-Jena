@@ -1,0 +1,96 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Membresias.PlanMembresiaListadoDto>
+
+@{
+    ViewBag.Title = "Planes de membresía";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Planes de membresía</h2>
+            <p class="text-muted mb-0">
+                Consulta los planes disponibles y administra sus precios.
+            </p>
+        </div>
+
+        <a href="@Url.Action("Dashboard", "Admin")"
+           class="btn btn-outline-secondary">
+            Volver al panel
+        </a>
+    </div>
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["MensajeExito"]
+        </div>
+    }
+
+    @if (TempData["MensajeError"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["MensajeError"]
+        </div>
+    }
+
+    <div class="row g-4">
+
+        @foreach (var plan in Model)
+        {
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h3 class="h4 fw-bold mb-1">
+                                    @plan.nombrePlan
+                                </h3>
+
+                                <span class="badge @(plan.estado ? "bg-success" : "bg-secondary")">
+                                    @(plan.estado ? "Activo" : "Inactivo")
+                                </span>
+                            </div>
+
+                            <div class="text-end">
+                                <div class="fs-3 fw-bold">
+                                    ₡@plan.precio.ToString("N0")
+                                </div>
+
+                                <small class="text-muted">
+                                    Precio actual
+                                </small>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="mb-3">
+                            <strong>Duración:</strong>
+                            @plan.duracionDias días
+                        </div>
+
+                        <div class="mb-4">
+                            <strong>Clases incluidas:</strong>
+                            @(plan.cantidadClases.HasValue
+                            ? plan.cantidadClases.Value.ToString()
+                            : "Ilimitadas")
+                        </div>
+
+                        <a href="@Url.Action(
+                                    "EditarPrecioPlan",
+                                    "Admin",
+                                    new { id = plan.idPlanMembresia })"
+                           class="btn btn-primary w-100">
+                            Editar precio
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+</div>

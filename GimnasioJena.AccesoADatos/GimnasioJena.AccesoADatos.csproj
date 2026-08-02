@@ -141,8 +141,11 @@
     <Compile Include="HorariosSemanales\RegistrarHorariosSemanales\RegistrarHorariosSemanalesAD.cs" />
     <Compile Include="Membresias\CambiarEstadoMembresia\CambiarEstadoMembresiaAD.cs" />
     <Compile Include="Membresias\EditarMembresia\EditarMembresiaAD.cs" />
+    <Compile Include="Membresias\EditarPrecioPlan\EditarPrecioPlanAD.cs" />
     <Compile Include="Membresias\ObtenerMembresiaPorCliente\ObtenerMembresiaPorClienteAD.cs" />
     <Compile Include="Membresias\ObtenerMembresiaPorId\ObtenerMembresiaPorIdAD.cs" />
+    <Compile Include="Membresias\ObtenerPlanesMembresia\ObtenerPlanesMembresiaAD.cs" />
+    <Compile Include="Membresias\ObtenerPlanMembresiaPorId\ObtenerPlanMembresiaPorIdAD.cs" />
     <Compile Include="Membresias\ObtenerTodasLasMembresias\ObtenerTodasLasMembresiasAD.cs" />
     <Compile Include="Membresias\RegistrarMembresia\RegistrarMembresiaAD.cs" />
     <Compile Include="Membresias\RenovarMembresia\RenovarMembresiaAD.cs" />

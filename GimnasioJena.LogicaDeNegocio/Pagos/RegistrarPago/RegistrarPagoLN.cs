@@ -32,9 +32,6 @@ namespace GimnasioJena.LogicaDeNegocio.Pagos.RegistrarPago
             if (pago.idEstadoPago <= 0)
                 return 0;
 
-            if (pago.monto <= 0)
-                return 0;
-
             if (!_registrarPagoAD.ExisteMetodoPago(
                 pago.idMetodoPago))
             {
@@ -54,11 +51,25 @@ namespace GimnasioJena.LogicaDeNegocio.Pagos.RegistrarPago
             if (membresia == null)
                 return 0;
 
+            /*
+             * El monto recibido desde la vista no se considera confiable.
+             * Siempre se utiliza el precio oficial almacenado en el plan.
+             */
+            pago.monto = membresia.precioPlan;
+
+            if (pago.monto <= 0)
+                return 0;
+
             if (pago.fechaPago == default(DateTime))
             {
                 pago.fechaPago = DateTime.Now;
             }
 
+            /*
+             * No se permite registrar una fecha de pago futura.
+             * Se deja un minuto de tolerancia por diferencias mínimas
+             * entre el navegador y el servidor.
+             */
             if (pago.fechaPago > DateTime.Now.AddMinutes(1))
                 return 0;
 
@@ -76,31 +87,41 @@ namespace GimnasioJena.LogicaDeNegocio.Pagos.RegistrarPago
                 DateTime hoy = DateTime.Today;
 
                 /*
-                 * Si la membresía todavía tiene días disponibles,
-                 * la nueva vigencia comenzará después de su fecha final.
+                 * Regla oficial:
+                 * no se permite renovar antes del vencimiento.
                  *
-                 * Si ya venció, comenzará hoy.
+                 * fechaFin == hoy:
+                 * sí se permite renovar.
+                 *
+                 * fechaFin < hoy:
+                 * sí se permite renovar.
                  */
-                if (membresia.fechaFin >= hoy)
+                if (membresia.fechaFin > hoy)
                 {
-                    nuevaFechaInicio =
-                        membresia.fechaFin.AddDays(1);
-                }
-                else
-                {
-                    nuevaFechaInicio = hoy;
+                    return 0;
                 }
 
                 /*
-                 * Como fechaFin es un campo DATE y se considera
-                 * inclusiva, una membresía de 31 días iniciada el
-                 * día 1 finaliza el día 31.
+                 * La nueva vigencia siempre comienza el día
+                 * en que se confirma el pago.
+                 */
+                nuevaFechaInicio = hoy;
+
+                /*
+                 * La fecha final es inclusiva.
+                 * Un plan de 31 días iniciado hoy termina
+                 * 30 días después.
                  */
                 nuevaFechaFin =
                     nuevaFechaInicio.Value.AddDays(
                         membresia.duracionDiasPlan - 1
                     );
 
+                /*
+                 * ROOT obtiene 12 clases.
+                 * TOP conserva NULL, lo cual representa
+                 * clases ilimitadas.
+                 */
                 nuevasClasesDisponibles =
                     membresia.cantidadClasesPlan;
 

@@ -119,8 +119,11 @@
     <Compile Include="AccesoADatos\HorariosSemanales\RegistrarHorariosSemanales\IRegistrarHorariosSemanalesAD.cs" />
     <Compile Include="AccesoADatos\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\EditarMembresia\IEditarMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\EditarPrecioPlan\IEditarPrecioPlanAD.cs" />
     <Compile Include="AccesoADatos\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteAD.cs" />
     <Compile Include="AccesoADatos\Membresias\ObtenerMembresiaPorId\IObtenerMembresiaPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\ObtenerPlanesMembresia\IObtenerPlanesMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\ObtenerPlanMembresiaPorId\IObtenerPlanMembresiaPorIdAD.cs" />
     <Compile Include="AccesoADatos\Membresias\ObtenerTodasLasMembresias\IObtenerTodasLasMembresiasAD.cs" />
     <Compile Include="AccesoADatos\Membresias\RegistrarMembresia\IRegistrarMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\RenovarMembresia\IRenovarMembresiaAD.cs" />
@@ -213,8 +216,11 @@
     <Compile Include="LogicaDeNegocio\HorariosSemanales\RegistrarHorariosSemanales\IRegistrarHorariosSemanalesLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\EditarMembresia\IEditarMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\EditarPrecioPlan\IEditarPrecioPlanLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\ObtenerMembresiaPorId\IObtenerMembresiaPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\ObtenerPlanesMembresia\IObtenerPlanesMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\ObtenerPlanMembresiaPorId\IObtenerPlanMembresiaPorIdLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\ObtenerTodasLasMembresias\IObtenerTodasLasMembresiasLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\RegistrarMembresia\IRegistrarMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\RenovarMembresia\IRenovarMembresiaLN.cs" />
@@ -304,6 +310,7 @@
     <Compile Include="Modelos\HorariosSemanales\HorarioSemanalMultipleCrearDto.cs" />
     <Compile Include="Modelos\HorariosSemanales\ResultadoGeneracionClasesDto.cs" />
     <Compile Include="Modelos\HorariosSemanales\ResultadoRegistroHorariosDto.cs" />
+    <Compile Include="Modelos\Membresias\EditarPrecioPlanDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaClienteDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCrearDto.cs" />
@@ -311,6 +318,10 @@
     <Compile Include="Modelos\Membresias\MembresiaEditarDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaListadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaRenovarDto.cs" />
+    <Compile Include="Modelos\Membresias\MiMembresiaViewModel.cs" />
+    <Compile Include="Modelos\Membresias\OperacionMembresiaDto.cs" />
+    <Compile Include="Modelos\Membresias\PlanMembresiaDatosDto.cs" />
+    <Compile Include="Modelos\Membresias\PlanMembresiaListadoDto.cs" />
     <Compile Include="Modelos\Pagos\PagoActualizarEstadoDto.cs" />
     <Compile Include="Modelos\Pagos\PagoCrearDto.cs" />
     <Compile Include="Modelos\Pagos\PagoDetalleDto.cs" />
