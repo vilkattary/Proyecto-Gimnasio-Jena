@@ -1058,6 +1058,28 @@ footer .copyright {
     box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
 }
 
+/* Cancelar reserva desde listado de clases */
+.btn-cancelar-reserva {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--jena-danger, #dc3545);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: opacity 0.2s ease;
+}
+
+.btn-cancelar-reserva:hover {
+    opacity: 0.75;
+}
+
 .btn-action:active {
     transform: translateY(-1px);
 }
@@ -4271,6 +4293,92 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         .btn-guardar {
             width: 100%;
         }
+
+        .toggle-recurrente-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+
+    /* =========================================
+       TOGGLE CLASE ÚNICA / RECURRENTE
+       ========================================= */
+
+    .toggle-recurrente-wrap {
+        margin-bottom: 28px;
+        padding: 16px 20px;
+        border: 1px solid var(--jena-border);
+        border-radius: 14px;
+        background: var(--jena-light-gray);
+    }
+
+    .toggle-recurrente-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .toggle-recurrente-label {
+        display: flex;
+        align-items: center;
+        color: var(--jena-navy);
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+        .toggle-recurrente-label i {
+            color: var(--jena-orange);
+            font-size: 1.1rem;
+        }
+
+    .toggle-recurrente-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .toggle-opcion {
+        font-size: .93rem;
+        font-weight: 600;
+        color: #9CA3AF;
+        transition: color .2s;
+    }
+
+        .toggle-opcion.activa {
+            color: var(--jena-orange);
+        }
+
+    .toggle-switch-jena .form-check-input {
+        width: 3rem;
+        height: 1.55rem;
+        cursor: pointer;
+        background-color: var(--jena-border);
+        border-color: var(--jena-border);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+    }
+
+        .toggle-switch-jena .form-check-input:checked {
+            background-color: var(--jena-orange);
+            border-color: var(--jena-orange);
+        }
+
+        .toggle-switch-jena .form-check-input:focus {
+            box-shadow: 0 0 0 .2rem rgba(255, 107, 53, .25);
+            border-color: var(--jena-orange);
+        }
+
+    /* =========================================
+       RECURRENTE RANGO DATE
+       ========================================= */
+
+    .recurrente-rango {
+        padding: 18px 20px;
+        border: 1px solid rgba(255, 107, 53, .30);
+        border-radius: 14px;
+        background: rgba(255, 107, 53, .04);
     }
 
 /* ============================================
@@ -5988,4 +6096,240 @@ body.modal-jena-open {
     .heading-nosotros-lg {
         font-size: clamp(1.1rem, 6vw, 1.4rem);
     }
+
+/* ============================================================
+   MOBILE RESERVATION CARDS — MiPerfil
+   Buenas prácticas UX/UI:
+   · Touch targets mínimo 44×44 px (Apple HIG / WCAG 2.5.5)
+   · Escaneo en F-pattern: fecha prominente, título, metadata
+   · Contraste de texto ≥ 4.5:1 (WCAG AA)
+   · Estados visuales diferenciados (activa / cancelada)
+   · Paginación accesible con aria-live y aria-label
+============================================================ */
+
+/* Card contenedor */
+.reserva-card-mobile {
+    display:        flex;
+    align-items:    center;
+    gap:            14px;
+    background:     var(--jena-white);
+    border:         2px solid var(--jena-light-blue);
+    border-radius:  16px;
+    padding:        14px 16px;
+    margin-bottom:  10px;
+    box-shadow:     0 3px 10px rgba(0, 0, 0, 0.06);
+    transition:     transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    position:       relative;
+    overflow:       hidden;
+}
+
+.reserva-card-mobile::before {
+    content:        '';
+    position:       absolute;
+    top:            0;
+    left:           0;
+    width:          4px;
+    height:         100%;
+    background:     var(--jena-light-blue);
+    border-radius:  16px 0 0 16px;
+    transition:     background .18s ease;
+}
+
+.reserva-card-mobile.reserva-activa::before {
+    background: var(--jena-orange);
+}
+
+.reserva-card-mobile:active {
+    transform:  scale(0.98);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Badge de fecha (día + mes) */
+.reserva-fecha-badge {
+    display:         flex;
+    flex-direction:  column;
+    align-items:     center;
+    justify-content: center;
+    min-width:       52px;
+    height:          60px;
+    background:      linear-gradient(135deg, var(--jena-orange), var(--jena-dark-orange));
+    border-radius:   12px;
+    color:           var(--jena-white);
+    flex-shrink:     0;
+    box-shadow:      0 4px 10px rgba(255, 107, 53, 0.35);
+}
+
+.reserva-card-mobile.reserva-inactiva .reserva-fecha-badge {
+    background:  var(--jena-light-blue);
+    box-shadow:  none;
+    opacity:     0.75;
+}
+
+.reserva-dia {
+    font-size:   1.4rem;
+    font-weight: 800;
+    line-height: 1;
+    font-family: var(--font-primary);
+}
+
+.reserva-mes {
+    font-size:      0.58rem;
+    font-weight:    700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top:     2px;
+    opacity:        0.9;
+}
+
+/* Bloque de información */
+.reserva-info {
+    flex:      1;
+    min-width: 0; /* evita overflow de texto */
+}
+
+.reserva-clase {
+    font-size:      0.95rem;
+    font-weight:    800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color:          var(--jena-navy);
+    margin:         0 0 6px 0;
+    white-space:    nowrap;
+    overflow:       hidden;
+    text-overflow:  ellipsis;
+}
+
+.reserva-meta {
+    display:        flex;
+    flex-direction: column;
+    gap:            3px;
+}
+
+.reserva-meta-item {
+    display:     flex;
+    align-items: center;
+    gap:         5px;
+    font-size:   0.78rem;
+    font-weight: 500;
+    color:       var(--jena-light-blue);
+    white-space: nowrap;
+    overflow:    hidden;
+    text-overflow: ellipsis;
+}
+
+.reserva-meta-item i {
+    color:       var(--jena-orange);
+    font-size:   0.8rem;
+    flex-shrink: 0;
+}
+
+/* Columna derecha: badge estado + botón detalle */
+.reserva-acciones {
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    gap:            8px;
+    flex-shrink:    0;
+}
+
+.reserva-badge {
+    display:        inline-block;
+    font-size:      0.65rem;
+    font-weight:    700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding:        3px 8px;
+    border-radius:  20px;
+    white-space:    nowrap;
+}
+
+.reserva-badge-activa {
+    background: rgba(255, 107, 53, 0.12);
+    color:      var(--jena-orange);
+    border:     1px solid rgba(255, 107, 53, 0.3);
+}
+
+.reserva-badge-inactiva {
+    background: rgba(108, 142, 164, 0.12);
+    color:      var(--jena-light-blue);
+    border:     1px solid rgba(108, 142, 164, 0.3);
+}
+
+/* Botón detalle — touch target 44×44 px mínimo */
+.reserva-btn-detalle {
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    width:           36px;
+    height:          36px;
+    min-width:       44px;  /* área táctil ampliada */
+    min-height:      44px;
+    border-radius:   10px;
+    border:          2px solid var(--jena-orange);
+    background:      var(--jena-white);
+    color:           var(--jena-orange);
+    font-size:       1rem;
+    text-decoration: none;
+    transition:      background .18s ease, color .18s ease, transform .18s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.reserva-btn-detalle:hover,
+.reserva-btn-detalle:active {
+    background:  var(--jena-orange);
+    color:       var(--jena-white);
+    transform:   scale(1.05);
+    text-decoration: none;
+}
+
+/* ── Paginación ─────────────────────────────────────────── */
+.reservas-paginacion {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    margin-top:      18px;
+    gap:             8px;
+}
+
+/* Botones prev/next — touch target ≥ 44×44 px */
+.reservas-paginacion .btn-pag {
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    width:           44px;
+    height:          44px;
+    border-radius:   12px;
+    border:          2px solid var(--jena-orange);
+    background:      var(--jena-white);
+    color:           var(--jena-orange);
+    font-size:       1.1rem;
+    font-weight:     700;
+    cursor:          pointer;
+    transition:      background .18s ease, color .18s ease, transform .18s ease, opacity .18s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select:     none;
+}
+
+.reservas-paginacion .btn-pag:not(:disabled):hover,
+.reservas-paginacion .btn-pag:not(:disabled):active {
+    background:  var(--jena-orange);
+    color:       var(--jena-white);
+    transform:   scale(1.05);
+}
+
+.reservas-paginacion .btn-pag:disabled {
+    opacity:        0.35;
+    cursor:         not-allowed;
+    pointer-events: none;
+}
+
+.reservas-paginacion .page-info {
+    font-size:      0.82rem;
+    font-weight:    700;
+    color:          var(--jena-navy);
+    text-align:     center;
+    flex:           1;
+    letter-spacing: 0.3px;
+    font-family:    var(--font-primary);
+}
 }

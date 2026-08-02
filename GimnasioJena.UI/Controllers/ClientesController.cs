@@ -53,6 +53,10 @@ namespace GimnasioJena.UI.Controllers
         {
             var identityUserId = User.Identity.GetUserId();
             var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
+            if (perfil != null)
+            {
+                ViewBag.Reservas = _obtenerReservasPorUsuarioServicio.ObtenerReservasPorUsuario(perfil.idUsuario);
+            }
             return View(perfil);
         }
 

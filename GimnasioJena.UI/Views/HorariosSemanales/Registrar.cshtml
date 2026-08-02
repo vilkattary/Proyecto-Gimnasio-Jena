@@ -3,6 +3,8 @@
 @{
     ViewBag.Title = "Programación semanal";
 
+    bool esRecurrente = Model != null && Model.esRecurrente;
+
     int diaSeleccionado = Model != null && Model.diaSemana >= 1
         ? Model.diaSemana
         : 1;
@@ -62,14 +64,62 @@
                         new { id = "diaSemanaSeleccionado" }
                     )
 
-                    <div class="section-title">
-                        <span class="section-number">1</span>
-                        Seleccione el día
+                    @* ── Toggle: clase única / recurrente ── *@
+                    <input type="hidden" name="esRecurrente" id="hiddenEsRecurrente" value="@(esRecurrente ? "true" : "false")" />
+
+                    <div class="toggle-recurrente-wrap">
+                        <div class="toggle-recurrente-inner">
+                            <div class="toggle-recurrente-label">
+                                <i class="bi bi-calendar3 me-2"></i>
+                                <span>Tipo de clase</span>
+                            </div>
+                            <div class="toggle-recurrente-control">
+                                <span class="toggle-opcion @(esRecurrente ? "" : "activa")" id="labelUnica">
+                                    Clase única
+                                </span>
+                                <div class="form-check form-switch toggle-switch-jena mb-0">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           id="toggleRecurrente"
+                                           role="switch"
+                                           @(esRecurrente ? "checked" : "") />
+                                    <label class="form-check-label visually-hidden" for="toggleRecurrente">Recurrente</label>
+                                </div>
+                                <span class="toggle-opcion @(esRecurrente ? "activa" : "")" id="labelRecurrente">
+                                    <i class="bi bi-arrow-repeat me-1"></i>Recurrente
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="dias-selector"
-                         role="group"
-                         aria-label="Seleccione un día de la semana">
+                    @* ── Fecha de la clase (solo para clase única) ── *@
+                    <div id="seccionFechaUnica" class="mb-4 @(esRecurrente ? "d-none" : "")">
+                        @Html.LabelFor(model => model.fechaClase, "Fecha de la clase", new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.fechaClase, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "inputFechaClase" })
+                        @Html.ValidationMessageFor(model => model.fechaClase, "", new { @class = "text-danger" })
+                    </div>
+
+                    @* ── Fecha fin (solo para clase recurrente) ── *@
+                    <div id="seccionFechaFin" class="recurrente-rango mb-4 @(esRecurrente ? "" : "d-none")">
+                        @Html.LabelFor(model => model.fechaFin, "Generar clases hasta:", new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.fechaFin, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "inputFechaFin", min = DateTime.Today.ToString("yyyy-MM-dd") })
+                        @Html.ValidationMessageFor(model => model.fechaFin, "", new { @class = "text-danger" })
+                        <small class="text-muted d-block mt-1">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Se creará el horario semanal y se generarán todas las instancias en ese rango automáticamente.
+                        </small>
+                    </div>
+
+                    <div id="seccionSelectorDia" class="@(esRecurrente ? "" : "d-none")">
+
+                        <div class="section-title">
+                            <span class="section-number">1</span>
+                            Seleccione el día
+                        </div>
+
+                        <div class="dias-selector"
+                             role="group"
+                             aria-label="Seleccione un día de la semana">
 
                         <button type="button"
                                 class="dia-button @(diaSeleccionado == 1 ? "activo" : "")"
@@ -162,6 +212,8 @@
                         new { @class = "text-danger" }
                     )
 
+                    </div>@* fin seccionSelectorDia *@
+
                     <div class="section-title mt-4">
                         <span class="section-number">2</span>
                         Información general
@@ -238,6 +290,7 @@
 
                     </div>
 
+                    <div id="seccionRangosMultiples" class="@(esRecurrente ? "" : "d-none")">
                     <div class="section-title mt-5">
                         <span class="section-number">3</span>
                         Rangos horarios
@@ -338,6 +391,37 @@
                             <i class="bi bi-plus-circle me-2"></i>
                             Agregar otro horario
                         </button>
+                    </div>
+
+                    </div>@* fin seccionRangosMultiples *@
+
+                    @* ── Hora única (visible solo en modo no recurrente) ── *@
+                    <div id="seccionHoraUnica" class="@(esRecurrente ? "d-none" : "")">
+                        <div class="section-title mt-2">
+                            <span class="section-number">3</span>
+                            Horario de la clase
+                        </div>
+                        <div class="horarios-panel">
+                            <div class="horario-row">
+                                <div>
+                                    <label class="form-label">Hora de inicio</label>
+                                    <input type="time" step="300"
+                                           class="form-control hora-inicio"
+                                           name="horarios[0].horaInicio"
+                                           id="horarios_0__horaInicio"
+                                           value="@(Model != null && Model.horarios != null && Model.horarios.Count > 0 ? Model.horarios[0].horaInicio.ToString("hh\\:mm") : "05:00")" />
+                                </div>
+                                <div>
+                                    <label class="form-label">Hora de finalización</label>
+                                    <input type="time" step="300"
+                                           class="form-control hora-fin"
+                                           name="horarios[0].horaFin"
+                                           id="horarios_0__horaFin"
+                                           value="@(Model != null && Model.horarios != null && Model.horarios.Count > 0 ? Model.horarios[0].horaFin.ToString("hh\\:mm") : "06:00")" />
+                                </div>
+                                <div></div>@* placeholder para la columna del botón eliminar *@
+                            </div>
+                        </div>
                     </div>
 
                     <div class="acciones-formulario">
@@ -724,6 +808,43 @@
                     minutosTexto
                 );
             }
+
+            /* ==========================================
+               TOGGLE RECURRENTE / ÚNICO
+               ========================================== */
+
+            const toggle           = document.getElementById('toggleRecurrente');
+            const hiddenEsRec      = document.getElementById('hiddenEsRecurrente');
+            const seccionDia       = document.getElementById('seccionSelectorDia');
+            const seccionRangos    = document.getElementById('seccionRangosMultiples');
+            const seccionHoraUnica = document.getElementById('seccionHoraUnica');
+            const seccionFechaUnica= document.getElementById('seccionFechaUnica');
+            const seccionFechaFin  = document.getElementById('seccionFechaFin');
+            const labelUnica       = document.getElementById('labelUnica');
+            const labelRecurrente  = document.getElementById('labelRecurrente');
+
+            function aplicarModoRecurrente(activo) {
+                hiddenEsRec.value = activo ? 'true' : 'false';
+                seccionDia.classList.toggle('d-none', !activo);
+                seccionRangos.classList.toggle('d-none', !activo);
+                seccionHoraUnica.classList.toggle('d-none', activo);
+                seccionFechaUnica.classList.toggle('d-none', activo);
+                seccionFechaFin.classList.toggle('d-none', !activo);
+                if (labelUnica) {
+                    labelUnica.classList.toggle('activa', !activo);
+                }
+                if (labelRecurrente) {
+                    labelRecurrente.classList.toggle('activa', activo);
+                }
+            }
+
+            toggle.addEventListener('change', function () {
+                aplicarModoRecurrente(this.checked);
+            });
+
+            // Estado inicial
+            aplicarModoRecurrente(toggle.checked);
+
         });
     </script>
 }

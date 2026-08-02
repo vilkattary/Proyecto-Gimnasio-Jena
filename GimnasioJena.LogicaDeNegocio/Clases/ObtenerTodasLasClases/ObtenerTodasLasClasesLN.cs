@@ -34,14 +34,23 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases
         {
             DateTime ahora = _fechasLN.ObtenerFechaActual();
 
+            // TESTING: se muestran clases activas independientemente de la fecha
             var clases = _obtenerTodasLasClasesAD
                 .ObtenerTodasLasClases()
-                .Where(c =>
-                    c.estadoClase == "Activa" &&
-                    c.fechaHoraInicio > ahora)
+                .Where(c => c.estadoClase == "Activo")
                 .OrderBy(c => c.fechaHoraInicio)
-                .Take(10)
+                .Take(20)
                 .ToList();
+
+            // PRODUCCIÓN (restaurar y quitar bloque anterior):
+            //var clases = _obtenerTodasLasClasesAD
+            //    .ObtenerTodasLasClases()
+            //    .Where(c =>
+            //        c.estadoClase == "Activo" &&
+            //        c.fechaHoraInicio > ahora)
+            //    .OrderBy(c => c.fechaHoraInicio)
+            //    .Take(10)
+            //    .ToList();
 
             foreach (var clase in clases)
             {
@@ -56,18 +65,19 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases
                     clase.reservaHabilitada = false;
                     clase.mensajeReserva = "Sin cupos disponibles";
                 }
-                else if (ahora < aperturaReserva)
-                {
-                    clase.reservaHabilitada = false;
-                    clase.mensajeReserva =
-                        "Disponible desde " +
-                        aperturaReserva.ToString("dd/MM/yyyy HH:mm");
-                }
-                else if (ahora >= cierreReserva)
-                {
-                    clase.reservaHabilitada = false;
-                    clase.mensajeReserva = "Reservas cerradas";
-                }
+                // TESTING: ventana horaria comentada para poder reservar en cualquier momento
+                //else if (ahora < aperturaReserva)
+                //{
+                //    clase.reservaHabilitada = false;
+                //    clase.mensajeReserva =
+                //        "Disponible desde " +
+                //        aperturaReserva.ToString("dd/MM/yyyy HH:mm");
+                //}
+                //else if (ahora >= cierreReserva)
+                //{
+                //    clase.reservaHabilitada = false;
+                //    clase.mensajeReserva = "Reservas cerradas";
+                //}
                 else
                 {
                     clase.reservaHabilitada = true;

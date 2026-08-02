@@ -3,14 +3,19 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.EditarClase;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerClasePorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.RegistrarClase;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Clases;
+using GimnasioJena.Abstracciones.Modelos.HorariosSemanales;
 using GimnasioJena.AccesoADatos;
 using GimnasioJena.LogicaDeNegocio.Clases.EditarClase;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerClasePorId;
 using GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase;
 using GimnasioJena.LogicaDeNegocio.Bitacora;
+using GimnasioJena.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
+using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -26,6 +31,8 @@ namespace GimnasioJena.UI.Controllers
         private readonly IRegistrarClaseLN _registrarClase;
         private readonly IEditarClaseLN _editarClase;
         private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
+        private readonly IObtenerHorariosSemanalesLN _obtenerHorariosSemanales;
+        private readonly IObtenerReservasPorUsuarioLN _obtenerReservasPorUsuario;
 
         public ClasesController()
         {
@@ -34,18 +41,64 @@ namespace GimnasioJena.UI.Controllers
             _registrarClase = new RegistrarClaseLN();
             _editarClase = new EditarClaseLN();
             _registrarBitacoraLN = new RegistrarBitacoraLN();
+            _obtenerHorariosSemanales = new ObtenerHorariosSemanalesLN();
+            _obtenerReservasPorUsuario = new ObtenerReservasPorUsuarioLN();
         }
 
         public ActionResult ObtenerTodasLasClases()
         {
             List<ClaseListadoDto> listaDeClases;
 
-            if (User.IsInRole("CLIENTE"))
+            if (!User.Identity.IsAuthenticated)
+            {
+                listaDeClases =
+                    _obtenerTodasLasClases.ObtenerProximasClasesParaCliente();
+
+                ViewBag.EsVistaCliente = false;
+                ViewBag.EsVistaPublica = true;
+
+                List<HorarioSemanalListadoDto> horarios =
+                    _obtenerHorariosSemanales.ObtenerHorariosSemanales();
+
+                ViewBag.HorariosSemanales = horarios != null
+                    ? horarios.Where(h => h.estado).ToList()
+                    : new List<HorarioSemanalListadoDto>();
+            }
+            else if (User.IsInRole("CLIENTE"))
             {
                 listaDeClases =
                     _obtenerTodasLasClases.ObtenerProximasClasesParaCliente();
 
                 ViewBag.EsVistaCliente = true;
+                ViewBag.EsVistaPublica = false;
+
+                List<HorarioSemanalListadoDto> horarios =
+                    _obtenerHorariosSemanales.ObtenerHorariosSemanales();
+
+                ViewBag.HorariosSemanales = horarios != null
+                    ? horarios.Where(h => h.estado).ToList()
+                    : new List<HorarioSemanalListadoDto>();
+
+                // Diccionario idClaseProgramada -> idReserva para el cliente actual
+                using (var ctx = new Contexto())
+                {
+                    var identityId = User.Identity.GetUserId();
+                    var usuario = ctx.Usuarios
+                        .FirstOrDefault(u => u.identityUserId == identityId);
+
+                    if (usuario != null)
+                    {
+                        var reservasActivas = ctx.Reservas
+                            .Where(r => r.idUsuario == usuario.idUsuario && r.idEstadoReserva == 1)
+                            .ToDictionary(r => r.idClaseProgramada, r => r.idReserva);
+
+                        ViewBag.ReservasActivas = reservasActivas;
+                    }
+                    else
+                    {
+                        ViewBag.ReservasActivas = new System.Collections.Generic.Dictionary<int, int>();
+                    }
+                }
             }
             else
             {
@@ -53,6 +106,7 @@ namespace GimnasioJena.UI.Controllers
                     _obtenerTodasLasClases.ObtenerTodasLasClases();
 
                 ViewBag.EsVistaCliente = false;
+                ViewBag.EsVistaPublica = false;
             }
 
             return View(listaDeClases);
@@ -144,9 +198,9 @@ namespace GimnasioJena.UI.Controllers
                 CargarCatalogos();
                 return View(claseAGuardar);
             }
-            catch
+            catch (Exception ex)
             {
-                TempData["MensajeError"] = "Ocurrió un error al registrar la clase.";
+                TempData["MensajeError"] = "Ocurrió un error al registrar la clase: " + ex.Message;
                 CargarCatalogos();
                 return View(claseAGuardar);
             }
@@ -274,7 +328,7 @@ namespace GimnasioJena.UI.Controllers
             List<ClaseListadoDto> todasLasClases = _obtenerTodasLasClases.ObtenerTodasLasClases();
 
             List<ClaseListadoDto> disponibles = todasLasClases
-                .Where(c => c.estadoClase == "Activa" && c.cuposDisponibles > 0)
+                .Where(c => c.estadoClase == "Activo" && c.cuposDisponibles > 0)
                 .OrderBy(c => c.fechaClase)
                 .ThenBy(c => c.horaInicio)
                 .ToList();
