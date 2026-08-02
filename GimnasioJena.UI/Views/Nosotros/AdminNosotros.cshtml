@@ -72,7 +72,7 @@
     ══════════════════════════════════════════════ *@
     <div class="action-buttons-card mb-4">
         <h2>
-            <i class="bi bi-type-h1 me-2 text-accent"></i>Cabecera Principal
+            <i class="bi bi-image me-2 text-accent"></i>Cabecera Principal
         </h2>
 
         @if (header == null)
@@ -232,118 +232,7 @@
     </div>
 
     @* ══════════════════════════════════════════════
-       BLOQUE 3 — ESTADÍSTICAS
-    ══════════════════════════════════════════════ *@
-    <div class="action-buttons-card mb-4">
-        <h2>
-            <i class="bi bi-bar-chart-fill me-2 text-accent"></i>Estadísticas (Contadores)
-        </h2>
-
-        <div class="alert alert-info">
-            <i class="bi bi-info-circle me-2"></i>
-            Edite número, etiqueta e ícono de cada contador. Use el interruptor para activar o desactivar su visibilidad en la página pública.
-        </div>
-
-        @if (!stats.Any())
-        {
-            <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontraron estadísticas.</div>
-        }
-        else
-        {
-            <div class="row g-4 justify-content-center">
-                @foreach (var stat in stats)
-                {
-                    string statIcon = string.IsNullOrEmpty(stat.UrlImagen) ? "bi-bar-chart-fill" : stat.UrlImagen;
-                    <div class="col-12 col-md-4 @(stat.Estado ? "" : "card-inactiva")">
-                        <div class="h-100 card-jena-bordered-sm">
-                            <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-dark-navy">
-                                <span class="text-uppercase fw-bold text-jena-white-spaced">
-                                    Tarjeta de estadística
-                                </span>
-                                <span class="rounded-circle d-flex align-items-center justify-content-center icon-badge-orange">
-                                    <i class="bi @statIcon text-white text-jena-sm" id="stat-preview-@stat.Id"></i>
-                                </span>
-                            </div>
-                            <div class="p-3">
-                                <fieldset @Html.Raw(!stat.Estado ? "disabled" : "") class="btn-borderless">
-                                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="Id"    value="@stat.Id" />
-                                    <input type="hidden" name="Clave" value="@stat.Clave" />
-
-                                    <div class="mb-2">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            Número <span class="text-accent">*</span>
-                                        </label>
-                                        <input type="text" name="TextoPrincipal" value="@stat.TextoPrincipal"
-                                               class="form-control" placeholder="Ej: 500+" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            Etiqueta <span class="text-accent">*</span>
-                                        </label>
-                                        <input type="text" name="TextoSecundario" value="@stat.TextoSecundario"
-                                               class="form-control" placeholder="Ej: Miembros Activos" required />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            <i class="bi bi-palette-fill me-1 text-accent"></i>Ícono
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text px-3 btn-jena-nav">
-                                                <i class="bi @statIcon text-white" id="stat-ico-@stat.Id"></i>
-                                            </span>
-                                            <select name="UrlImagen" class="form-select"
-                                                    onchange="actualizarIconoBI('stat-ico-@stat.Id', this.value)">
-                                                <option value="bi-people-fill"@Html.Raw(stat.UrlImagen == "bi-people-fill" ? " selected" : "")>Personas / Comunidad</option>
-                                                <option value="bi-calendar-check-fill"@Html.Raw(stat.UrlImagen == "bi-calendar-check-fill" ? " selected" : "")>Calendario / Experiencia</option>
-                                                <option value="bi-lightning-charge-fill"@Html.Raw(stat.UrlImagen == "bi-lightning-charge-fill" ? " selected" : "")>Clases / Actividades</option>
-                                                <option value="bi-trophy-fill"@Html.Raw(stat.UrlImagen == "bi-trophy-fill" ? " selected" : "")>Logros / Excelencia</option>
-                                                <option value="bi-bar-chart-fill"@Html.Raw(stat.UrlImagen == "bi-bar-chart-fill" ? " selected" : "")>Estadísticas</option>
-                                                <option value="bi-stopwatch-fill"@Html.Raw(stat.UrlImagen == "bi-stopwatch-fill" ? " selected" : "")>Velocidad / Tiempo</option>
-                                                <option value="bi-activity"@Html.Raw(stat.UrlImagen == "bi-activity" ? " selected" : "")>Actividad física</option>
-                                                <option value="bi-fire"@Html.Raw(stat.UrlImagen == "bi-fire" ? " selected" : "")>Intensidad</option>
-                                                <option value="bi-heart-fill"@Html.Raw(stat.UrlImagen == "bi-heart-fill" ? " selected" : "")>Salud / Bienestar</option>
-                                                <option value="bi-award-fill"@Html.Raw(stat.UrlImagen == "bi-award-fill" ? " selected" : "")>Reconocimiento</option>
-                                                <option value="bi-star-fill"@Html.Raw(stat.UrlImagen == "bi-star-fill" ? " selected" : "")>General</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-text">El ícono se mostrará en la página pública. El cambio es inmediato al guardar.</div>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
-                                        <small class="text-muted text-jena-mini">
-                                            <i class="bi bi-clock me-1"></i>@(stat.FechaModificacion.HasValue ? stat.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
-                                        </small>
-                                        <button type="submit" class="btn-action btn-action-sm">
-                                            <i class="bi bi-save-fill"></i>Guardar
-                                        </button>
-                                    </div>
-                                </form>
-                                </fieldset>
-                                <hr class="my-2 border-light-blue" />
-                                <form action="@Url.Action("ToggleEstado", "SeccionesNosotros")" method="post" class="toggle-form mb-0">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@stat.Id" />
-                                    <div class="form-check form-switch d-flex align-items-center gap-2">
-                                        <input class="form-check-input" type="checkbox"
-                                               id="toggle-stat-@stat.Id"
-                                               @(stat.Estado ? "checked" : "")
-                                               onchange="this.form.submit()" />
-                                        <label class="form-check-label" for="toggle-stat-@stat.Id">
-                                            @(stat.Estado ? "Activo" : "Inactivo")
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-    </div>
-
-    @* ══════════════════════════════════════════════
-       BLOQUE 4 — MISIÓN Y VISIÓN
+       BLOQUE 3 — MISIÓN Y VISIÓN
     ══════════════════════════════════════════════ *@
     <div class="action-buttons-card mb-4">
         <h2>
@@ -435,7 +324,7 @@
     </div>
 
     @* ══════════════════════════════════════════════
-       BLOQUE 5 — NUESTROS VALORES
+       BLOQUE 4 — NUESTROS VALORES
     ══════════════════════════════════════════════ *@
     <div class="action-buttons-card mb-4">
         <h2>
@@ -534,13 +423,10 @@
                                                 <option value="bi-fire"@Html.Raw(valor.UrlImagen == "bi-fire" ? " selected" : "")>Intensidad / Motivación</option>
                                                 <option value="bi-stars"@Html.Raw(valor.UrlImagen == "bi-stars" ? " selected" : "")>Élite / Premium</option>
                                                 <option value="bi-award-fill"@Html.Raw(valor.UrlImagen == "bi-award-fill" ? " selected" : "")>Reconocimiento</option>
-                                                <option value="bi-gem"@Html.Raw(valor.UrlImagen == "bi-gem" ? " selected" : "")>Distinción / Valor</option>
-                                                <option value="bi-hand-thumbs-up-fill"@Html.Raw(valor.UrlImagen == "bi-hand-thumbs-up-fill" ? " selected" : "")>Apoyo / Positividad</option>
-                                                <option value="bi-arrow-up-circle-fill"@Html.Raw(valor.UrlImagen == "bi-arrow-up-circle-fill" ? " selected" : "")>Superación / Progreso</option>
                                                 <option value="bi-star-fill"@Html.Raw(valor.UrlImagen == "bi-star-fill" ? " selected" : "")>General</option>
                                             </select>
                                         </div>
-                                        <div class="form-text">El ícono se mostrará en la página pública. El cambio es inmediato al guardar.</div>
+                                        <div class="form-text">El ícono se mostrará en la página pública.</div>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
                                         <small class="text-muted text-jena-mini">
@@ -563,6 +449,117 @@
                                                onchange="this.form.submit()" />
                                         <label class="form-check-label" for="toggle-valor-@valor.Id">
                                             @(valor.Estado ? "Activo" : "Inactivo")
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @* ══════════════════════════════════════════════
+       BLOQUE 5 — ESTADÍSTICAS
+    ══════════════════════════════════════════════ *@
+    <div class="action-buttons-card mb-4">
+        <h2>
+            <i class="bi bi-bar-chart-fill me-2 text-accent"></i>Estadísticas (Contadores)
+        </h2>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Edite número, etiqueta e ícono de cada contador. Use el interruptor para activar o desactivar su visibilidad en la página pública.
+        </div>
+
+        @if (!stats.Any())
+        {
+            <div class="alert alert-warning"><i class="bi bi-info-circle me-2"></i>No se encontraron estadísticas.</div>
+        }
+        else
+        {
+            <div class="row g-4 justify-content-center">
+                @foreach (var stat in stats)
+                {
+                    string statIcon = string.IsNullOrEmpty(stat.UrlImagen) ? "bi-bar-chart-fill" : stat.UrlImagen;
+                    <div class="col-12 col-md-4 @(stat.Estado ? "" : "card-inactiva")">
+                        <div class="h-100 card-jena-bordered-sm">
+                            <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-dark-navy">
+                                <span class="text-uppercase fw-bold text-jena-white-spaced">
+                                    Tarjeta de estadística
+                                </span>
+                                <span class="rounded-circle d-flex align-items-center justify-content-center icon-badge-orange">
+                                    <i class="bi @statIcon text-white text-jena-sm" id="stat-preview-@stat.Id"></i>
+                                </span>
+                            </div>
+                            <div class="p-3">
+                                <fieldset @Html.Raw(!stat.Estado ? "disabled" : "") class="btn-borderless">
+                                <form action="@Url.Action("GuardarSeccion", "SeccionesNosotros")" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="Id"    value="@stat.Id" />
+                                    <input type="hidden" name="Clave" value="@stat.Clave" />
+
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold form-label-jena-sm">
+                                            Número <span class="text-accent">*</span>
+                                        </label>
+                                        <input type="text" name="TextoPrincipal" value="@stat.TextoPrincipal"
+                                               class="form-control" placeholder="Ej: 500+" required />
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold form-label-jena-sm">
+                                            Etiqueta <span class="text-accent">*</span>
+                                        </label>
+                                        <input type="text" name="TextoSecundario" value="@stat.TextoSecundario"
+                                               class="form-control" placeholder="Ej: Miembros Activos" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold form-label-jena-sm">
+                                            <i class="bi bi-palette-fill me-1 text-accent"></i>Ícono
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text px-3 btn-jena-nav">
+                                                <i class="bi @statIcon text-white" id="stat-ico-@stat.Id"></i>
+                                            </span>
+                                            <select name="UrlImagen" class="form-select"
+                                                    onchange="actualizarIconoBI('stat-ico-@stat.Id', this.value)">
+                                                <option value="bi-people-fill"@Html.Raw(stat.UrlImagen == "bi-people-fill" ? " selected" : "")>Personas / Comunidad</option>
+                                                <option value="bi-calendar-check-fill"@Html.Raw(stat.UrlImagen == "bi-calendar-check-fill" ? " selected" : "")>Calendario / Experiencia</option>
+                                                <option value="bi-lightning-charge-fill"@Html.Raw(stat.UrlImagen == "bi-lightning-charge-fill" ? " selected" : "")>Clases / Actividades</option>
+                                                <option value="bi-trophy-fill"@Html.Raw(stat.UrlImagen == "bi-trophy-fill" ? " selected" : "")>Logros / Excelencia</option>
+                                                <option value="bi-bar-chart-fill"@Html.Raw(stat.UrlImagen == "bi-bar-chart-fill" ? " selected" : "")>Estadísticas</option>
+                                                <option value="bi-stopwatch-fill"@Html.Raw(stat.UrlImagen == "bi-stopwatch-fill" ? " selected" : "")>Velocidad / Tiempo</option>
+                                                <option value="bi-activity"@Html.Raw(stat.UrlImagen == "bi-activity" ? " selected" : "")>Actividad física</option>
+                                                <option value="bi-fire"@Html.Raw(stat.UrlImagen == "bi-fire" ? " selected" : "")>Intensidad</option>
+                                                <option value="bi-heart-fill"@Html.Raw(stat.UrlImagen == "bi-heart-fill" ? " selected" : "")>Salud / Bienestar</option>
+                                                <option value="bi-award-fill"@Html.Raw(stat.UrlImagen == "bi-award-fill" ? " selected" : "")>Reconocimiento</option>
+                                                <option value="bi-star-fill"@Html.Raw(stat.UrlImagen == "bi-star-fill" ? " selected" : "")>General</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-text">El ícono se mostrará en la página pública. El cambio es inmediato al guardar.</div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                                        <small class="text-muted text-jena-mini">
+                                            <i class="bi bi-clock me-1"></i>@(stat.FechaModificacion.HasValue ? stat.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
+                                        </small>
+                                        <button type="submit" class="btn-action btn-action-sm">
+                                            <i class="bi bi-save-fill"></i>Guardar
+                                        </button>
+                                    </div>
+                                </form>
+                                </fieldset>
+                                <hr class="my-2 border-light-blue" />
+                                <form action="@Url.Action("ToggleEstado", "SeccionesNosotros")" method="post" class="toggle-form mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@stat.Id" />
+                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="toggle-stat-@stat.Id"
+                                               @(stat.Estado ? "checked" : "")
+                                               onchange="this.form.submit()" />
+                                        <label class="form-check-label" for="toggle-stat-@stat.Id">
+                                            @(stat.Estado ? "Activo" : "Inactivo")
                                         </label>
                                     </div>
                                 </form>

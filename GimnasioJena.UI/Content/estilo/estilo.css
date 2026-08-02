@@ -3511,6 +3511,10 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     }
 
     .btn-nueva-programacion {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
         min-height: 46px;
         padding: 11px 20px;
         border: 2px solid var(--jena-orange);
@@ -3521,10 +3525,21 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         box-shadow: 0 8px 20px rgba(255, 107, 53, .25);
     }
 
-        .btn-nueva-programacion:hover {
+        .btn-nueva-programacion i {
+            color: var(--jena-orange);
+            line-height: 1;
+        }
+
+        .btn-nueva-programacion:hover,
+        .btn-nueva-programacion:focus {
             color: white;
             background: var(--jena-orange);
             transform: translateY(-1px);
+        }
+
+        .btn-nueva-programacion:hover i,
+        .btn-nueva-programacion:focus i {
+            color: white !important;
         }
 
     .btn-generar {
@@ -3763,15 +3778,28 @@ section.hero-apex a.btn.btn-apex-primary:hover {
         }
 
         .estado-vacio h3 {
-            margin-bottom: 8px;
+            margin: 0 auto 8px;
             color: var(--jena-navy);
             font-weight: 800;
+            text-align: center;
+            width: 100%;
         }
 
         .estado-vacio p {
             max-width: 560px;
             margin: 0 auto 22px;
             color: var(--jena-muted);
+        }
+
+        .estado-vacio .btn-nueva-programacion {
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .estado-vacio .btn-nueva-programacion i {
+            font-size: 1.4rem;
+            line-height: 1;
         }
 
     .alerta-programacion {
@@ -5462,6 +5490,50 @@ section.hero-apex a.btn.btn-apex-primary:hover {
    Estilos para Nosotros/Index
    ========================== */
 
+/* ── Hero Header ── */
+.hero-nosotros {
+    position: relative;
+    width: 100%;
+    min-height: 420px;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-nosotros .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.52);
+}
+
+.hero-nosotros .hero-content {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    padding: 3rem 1rem;
+}
+
+.hero-nosotros .hero-subtitle {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--jena-orange, #f97316);
+    margin-bottom: 0.75rem;
+}
+
+.hero-nosotros .hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0;
+    color: #fff;
+}
+
 .historia-section {
     padding: 2rem 0;
 }
@@ -5488,9 +5560,65 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     margin-bottom: 0.75rem;
 }
 
+/* ===== Misión & Visión ===== */
+.mision-vision-section {
+    background-color: var(--jena-dark-navy);
+    padding: 5rem 0;
+}
+
+.heading-nosotros-lg {
+    font-size: var(--font-h2);
+    color: var(--jena-white);
+    font-weight: 700;
+}
+
+.mv-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 2rem;
+    min-height: 220px;
+    height: 100%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    border-left: 4px solid var(--jena-orange);
+}
+
+.mv-card h3 {
+    color: var(--jena-white);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.mv-card p {
+    color: var(--jena-light-gray);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.mv-icon-wrap {
+    width: 62px;
+    height: 62px;
+    border-radius: 12px;
+    background: rgba(255, 107, 53, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+    .mv-icon-wrap i {
+        font-size: 1.6rem;
+        color: var(--jena-orange);
+    }
+
 /* ===== Estadísticas ===== */
 .stats-section {
-    padding: 2rem 0;
+    background-color: var(--jena-white);
+    padding: 5rem 0;
 }
 
     .stats-section .container {
@@ -5498,29 +5626,23 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     }
 
 .stat-item {
-    background: linear-gradient(180deg, var(--jena-white), #ffffff);
-    border-radius: 12px;
-    padding: 1.4rem 1rem;
+    background-color: var(--jena-white);
+    border-radius: 15px;
+    padding: 2rem 1rem;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(11,11,11,0.04);
-    transition: transform 180ms ease, box-shadow 180ms ease;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.6rem;
-    border: 1px solid rgba(41,48,57,0.04);
+    border-left: 4px solid var(--jena-orange);
 }
-
-    .stat-item:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 18px 40px rgba(11,11,11,0.06);
-    }
 
 .stat-icon i {
     font-size: 2.1rem;
-    color: var(--jena-accent, var(--jena-orange));
-    background: rgba(255,107,53,0.08);
+    color: var(--jena-orange);
+    background: rgba(255, 107, 53, 0.08);
     padding: 12px;
     border-radius: 12px;
 }
@@ -5533,53 +5655,9 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 }
 
 .stat-label {
-    color: rgba(41,48,57,0.7);
+    color: rgba(41, 48, 57, 0.7);
     font-size: 0.95rem;
 }
-
-/* ===== Misión & Visión ===== */
-.mision-vision-section {
-    padding: 3rem 0;
-}
-
-.heading-nosotros-lg {
-    font-size: var(--font-h2);
-    color: var(--jena-navy);
-    font-weight: 700;
-}
-
-.mv-card {
-    background: linear-gradient(180deg, #FFFFFF, #FBFCFD);
-    border-radius: 12px;
-    padding: 1.4rem;
-    min-height: 220px;
-    box-shadow: 0 12px 30px rgba(41,48,57,0.04);
-    transition: transform 200ms ease, box-shadow 200ms ease;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-    .mv-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 22px 48px rgba(41,48,57,0.06);
-    }
-
-.mv-icon-wrap {
-    width: 62px;
-    height: 62px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(108,142,164,0.08), rgba(255,107,53,0.06));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0.5rem;
-}
-
-    .mv-icon-wrap i {
-        font-size: 1.6rem;
-        color: var(--jena-orange);
-    }
 
 /* ===== Valores ===== */
 .valores-section {
@@ -5588,24 +5666,24 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
 .valor-card {
     background: var(--jena-white);
-    border-radius: 12px;
-    padding: 1.2rem;
+    border-radius: 15px;
+    padding: 2rem 1.2rem;
     text-align: center;
-    box-shadow: 0 10px 28px rgba(11,11,11,0.04);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     height: 100%;
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
     align-items: center;
     justify-content: flex-start;
-    border: 1px solid rgba(41,48,57,0.03);
+    border-left: 4px solid var(--jena-light-blue);
 }
 
 .valor-icon {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: linear-gradient(180deg, rgba(255,107,53,0.06), rgba(108,142,164,0.04));
+    background: rgba(108, 142, 164, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -5614,7 +5692,7 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
     .valor-icon i {
         font-size: 1.5rem;
-        color: var(--jena-orange);
+        color: var(--jena-light-blue);
     }
 
 .valor-card h4 {
@@ -5632,31 +5710,33 @@ section.hero-apex a.btn.btn-apex-primary:hover {
 
 /* ===== CTA ===== */
 .cta-nosotros {
-    margin-top: 2rem;
-    padding: 2.2rem 0;
-    background: linear-gradient(90deg, rgba(255,107,53,0.06), rgba(44,62,80,0.02));
-    border-radius: 12px;
+    margin-top: 0;
+    padding: 5rem 0;
+    background-color: var(--jena-dark-navy);
     text-align: center;
-    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.3);
 }
 
     .cta-nosotros .container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.6rem;
+        gap: 0.75rem;
     }
 
     .cta-nosotros h2 {
-        font-size: 1.4rem;
-        color: var(--jena-navy);
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+        color: var(--jena-white);
         margin-bottom: 0;
-        font-weight: 700;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
     }
 
     .cta-nosotros p {
-        color: rgba(41,48,57,0.8);
-        margin-bottom: 0.6rem;
+        color: var(--jena-light-gray);
+        margin-bottom: 0.5rem;
+        max-width: 600px;
+        line-height: 1.7;
     }
 
 /* Botón CTA */
@@ -5686,6 +5766,14 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     }
 
 /* ===== Helpers y responsividad ===== */
+
+/* Desktop: hero 10 px más alto */
+@media (min-width: 992px) {
+    .hero-nosotros {
+        min-height: 430px;
+    }
+}
+
 @media (max-width: 991.98px) {
     .historia-section .container {
         padding: 1rem;
@@ -5694,9 +5782,19 @@ section.hero-apex a.btn.btn-apex-primary:hover {
     .mv-card {
         min-height: unset;
     }
+
+    /* Gap vertical cuando las stat-cards se apilan en tablet/mobile */
+    .stats-section .row {
+        row-gap: 1.25rem;
+    }
 }
 
 @media (max-width: 575.98px) {
+    /* Gap más generoso en mobile pequeño */
+    .stats-section .row {
+        row-gap: 1rem;
+    }
+
     .logo-circular {
         width: 110px;
         height: 110px;
