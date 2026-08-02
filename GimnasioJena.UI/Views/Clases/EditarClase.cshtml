@@ -141,9 +141,16 @@
                 </button>
 
                 <div class="text-center mt-4">
-                    <a href="@Url.Action("ObtenerTodasLasClases")" class="text-muted text-decoration-none">
-                        ← Volver al listado
-                    </a>
+                    @Html.ActionLink(
+                        "Volver al listado",
+                        "Index",
+                        "HorariosSemanales",
+                        null,
+                        new
+                        {
+                            @class = "btn btn-outline-secondary"
+                        }
+                    )
                 </div>
             </div>
 

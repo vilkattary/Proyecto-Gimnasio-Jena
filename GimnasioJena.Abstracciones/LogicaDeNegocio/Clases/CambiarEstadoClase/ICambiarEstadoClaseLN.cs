@@ -8,5 +8,6 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.CambiarEstadoClase
 {
     public interface ICambiarEstadoClaseLN
     {
+        bool CambiarEstadoClase(int idClaseProgramada);
     }
 }

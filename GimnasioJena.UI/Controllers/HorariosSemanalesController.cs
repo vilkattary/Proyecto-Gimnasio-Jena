@@ -1,4 +1,5 @@
 ﻿using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.RegistrarClase;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.CambiarEstadoHorarioSemanal;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.EditarHorarioSemanal;
@@ -11,6 +12,7 @@ using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.Abstracciones.Modelos.HorariosSemanales;
 using GimnasioJena.AccesoADatos;
 using GimnasioJena.LogicaDeNegocio.Bitacora;
+using GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.CambiarEstadoHorarioSemanal;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.EditarHorarioSemanal;
@@ -54,6 +56,9 @@ namespace GimnasioJena.UI.Controllers
         private readonly IRegistrarClaseLN
              _registrarClaseLN;
 
+        private readonly IObtenerTodasLasClasesLN
+             _obtenerTodasLasClasesLN;
+
         public HorariosSemanalesController()
         {
             _obtenerHorariosSemanalesLN =
@@ -79,6 +84,9 @@ namespace GimnasioJena.UI.Controllers
 
             _registrarClaseLN =
                 new RegistrarClaseLN();
+
+            _obtenerTodasLasClasesLN =
+                new ObtenerTodasLasClasesLN();
         }
 
         // GET: HorariosSemanales
@@ -90,6 +98,17 @@ namespace GimnasioJena.UI.Controllers
                 List<HorarioSemanalListadoDto> horarios =
                     _obtenerHorariosSemanalesLN
                         .ObtenerHorariosSemanales();
+
+                DateTime hoy = DateTime.Today;
+
+                ViewBag.ClasesUnicas =
+                    _obtenerTodasLasClasesLN
+                        .ObtenerTodasLasClases()
+                        .Where(c =>
+                            !c.idHorario.HasValue &&
+                            c.fechaClase >= hoy)
+                        .OrderBy(c => c.fechaHoraInicio)
+                        .ToList();
 
                 return View(horarios);
             }
@@ -531,9 +550,7 @@ namespace GimnasioJena.UI.Controllers
 
                 RegistrarBitacoraSegura(
                     "HorarioSemanal",
-                    nuevoEstado
-                        ? "ACTIVAR"
-                        : "DESACTIVAR",
+                    "CAMBIO_ESTADO",
                     idHorario,
                     nuevoEstado
                         ? "Se activó un horario semanal."
@@ -555,7 +572,8 @@ namespace GimnasioJena.UI.Controllers
                 );
 
                 TempData["MensajeError"] =
-                    "No fue posible cambiar el estado de la programación semanal.";
+                    "No fue posible cambiar el estado de la programación semanal: " +
+                    ObtenerMensajeCompleto(ex);
 
                 return RedirectToAction("Index");
             }
@@ -936,6 +954,25 @@ namespace GimnasioJena.UI.Controllers
                 $"entre el {resultado.fechaInicioGenerada:dd/MM/yyyy} " +
                 $"y el {resultado.fechaFinGenerada:dd/MM/yyyy}. " +
                 $"Se omitieron {resultado.clasesOmitidas} clases porque ya existían.";
+        }
+
+        private static string ObtenerMensajeCompleto(Exception ex)
+        {
+            var mensajes = new List<string>();
+            Exception actual = ex;
+
+            while (actual != null)
+            {
+                if (!string.IsNullOrWhiteSpace(actual.Message) &&
+                    !mensajes.Contains(actual.Message))
+                {
+                    mensajes.Add(actual.Message);
+                }
+
+                actual = actual.InnerException;
+            }
+
+            return string.Join(" | ", mensajes);
         }
 
     }

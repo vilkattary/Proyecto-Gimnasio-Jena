@@ -34,23 +34,13 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases
         {
             DateTime ahora = _fechasLN.ObtenerFechaActual();
 
-            // TESTING: se muestran clases activas independientemente de la fecha
             var clases = _obtenerTodasLasClasesAD
                 .ObtenerTodasLasClases()
-                .Where(c => c.estadoClase == "Activo")
+                .Where(c =>
+                    c.estadoClase == "Activo" &&
+                    c.fechaHoraInicio > ahora)
                 .OrderBy(c => c.fechaHoraInicio)
-                .Take(20)
                 .ToList();
-
-            // PRODUCCIÓN (restaurar y quitar bloque anterior):
-            //var clases = _obtenerTodasLasClasesAD
-            //    .ObtenerTodasLasClases()
-            //    .Where(c =>
-            //        c.estadoClase == "Activo" &&
-            //        c.fechaHoraInicio > ahora)
-            //    .OrderBy(c => c.fechaHoraInicio)
-            //    .Take(10)
-            //    .ToList();
 
             foreach (var clase in clases)
             {

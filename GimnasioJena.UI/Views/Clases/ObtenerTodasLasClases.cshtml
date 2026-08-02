@@ -200,8 +200,39 @@
         </div>
     }
 
+    @if (esVistaCliente || esVistaPublica)
+    {
+        <div class="info-card mb-4">
+
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-calendar-week text-accent me-1"></i>
+                    Calendario de clases
+                </h5>
+
+                @if (esVistaCliente)
+                {
+                    <div class="btn-group" role="group" aria-label="Alternar vista">
+                        <button type="button" id="btnVerCalendario" class="btn btn-orange btn-sm">
+                            <i class="bi bi-calendar3 me-1"></i>Calendario
+                        </button>
+                        <button type="button" id="btnVerLista" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-list-ul me-1"></i>Lista
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <div id="contenedorCalendario">
+                <div id="calendarioClases"></div>
+            </div>
+
+        </div>
+
+    }
+
     <!-- Lista de clases -->
-    <div id="listaClases">
+    <div id="listaClases" class="@((esVistaCliente || esVistaPublica) ? "d-none" : "")">
 
         @if (Model == null || !Model.Any())
         {
@@ -280,7 +311,6 @@
                         ? "bi-check-circle"
                         : "bi-x-circle";
 
-                if (esVistaPublica) { continue; }
                 <div class="clase-item mb-3"
                      data-tipo="@tipoLower"
                      data-estado="@estadoLower"
@@ -512,96 +542,62 @@
 
     </div>
 
-    <div id="paginacionClases" class="mt-3 mb-2"></div>
-
-    @* Sección de Programación Semanal — visible para usuario público y cliente *@
-    @if (esVistaPublica && horariosSemanales.Any())
-    {
-        var diasAgrupados = horariosSemanales
-            .GroupBy(h => new { h.diaSemana, h.nombreDia })
-            .OrderBy(g => g.Key.diaSemana)
-            .ToList();
-
-        <div class="mt-5">
-
-            <div class="welcome-section mb-4">
-                <div class="welcome-text">
-                    <h3>
-                        <i class="bi bi-calendar-week me-2"></i>
-                        Programación semanal
-                    </h3>
-                    <p>
-                        Estos son los horarios recurrentes del gimnasio.
-                        Las clases con fecha específica se generan a partir de esta programación.
-                    </p>
-                </div>
-            </div>
-
-            @foreach (var grupo in diasAgrupados)
-            {
-                <div class="info-card mb-3">
-
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-calendar-day text-accent fs-5"></i>
-                        <h5 class="mb-0 fw-semibold">@grupo.Key.nombreDia</h5>
-                        <span class="badge bg-secondary ms-auto">
-                            @grupo.Count()
-                            @(grupo.Count() == 1 ? "clase" : "clases")
-                        </span>
-                    </div>
-
-                    <div class="row g-3">
-                        @foreach (var h in grupo.OrderBy(x => x.horaInicio))
-                        {
-                            <div class="col-12 col-sm-6 col-lg-4">
-
-                                <div class="p-3 rounded border h-100"
-                                     style="border-color: var(--jena-light-blue) !important;">
-
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <i class="bi bi-clock text-accent"></i>
-                                        <span class="fw-semibold">
-                                            @h.horaInicio.ToString(@"hh\:mm")
-                                            –
-                                            @h.horaFin.ToString(@"hh\:mm")
-                                        </span>
-                                    </div>
-
-                                    <div class="text-clase-body">
-                                        <div>
-                                            <i class="bi bi-tag text-accent me-1"></i>
-                                            @h.nombreClase
-                                        </div>
-                                        <div>
-                                            <i class="bi bi-person-badge text-accent me-1"></i>
-                                            @h.nombreEntrenador
-                                        </div>
-                                        <div>
-                                            <i class="bi bi-people text-accent me-1"></i>
-                                            Cupo: @h.cupoMaximo
-                                        </div>
-                                        @if (!string.IsNullOrWhiteSpace(h.ubicacion))
-                                        {
-                                            <div>
-                                                <i class="bi bi-geo-alt text-accent me-1"></i>
-                                                @h.ubicacion
-                                            </div>
-                                        }
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        }
-                    </div>
-
-                </div>
-            }
-
-        </div>
-    }
+    <div id="paginacionClases" class="mt-3 mb-2 @((esVistaCliente || esVistaPublica) ? "d-none" : "")"></div>
 
 </div>
+
+@* Modal de detalle de clase y reserva/cancelacion (solo cliente) *@
+@if (esVistaCliente)
+{
+    using (Html.BeginForm("ReservarAjax", "Reservas", FormMethod.Post, new { id = "formTokenCalendario", style = "display:none;" }))
+    {
+        @Html.AntiForgeryToken()
+    }
+
+    <div class="modal fade" id="modalDetalleClase" tabindex="-1" aria-labelledby="modalDetalleClaseLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDetalleClaseLabel">
+                        <i class="bi bi-calendar-event text-accent me-2"></i>
+                        <span id="modalClaseTitulo">Clase</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-clase-body">
+                        <div class="mb-2">
+                            <i class="bi bi-calendar-date text-accent me-1"></i>
+                            <span id="modalClaseFecha"></span>
+                        </div>
+                        <div class="mb-2">
+                            <i class="bi bi-clock text-accent me-1"></i>
+                            <span id="modalClaseHora"></span>
+                        </div>
+                        <div class="mb-2">
+                            <i class="bi bi-person-badge text-accent me-1"></i>
+                            <span id="modalClaseEntrenador"></span>
+                        </div>
+                        <div class="mb-2">
+                            <i class="bi bi-people text-accent me-1"></i>
+                            <span id="modalClaseCupos"></span>
+                        </div>
+                        <div class="mb-2" id="modalClaseUbicacionContenedor">
+                            <i class="bi bi-geo-alt text-accent me-1"></i>
+                            <span id="modalClaseUbicacion"></span>
+                        </div>
+                    </div>
+                    <div id="modalClaseMensaje" class="alert alert-info d-none mt-3 mb-0 py-2 px-3 small"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" id="btnReservarModal" class="btn-action">Reservar clase</button>
+                    <button type="button" id="btnCancelarModal" class="btn-cancelar-reserva">Cancelar reserva</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <script>
 (function () {
@@ -718,3 +714,295 @@
     });
 }());
 </script>
+
+@if (esVistaCliente || esVistaPublica)
+{
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet" />
+    <style>
+        #calendarioClases .fc {
+            --fc-border-color: var(--jena-light-blue);
+            --fc-today-bg-color: rgba(255, 140, 0, 0.08);
+            --fc-event-bg-color: var(--jena-navy, #0b2545);
+            --fc-event-border-color: var(--jena-navy, #0b2545);
+            font-family: inherit;
+        }
+
+        #calendarioClases .fc-event {
+            cursor: @(esVistaCliente ? "pointer" : "default");
+            border-radius: 6px;
+            padding: 2px 4px;
+        }
+
+        #calendarioClases .fc-toolbar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        #calendarioClases .fc-button {
+            background-color: var(--jena-orange, #ff8c00) !important;
+            border-color: var(--jena-orange, #ff8c00) !important;
+        }
+
+        #calendarioClases .fc-button:disabled {
+            opacity: .5;
+        }
+
+        #calendarioClases .fc-button-active {
+            filter: brightness(0.9);
+        }
+
+        /* Responsive: mobile ajustes para que el calendario no se rompa */
+        @@media (max-width: 768px) {
+            #calendarioClases .fc-toolbar {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: stretch;
+            }
+
+            #calendarioClases .fc-toolbar-chunk {
+                display: flex;
+                justify-content: center;
+            }
+
+            #calendarioClases .fc-toolbar-title {
+                font-size: 1rem;
+                text-align: center;
+            }
+
+            #calendarioClases .fc-button {
+                padding: 0.3rem 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            #calendarioClases .fc-col-header-cell-cushion {
+                font-size: 0.75rem;
+            }
+
+            #calendarioClases .fc-timegrid-slot-label-cushion {
+                font-size: 0.7rem;
+            }
+
+            #calendarioClases .fc-event-title,
+            #calendarioClases .fc-event-time {
+                font-size: 0.7rem;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            #calendarioClases .fc-toolbar-title {
+                font-size: 0.9rem;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            #contenedorCalendario {
+                overflow-x: auto;
+            }
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var esCliente = @Html.Raw(esVistaCliente ? "true" : "false");
+            var urlEventos = '@Url.Action("ObtenerEventosCalendario", "Clases")';
+            var urlReservar = '@Url.Action("ReservarAjax", "Reservas")';
+            var urlCancelar = '@Url.Action("CancelarAjax", "Reservas")';
+            var token = $('input[name="__RequestVerificationToken"]').first().val();
+
+            var eventoSeleccionado = null;
+            var modalEl = document.getElementById('modalDetalleClase');
+            var modalInstancia = modalEl ? bootstrap.Modal.getOrCreateInstance(modalEl) : null;
+
+            function iniciarCalendario() {
+                var calendarioEl = document.getElementById('calendarioClases');
+                if (!calendarioEl) { return; }
+
+                $.getJSON(urlEventos, function (eventos) {
+                    var minHora = '06:00:00';
+                    var maxHora = '22:00:00';
+
+                    if (eventos && eventos.length) {
+                        var horaInicios = eventos.map(function (e) { return e.start.substring(11, 19); });
+                        var horaFines = eventos.map(function (e) { return e.end.substring(11, 19); });
+                        minHora = horaInicios.sort()[0];
+                        maxHora = horaFines.sort().slice(-1)[0];
+                    }
+
+                    var eventosCalendario = (eventos || []).map(function (e) {
+                        var color = e.yaReservada ? '#28a745' : (e.reservaHabilitada || !esCliente ? 'var(--jena-navy, #0b2545)' : '#adb5bd');
+                        return {
+                            id: e.id,
+                            title: e.title,
+                            start: e.start,
+                            end: e.end,
+                            backgroundColor: color,
+                            borderColor: color,
+                            extendedProps: e
+                        };
+                    });
+
+                    var calendar = new FullCalendar.Calendar(calendarioEl, {
+                        initialView: window.innerWidth <= 768 ? 'timeGridDay' : 'timeGridWeek',
+                        locale: 'es',
+                        height: 'auto',
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: window.innerWidth <= 768
+                                ? 'timeGridDay,dayGridMonth'
+                                : 'timeGridWeek,dayGridMonth'
+                        },
+                        windowResize: function (view) {
+                            var esMobile = window.innerWidth <= 768;
+                            calendar.changeView(esMobile ? 'timeGridDay' : 'timeGridWeek');
+                        },
+                        slotMinTime: minHora,
+                        slotMaxTime: maxHora,
+                        slotDuration: '00:30:00',
+                        allDaySlot: false,
+                        events: eventosCalendario,
+                        eventClick: function (info) {
+                            if (!esCliente) { return; }
+                            mostrarModal(info.event.extendedProps);
+                        }
+                    });
+
+                    calendar.render();
+                });
+            }
+
+            function mostrarModal(data) {
+                eventoSeleccionado = data;
+
+                var inicio = new Date(data.start);
+                var fin = new Date(data.end);
+
+                document.getElementById('modalClaseTitulo').textContent = data.nombreClase || 'Clase';
+                document.getElementById('modalClaseFecha').textContent = inicio.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('modalClaseHora').textContent =
+                    inicio.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) + ' – ' +
+                    fin.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('modalClaseEntrenador').textContent = data.nombreEntrenador || 'Sin asignar';
+                document.getElementById('modalClaseCupos').textContent = data.cuposDisponibles + ' cupos disponibles';
+
+                var ubicContenedor = document.getElementById('modalClaseUbicacionContenedor');
+                if (data.ubicacion) {
+                    document.getElementById('modalClaseUbicacion').textContent = data.ubicacion;
+                    ubicContenedor.classList.remove('d-none');
+                } else {
+                    ubicContenedor.classList.add('d-none');
+                }
+
+                var mensajeEl = document.getElementById('modalClaseMensaje');
+                var btnReservar = document.getElementById('btnReservarModal');
+                var btnCancelar = document.getElementById('btnCancelarModal');
+
+                mensajeEl.classList.add('d-none');
+                btnReservar.classList.add('d-none');
+                btnCancelar.classList.add('d-none');
+
+                if (data.yaReservada) {
+                    btnCancelar.classList.remove('d-none');
+                } else if (data.reservaHabilitada) {
+                    btnReservar.classList.remove('d-none');
+                } else {
+                    mensajeEl.textContent = data.mensajeReserva || 'Esta clase no est\u00E1 disponible para reservar.';
+                    mensajeEl.classList.remove('d-none');
+                }
+
+                if (modalInstancia) { modalInstancia.show(); }
+            }
+
+            var btnReservarModal = document.getElementById('btnReservarModal');
+            if (btnReservarModal) {
+                btnReservarModal.addEventListener('click', function () {
+                    if (!eventoSeleccionado) { return; }
+                    btnReservarModal.disabled = true;
+
+                    $.post(urlReservar, {
+                        idClaseProgramada: eventoSeleccionado.id,
+                        __RequestVerificationToken: token
+                    }).done(function (resp) {
+                        if (resp.exito) {
+                            if (modalInstancia) { modalInstancia.hide(); }
+                            location.reload();
+                        } else {
+                            mostrarMensajeModal(resp.mensaje);
+                        }
+                    }).fail(function () {
+                        mostrarMensajeModal('No fue posible completar la reserva.');
+                    }).always(function () {
+                        btnReservarModal.disabled = false;
+                    });
+                });
+            }
+
+            var btnCancelarModal = document.getElementById('btnCancelarModal');
+            if (btnCancelarModal) {
+                btnCancelarModal.addEventListener('click', function () {
+                    if (!eventoSeleccionado) { return; }
+                    btnCancelarModal.disabled = true;
+
+                    $.post(urlCancelar, {
+                        idReserva: eventoSeleccionado.idReservaActiva,
+                        __RequestVerificationToken: token
+                    }).done(function (resp) {
+                        if (resp.exito) {
+                            if (modalInstancia) { modalInstancia.hide(); }
+                            location.reload();
+                        } else {
+                            mostrarMensajeModal(resp.mensaje);
+                        }
+                    }).fail(function () {
+                        mostrarMensajeModal('No fue posible cancelar la reserva.');
+                    }).always(function () {
+                        btnCancelarModal.disabled = false;
+                    });
+                });
+            }
+
+            function mostrarMensajeModal(mensaje) {
+                var mensajeEl = document.getElementById('modalClaseMensaje');
+                if (!mensajeEl) { return; }
+                mensajeEl.textContent = mensaje;
+                mensajeEl.classList.remove('d-none');
+            }
+
+            // Alternar entre calendario y lista (solo cliente), con persistencia en localStorage
+            var btnVerCalendario = document.getElementById('btnVerCalendario');
+            var btnVerLista = document.getElementById('btnVerLista');
+            var calendarioContenedor = document.getElementById('contenedorCalendario');
+            var listaContenedor = document.getElementById('listaClases');
+            var paginacionContenedor = document.getElementById('paginacionClases');
+
+            function aplicarVista(vista) {
+                if (vista === 'lista') {
+                    if (calendarioContenedor) { calendarioContenedor.classList.add('d-none'); }
+                    if (listaContenedor) { listaContenedor.classList.remove('d-none'); }
+                    if (paginacionContenedor) { paginacionContenedor.classList.remove('d-none'); }
+                    if (btnVerLista) { btnVerLista.classList.replace('btn-outline-secondary', 'btn-orange'); }
+                    if (btnVerCalendario) { btnVerCalendario.classList.replace('btn-orange', 'btn-outline-secondary'); }
+                } else {
+                    if (calendarioContenedor) { calendarioContenedor.classList.remove('d-none'); }
+                    if (listaContenedor) { listaContenedor.classList.add('d-none'); }
+                    if (paginacionContenedor) { paginacionContenedor.classList.add('d-none'); }
+                    if (btnVerCalendario) { btnVerCalendario.classList.replace('btn-outline-secondary', 'btn-orange'); }
+                    if (btnVerLista) { btnVerLista.classList.replace('btn-orange', 'btn-outline-secondary'); }
+                }
+                try { localStorage.setItem('jena_vista_clases', vista); } catch (e) { }
+            }
+
+            iniciarCalendario();
+
+            if (btnVerCalendario && btnVerLista) {
+                btnVerCalendario.addEventListener('click', function () { aplicarVista('calendario'); });
+                btnVerLista.addEventListener('click', function () { aplicarVista('lista'); });
+
+                var vistaGuardada = 'calendario';
+                try { vistaGuardada = localStorage.getItem('jena_vista_clases') || 'calendario'; } catch (e) { }
+                aplicarVista(vistaGuardada);
+            }
+        });
+    </script>
+}
