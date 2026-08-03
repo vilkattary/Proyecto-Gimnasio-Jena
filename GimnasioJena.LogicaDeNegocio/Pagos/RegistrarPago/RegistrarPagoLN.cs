@@ -138,5 +138,14 @@ namespace GimnasioJena.LogicaDeNegocio.Pagos.RegistrarPago
                     nuevoEstadoMembresia
                 );
         }
+
+        public bool ExisteReferenciaPago(string referenciaPago)
+        {
+            if (string.IsNullOrWhiteSpace(referenciaPago))
+                return false;
+
+            return _registrarPagoAD
+                .ExisteReferenciaPago(referenciaPago);
+        }
     }
 }

@@ -9,6 +9,8 @@ namespace GimnasioJena.AccesoADatos.Pagos.RegistrarPago
 {
     public class RegistrarPagoAD : IRegistrarPagoAD
     {
+        private const int LONGITUD_MAXIMA_REFERENCIA_PAGO = 255;
+
         private readonly Contexto _contexto;
 
         public RegistrarPagoAD()
@@ -94,7 +96,7 @@ namespace GimnasioJena.AccesoADatos.Pagos.RegistrarPago
                             pago.fechaPago,
 
                         referenciaPago =
-                            pago.referenciaPago,
+                            TruncarReferenciaPago(pago.referenciaPago),
 
                         observaciones =
                             pago.observaciones
@@ -165,6 +167,28 @@ namespace GimnasioJena.AccesoADatos.Pagos.RegistrarPago
             return _contexto.EstadoPagos.Any(e =>
                 e.idEstadoPago == idEstadoPago &&
                 e.estado);
+        }
+
+        public bool ExisteReferenciaPago(string referenciaPago)
+        {
+            if (string.IsNullOrWhiteSpace(referenciaPago))
+                return false;
+
+            string referencia =
+                TruncarReferenciaPago(referenciaPago);
+
+            return _contexto.Pagos.Any(p =>
+                p.referenciaPago == referencia);
+        }
+
+        private static string TruncarReferenciaPago(string referenciaPago)
+        {
+            if (string.IsNullOrEmpty(referenciaPago))
+                return referenciaPago;
+
+            return referenciaPago.Length > LONGITUD_MAXIMA_REFERENCIA_PAGO
+                ? referenciaPago.Substring(0, LONGITUD_MAXIMA_REFERENCIA_PAGO)
+                : referenciaPago;
         }
     }
 }
