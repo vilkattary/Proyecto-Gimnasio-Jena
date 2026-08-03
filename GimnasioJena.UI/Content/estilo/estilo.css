@@ -6924,7 +6924,7 @@ body.modal-jena-open {
         gap: 8px;
     }
 
-        /* Botones prev/next — touch target ≥ 44×44 px */
+       
         .reservas-paginacion .btn-pag {
             display: flex;
             align-items: center;
@@ -6965,4 +6965,27 @@ body.modal-jena-open {
             letter-spacing: 0.3px;
             font-family: var(--font-primary);
         }
+}
+
+#calendarioClases .fc-button {
+    background-color: var(--jena-orange, #ff8c00) !important;
+    border-color: var(--jena-orange, #ff8c00) !important;
+    color: #ffffff !important; 
+}
+
+  
+    #calendarioClases .fc-button:disabled {
+        opacity: .5;
+    }
+
+#calendarioClases .fc-button-active {
+    filter: brightness(0.9);
+}
+
+
+#calendarioClases .fc-button .fc-icon,
+#calendarioClases .fc-button svg,
+#calendarioClases .fc-button .fc-button-icon {
+    color: inherit;
+    fill: currentColor;
 }
