@@ -836,7 +836,12 @@
                     }
 
                     var eventosCalendario = (eventos || []).map(function (e) {
-                        var color = e.yaReservada ? '#28a745' : (e.reservaHabilitada || !esCliente ? 'var(--jena-navy, #0b2545)' : '#adb5bd');
+                        var reservado = !!e.yaReservada; 
+                        var colorReservado = '#28a745'; 
+                        var colorNormal = (e.reservaHabilitada || !esCliente) ? 'var(--jena-navy, #0b2545)' : '#adb5bd';
+
+                        var color = reservado ? colorReservado : colorNormal;
+
                         return {
                             id: e.id,
                             title: e.title,
@@ -844,6 +849,8 @@
                             end: e.end,
                             backgroundColor: color,
                             borderColor: color,
+                            textColor: '#ffffff',               
+                            classNames: reservado ? ['fc-event-reserved'] : [],
                             extendedProps: e
                         };
                     });
