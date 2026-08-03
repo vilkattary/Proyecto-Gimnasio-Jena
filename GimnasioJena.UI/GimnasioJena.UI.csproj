@@ -200,6 +200,7 @@
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SeccionesNosotrosController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="Controllers\WebhookController.cs" />
     <Compile Include="Filters\SoloAdministradorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -344,6 +345,7 @@
     <Content Include="Views\Admin\PlanesMembresia.cshtml" />
     <Content Include="Views\Admin\EditarPrecioPlan.cshtml" />
     <Content Include="Views\Manage\_ChangePasswordPartial.cshtml" />
+    <Content Include="Views\Clientes\ErrorPago.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
