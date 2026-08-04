@@ -7,6 +7,10 @@
 }
 
 <div class="container py-5">
+    <a href="javascript:history.back()" class="btn btn-volver" aria-label="Volver">
+        <i class="bi bi-arrow-left"></i> Atrás
+    </a>
+
     <div class="mb-5">
         <h1 class="page-title">Gestión de usuarios</h1>
         <p class="text-muted">Administre los usuarios registrados, sus roles y el acceso al sistema.</p>
@@ -35,71 +39,71 @@
         }
         else
         {
-        <div class="table-jena-wrapper">
-            <table class="table-jena">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Identificación</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Rol actual</th>
-                        <th>Estado</th>
-                        <th>Fecha registro</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="cuerpoTabla">
-                    @foreach (var usuario in Model)
-                    {
-                        var entrenador = entrenadores.FirstOrDefault(e => e.idUsuario == usuario.idUsuario);
-
-                        string badgeRol;
-                        if (usuario.rol == "ADMINISTRADOR")      { badgeRol = "badge-jena-admin"; }
-                        else if (usuario.rol == "ENTRENADOR")    { badgeRol = "badge-jena-coach"; }
-                        else                                     { badgeRol = "badge-jena-client"; }
-
+            <div class="table-jena-wrapper">
+                <table class="table-jena">
+                    <thead>
                         <tr>
-                            <td data-label="Nombre">@usuario.nombreCompleto</td>
-                            <td data-label="Identificación">@usuario.identificacion</td>
-                            <td data-label="Correo">@usuario.correo</td>
-                            <td data-label="Teléfono">@usuario.telefono</td>
-                            <td data-label="Rol actual">
-                                <span class="@badgeRol">@usuario.rol</span>
-                            </td>
-                            <td data-label="Estado">
-                                @if (usuario.estado)
-                                {
-                                    <span class="badge bg-success">Activo</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger">Inactivo</span>
-                                }
-                            </td>
-                            <td data-label="Fecha registro">@usuario.fechaRegistro.ToString("dd/MM/yyyy")</td>
-                            <td class="td-acciones">
-                                <div class="d-flex gap-1 flex-wrap justify-content-center">
-                                    <button type="button" class="btn btn-sm btn-action-jena"
-                                            onclick="cargarVistaModalRol('@usuario.identityUserId')">
-                                        <i class="bi bi-shield-lock me-1"></i>Cambiar rol
-                                    </button>
-                                    @if (entrenador != null)
-                                    {
-                                        <button type="button" class="btn btn-sm btn-action-jena"
-                                                onclick="cargarVistaModalEntrenador(@entrenador.idEntrenador)">
-                                            <i class="bi bi-person-badge me-1"></i>Editar entrenador
-                                        </button>
-                                    }
-                                </div>
-                            </td>
+                            <th>Nombre</th>
+                            <th>Identificación</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Rol actual</th>
+                            <th>Estado</th>
+                            <th>Fecha registro</th>
+                            <th>Acciones</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <p class="paginacion-info" id="paginacionInfo"></p>
-        <div id="paginacion-mobile" class="paginacion-mobile-wrapper"></div>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                        @foreach (var usuario in Model)
+                        {
+                            var entrenador = entrenadores.FirstOrDefault(e => e.idUsuario == usuario.idUsuario);
+
+                            string badgeRol;
+                            if (usuario.rol == "ADMINISTRADOR") { badgeRol = "badge-jena-admin"; }
+                            else if (usuario.rol == "ENTRENADOR") { badgeRol = "badge-jena-coach"; }
+                            else { badgeRol = "badge-jena-client"; }
+
+                            <tr>
+                                <td data-label="Nombre">@usuario.nombreCompleto</td>
+                                <td data-label="Identificación">@usuario.identificacion</td>
+                                <td data-label="Correo">@usuario.correo</td>
+                                <td data-label="Teléfono">@usuario.telefono</td>
+                                <td data-label="Rol actual">
+                                    <span class="@badgeRol">@usuario.rol</span>
+                                </td>
+                                <td data-label="Estado">
+                                    @if (usuario.estado)
+                                    {
+                                        <span class="badge bg-success">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    }
+                                </td>
+                                <td data-label="Fecha registro">@usuario.fechaRegistro.ToString("dd/MM/yyyy")</td>
+                                <td class="td-acciones">
+                                    <div class="d-flex gap-1 flex-wrap justify-content-center">
+                                        <button type="button" class="btn btn-sm btn-action-jena"
+                                                onclick="cargarVistaModalRol('@usuario.identityUserId')">
+                                            <i class="bi bi-shield-lock me-1"></i>Cambiar rol
+                                        </button>
+                                        @if (entrenador != null)
+                                        {
+                                            <button type="button" class="btn btn-sm btn-action-jena"
+                                                    onclick="cargarVistaModalEntrenador(@entrenador.idEntrenador)">
+                                                <i class="bi bi-person-badge me-1"></i>Editar entrenador
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <p class="paginacion-info" id="paginacionInfo"></p>
+            <div id="paginacion-mobile" class="paginacion-mobile-wrapper"></div>
         }
     </div>
 </div>
