@@ -9,6 +9,11 @@ namespace GimnasioJena.Abstracciones.AccesoADatos
             MembresiaCrearDto membresia
         );
 
+        int RegistrarMembresiaPendiente(
+            int idUsuario,
+            int idPlanMembresia
+        );
+
         bool UsuarioTieneMembresiaActiva(
             int idUsuario
         );

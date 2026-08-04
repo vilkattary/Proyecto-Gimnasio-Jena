@@ -5,5 +5,7 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Membresias.RegistrarMembres
     public interface IRegistrarMembresiaLN
     {
         bool RegistrarMembresia(MembresiaCrearDto membresia);
+
+        int RegistrarMembresiaPendiente(int idUsuario, int idPlanMembresia);
     }
 }

@@ -1,0 +1,25 @@
+@{
+    ViewBag.Title = "Pago no completado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container py-5">
+    <div class="text-center" style="max-width: 620px; margin: 0 auto;">
+        <div style="font-size: 64px; line-height: 1; color: #D95F31;">&#9888;</div>
+
+        <h1 class="page-title mt-4">No pudimos completar tu pago</h1>
+
+        <p class="text-muted">
+            @(TempData["MensajeError"] ??
+                "El pago no pudo procesarse. Si se realizó algún cargo, " +
+                "comunícate con soporte indicando tu número de referencia.")
+        </p>
+
+        <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
+            <a href="@Url.Action("MiMembresia", "Clientes")"
+               class="btn btn-primary">
+                Volver a mi membresía
+            </a>
+        </div>
+    </div>
+</section>

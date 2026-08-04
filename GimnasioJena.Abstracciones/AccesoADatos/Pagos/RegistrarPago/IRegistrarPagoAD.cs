@@ -20,5 +20,7 @@ namespace GimnasioJena.Abstracciones.AccesoADatos.Pagos.RegistrarPago
         bool ExisteMetodoPago(int idMetodoPago);
 
         bool ExisteEstadoPago(int idEstadoPago);
+
+        bool ExisteReferenciaPago(string referenciaPago);
     }
 }
