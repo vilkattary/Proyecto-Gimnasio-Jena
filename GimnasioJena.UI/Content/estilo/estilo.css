@@ -636,6 +636,8 @@ a:focus-visible {
             max-height: 58px;
             max-width: 240px;
             vertical-align: middle;
+            object-fit: contain;
+            object-position: left center;
             transition: opacity 0.3s ease;
         }
 
@@ -799,11 +801,54 @@ footer {
     }
 
     footer {
-        text-align: center;
+        text-align: left;
+        padding: 2rem 0 1.5rem;
     }
 
+        footer .footer-logo {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        footer .col-lg-4 > .text-muted-light {
+            text-align: center;
+        }
+
+        footer .social-links {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
         footer .social-icon {
-            margin: 0 0.25rem;
+            margin: 0 0.35rem;
+        }
+
+        footer .col-lg-2,
+        footer .col-lg-3 {
+            text-align: left;
+            padding-top: 0.5rem;
+        }
+
+        footer h5 {
+            text-align: left;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.3);
+            display: inline-block;
+        }
+
+        footer ul.list-unstyled li {
+            text-align: left;
+        }
+
+        footer ul.list-unstyled li a {
+            font-size: 0.9rem;
+        }
+
+        footer .copyright {
+            margin-top: 1.5rem;
+            text-align: center;
         }
 }
 
@@ -3352,7 +3397,9 @@ section.hero-apex a.btn.btn-apex-primary {
     }
 
 .class-card {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: var(--jena-white);
     border-radius: 20px;
     padding: 2.5rem 2rem;
@@ -3360,11 +3407,8 @@ section.hero-apex a.btn.btn-apex-primary {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     height: 100%;
     border: 2px solid transparent;
+    transition: none;
 }
-
-    .class-card:hover {
-        border-color: var(--jena-orange);
-    }
 
     .class-card .icon-wrapper {
         width: 80px;
@@ -3375,6 +3419,7 @@ section.hero-apex a.btn.btn-apex-primary {
         align-items: center;
         justify-content: center;
         margin: 0 auto 1.5rem;
+        flex-shrink: 0;
     }
 
         .class-card .icon-wrapper i {
@@ -3388,6 +3433,7 @@ section.hero-apex a.btn.btn-apex-primary {
         margin-bottom: 1rem;
         font-family: var(--font-headings);
         letter-spacing: 1px;
+        flex-shrink: 0;
     }
 
     .class-card p {
@@ -3395,6 +3441,20 @@ section.hero-apex a.btn.btn-apex-primary {
         font-size: 0.95rem;
         line-height: 1.6;
         margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .class-card .btn-action,
+    .class-card .btn-class {
+        flex-shrink: 0;
+        margin-top: auto;
+        align-self: center;
+        display: inline-flex;
+        width: auto;
+        padding: 0.55rem 1.6rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        margin-bottom: 0;
     }
 
 .btn-class {
@@ -3499,7 +3559,14 @@ section.hero-apex a.btn.btn-apex-primary {
 
     .class-card {
         margin-bottom: 2rem;
+        padding: 2rem 1.5rem;
     }
+
+        .class-card .btn-action,
+        .class-card .btn-class {
+            padding: 0.5rem 1.4rem;
+            font-size: 0.75rem;
+        }
 }
 
 
@@ -5801,46 +5868,34 @@ section.hero-apex a.btn.btn-apex-primary {
 
 .admin-card-actions {
     margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
-.btn-jena-primary {
-    background: var(--jena-white);
-    color: var(--jena-orange) !important;
-    border: 2px solid var(--jena-orange);
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 0.5rem 1.1rem;
-    transition: background 0.2s,transform 0.15s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-}
-
-    .btn-jena-primary:hover {
-        background: var(--jena-orange);
-        color: var(--jena-white) !important;
-        transform: translateY(-1px);
-    }
-
+/* btn-jena-primary y btn-jena-outline son idénticos visualmente: blanco + borde navy */
+.btn-jena-primary,
 .btn-jena-outline {
-    background: transparent;
+    background: var(--jena-white);
     color: var(--jena-navy) !important;
     border: 1.5px solid var(--jena-navy);
     border-radius: 8px;
     font-size: 0.875rem;
     font-weight: 600;
-    padding: 0.45rem 1rem;
-    transition: background 0.2s,color 0.2s;
+    padding: 0.5rem 1.1rem;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    white-space: nowrap;
 }
 
-    .btn-jena-outline:hover {
-        background: var(--jena-navy);
-        color: var(--jena-white) !important;
-    }
+.btn-jena-primary:hover,
+.btn-jena-outline:hover {
+    background: var(--jena-navy);
+    color: var(--jena-white) !important;
+    transform: translateY(-1px);
+}
 
 .admin-main {
     min-height: calc(100vh - 72px);
@@ -5854,6 +5909,102 @@ section.hero-apex a.btn.btn-apex-primary {
     border-radius: 8px;
     background-color: var(--jena-white);
     padding: 1.5rem;
+}
+
+/* ============================================
+   PLANES MEMBRESÍA — CARDS
+============================================ */
+.plan-precio-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+}
+
+.plan-precio {
+    font-family: var(--font-headings);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--jena-navy);
+    line-height: 1;
+}
+
+.plan-precio-label {
+    font-size: 0.75rem;
+    color: var(--jena-navy);
+    opacity: 0.55;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.plan-detalle-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+    .plan-detalle-list li {
+        font-size: 0.875rem;
+        color: var(--jena-navy);
+        display: flex;
+        align-items: center;
+    }
+
+        .plan-detalle-list li i {
+            color: var(--jena-orange);
+            flex-shrink: 0;
+        }
+
+/* ============================================
+   FORMULARIOS JENA (admin)
+============================================ */
+.form-group-jena {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-label-jena {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--jena-navy);
+    opacity: 0.7;
+}
+
+.form-control-jena {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--jena-navy);
+    background: var(--jena-white);
+    border: 1.5px solid rgba(0, 45, 80, 0.25);
+    border-radius: 8px;
+    padding: 0.55rem 0.9rem;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    box-sizing: border-box;
+}
+
+    .form-control-jena:focus {
+        border-color: var(--jena-navy);
+        box-shadow: 0 0 0 3px rgba(0, 45, 80, 0.12);
+    }
+
+    .form-control-jena[readonly] {
+        background: var(--jena-light-gray);
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+.form-error-jena {
+    font-size: 0.78rem;
+    color: #c0392b;
+    margin-top: 0.2rem;
 }
 
 /* ============================================
