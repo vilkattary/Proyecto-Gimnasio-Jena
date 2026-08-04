@@ -3,8 +3,22 @@
 @{
     ViewBag.Title = "Pagos";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
 
+    var pagos = Model ?? Enumerable.Empty<dynamic>();
+    var clientes = pagos
+        .Where(p => !string.IsNullOrWhiteSpace((string)p.nombreCliente))
+        .Select(p => (string)p.nombreCliente)
+        .Distinct()
+        .OrderBy(c => c)
+        .ToList();
+
+    var estados = pagos
+        .Where(p => !string.IsNullOrWhiteSpace((string)p.estadoPago))
+        .Select(p => (string)p.estadoPago)
+        .Distinct()
+        .OrderBy(e => e)
+        .ToList();
+}
 <div class="container py-5">
 
     <a href="javascript:history.back()" class="btn btn-volver" aria-label="Volver">
@@ -24,28 +38,66 @@
             Registrar pago
         </a>
     </div>
+    @* FILTROS: Cliente | Estado | Fecha *@
+    <div class="info-card mb-4">
+        <div class="row align-items-end g-3">
+            <div class="col-md-4">
+                <label class="info-label mb-1"><i class="bi bi-person me-1"></i>Cliente</label>
+                <select id="filtroPagoCliente" class="form-select">
+                    <option value="">Todos los clientes</option>
+                    @foreach (var c in clientes)
+                    {
+                        <option value="@c.ToLower()">@c</option>
+}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="info-label mb-1"><i class="bi bi-toggle-on me-1"></i>Estado</label>
+                <select id="filtroPagoEstado" class="form-select">
+                    <option value="">Todos</option>
+                    @foreach (var e in estados)
+                    {
+                        <option value="@e.ToLower()">@e</option>
+}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="info-label mb-1"><i class="bi bi-calendar-event me-1"></i>Fecha desde</label>
+                <input id="filtroPagoDesde" type="date" class="form-control" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="info-label mb-1"><i class="bi bi-calendar-event me-1"></i>Fecha hasta</label>
+                <input id="filtroPagoHasta" type="date" class="form-control" />
+            </div>
+
+            <div class="col-md-3">
+                <button type="button" class="btn-orange w-100" onclick="aplicarFiltrosPagos()">
+                    <i class="bi bi-search me-2"></i>Buscar
+                </button>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-outline-secondary w-100" onclick="resetearFiltrosPagos()">
+                    <i class="bi bi-x-circle me-2"></i>Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div class="info-card">
 
-        @if (TempData["MensajeExito"] != null)
-        {
-            <div class="alert alert-success">
-                @TempData["MensajeExito"]
-            </div>
-        }
 
+
+        @if (TempData["MensajeExito"] != null)
+        {<div class="alert alert-success">@TempData["MensajeExito"]</div>}
         @if (TempData["MensajeError"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["MensajeError"]
-            </div>
-        }
+        {<div class="alert alert-danger">@TempData["MensajeError"]</div>}
 
         @if (Model == null || !Model.Any())
         {
-            <div class="alert alert-info">
-                No hay pagos registrados.
-            </div>
+            <div class="alert alert-info">No hay pagos registrados.</div>
         }
         else
         {
@@ -64,49 +116,31 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody id="cuerpoTablaPagos">
                         @foreach (var pago in Model)
                         {
-                            <tr>
+                            var clienteData = (pago.nombreCliente ?? "").ToString().ToLower();
+                            var estadoData = (pago.estadoPago ?? "").ToString().ToLower();
+                            // ISO date for JS comparison
+                            var fechaIso = pago.fechaPago.ToString("yyyy-MM-dd");
+                            <tr data-cliente="@clienteData" data-estado="@estadoData" data-fecha="@fechaIso">
                                 <td>@pago.idPago</td>
                                 <td>@pago.nombreCliente</td>
                                 <td>@pago.nombrePlan</td>
                                 <td>@pago.metodoPago</td>
-
                                 <td>
                                     @if (pago.estadoPago == "Pagado")
-                                    {
-                                        <span class="badge bg-success">
-                                            @pago.estadoPago
-                                        </span>
-                                    }
-                                    else if (pago.estadoPago == "Pendiente")
-                                    {
-                                        <span class="badge bg-warning text-dark">
-                                            @pago.estadoPago
-                                        </span>
-                                    }
-                                    else if (pago.estadoPago == "Rechazado")
-                                    {
-                                        <span class="badge bg-danger">
-                                            @pago.estadoPago
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary">
-                                            @pago.estadoPago
-                                        </span>
-                                    }
+                                    {<span class="badge bg-success">@pago.estadoPago</span> }
+                                else if (pago.estadoPago == "Pendiente")
+                                { <span class="badge bg-warning text-dark">@pago.estadoPago</span> }
+                            else if (pago.estadoPago == "Rechazado")
+                            { <span class="badge bg-danger">@pago.estadoPago</span> }
+                        else
+                        { <span class="badge bg-secondary">@pago.estadoPago</span>}
                                 </td>
-
                                 <td>₡ @pago.monto.ToString("N2")</td>
                                 <td>@pago.fechaPago.ToString("dd/MM/yyyy HH:mm")</td>
-                                <td>
-                                    @(string.IsNullOrWhiteSpace(pago.referenciaPago)
-                                        ? "-"
-                                        : pago.referenciaPago)
-                                </td>
+                                <td>@(string.IsNullOrWhiteSpace(pago.referenciaPago) ? "-" : pago.referenciaPago)</td>
                             </tr>
                         }
                     </tbody>
@@ -115,3 +149,45 @@
         }
     </div>
 </div>
+
+@section Scripts {
+<script>
+    // Filtros Pagos
+    function aplicarFiltrosPagos() {
+        var selCliente = document.getElementById('filtroPagoCliente');
+        var selEstado = document.getElementById('filtroPagoEstado');
+        var desde = document.getElementById('filtroPagoDesde').value;
+        var hasta = document.getElementById('filtroPagoHasta').value;
+
+        var cliente = selCliente ? selCliente.value.toLowerCase() : '';
+        var estado = selEstado ? selEstado.value.toLowerCase() : '';
+
+        Array.from(document.querySelectorAll('#cuerpoTablaPagos tr')).forEach(function (r) {
+            var rCliente = (r.getAttribute('data-cliente') || '').toLowerCase();
+            var rEstado = (r.getAttribute('data-estado') || '').toLowerCase();
+            var rFecha = r.getAttribute('data-fecha'); // yyyy-mm-dd
+
+            var matchCliente = !cliente || rCliente === cliente;
+            var matchEstado = !estado || rEstado === estado;
+
+            var matchFecha = true;
+            if (desde) {
+                matchFecha = matchFecha && (rFecha >= desde);
+            }
+            if (hasta) {
+                matchFecha = matchFecha && (rFecha <= hasta);
+            }
+
+            r.style.display = (matchCliente && matchEstado && matchFecha) ? '' : 'none';
+        });
+    }
+
+    function resetearFiltrosPagos() {
+        document.getElementById('filtroPagoCliente').value = '';
+        document.getElementById('filtroPagoEstado').value = '';
+        document.getElementById('filtroPagoDesde').value = '';
+        document.getElementById('filtroPagoHasta').value = '';
+        Array.from(document.querySelectorAll('#cuerpoTablaPagos tr')).forEach(function (r) { r.style.display = ''; });
+    }
+</script>
+}
