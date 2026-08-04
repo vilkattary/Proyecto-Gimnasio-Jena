@@ -58,5 +58,16 @@ namespace GimnasioJena.LogicaDeNegocio.Membresias.RegistrarMembresia
             return _registrarMembresiaAD
                 .RegistrarMembresia(membresia) > 0;
         }
+
+        public int RegistrarMembresiaPendiente(
+            int idUsuario,
+            int idPlanMembresia)
+        {
+            if (idUsuario <= 0 || idPlanMembresia <= 0)
+                return 0;
+
+            return _registrarMembresiaAD
+                .RegistrarMembresiaPendiente(idUsuario, idPlanMembresia);
+        }
     }
 }

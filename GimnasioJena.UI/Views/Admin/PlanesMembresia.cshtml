@@ -1,96 +1,189 @@
 ﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Membresias.PlanMembresiaListadoDto>
 
 @{
-    ViewBag.Title = "Planes de membresía";
+    ViewBag.Title = "Planes de Membresía";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var limiteMaximo = ViewBag.LimiteMaximoPlanes != null
+        ? (int)ViewBag.LimiteMaximoPlanes
+        : 5;
+
+    var sePuedeCrear = ViewBag.SePuedeRegistrarNuevoPlan != null
+        && (bool)ViewBag.SePuedeRegistrarNuevoPlan;
+
+    var totalPlanes = Model != null ? Model.Count() : 0;
 }
 
-<div class="container py-4">
+<section class="dashboard-modules py-5">
+    <div class="container-jena">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">Planes de membresía</h2>
-            <p class="text-muted mb-0">
-                Consulta los planes disponibles y administra sus precios.
-            </p>
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+            <div>
+                <h1 class="section-title-admin mb-1">Planes de Membresía</h1>
+                <p class="admin-card-desc mb-0">
+                    Consulta los planes disponibles y administra su información
+                    (@totalPlanes de @limiteMaximo).
+                </p>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                @if (sePuedeCrear)
+                {
+                    <button type="button" class="btn btn-jena-outline" data-bs-toggle="collapse"
+                            data-bs-target="#formNuevoPlan" aria-expanded="false" aria-controls="formNuevoPlan">
+                        <i class="bi bi-plus-circle me-1"></i>Nuevo plan
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-jena-outline" disabled
+                            title="Se alcanzó el máximo de @limiteMaximo planes.">
+                        <i class="bi bi-plus-circle me-1"></i>Nuevo plan
+                    </button>
+                }
+                <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-jena-outline">
+                    <i class="bi bi-arrow-left me-1"></i>Volver al panel
+                </a>
+            </div>
         </div>
 
-        <a href="@Url.Action("Dashboard", "Admin")"
-           class="btn btn-outline-secondary">
-            Volver al panel
-        </a>
-    </div>
-
-    @if (TempData["MensajeExito"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["MensajeExito"]
-        </div>
-    }
-
-    @if (TempData["MensajeError"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["MensajeError"]
-        </div>
-    }
-
-    <div class="row g-4">
-
-        @foreach (var plan in Model)
+        @if (TempData["MensajeExito"] != null)
         {
-            <div class="col-md-6">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body p-4">
+            <div class="alert alert-success d-flex align-items-center gap-2 mb-4" role="alert">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>@TempData["MensajeExito"]</span>
+            </div>
+        }
 
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <h3 class="h4 fw-bold mb-1">
-                                    @plan.nombrePlan
-                                </h3>
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger d-flex align-items-center gap-2 mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>@TempData["MensajeError"]</span>
+            </div>
+        }
 
-                                <span class="badge @(plan.estado ? "bg-success" : "bg-secondary")">
-                                    @(plan.estado ? "Activo" : "Inactivo")
-                                </span>
-                            </div>
-
-                            <div class="text-end">
-                                <div class="fs-3 fw-bold">
-                                    ₡@plan.precio.ToString("N0")
-                                </div>
-
-                                <small class="text-muted">
-                                    Precio actual
-                                </small>
-                            </div>
-                        </div>
-
-                        <hr />
-
-                        <div class="mb-3">
-                            <strong>Duración:</strong>
-                            @plan.duracionDias días
-                        </div>
-
-                        <div class="mb-4">
-                            <strong>Clases incluidas:</strong>
-                            @(plan.cantidadClases.HasValue
-                            ? plan.cantidadClases.Value.ToString()
-                            : "Ilimitadas")
-                        </div>
-
-                        <a href="@Url.Action(
-                                    "EditarPrecioPlan",
-                                    "Admin",
-                                    new { id = plan.idPlanMembresia })"
-                           class="btn btn-primary w-100">
-                            Editar precio
-                        </a>
-
+        @if (sePuedeCrear)
+        {
+            <div class="collapse mb-4" id="formNuevoPlan">
+                <div class="admin-card">
+                    <div class="admin-card-icon">
+                        <i class="bi bi-plus-circle"></i>
                     </div>
+                    <h2 class="admin-card-title">Nuevo plan de membresía</h2>
+
+                    @using (Html.BeginForm("CrearPlanMembresia", "Admin", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group-jena mb-0">
+                                    <label class="form-label-jena" for="nuevoNombrePlan">Nombre del plan</label>
+                                    <input type="text" name="nombrePlan" id="nuevoNombrePlan"
+                                           class="form-control-jena" maxlength="100"
+                                           placeholder="Ej: PLAN PREMIUM" required />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group-jena mb-0">
+                                    <label class="form-label-jena" for="nuevoPrecio">Precio (&#x20A1;)</label>
+                                    <input type="number" name="precio" id="nuevoPrecio"
+                                           class="form-control-jena" step="0.01" min="1" required />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group-jena mb-0">
+                                    <label class="form-label-jena" for="nuevoDuracionDias">Duración (días)</label>
+                                    <input type="number" name="duracionDias" id="nuevoDuracionDias"
+                                           class="form-control-jena" step="1" min="1" required />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group-jena mb-0">
+                                    <label class="form-label-jena" for="nuevoCantidadClases">Clases incluidas</label>
+                                    <input type="number" name="cantidadClases" id="nuevoCantidadClases"
+                                           class="form-control-jena" step="1" min="0"
+                                           placeholder="Vacío = ilimitadas" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="admin-card-actions mt-3">
+                            <button type="button" class="btn btn-jena-outline" data-bs-toggle="collapse"
+                                    data-bs-target="#formNuevoPlan">
+                                <i class="bi bi-x-circle me-1"></i>Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-jena-outline">
+                                <i class="bi bi-check-circle me-1"></i>Crear plan
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
         }
 
-    </div>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
 
-</div>
+            @foreach (var plan in Model)
+            {
+                <div class="col">
+                    <div class="admin-card h-100">
+
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+                            <div class="admin-card-icon">
+                                <i class="bi bi-patch-check"></i>
+                            </div>
+                            <span class="@(plan.estado ? "badge-jena-coach" : "badge-jena-admin")">
+                                @(plan.estado ? "Activo" : "Inactivo")
+                            </span>
+                        </div>
+
+                        <h3 class="admin-card-title">@plan.nombrePlan</h3>
+
+                        <div class="plan-precio-wrapper">
+                            <span class="plan-precio">&#x20A1;@plan.precio.ToString("N0")</span>
+                            <small class="plan-precio-label">precio actual</small>
+                        </div>
+
+                        <ul class="plan-detalle-list">
+                            <li>
+                                <i class="bi bi-calendar3 me-2"></i>
+                                <strong>Duración:</strong>&nbsp;@plan.duracionDias días
+                            </li>
+                            <li>
+                                <i class="bi bi-person-check me-2"></i>
+                                <strong>Clases incluidas:</strong>&nbsp;@(plan.cantidadClases.HasValue
+                                    ? plan.cantidadClases.Value.ToString()
+                                    : "Ilimitadas")
+                            </li>
+                        </ul>
+
+                        <form action="@Url.Action("CambiarEstadoPlan", "Admin")" method="post" class="toggle-form mb-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="idPlanMembresia" value="@plan.idPlanMembresia" />
+                            <div class="form-check form-switch d-flex align-items-center gap-2">
+                                <input class="form-check-input" type="checkbox"
+                                       id="toggle-plan-@plan.idPlanMembresia"
+                                       @(plan.estado ? "checked" : "")
+                                       onchange="this.form.submit()" />
+                                <label class="form-check-label" for="toggle-plan-@plan.idPlanMembresia">
+                                    @(plan.estado ? "Activo" : "Inactivo")
+                                </label>
+                            </div>
+                        </form>
+
+                        <div class="admin-card-actions">
+                            <a href="@Url.Action("EditarPrecioPlan", "Admin", new { id = plan.idPlanMembresia })"
+                               class="btn btn-jena-outline">
+                                <i class="bi bi-pencil-square me-1"></i>Editar plan
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</section>

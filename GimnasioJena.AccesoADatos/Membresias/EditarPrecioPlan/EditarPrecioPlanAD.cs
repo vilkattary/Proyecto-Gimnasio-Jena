@@ -26,7 +26,10 @@ namespace GimnasioJena.AccesoADatos.Membresias.EditarPrecioPlan
                 return false;
             }
 
+            plan.nombrePlan = modelo.nombrePlan;
             plan.precio = modelo.precio;
+            plan.duracionDias = modelo.duracionDias;
+            plan.cantidadClases = modelo.cantidadClases;
 
             _contexto.SaveChanges();
 

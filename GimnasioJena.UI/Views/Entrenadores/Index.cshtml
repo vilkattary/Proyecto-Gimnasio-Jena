@@ -59,25 +59,24 @@
             <div class="info-card">
                 <div class="row">
                     <div class="col-md-4 profile-section mb-3 mb-md-0">
-                        <div class="profile-avatar mx-auto">
-                            @if (Model.Usuario != null && !string.IsNullOrWhiteSpace(Model.Usuario.fotoPerfil))
-                            {
-                                <img src="@Url.Content(Model.Usuario.fotoPerfil)"
-                                     alt="Foto del entrenador"
-                                     class="rounded-circle avatar-trainer" />
-                            }
-                            else
-                            {
+                        @if (Model.Usuario != null && !string.IsNullOrWhiteSpace(Model.Usuario.fotoPerfil))
+                        {
+                            <img src="@Url.Content(Model.Usuario.fotoPerfil)"
+                                 alt="Foto del entrenador"
+                                 class="profile-avatar mx-auto img-cover" />
+                        }
+                        else
+                        {
+                            <div class="profile-avatar mx-auto">
                                 <span class="initials">@iniciales</span>
-                            }
-
-                            @if (Model.estado)
-                            {
-                                <div class="verified-badge">
-                                    <i class="bi bi-check-lg"></i>
-                                </div>
-                            }
-                        </div>
+                                @if (Model.estado)
+                                {
+                                    <div class="verified-badge">
+                                        <i class="bi bi-check-lg"></i>
+                                    </div>
+                                }
+                            </div>
+                        }
                     </div>
 
                     <div class="col-md-8">
@@ -137,48 +136,7 @@
                     <span>Editar Perfil</span>
                 </a>
 
-                <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-action">
-                    <i class="bi bi-shield-lock"></i>
-                    <span>Cambiar Contraseña</span>
-                </a>
-
-                <a href="@Url.Action("Index", "Home")" class="btn btn-action">
-                    <i class="bi bi-house-door"></i>
-                    <span>Volver al Inicio</span>
-                </a>
-            </div>
-
-            <div class="info-card">
-                <h5 class="text-center mb-3 title-inline-jena">
-                    <i class="bi bi-star-fill text-accent"></i>
-                    Estado de Cuenta
-                </h5>
-
-                <div class="text-center">
-                    <div class="mb-3">
-                        <span class="title-stat-jena">
-                            @(Model.estado ? "Activo" : "Inactivo")
-                        </span>
-                    </div>
-
-                    <div class="info-item btn-link-jena">
-                        <i class="bi bi-award"></i>
-                        <div class="info-content text-start">
-                            <div class="info-label">Especialidad</div>
-                            <div class="info-value">@Model.especialidad</div>
-                        </div>
-                    </div>
-
-                    <div class="info-item btn-link-jena">
-                        <i class="bi bi-calendar-check"></i>
-                        <div class="info-content text-start">
-                            <div class="info-label">Fecha de Contratación</div>
-                            <div class="info-value">@Model.fechaContratacion.ToString("dd/MM/yyyy")</div>
-                        </div>
-                    </div>
                 </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

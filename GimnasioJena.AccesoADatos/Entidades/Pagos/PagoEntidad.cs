@@ -20,7 +20,7 @@ namespace GimnasioJena.AccesoADatos.Entidades.Pagos
 
         public DateTime fechaPago { get; set; }
 
-        [StringLength(100)]
+        [StringLength(255)]
         public string referenciaPago { get; set; }
 
         [StringLength(300)]

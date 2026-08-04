@@ -133,6 +133,45 @@
             background-color: #D95F31;
         }
 
+        .btn-continuar:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+
+    .btn-continuar-spinner {
+        display: none;
+        width: 15px;
+        height: 15px;
+        margin-left: 8px;
+        vertical-align: -2px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: btn-continuar-giro 0.7s linear infinite;
+    }
+
+    .btn-continuar.is-loading .btn-continuar-spinner {
+        display: inline-block;
+    }
+
+    @@keyframes btn-continuar-giro {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .pago-error {
+        display: none;
+        margin-top: 16px;
+        padding: 12px 16px;
+        border-radius: 9px;
+        background-color: #FDECEA;
+        border: 1px solid #F5C2C0;
+        color: #B02A37;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
     .nota-seguridad {
         margin-top: 18px;
         color: #6C757D;
@@ -174,16 +213,16 @@
 </style>
 
 <section class="container py-5">
+    <div class="mb-5">
+        <h1 class="page-title">Confirmar Membresía</h1>
+        <p class="text-muted">Revisa los datos de la operación antes de continuar.</p>
+    </div>
     <div class="confirmacion-container">
 
         <div class="confirmacion-card shadow-sm">
 
             <div class="confirmacion-header">
                 <h2>Confirmar membresía</h2>
-
-                <p>
-                    Revisa los datos de la operación antes de continuar.
-                </p>
             </div>
 
             <div class="confirmacion-body">
@@ -272,19 +311,26 @@
                         "IniciarPago",
                         "Clientes",
                         FormMethod.Post,
-                        new { @class = "d-inline" }))
+                        new { @class = "d-inline", id = "formIniciarPago" }))
                     {
                         @Html.AntiForgeryToken()
 
-                        @Html.HiddenFor(modelo => modelo.idPlan)
+                        @Html.Hidden("idUsuario", Model.idUsuario)
+                        @Html.Hidden("idPlan", Model.idPlan)
 
                         <button type="submit"
+                                id="btnContinuarPago"
                                 class="btn-continuar">
-                            Continuar con el pago
+                            <span class="btn-continuar-texto">Continuar con el pago</span>
+                            <span class="btn-continuar-spinner"
+                                  role="status"
+                                  aria-hidden="true"></span>
                         </button>
                     }
 
                 </div>
+
+                <div id="pagoError" class="pago-error" role="alert"></div>
 
                 <div class="nota-seguridad">
                     El precio y las condiciones del plan fueron verificados
@@ -295,3 +341,102 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    @* TODO: [TILOPAY EN PAUSA] Descomentar y continuar cuando se tengan credenciales reales.
+       Llamada AJAX/Fetch al flujo de pago Tilopay desactivada. El botón mantiene su
+       comportamiento original de submit tradicional mientras la integración está en pausa. *@
+    @*
+    <script>
+        (function () {
+            var form = document.getElementById("formIniciarPago");
+
+            if (!form) {
+                return;
+            }
+
+            var boton = document.getElementById("btnContinuarPago");
+            var textoBoton = boton.querySelector(".btn-continuar-texto");
+            var cajaError = document.getElementById("pagoError");
+            var textoOriginal = textoBoton.textContent;
+
+            function mostrarError(mensaje) {
+                cajaError.textContent = mensaje;
+                cajaError.style.display = "block";
+            }
+
+            function ocultarError() {
+                cajaError.style.display = "none";
+                cajaError.textContent = "";
+            }
+
+            function activarCarga() {
+                boton.disabled = true;
+                boton.classList.add("is-loading");
+                textoBoton.textContent = "Procesando...";
+            }
+
+            function desactivarCarga() {
+                boton.disabled = false;
+                boton.classList.remove("is-loading");
+                textoBoton.textContent = textoOriginal;
+            }
+
+            form.addEventListener("submit", function (evento) {
+                evento.preventDefault();
+                ocultarError();
+                activarCarga();
+
+                var datos = new FormData(form);
+
+                fetch(form.getAttribute("action"), {
+                    method: "POST",
+                    body: datos,
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                    credentials: "same-origin"
+                })
+                    .then(function (respuesta) {
+                        if (!respuesta.ok) {
+                            throw new Error("HTTP " + respuesta.status);
+                        }
+
+                        return respuesta.json();
+                    })
+                    .then(function (data) {
+                        if (data && data.success && data.url) {
+                            window.location.href = data.url;
+                            return;
+                        }
+
+                        desactivarCarga();
+                        mostrarError(
+                            (data && data.mensaje) ||
+                            "No fue posible iniciar el proceso de pago.");
+                    })
+                    .catch(function () {
+                        desactivarCarga();
+                        mostrarError(
+                            "Ocurrió un error de conexión. " +
+                            "Verifica tu red e inténtalo nuevamente.");
+                    });
+            });
+        })();
+    </script>
+    *@
+}
+
+<!-- 
+[BITÁCORA DE INTEGRACIÓN TILOPAY - PENDIENTES PARA COMPLETAR EL FLUJO]
+El código de backend está listo (Mock Mode, Webhook, Idempotencia, Creación Diferida), pero está comentado. Falta lo siguiente:
+1. Credenciales: Agregar claves reales en Web.config e implementar TilopayApiKey en el proceso de Login.
+2. Contrato API: Validar contra la documentación real los campos exactos de request/response (login, processPayment, checkoutUrl).
+3. Webhook: Confirmar el nombre del header de firma, el algoritmo HMAC exacto y los parámetros que Tilopay envía en el callback GET.
+4. Infraestructura: Levantar túnel HTTPS público (Ej. Ngrok) y registrar la URL del webhook en el panel de Tilopay.
+5. Base de Datos: Confirmar datos semilla (TilopayMetodoPagoId=1, EstadoPagoAprobado=2, EstadoMembresiaInactiva=2) y asegurar que Pago.referenciaPago sea NVARCHAR(255).
+6. Clases y Archivos a revisar para la reanudación:
+   - ClientesController.cs: Descomentar métodos IniciarPago() y RespuestaTilopay().
+   - WebhookController.cs: Descomentar el controlador y su endpoint POST.
+   - PagoCrearDto.cs / MembresiaCrearDto.cs: Verificar que las propiedades de pasarela sigan existiendo.
+   - ConfirmarCompra.cshtml: Reactivar la llamada AJAX/Fetch en el botón de pago.
+   - Web.config: Reemplazar los valores DUMMY por las llaves de producción.
+-->

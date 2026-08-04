@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GimnasioJena.Abstracciones.Modelos.HorariosSemanales
@@ -36,5 +37,14 @@ namespace GimnasioJena.Abstracciones.Modelos.HorariosSemanales
         public string ubicacion { get; set; }
 
         public List<HorarioSemanalDetalleCrearDto> horarios { get; set; }
+
+        // Toggle: clase única vs recurrente
+        public bool esRecurrente { get; set; }
+
+        [Display(Name = "Fecha de la clase")]
+        public DateTime? fechaClase { get; set; }
+
+        [Display(Name = "Fecha fin de recurrencia")]
+        public DateTime? fechaFin { get; set; }
     }
 }
