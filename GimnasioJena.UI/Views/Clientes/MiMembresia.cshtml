@@ -50,7 +50,13 @@
             : null;
 }
 
+
+
 <div class="container py-5">
+
+    <a href="javascript:history.back()" class="btn btn-volver" aria-label="Volver">
+        <i class="bi bi-arrow-left"></i> Atrás
+    </a>
 
     <div class="mb-5">
 
@@ -410,10 +416,10 @@
                             if (Model.membresiaActual.fechaFin.Date > hoy)
                             {
                                 <button type="button"
-                                     class="btn btn-outline-secondary w-100"
-                                     disabled>
+                                        class="btn btn-outline-secondary w-100"
+                                        disabled>
 
-                                      <i class="bi bi-clock me-1"></i>
+                                    <i class="bi bi-clock me-1"></i>
 
                                     Renovación disponible el
                                     @(Model.membresiaActual.fechaFin.ToString("dd/MM/yyyy"))
