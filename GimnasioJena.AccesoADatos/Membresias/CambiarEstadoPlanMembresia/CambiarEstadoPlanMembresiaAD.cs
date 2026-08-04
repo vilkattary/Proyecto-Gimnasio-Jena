@@ -1,19 +1,19 @@
-﻿using GimnasioJena.Abstracciones.AccesoADatos.Membresias.EditarPrecioPlan;
+using GimnasioJena.Abstracciones.AccesoADatos.Membresias.CambiarEstadoPlanMembresia;
 using GimnasioJena.Abstracciones.Modelos.Membresias;
 using System.Linq;
 
-namespace GimnasioJena.AccesoADatos.Membresias.EditarPrecioPlan
+namespace GimnasioJena.AccesoADatos.Membresias.CambiarEstadoPlanMembresia
 {
-    public class EditarPrecioPlanAD : IEditarPrecioPlanAD
+    public class CambiarEstadoPlanMembresiaAD : ICambiarEstadoPlanMembresiaAD
     {
         private readonly Contexto _contexto;
 
-        public EditarPrecioPlanAD()
+        public CambiarEstadoPlanMembresiaAD()
         {
             _contexto = new Contexto();
         }
 
-        public bool EditarPrecioPlan(EditarPrecioPlanDto modelo)
+        public bool CambiarEstadoPlanMembresia(CambiarEstadoPlanMembresiaDto modelo)
         {
             var plan =
                 _contexto.PlanesMembresia
@@ -26,10 +26,7 @@ namespace GimnasioJena.AccesoADatos.Membresias.EditarPrecioPlan
                 return false;
             }
 
-            plan.nombrePlan = modelo.nombrePlan;
-            plan.precio = modelo.precio;
-            plan.duracionDias = modelo.duracionDias;
-            plan.cantidadClases = modelo.cantidadClases;
+            plan.estado = !plan.estado;
 
             _contexto.SaveChanges();
 

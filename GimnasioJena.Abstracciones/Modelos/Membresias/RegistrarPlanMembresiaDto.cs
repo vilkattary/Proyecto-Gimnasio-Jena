@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace GimnasioJena.Abstracciones.Modelos.Membresias
 {
-    public class EditarPrecioPlanDto
+    public class RegistrarPlanMembresiaDto
     {
-        public int idPlanMembresia { get; set; }
-
         [Required(
             ErrorMessage = "El nombre del plan es obligatorio.")]
         [StringLength(
