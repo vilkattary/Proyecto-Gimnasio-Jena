@@ -72,100 +72,100 @@
 </div>
 
 @section Scripts {
-<script>
-    /* ── Paginación mobile – Reservas ───────────────────────── */
-    (function () {
-        var POR_PAGINA = 5;
-        var paginaActual = 1;
+    <script>
+        /* ── Paginación mobile – Reservas ───────────────────────── */
+        (function () {
+            var POR_PAGINA = 5;
+            var paginaActual = 1;
 
-        function esMobile() { return window.innerWidth < 768; }
+            function esMobile() { return window.innerWidth < 768; }
 
-        function filas() {
-            return Array.from(document.querySelectorAll('#cuerpoTablaReservas tr'));
-        }
-
-        function renderPaginacion(totalPaginas) {
-            var container = document.getElementById('paginacion-mobile-reservas');
-            var info      = document.getElementById('paginacionInfoReservas');
-            if (!container) return;
-
-            if (!esMobile() || totalPaginas <= 1) {
-                container.style.display = 'none';
-                if (info) info.style.display = 'none';
-                return;
+            function filas() {
+                return Array.from(document.querySelectorAll('#cuerpoTablaReservas tr'));
             }
 
-            if (info) {
-                var desde = (paginaActual - 1) * POR_PAGINA + 1;
-                var hasta = Math.min(paginaActual * POR_PAGINA, filas().length);
-                info.textContent = 'Mostrando ' + desde + '–' + hasta + ' de ' + filas().length + ' reservas';
-                info.style.display = 'block';
-            }
+            function renderPaginacion(totalPaginas) {
+                var container = document.getElementById('paginacion-mobile-reservas');
+                var info = document.getElementById('paginacionInfoReservas');
+                if (!container) return;
 
-            var html = '<ul class="pagination-jena">';
+                if (!esMobile() || totalPaginas <= 1) {
+                    container.style.display = 'none';
+                    if (info) info.style.display = 'none';
+                    return;
+                }
 
-            html += '<li class="page-jena-item' + (paginaActual === 1 ? ' disabled' : '') + '">'
-                  + '<button class="page-jena-btn" data-p="' + (paginaActual - 1) + '" aria-label="Anterior">'
-                  + '<i class="bi bi-chevron-left"></i></button></li>';
+                if (info) {
+                    var desde = (paginaActual - 1) * POR_PAGINA + 1;
+                    var hasta = Math.min(paginaActual * POR_PAGINA, filas().length);
+                    info.textContent = 'Mostrando ' + desde + '–' + hasta + ' de ' + filas().length + ' reservas';
+                    info.style.display = 'block';
+                }
 
-            for (var i = 1; i <= totalPaginas; i++) {
-                html += '<li class="page-jena-item' + (i === paginaActual ? ' active' : '') + '">'
-                      + '<button class="page-jena-btn" data-p="' + i + '">' + i + '</button></li>';
-            }
+                var html = '<ul class="pagination-jena">';
 
-            html += '<li class="page-jena-item' + (paginaActual === totalPaginas ? ' disabled' : '') + '">'
-                  + '<button class="page-jena-btn" data-p="' + (paginaActual + 1) + '" aria-label="Siguiente">'
-                  + '<i class="bi bi-chevron-right"></i></button></li>';
+                html += '<li class="page-jena-item' + (paginaActual === 1 ? ' disabled' : '') + '">'
+                    + '<button class="page-jena-btn" data-p="' + (paginaActual - 1) + '" aria-label="Anterior">'
+                    + '<i class="bi bi-chevron-left"></i></button></li>';
 
-            html += '</ul>';
-            container.innerHTML = html;
-            container.style.display = 'flex';
+                for (var i = 1; i <= totalPaginas; i++) {
+                    html += '<li class="page-jena-item' + (i === paginaActual ? ' active' : '') + '">'
+                        + '<button class="page-jena-btn" data-p="' + i + '">' + i + '</button></li>';
+                }
 
-            container.querySelectorAll('.page-jena-btn[data-p]').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    irAPagina(parseInt(this.getAttribute('data-p')));
+                html += '<li class="page-jena-item' + (paginaActual === totalPaginas ? ' disabled' : '') + '">'
+                    + '<button class="page-jena-btn" data-p="' + (paginaActual + 1) + '" aria-label="Siguiente">'
+                    + '<i class="bi bi-chevron-right"></i></button></li>';
+
+                html += '</ul>';
+                container.innerHTML = html;
+                container.style.display = 'flex';
+
+                container.querySelectorAll('.page-jena-btn[data-p]').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        irAPagina(parseInt(this.getAttribute('data-p')));
+                    });
                 });
-            });
-        }
-
-        function irAPagina(p) {
-            var total = Math.ceil(filas().length / POR_PAGINA);
-            if (p < 1 || p > total) return;
-            paginaActual = p;
-            aplicar();
-        }
-
-        function aplicar() {
-            var rows  = filas();
-            var total = Math.ceil(rows.length / POR_PAGINA);
-
-            if (!esMobile()) {
-                rows.forEach(function (r) { r.style.display = ''; });
-                var c = document.getElementById('paginacion-mobile-reservas');
-                var i = document.getElementById('paginacionInfoReservas');
-                if (c) c.style.display = 'none';
-                if (i) i.style.display = 'none';
-                return;
             }
 
-            var desde = (paginaActual - 1) * POR_PAGINA;
-            var hasta = desde + POR_PAGINA;
-            rows.forEach(function (r, idx) {
-                r.style.display = (idx >= desde && idx < hasta) ? '' : 'none';
-            });
-            renderPaginacion(total);
-        }
-
-        aplicar();
-
-        var resizeTimer;
-        window.addEventListener('resize', function () {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function () {
-                paginaActual = 1;
+            function irAPagina(p) {
+                var total = Math.ceil(filas().length / POR_PAGINA);
+                if (p < 1 || p > total) return;
+                paginaActual = p;
                 aplicar();
-            }, 150);
-        });
-    }());
-</script>
+            }
+
+            function aplicar() {
+                var rows = filas();
+                var total = Math.ceil(rows.length / POR_PAGINA);
+
+                if (!esMobile()) {
+                    rows.forEach(function (r) { r.style.display = ''; });
+                    var c = document.getElementById('paginacion-mobile-reservas');
+                    var i = document.getElementById('paginacionInfoReservas');
+                    if (c) c.style.display = 'none';
+                    if (i) i.style.display = 'none';
+                    return;
+                }
+
+                var desde = (paginaActual - 1) * POR_PAGINA;
+                var hasta = desde + POR_PAGINA;
+                rows.forEach(function (r, idx) {
+                    r.style.display = (idx >= desde && idx < hasta) ? '' : 'none';
+                });
+                renderPaginacion(total);
+            }
+
+            aplicar();
+
+            var resizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    paginaActual = 1;
+                    aplicar();
+                }, 150);
+            });
+        }());
+    </script>
 }
