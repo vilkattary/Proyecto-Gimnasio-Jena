@@ -418,3 +418,5 @@ FodyWeavers.xsd
 # NuGet bootstrapper
 .nuget/nuget.exe
 *.msp
+
+GimnasioJena.UI/AppSettings.Local.config
