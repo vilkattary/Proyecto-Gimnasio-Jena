@@ -3,9 +3,26 @@
 @{
     ViewBag.Title = "Membresías";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
 
+    var membresias = Model ?? Enumerable.Empty<dynamic>();
+    var planes = membresias
+        .Where(m => !string.IsNullOrWhiteSpace((string)m.nombrePlan))
+        .Select(m => (string)m.nombrePlan)
+        .Distinct()
+        .OrderBy(p => p)
+        .ToList();
+
+    var clientes = membresias
+        .Where(m => !string.IsNullOrWhiteSpace((string)m.nombreCliente))
+        .Select(m => (string)m.nombreCliente)
+        .Distinct()
+        .OrderBy(c => c)
+        .ToList();
+}
 <div class="container py-5">
+    <a href="javascript:history.back()" class="btn btn-volver" aria-label="Volver">
+        <i class="bi bi-arrow-left"></i> Atrás
+    </a>
 
     <div class="text-center mb-5">
         <h1 class="page-title">Membresías</h1>
@@ -19,6 +36,68 @@
             <i class="bi bi-plus-circle me-1"></i>
             Registrar Membresía
         </a>
+    </div>
+
+    <!-- FILTROS: Plan | Estado | Cliente -->
+    <div class="info-card mb-4">
+        <div class="row align-items-end g-3">
+            <div class="col-md-4">
+                <label class="info-label mb-1">
+                    <i class="bi bi-list me-1"></i>
+                    Plan
+                </label>
+                <select class="form-select" id="filtroPlan">
+                    <option value="">Todos los planes</option>
+                    @foreach (var p in planes)
+                    {
+                        <option value="@p.ToLower()">@p</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="info-label mb-1">
+                    <i class="bi bi-toggle-on me-1"></i>
+                    Estado
+                </label>
+                <select class="form-select" id="filtroEstadoMembresias">
+                    <option value="">Todos</option>
+                    <option value="activa">Activa</option>
+                    <option value="inactiva">Inactiva</option>
+                    <option value="vencida">Vencida</option>
+                    <option value="suspendida">Suspendida</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="info-label mb-1">
+                    <i class="bi bi-person me-1"></i>
+                    Cliente
+                </label>
+                <select class="form-select" id="filtroCliente">
+                    <option value="">Todos los clientes</option>
+                    @foreach (var c in clientes)
+                    {
+                        <option value="@c.ToLower()">@c</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-12 d-md-none mt-2"></div>
+
+            <div class="col-md-3">
+                <button type="button" class="btn-orange w-100" onclick="aplicarFiltrosMembresias()">
+                    <i class="bi bi-search me-2"></i>
+                    Buscar
+                </button>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-outline-secondary w-100" onclick="resetearFiltrosMembresias()">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Limpiar
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="info-card">
@@ -45,6 +124,8 @@
         }
         else
         {
+
+
             <div class="table-responsive">
                 <table class="table-jena tabla-membresias">
 
@@ -66,8 +147,10 @@
 
                         @foreach (var m in Model)
                         {
-                            <tr>
-
+                            var planData = (m.nombrePlan ?? "").ToString().ToLower();
+                            var estadoData = (m.estadoMembresia ?? "").ToString().ToLower();
+                            var clienteData = (m.nombreCliente ?? "").ToString().ToLower();
+                            <tr data-plan="@planData" data-estado="@estadoData" data-cliente="@clienteData">
                                 <td data-label="#">@m.idMembresiaCliente</td>
 
                                 <td data-label="Cliente">@m.nombreCliente</td>
@@ -195,21 +278,26 @@
             <p class="paginacion-info" id="paginacionInfoMembresias"></p>
             <div id="paginacion-mobile-membresias" class="paginacion-mobile-wrapper"></div>
         }
-
     </div>
 
 </div>
 
 @section Scripts {
 <script>
-    /* ── Paginación mobile – Membresías ─────────────────────── */
+    /* ── Paginación mobile – Membresías + filtros (FIX: aplicar filtro también en desktop) ─────────────────────── */
     (function () {
         var POR_PAGINA = 5;
         var paginaActual = 1;
 
         function esMobile() { return window.innerWidth < 768; }
 
+        // filas activas (considera filtro por dataset.visible)
         function filas() {
+            return Array.from(document.querySelectorAll('#cuerpoTablaMembresias tr'))
+                .filter(function (r) { return r.dataset.visible !== '0'; });
+        }
+
+        function filasTodas() {
             return Array.from(document.querySelectorAll('#cuerpoTablaMembresias tr'));
         }
 
@@ -258,18 +346,23 @@
         }
 
         function irAPagina(p) {
-            var total = Math.ceil(filas().length / POR_PAGINA);
+            var total = Math.ceil(filas().length / POR_PAGINA) || 1;
             if (p < 1 || p > total) return;
             paginaActual = p;
             aplicar();
         }
 
         function aplicar() {
-            var rows  = filas();
-            var total = Math.ceil(rows.length / POR_PAGINA);
+            var rows  = filasTodas(); // all rows
+            var visibles = filas();   // filtered and visible rows
+            var total = Math.max(1, Math.ceil(visibles.length / POR_PAGINA));
 
             if (!esMobile()) {
-                rows.forEach(function (r) { r.style.display = ''; });
+                // Mostrar solo las filas que coinciden con el filtro en escritorio
+                rows.forEach(function (r) {
+                    r.style.display = (r.dataset.visible !== '0') ? '' : 'none';
+                });
+                // ocultar controles mobile
                 var c = document.getElementById('paginacion-mobile-membresias');
                 var i = document.getElementById('paginacionInfoMembresias');
                 if (c) c.style.display = 'none';
@@ -277,13 +370,54 @@
                 return;
             }
 
-            var desde = (paginaActual - 1) * POR_PAGINA;
-            var hasta = desde + POR_PAGINA;
-            rows.forEach(function (r, idx) {
-                r.style.display = (idx >= desde && idx < hasta) ? '' : 'none';
+            // Mobile: paginar solo entre las filas visibles
+            rows.forEach(function (r) { r.style.display = 'none'; });
+            var inicio = (paginaActual - 1) * POR_PAGINA;
+            var fin = inicio + POR_PAGINA;
+            visibles.forEach(function (r, idx) {
+                r.style.display = (idx >= inicio && idx < fin) ? '' : 'none';
             });
+
             renderPaginacion(total);
         }
+
+        // Inicializar visibilidad en todas las filas
+        filasTodas().forEach(function (r) { r.dataset.visible = '1'; });
+
+        // Función pública para aplicar filtros (Plan, Estado, Cliente)
+        window.aplicarFiltrosMembresias = function () {
+            var selPlan = document.getElementById('filtroPlan');
+            var selEstado = document.getElementById('filtroEstadoMembresias');
+            var selCliente = document.getElementById('filtroCliente');
+
+            var plan = selPlan ? selPlan.value.toLowerCase() : '';
+            var estado = selEstado ? selEstado.value.toLowerCase() : '';
+            var cliente = selCliente ? selCliente.value.toLowerCase() : '';
+
+            filasTodas().forEach(function (r) {
+                var rPlan = (r.getAttribute('data-plan') || '').toLowerCase();
+                var rEstado = (r.getAttribute('data-estado') || '').toLowerCase();
+                var rCliente = (r.getAttribute('data-cliente') || '').toLowerCase();
+
+                var matchPlan = !plan || rPlan === plan;
+                var matchEstado = !estado || rEstado === estado;
+                var matchCliente = !cliente || rCliente === cliente;
+
+                r.dataset.visible = (matchPlan && matchEstado && matchCliente) ? '1' : '0';
+            });
+
+            paginaActual = 1;
+            aplicar();
+        };
+
+        window.resetearFiltrosMembresias = function () {
+            document.getElementById('filtroPlan').value = '';
+            document.getElementById('filtroEstadoMembresias').value = '';
+            document.getElementById('filtroCliente').value = '';
+            filasTodas().forEach(function (r) { r.dataset.visible = '1'; });
+            paginaActual = 1;
+            aplicar();
+        };
 
         aplicar();
 

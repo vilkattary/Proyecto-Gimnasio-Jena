@@ -38,6 +38,10 @@
 
 <div class="container py-5">
 
+    <a href="javascript:history.back()" class="btn btn-volver" aria-label="Volver">
+        <i class="bi bi-arrow-left"></i> Atrás
+    </a>
+
     <div class="row mb-5">
         <div class="col-12">
             <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
@@ -180,71 +184,71 @@
 
                             <div class="p-3">
                                 <fieldset @Html.Raw(!item.Estado ? "disabled" : "") class="btn-borderless">
-                                <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
-                                      method="post">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="Id" value="@item.Id" />
-                                    <input type="hidden" name="Clave" value="@item.Clave" />
+                                    <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
+                                          method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="Id" value="@item.Id" />
+                                        <input type="hidden" name="Clave" value="@item.Clave" />
 
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            Nombre de la clase <span class="text-accent">*</span>
-                                        </label>
-                                        <input type="text"
-                                               name="TextoPrincipal"
-                                               value="@item.TextoPrincipal"
-                                               class="form-control"
-                                               required />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            Descripción
-                                        </label>
-                                        <textarea name="TextoSecundario"
-                                                  class="form-control"
-                                                  rows="3">@item.TextoSecundario</textarea>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            <i class="bi bi-palette-fill me-1 text-accent"></i>Ícono
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text px-3 btn-jena-nav-lg">
-                                                <i class="bi @iconoActual text-white" id="icono-i-@item.Id"></i>
-                                            </span>
-                                            <select name="UrlImagen" class="form-select"
-                                                    onchange="actualizarIconoBI('@item.Id', this.value)">
-                                                <option value="bi-lightning-charge-fill" @Html.Raw(item.UrlImagen == "bi-lightning-charge-fill" ? " selected" : "")> Fuerza / Potencia</option>
-                                                <option value="bi-heart-pulse-fill" @Html.Raw(item.UrlImagen == "bi-heart-pulse-fill" ? " selected" : "")> Cardio / Salud</option>
-                                                <option value="bi-fire" @Html.Raw(item.UrlImagen == "bi-fire" ? " selected" : "")> Quema calorías</option>
-                                                <option value="bi-bicycle" @Html.Raw(item.UrlImagen == "bi-bicycle" ? " selected" : "")> Ciclismo / Spinning</option>
-                                                <option value="bi-person-arms-up" @Html.Raw(item.UrlImagen == "bi-person-arms-up" ? " selected" : "")> Ejercicio general</option>
-                                                <option value="bi-trophy-fill" @Html.Raw(item.UrlImagen == "bi-trophy-fill" ? " selected" : "")> Competencia / Reto</option>
-                                                <option value="bi-stopwatch-fill" @Html.Raw(item.UrlImagen == "bi-stopwatch-fill" ? " selected" : "")> Velocidad / Tiempo</option>
-                                                <option value="bi-activity" @Html.Raw(item.UrlImagen == "bi-activity" ? " selected" : "")> Actividad física</option>
-                                                <option value="bi-peace-fill" @Html.Raw(item.UrlImagen == "bi-peace-fill" ? " selected" : "")> Yoga / Mindfulness</option>
-                                                <option value="bi-music-note-beamed" @Html.Raw(item.UrlImagen == "bi-music-note-beamed" ? " selected" : "")> Danza / Zumba</option>
-                                                <option value="bi-shield-fill-check" @Html.Raw(item.UrlImagen == "bi-shield-fill-check" ? " selected" : "")> Defensa / Artes marciales</option>
-                                                <option value="bi-water" @Html.Raw(item.UrlImagen == "bi-water" ? " selected" : "")> Natación / Aqua</option>
-                                                <option value="bi-wind" @Html.Raw(item.UrlImagen == "bi-wind" ? " selected" : "")> Respiración / Flexibilidad</option>
-                                                <option value="bi-arrow-up-circle-fill" @Html.Raw(item.UrlImagen == "bi-arrow-up-circle-fill" ? " selected" : "")> Progreso / Superación</option>
-                                                <option value="bi-stars" @Html.Raw(item.UrlImagen == "bi-stars" ? " selected" : "")> Élite / Premium</option>
-                                                <option value="bi-star-fill" @Html.Raw(item.UrlImagen == "bi-star-fill" ? " selected" : "")> General</option>
-                                            </select>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold form-label-jena-sm">
+                                                Nombre de la clase <span class="text-accent">*</span>
+                                            </label>
+                                            <input type="text"
+                                                   name="TextoPrincipal"
+                                                   value="@item.TextoPrincipal"
+                                                   class="form-control"
+                                                   required />
                                         </div>
-                                    </div>
 
-                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
-                                        <small class="text-muted text-jena-mini">
-                                            <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
-                                        </small>
-                                        <button type="submit" class="btn-action btn-action-sm">
-                                            <i class="bi bi-save-fill"></i>Guardar
-                                        </button>
-                                    </div>
-                                </form>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold form-label-jena-sm">
+                                                Descripción
+                                            </label>
+                                            <textarea name="TextoSecundario"
+                                                      class="form-control"
+                                                      rows="3">@item.TextoSecundario</textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold form-label-jena-sm">
+                                                <i class="bi bi-palette-fill me-1 text-accent"></i>Ícono
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text px-3 btn-jena-nav-lg">
+                                                    <i class="bi @iconoActual text-white" id="icono-i-@item.Id"></i>
+                                                </span>
+                                                <select name="UrlImagen" class="form-select"
+                                                        onchange="actualizarIconoBI('@item.Id', this.value)">
+                                                    <option value="bi-lightning-charge-fill" @Html.Raw(item.UrlImagen == "bi-lightning-charge-fill" ? " selected" : "")> Fuerza / Potencia</option>
+                                                    <option value="bi-heart-pulse-fill" @Html.Raw(item.UrlImagen == "bi-heart-pulse-fill" ? " selected" : "")> Cardio / Salud</option>
+                                                    <option value="bi-fire" @Html.Raw(item.UrlImagen == "bi-fire" ? " selected" : "")> Quema calorías</option>
+                                                    <option value="bi-bicycle" @Html.Raw(item.UrlImagen == "bi-bicycle" ? " selected" : "")> Ciclismo / Spinning</option>
+                                                    <option value="bi-person-arms-up" @Html.Raw(item.UrlImagen == "bi-person-arms-up" ? " selected" : "")> Ejercicio general</option>
+                                                    <option value="bi-trophy-fill" @Html.Raw(item.UrlImagen == "bi-trophy-fill" ? " selected" : "")> Competencia / Reto</option>
+                                                    <option value="bi-stopwatch-fill" @Html.Raw(item.UrlImagen == "bi-stopwatch-fill" ? " selected" : "")> Velocidad / Tiempo</option>
+                                                    <option value="bi-activity" @Html.Raw(item.UrlImagen == "bi-activity" ? " selected" : "")> Actividad física</option>
+                                                    <option value="bi-peace-fill" @Html.Raw(item.UrlImagen == "bi-peace-fill" ? " selected" : "")> Yoga / Mindfulness</option>
+                                                    <option value="bi-music-note-beamed" @Html.Raw(item.UrlImagen == "bi-music-note-beamed" ? " selected" : "")> Danza / Zumba</option>
+                                                    <option value="bi-shield-fill-check" @Html.Raw(item.UrlImagen == "bi-shield-fill-check" ? " selected" : "")> Defensa / Artes marciales</option>
+                                                    <option value="bi-water" @Html.Raw(item.UrlImagen == "bi-water" ? " selected" : "")> Natación / Aqua</option>
+                                                    <option value="bi-wind" @Html.Raw(item.UrlImagen == "bi-wind" ? " selected" : "")> Respiración / Flexibilidad</option>
+                                                    <option value="bi-arrow-up-circle-fill" @Html.Raw(item.UrlImagen == "bi-arrow-up-circle-fill" ? " selected" : "")> Progreso / Superación</option>
+                                                    <option value="bi-stars" @Html.Raw(item.UrlImagen == "bi-stars" ? " selected" : "")> Élite / Premium</option>
+                                                    <option value="bi-star-fill" @Html.Raw(item.UrlImagen == "bi-star-fill" ? " selected" : "")> General</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
+                                            <small class="text-muted text-jena-mini">
+                                                <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
+                                            </small>
+                                            <button type="submit" class="btn-action btn-action-sm">
+                                                <i class="bi bi-save-fill"></i>Guardar
+                                            </button>
+                                        </div>
+                                    </form>
                                 </fieldset>
                                 <hr class="my-2 border-light-blue" />
                                 <form action="@Url.Action("ToggleEstado", "SeccionesHome")" method="post" class="toggle-form mb-0">
@@ -320,52 +324,52 @@
 
                             <div class="p-3">
                                 <fieldset @Html.Raw(!item.Estado ? "disabled" : "") class="btn-borderless">
-                                <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
-                                      method="post"
-                                      enctype="multipart/form-data">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="Id" value="@item.Id" />
-                                    <input type="hidden" name="Clave" value="@item.Clave" />
+                                    <form action="@Url.Action("GuardarSeccion", "SeccionesHome")"
+                                          method="post"
+                                          enctype="multipart/form-data">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="Id" value="@item.Id" />
+                                        <input type="hidden" name="Clave" value="@item.Clave" />
 
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            Nombre del cliente <span class="text-accent">*</span>
-                                        </label>
-                                        <input type="text"
-                                               name="TextoPrincipal"
-                                               value="@item.TextoPrincipal"
-                                               class="form-control"
-                                               required />
-                                    </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold form-label-jena-sm">
+                                                Nombre del cliente <span class="text-accent">*</span>
+                                            </label>
+                                            <input type="text"
+                                                   name="TextoPrincipal"
+                                                   value="@item.TextoPrincipal"
+                                                   class="form-control"
+                                                   required />
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            Testimonio / Cita
-                                        </label>
-                                        <textarea name="TextoSecundario"
-                                                  class="form-control"
-                                                  rows="4">@item.TextoSecundario</textarea>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold form-label-jena-sm">
+                                                Testimonio / Cita
+                                            </label>
+                                            <textarea name="TextoSecundario"
+                                                      class="form-control"
+                                                      rows="4">@item.TextoSecundario</textarea>
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold form-label-jena-sm">
-                                            <i class="bi bi-upload me-1 text-accent"></i>Avatar
-                                        </label>
-                                        <input type="file"
-                                               name="ArchivoImagen"
-                                               accept="image/*"
-                                               class="form-control" />
-                                    </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold form-label-jena-sm">
+                                                <i class="bi bi-upload me-1 text-accent"></i>Avatar
+                                            </label>
+                                            <input type="file"
+                                                   name="ArchivoImagen"
+                                                   accept="image/*"
+                                                   class="form-control" />
+                                        </div>
 
-                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
-                                        <small class="text-muted text-jena-mini">
-                                            <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
-                                        </small>
-                                        <button type="submit" class="btn-action btn-action-sm">
-                                            <i class="bi bi-save-fill"></i>Guardar
-                                        </button>
-                                    </div>
-                                </form>
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 pt-1">
+                                            <small class="text-muted text-jena-mini">
+                                                <i class="bi bi-clock me-1"></i>@(item.FechaModificacion.HasValue ? item.FechaModificacion.Value.ToString("dd/MM/yy HH:mm") : "-")
+                                            </small>
+                                            <button type="submit" class="btn-action btn-action-sm">
+                                                <i class="bi bi-save-fill"></i>Guardar
+                                            </button>
+                                        </div>
+                                    </form>
                                 </fieldset>
                                 <hr class="my-2 border-light-blue" />
                                 <form action="@Url.Action("ToggleEstado", "SeccionesHome")" method="post" class="toggle-form mb-0">

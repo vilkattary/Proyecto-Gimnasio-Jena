@@ -4338,6 +4338,7 @@ section.hero-apex a.btn.btn-apex-primary {
     color: var(--jena-navy);
     background: #E9ECEF;
     font-weight: 700;
+    margin: 20px 0px !important;
 }
 
 .btn-guardar {
