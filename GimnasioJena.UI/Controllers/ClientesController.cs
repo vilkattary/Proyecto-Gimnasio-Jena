@@ -128,310 +128,694 @@ namespace GimnasioJena.UI.Controllers
         }
 
         // TODO: [TILOPAY EN PAUSA] Descomentar y continuar cuando se tengan credenciales reales.
-#if false
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> IniciarPago(int idUsuario, int idPlan)
+[ValidateAntiForgeryToken]
+public async Task<ActionResult> IniciarPago(int idPlan)
+{
+    try
+    {
+        var identityUserId = User.Identity.GetUserId();
+
+        var perfil =
+            await _obtenerUsuarioServicio
+                .ObtenerUsuarioPorId(identityUserId);
+
+        if (perfil == null)
         {
-            try
+            return Json(new
             {
-                var apiUrl = ConfigurationManager.AppSettings["TilopayApiUrl"];
-                var apiUser = ConfigurationManager.AppSettings["TilopayApiUser"];
-                var apiPassword = ConfigurationManager.AppSettings["TilopayApiPassword"];
-                var redirectUrl = ConfigurationManager.AppSettings["TilopayRedirectUrl"];
-
-                var referencia = $"JENA-{idUsuario}-{idPlan}-{DateTime.UtcNow.Ticks}";
-
-                // MOCK MODE
-                if (string.IsNullOrWhiteSpace(apiUser) || apiUser == "DUMMY_USER")
-                {
-                    var urlMock = Url.Action(
-                        "RespuestaTilopay",
-                        "Clientes",
-                        new { status = "APPROVED", orderNumber = referencia });
-
-                    return Json(new
-                    {
-                        success = true,
-                        url = urlMock
-                    });
-                }
-
-                // TODO: [ALERTA TILOPAY] Quitar el bloque Mock Mode de arriba cuando se tengan las credenciales reales de producción.
-
-                var plan =
-                    _obtenerPlanMembresiaPorIdServicio
-                        .ObtenerPlanMembresiaPorId(idPlan);
-
-                if (plan == null)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        mensaje = "El plan seleccionado no es válido."
-                    });
-                }
-
-                decimal monto = plan.precio;
-
-                string baseUrl = (apiUrl ?? string.Empty).TrimEnd('/');
-                string accessToken;
-
-                using (var cliente = new HttpClient())
-                {
-                    cliente.Timeout = TimeSpan.FromSeconds(30);
-
-                    var loginPayload = new
-                    {
-                        apiuser = apiUser,
-                        password = apiPassword
-                    };
-
-                    var loginContenido = new StringContent(
-                        JsonConvert.SerializeObject(loginPayload),
-                        Encoding.UTF8,
-                        "application/json");
-
-                    var loginRespuesta = await cliente.PostAsync(
-                        baseUrl + "/api/v1/login",
-                        loginContenido);
-
-                    var loginCuerpo =
-                        await loginRespuesta.Content.ReadAsStringAsync();
-
-                    if (!loginRespuesta.IsSuccessStatusCode)
-                    {
-                        throw new HttpRequestException(
-                            $"Tilopay login respondió {(int)loginRespuesta.StatusCode}: {loginCuerpo}");
-                    }
-
-                    var loginResultado =
-                        JsonConvert.DeserializeObject<JObject>(loginCuerpo);
-
-                    accessToken = (string)loginResultado?["access_token"];
-
-                    if (string.IsNullOrWhiteSpace(accessToken))
-                    {
-                        throw new InvalidOperationException(
-                            "Tilopay no devolvió un access_token válido.");
-                    }
-
-                    var payload = new
-                    {
-                        amount = monto.ToString("F2", CultureInfo.InvariantCulture),
-                        currency = "CRC",
-                        orderNumber = referencia,
-                        billToFirstName = "Cliente",
-                        billToLastName = "GimnasioJena",
-                        subscription = 0,
-                        platform = "api",
-                        returnData = referencia,
-                        redirect = redirectUrl,
-                        capture = 1,
-                        description = $"Pago membresía plan {idPlan}"
-                    };
-
-                    var pagoContenido = new StringContent(
-                        JsonConvert.SerializeObject(payload),
-                        Encoding.UTF8,
-                        "application/json");
-
-                    cliente.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue(
-                            "Bearer", accessToken);
-
-                    var pagoRespuesta = await cliente.PostAsync(
-                        baseUrl + "/api/v1/processPayment",
-                        pagoContenido);
-
-                    var pagoCuerpo =
-                        await pagoRespuesta.Content.ReadAsStringAsync();
-
-                    if (!pagoRespuesta.IsSuccessStatusCode)
-                    {
-                        throw new HttpRequestException(
-                            $"Tilopay processPayment respondió {(int)pagoRespuesta.StatusCode}: {pagoCuerpo}");
-                    }
-
-                    var pagoResultado =
-                        JsonConvert.DeserializeObject<JObject>(pagoCuerpo);
-
-                    string checkoutUrl =
-                        (string)(pagoResultado?["url"]
-                                 ?? pagoResultado?["urlPay"]
-                                 ?? pagoResultado?["checkoutUrl"]);
-
-                    if (string.IsNullOrWhiteSpace(checkoutUrl))
-                    {
-                        throw new InvalidOperationException(
-                            "Tilopay no devolvió una URL de pago válida.");
-                    }
-
-                    return Json(new
-                    {
-                        success = true,
-                        url = checkoutUrl
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.TraceError(
-                    "Error al iniciar el pago con Tilopay: " + ex);
-
-                return Json(new
-                {
-                    success = false,
-                    mensaje = "No fue posible iniciar el proceso de pago. " +
-                              "Inténtalo de nuevo más tarde."
-                });
-            }
+                success = false,
+                mensaje = "No se encontró la información del usuario."
+            });
         }
 
-        [HttpGet]
-        public ActionResult RespuestaTilopay(
-            string status,
-            string orderNumber,
-            string transactionId,
-            string token)
+        int idUsuario = perfil.idUsuario;
+
+        var apiUrl =
+            ConfigurationManager.AppSettings["TilopayApiUrl"];
+
+        var apiKey =
+            ConfigurationManager.AppSettings["TilopayApiKey"];
+
+        var apiUser =
+            ConfigurationManager.AppSettings["TilopayApiUser"];
+
+        var apiPassword =
+            ConfigurationManager.AppSettings["TilopayApiPassword"];
+
+        var redirectUrl =
+            ConfigurationManager.AppSettings["TilopayRedirectUrl"];
+
+        var referencia =
+            $"JENA-{idUsuario}-{idPlan}-{DateTime.UtcNow.Ticks}";
+
+        // MOCK MODE
+        if (string.IsNullOrWhiteSpace(apiUser) ||
+            apiUser == "DUMMY_USER")
         {
-            if (!string.Equals(status, "APPROVED", StringComparison.Ordinal))
-            {
-                TempData["MensajeError"] =
-                    "El pago no pudo completarse. Si el cargo fue realizado, " +
-                    "comunícate con soporte indicando tu número de referencia.";
-
-                return View("ErrorPago");
-            }
-
-            try
-            {
-                if (!TryParseReferencia(orderNumber, out int idUsuario, out int idPlan))
+            var urlMock = Url.Action(
+                "RespuestaTilopay",
+                "Clientes",
+                new
                 {
-                    TempData["MensajeError"] =
-                        "La referencia del pago no es válida.";
-
-                    return View("ErrorPago");
-                }
-
-                var referenciaPago = JsonConvert.SerializeObject(new
-                {
-                    transactionId,
-                    orderNumber,
-                    token
+                    status = "APPROVED",
+                    orderNumber = referencia
                 });
 
-                /*
-                 * Idempotencia: si esta referencia ya fue registrada
-                 * (por ejemplo por el webhook), no se duplica el pago.
-                 */
-                if (_registrarPagoLN.ExisteReferenciaPago(referenciaPago))
-                {
-                    TempData["MensajeExito"] =
-                        "Tu pago ya fue registrado correctamente.";
-
-                    return RedirectToAction("MiMembresia");
-                }
-
-                /*
-                 * Creación diferida: se crea la membresía del plan elegido
-                 * en estado NO activo; el registro del pago confirmado es
-                 * quien la activa (mismo flujo que el pago administrativo).
-                 */
-                int idMembresiaCliente =
-                    _registrarMembresiaLN
-                        .RegistrarMembresiaPendiente(idUsuario, idPlan);
-
-                if (idMembresiaCliente <= 0)
-                {
-                    TempData["MensajeError"] =
-                        "No fue posible activar la membresía tras el pago. " +
-                        "Comunícate con soporte indicando tu número de referencia.";
-
-                    return View("ErrorPago");
-                }
-
-                var pagoDto = new PagoCrearDto
-                {
-                    idMembresiaCliente = idMembresiaCliente,
-                    idMetodoPago = LeerEnteroConfig("TilopayMetodoPagoId", 1),
-                    idEstadoPago = LeerEnteroConfig("TilopayEstadoPagoAprobado", 2),
-                    fechaPago = DateTime.Now,
-                    referenciaPago = referenciaPago
-                };
-
-                int idPago = _registrarPagoLN.RegistrarPago(pagoDto);
-
-                if (idPago <= 0)
-                {
-                    TempData["MensajeError"] =
-                        "El pago fue aprobado pero no pudo registrarse. " +
-                        "Comunícate con soporte indicando tu número de referencia.";
-
-                    return View("ErrorPago");
-                }
-
-                _registrarBitacoraLN.RegistrarBitacora(new BitacoraDto
-                {
-                    idUsuario = idUsuario,
-                    tablaAfectada = "Pago",
-                    accionRealizada = "PAGO_TILOPAY_APROBADO",
-                    idRegistroAfectado = idPago,
-                    detalle =
-                        $"Pago Tilopay aprobado. Membresía {idMembresiaCliente} activada.",
-                    ipUsuario = Request?.UserHostAddress
-                });
-
-                TempData["MensajeExito"] =
-                    "Tu pago fue aprobado y tu membresía fue activada correctamente.";
-
-                return RedirectToAction("MiMembresia");
-            }
-            catch (Exception ex)
+            return Json(new
             {
-                System.Diagnostics.Trace.TraceError(
-                    "Error procesando la respuesta de Tilopay: " + ex);
-
-                TempData["MensajeError"] =
-                    "Ocurrió un error al procesar tu pago. " +
-                    "Comunícate con soporte indicando tu número de referencia.";
-
-                return View("ErrorPago");
-            }
+                success = true,
+                url = urlMock
+            });
         }
 
-        private static int LeerEnteroConfig(string clave, int valorPorDefecto)
+        var plan =
+            _obtenerPlanMembresiaPorIdServicio
+                .ObtenerPlanMembresiaPorId(idPlan);
+
+        if (plan == null)
         {
-            var valor = ConfigurationManager.AppSettings[clave];
-
-            return int.TryParse(valor, out int resultado)
-                ? resultado
-                : valorPorDefecto;
+            return Json(new
+            {
+                success = false,
+                mensaje = "El plan seleccionado no es válido."
+            });
         }
 
-        private static bool TryParseReferencia(
-            string referencia,
+        decimal monto = plan.precio;
+
+        string baseUrl =
+            (apiUrl ?? string.Empty).TrimEnd('/');
+
+        string accessToken;
+
+        using (var cliente = new HttpClient())
+        {
+            cliente.Timeout = TimeSpan.FromSeconds(30);
+
+            var loginPayload = new
+            {
+                apiuser = apiUser,
+                password = apiPassword
+            };
+
+            var loginContenido = new StringContent(
+                JsonConvert.SerializeObject(loginPayload),
+                Encoding.UTF8,
+                "application/json");
+
+            var loginRespuesta =
+                await cliente.PostAsync(
+                    baseUrl + "/login",
+                    loginContenido);
+
+            var loginCuerpo =
+                await loginRespuesta.Content.ReadAsStringAsync();
+
+            if (!loginRespuesta.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(
+                    $"Tilopay login respondió {(int)loginRespuesta.StatusCode}: {loginCuerpo}");
+            }
+
+            var loginResultado =
+                JsonConvert.DeserializeObject<JObject>(
+                    loginCuerpo);
+
+            accessToken =
+                (string)loginResultado?["access_token"];
+
+            if (string.IsNullOrWhiteSpace(accessToken))
+            {
+                throw new InvalidOperationException(
+                    "Tilopay no devolvió un access_token válido.");
+            }
+
+            var payload = new
+            {
+                redirect = redirectUrl,
+                key = apiKey,
+                amount = monto.ToString(
+                    "F2",
+                    CultureInfo.InvariantCulture),
+                currency = "CRC",
+
+                billToFirstName = "Cliente",
+                billToLastName = "GimnasioJena",
+                billToEmail = perfil.correo,
+
+                orderNumber = referencia,
+                capture = "1",
+                subscription = "0",
+                platform = "api",
+                returnData = referencia,
+                hashVersion = "V2"
+            };
+
+            var pagoContenido = new StringContent(
+                JsonConvert.SerializeObject(payload),
+                Encoding.UTF8,
+                "application/json");
+
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    "Bearer",
+                    accessToken);
+
+            cliente.DefaultRequestHeaders.Accept.Clear();
+
+            cliente.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(
+                    "application/json"));
+
+            var pagoRespuesta =
+                await cliente.PostAsync(
+                    baseUrl + "/processPayment",
+                    pagoContenido);
+
+            var pagoCuerpo =
+                await pagoRespuesta.Content.ReadAsStringAsync();
+
+            if (!pagoRespuesta.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(
+                    $"Tilopay processPayment respondió {(int)pagoRespuesta.StatusCode}: {pagoCuerpo}");
+            }
+
+            var pagoResultado =
+                JsonConvert.DeserializeObject<JObject>(
+                    pagoCuerpo);
+
+            string checkoutUrl =
+                (string)pagoResultado?["url"];
+
+            if (string.IsNullOrWhiteSpace(checkoutUrl))
+            {
+                throw new InvalidOperationException(
+                    "Tilopay no devolvió una URL de pago válida.");
+            }
+
+            return Json(new
+            {
+                success = true,
+                url = checkoutUrl
+            });
+        }
+    }
+    catch (Exception ex)
+    {
+        System.Diagnostics.Trace.TraceError(
+            "Error al iniciar el pago con Tilopay: " + ex);
+
+        return Json(new
+        {
+            success = false,
+            mensaje =
+                "No fue posible iniciar el proceso de pago. " +
+                "Inténtalo de nuevo más tarde."
+        });
+    }
+}
+
+[HttpGet]
+public async Task<ActionResult> RespuestaTilopay(
+    string code,
+    string description,
+    string order,
+    string tpt,
+    string OrderHash,
+    string returnData)
+{
+    try
+    {
+        /*
+         * La respuesta del navegador NO se considera confirmación
+         * suficiente del pago.
+         *
+         * "order" solamente se utiliza para consultar posteriormente
+         * la transacción directamente contra Tilopay.
+         */
+        if (string.IsNullOrWhiteSpace(order))
+        {
+            TempData["MensajeError"] =
+                "No se recibió una referencia válida del pago.";
+
+            return View("ErrorPago");
+        }
+
+        if (!TryParseReferencia(
+            order,
             out int idUsuario,
-            out int idPlan)
+            out int idPlan))
         {
-            idUsuario = 0;
-            idPlan = 0;
+            TempData["MensajeError"] =
+                "La referencia del pago no es válida.";
 
-            if (string.IsNullOrWhiteSpace(referencia))
-                return false;
-
-            var coincidencia =
-                Regex.Match(referencia, @"JENA-(\d+)-(\d+)");
-
-            if (!coincidencia.Success)
-                return false;
-
-            return int.TryParse(coincidencia.Groups[1].Value, out idUsuario)
-                   && int.TryParse(coincidencia.Groups[2].Value, out idPlan)
-                   && idUsuario > 0
-                   && idPlan > 0;
+            return View("ErrorPago");
         }
-#endif
+
+        /*
+         * Seguridad:
+         * verificamos que la referencia corresponda al usuario
+         * que actualmente está autenticado.
+         */
+        var identityUserId = User.Identity.GetUserId();
+
+        var perfil =
+            await _obtenerUsuarioServicio
+                .ObtenerUsuarioPorId(identityUserId);
+
+        if (perfil == null ||
+            perfil.idUsuario != idUsuario)
+        {
+            TempData["MensajeError"] =
+                "No fue posible validar el usuario asociado al pago.";
+
+            return View("ErrorPago");
+        }
+
+        var apiUrl =
+            ConfigurationManager.AppSettings["TilopayApiUrl"];
+
+        var apiKey =
+            ConfigurationManager.AppSettings["TilopayApiKey"];
+
+        var apiUser =
+            ConfigurationManager.AppSettings["TilopayApiUser"];
+
+        var apiPassword =
+            ConfigurationManager.AppSettings["TilopayApiPassword"];
+
+        if (string.IsNullOrWhiteSpace(apiUrl) ||
+            string.IsNullOrWhiteSpace(apiKey) ||
+            string.IsNullOrWhiteSpace(apiUser) ||
+            string.IsNullOrWhiteSpace(apiPassword))
+        {
+            throw new InvalidOperationException(
+                "La configuración de Tilopay está incompleta.");
+        }
+
+        string baseUrl =
+            apiUrl.TrimEnd('/');
+
+        JObject transaccionTilopay;
+
+        using (var cliente = new HttpClient())
+        {
+            cliente.Timeout =
+                TimeSpan.FromSeconds(30);
+
+            /*
+             * 1. Obtener token oficial de Tilopay.
+             */
+            var loginPayload = new
+            {
+                apiuser = apiUser,
+                password = apiPassword
+            };
+
+            var loginContenido = new StringContent(
+                JsonConvert.SerializeObject(loginPayload),
+                Encoding.UTF8,
+                "application/json");
+
+            var loginRespuesta =
+                await cliente.PostAsync(
+                    baseUrl + "/login",
+                    loginContenido);
+
+            var loginCuerpo =
+                await loginRespuesta.Content
+                    .ReadAsStringAsync();
+
+            if (!loginRespuesta.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(
+                    $"Tilopay login respondió " +
+                    $"{(int)loginRespuesta.StatusCode}: " +
+                    loginCuerpo);
+            }
+
+            var loginResultado =
+                JsonConvert.DeserializeObject<JObject>(
+                    loginCuerpo);
+
+            string accessToken =
+                (string)loginResultado?["access_token"];
+
+            if (string.IsNullOrWhiteSpace(accessToken))
+            {
+                throw new InvalidOperationException(
+                    "Tilopay no devolvió un access_token válido.");
+            }
+
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers
+                    .AuthenticationHeaderValue(
+                        "Bearer",
+                        accessToken);
+
+            cliente.DefaultRequestHeaders.Accept.Clear();
+
+            cliente.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers
+                    .MediaTypeWithQualityHeaderValue(
+                        "application/json"));
+
+            /*
+             * 2. Consultar la transacción directamente en Tilopay.
+             */
+            var consultaPayload = new
+            {
+                key = apiKey,
+                orderNumber = order,
+                merchantId = ""
+            };
+
+            var consultaContenido =
+                new StringContent(
+                    JsonConvert.SerializeObject(
+                        consultaPayload),
+                    Encoding.UTF8,
+                    "application/json");
+
+            var consultaRespuesta =
+                await cliente.PostAsync(
+                    baseUrl + "/consult",
+                    consultaContenido);
+
+            var consultaCuerpo =
+                await consultaRespuesta.Content
+                    .ReadAsStringAsync();
+
+                    if (!consultaRespuesta.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(
+                    $"Tilopay consult respondió " +
+                    $"{(int)consultaRespuesta.StatusCode}: " +
+                    consultaCuerpo);
+            }
+
+            var consultaResultado =
+                JsonConvert.DeserializeObject<JObject>(
+                    consultaCuerpo);
+
+            var transacciones =
+                consultaResultado?["response"] as JArray;
+
+            if (transacciones == null ||
+                transacciones.Count == 0)
+            {
+                TempData["MensajeError"] =
+                    "Tilopay no confirmó la transacción solicitada.";
+
+                return View("ErrorPago");
+            }
+
+                    /*
+                     * Localizamos exactamente la transacción
+                     * correspondiente al orderNumber generado por Jéna.
+                     */
+            transaccionTilopay =
+                transacciones
+                        .OfType<JObject>()
+                        .FirstOrDefault(t =>
+                        {
+                            string orderNumberTilopay =
+                                (string)t["orderNumber"];
+
+                            return !string.IsNullOrWhiteSpace(orderNumberTilopay)
+                                   && orderNumberTilopay.EndsWith(
+                                       order,
+                                       StringComparison.Ordinal);
+                        });
+
+                    if (transaccionTilopay == null)
+            {
+                TempData["MensajeError"] =
+                    "La transacción devuelta por Tilopay " +
+                    "no corresponde a la operación solicitada.";
+
+                return View("ErrorPago");
+            }
+        }
+
+        /*
+         * 3. Tilopay documenta code = "1"
+         * como transacción aprobada.
+         */
+        string codigoTilopay =
+            (string)transaccionTilopay["code"];
+
+        if (!string.Equals(
+            codigoTilopay,
+            "1",
+            StringComparison.Ordinal))
+        {
+            TempData["MensajeError"] =
+                "El pago no fue aprobado por Tilopay.";
+
+            return View("ErrorPago");
+        }
+
+        /*
+         * 4. Validar plan, monto y moneda contra
+         * información controlada por el servidor.
+         */
+        var plan =
+            _obtenerPlanMembresiaPorIdServicio
+                .ObtenerPlanMembresiaPorId(idPlan);
+
+        if (plan == null)
+        {
+            TempData["MensajeError"] =
+                "El plan asociado al pago no es válido.";
+
+            return View("ErrorPago");
+        }
+
+        string monedaTilopay =
+            (string)transaccionTilopay["currency"];
+
+        string montoTexto =
+            (string)transaccionTilopay["amount"];
+
+        if (!decimal.TryParse(
+            montoTexto,
+            NumberStyles.Number,
+            CultureInfo.InvariantCulture,
+            out decimal montoTilopay))
+        {
+            TempData["MensajeError"] =
+                "No fue posible validar el monto recibido de Tilopay.";
+
+            return View("ErrorPago");
+        }
+
+        if (!string.Equals(
+                monedaTilopay,
+                "CRC",
+                StringComparison.OrdinalIgnoreCase) ||
+            montoTilopay != plan.precio)
+        {
+            TempData["MensajeError"] =
+                "Los datos del pago no coinciden con el plan seleccionado.";
+
+            return View("ErrorPago");
+        }
+
+        /*
+         * 5. La referencia idempotente será el identificador
+         * real de la transacción de Tilopay.
+         */
+        string idTilopay =
+            transaccionTilopay["id_tilopay"]?
+                .ToString();
+
+        if (string.IsNullOrWhiteSpace(idTilopay))
+        {
+            throw new InvalidOperationException(
+                "Tilopay no devolvió un identificador de transacción válido.");
+        }
+
+        string referenciaPago =
+            "TILOPAY-" + idTilopay;
+
+        /*
+         * 6. Idempotencia.
+         */
+        if (_registrarPagoLN
+            .ExisteReferenciaPago(referenciaPago))
+        {
+            TempData["MensajeExito"] =
+                "Tu pago ya fue registrado correctamente.";
+
+            return RedirectToAction("MiMembresia");
+        }
+
+        /*
+         * 7. Crear membresía pendiente.
+         */
+        int idMembresiaCliente =
+            _registrarMembresiaLN
+                .RegistrarMembresiaPendiente(
+                    idUsuario,
+                    idPlan);
+
+        if (idMembresiaCliente <= 0)
+        {
+            TempData["MensajeError"] =
+                "El pago fue aprobado, pero no fue posible " +
+                "preparar la membresía. Comunícate con soporte.";
+
+            return View("ErrorPago");
+        }
+
+        string autorizacion =
+            (string)transaccionTilopay["auth"];
+
+        string ambiente =
+            (string)transaccionTilopay["environment"];
+
+        var pagoDto = new PagoCrearDto
+        {
+            idMembresiaCliente =
+                idMembresiaCliente,
+
+            idMetodoPago =
+                LeerEnteroConfig(
+                    "TilopayMetodoPagoId",
+                    5),
+
+            idEstadoPago =
+                LeerEnteroConfig(
+                    "TilopayEstadoPagoAprobado",
+                    2),
+
+            fechaPago =
+                DateTime.Now,
+
+            referenciaPago =
+                referenciaPago,
+
+            observaciones =
+                $"Tilopay Order: {order}. " +
+                $"Auth: {autorizacion}. " +
+                $"Ambiente: {ambiente}."
+        };
+
+        /*
+         * RegistrarPagoLN vuelve a obtener el precio
+         * oficial del plan desde la BD.
+         */
+        int idPago =
+            _registrarPagoLN
+                .RegistrarPago(pagoDto);
+
+        if (idPago <= 0)
+        {
+            TempData["MensajeError"] =
+                "El pago fue aprobado pero no pudo registrarse. " +
+                "Comunícate con soporte indicando tu referencia.";
+
+            return View("ErrorPago");
+        }
+
+        _registrarBitacoraLN
+            .RegistrarBitacora(
+                new BitacoraDto
+                {
+                    idUsuario =
+                        idUsuario,
+
+                    tablaAfectada =
+                        "Pago",
+
+                    accionRealizada =
+                        "INSERT",
+
+                    idRegistroAfectado =
+                        idPago,
+
+                    detalle =
+                        $"Pago Tilopay {idTilopay} aprobado. " +
+                        $"Membresía {idMembresiaCliente} activada.",
+
+                    ipUsuario =
+                        Request?.UserHostAddress
+                });
+
+        TempData["MensajeExito"] =
+            "Tu pago fue aprobado y tu membresía " +
+            "fue activada correctamente.";
+
+        return RedirectToAction(
+            "MiMembresia");
+    }
+    catch (Exception ex)
+    {
+        System.Diagnostics.Trace.TraceError(
+            "Error procesando la respuesta de Tilopay: " +
+            ex);
+
+        TempData["MensajeError"] =
+            "Ocurrió un error al verificar tu pago. " +
+            "Comunícate con soporte indicando tu referencia.";
+
+        return View("ErrorPago");
+    }
+}
+
+
+private static int LeerEnteroConfig(
+    string clave,
+    int valorPorDefecto)
+{
+    var valor =
+        ConfigurationManager.AppSettings[clave];
+
+    return int.TryParse(
+        valor,
+        out int resultado)
+        ? resultado
+        : valorPorDefecto;
+}
+
+
+private static bool TryParseReferencia(
+    string referencia,
+    out int idUsuario,
+    out int idPlan)
+{
+    idUsuario = 0;
+    idPlan = 0;
+
+    if (string.IsNullOrWhiteSpace(referencia))
+        return false;
+
+    var coincidencia =
+        Regex.Match(
+            referencia,
+            @"^JENA-(\d+)-(\d+)-\d+$");
+
+    if (!coincidencia.Success)
+        return false;
+
+    return
+        int.TryParse(
+            coincidencia.Groups[1].Value,
+            out idUsuario)
+        &&
+        int.TryParse(
+            coincidencia.Groups[2].Value,
+            out idPlan)
+        &&
+        idUsuario > 0
+        &&
+        idPlan > 0;
+}
+
         // TODO: [TILOPAY EN PAUSA] Fin del bloque de integración Tilopay en pausa.
 
         private async Task<OperacionMembresiaDto> PrepararOperacionMembresia(int idPlan)

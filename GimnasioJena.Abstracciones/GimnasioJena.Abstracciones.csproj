@@ -1,4 +1,4 @@
-Ôªø<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\EntityFramework.6.5.2\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -118,6 +118,8 @@
     <Compile Include="AccesoADatos\HorariosSemanales\ObtenerHorariosSemanales\IObtenerHorariosSemanalesAD.cs" />
     <Compile Include="AccesoADatos\HorariosSemanales\RegistrarHorariosSemanales\IRegistrarHorariosSemanalesAD.cs" />
     <Compile Include="AccesoADatos\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\CambiarEstadoPlanMembresia\ICambiarEstadoPlanMembresiaAD.cs" />
+    <Compile Include="AccesoADatos\Membresias\RegistrarPlanMembresia\IRegistrarPlanMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\EditarMembresia\IEditarMembresiaAD.cs" />
     <Compile Include="AccesoADatos\Membresias\EditarPrecioPlan\IEditarPrecioPlanAD.cs" />
     <Compile Include="AccesoADatos\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteAD.cs" />
@@ -215,6 +217,8 @@
     <Compile Include="LogicaDeNegocio\HorariosSemanales\ObtenerHorariosSemanales\IObtenerHorariosSemanalesLN.cs" />
     <Compile Include="LogicaDeNegocio\HorariosSemanales\RegistrarHorariosSemanales\IRegistrarHorariosSemanalesLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoMembresia\ICambiarEstadoMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\CambiarEstadoPlanMembresia\ICambiarEstadoPlanMembresiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Membresias\RegistrarPlanMembresia\IRegistrarPlanMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\EditarMembresia\IEditarMembresiaLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\EditarPrecioPlan\IEditarPrecioPlanLN.cs" />
     <Compile Include="LogicaDeNegocio\Membresias\ObtenerMembresiaPorCliente\IObtenerMembresiaPorClienteLN.cs" />
@@ -311,6 +315,8 @@
     <Compile Include="Modelos\HorariosSemanales\ResultadoGeneracionClasesDto.cs" />
     <Compile Include="Modelos\HorariosSemanales\ResultadoRegistroHorariosDto.cs" />
     <Compile Include="Modelos\Membresias\EditarPrecioPlanDto.cs" />
+    <Compile Include="Modelos\Membresias\RegistrarPlanMembresiaDto.cs" />
+    <Compile Include="Modelos\Membresias\CambiarEstadoPlanMembresiaDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaClienteDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Membresias\MembresiaCrearDto.cs" />
@@ -379,7 +385,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauraci√≥n de paquetes NuGet para descargarlos. Para obtener m√°s informaci√≥n, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauraciÛn de paquetes NuGet para descargarlos. Para obtener m·s informaciÛn, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.targets'))" />

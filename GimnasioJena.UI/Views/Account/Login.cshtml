@@ -61,10 +61,10 @@
                             @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="form-check">
-                                @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
-                                @Html.LabelFor(m => m.RememberMe, "Recuérdame", new { @class = "form-check-label small" })
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                            <div class="form-check d-flex align-items-center gap-2 mb-0 ps-0">
+                                @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input m-0 flex-shrink-0", style = "width: 1.15rem; height: 1.15rem; min-width: 1.15rem; margin: 0; appearance: auto; -webkit-appearance: auto; float: none;" })
+                                @Html.LabelFor(m => m.RememberMe, "Recuérdame", new { @class = "form-check-label small mb-0" })
                             </div>
 
                             <a href="@Url.Action("ForgotPassword", "Account")"

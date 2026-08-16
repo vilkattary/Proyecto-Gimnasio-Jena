@@ -52,6 +52,7 @@ namespace GimnasioJena.AccesoADatos.Membresias.RegistrarMembresia
              * con vigencia en el pasado, para que el registro del pago
              * confirmado sea quien la active/renueve (mismo flujo del admin).
              */
+            DateTime anteayer = DateTime.Today.AddDays(-2);
             DateTime ayer = DateTime.Today.AddDays(-1);
 
             var membresiaAGuardar = new MembresiaEntidad
@@ -59,7 +60,7 @@ namespace GimnasioJena.AccesoADatos.Membresias.RegistrarMembresia
                 idUsuario = idUsuario,
                 idPlanMembresia = idPlanMembresia,
                 idEstadoMembresia = ESTADO_MEMBRESIA_NO_ACTIVA,
-                fechaInicio = ayer,
+                fechaInicio = anteayer,
                 fechaFin = ayer,
                 clasesDisponibles = 0,
                 observaciones =

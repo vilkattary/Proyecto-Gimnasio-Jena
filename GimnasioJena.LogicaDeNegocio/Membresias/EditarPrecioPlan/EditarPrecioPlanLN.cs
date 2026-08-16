@@ -28,7 +28,23 @@ namespace GimnasioJena.LogicaDeNegocio.Membresias.EditarPrecioPlan
                 return false;
             }
 
+            if (string.IsNullOrWhiteSpace(modelo.nombrePlan))
+            {
+                return false;
+            }
+
             if (modelo.precio <= 0)
+            {
+                return false;
+            }
+
+            if (modelo.duracionDias <= 0)
+            {
+                return false;
+            }
+
+            if (modelo.cantidadClases.HasValue &&
+                modelo.cantidadClases.Value < 0)
             {
                 return false;
             }
