@@ -121,7 +121,6 @@
     <Compile Include="Entidades\Pagos\PagoEntidad.cs" />
     <Compile Include="Entidades\Reportes\ReporteEntidad.cs" />
     <Compile Include="Entidades\Reservas\ReservaEntidad.cs" />
-    <Compile Include="Entidades\Roles\RolEntidad.cs" />
     <Compile Include="Entidades\Usuarios\UsuarioEntidad.cs" />
     <Compile Include="Entrenadores\CambiarEstadoEntrenador\CambiarEstadoEntrenadorAD.cs" />
     <Compile Include="Entrenadores\EditarEntrenador\EditarEntrenadorAD.cs" />
@@ -180,11 +179,6 @@
     <Compile Include="Reservas\ObtenerReservasPorUsuario\ObtenerReservasPorUsuarioAD.cs" />
     <Compile Include="Reservas\ObtenerTodasLasReservas\ObtenerTodasLasReservasAD.cs" />
     <Compile Include="Reservas\RegistrarReserva\RegistrarReservaAD.cs" />
-    <Compile Include="Roles\CambiarEstadoRol\CambiarEstadoRolAD.cs" />
-    <Compile Include="Roles\EditarRol\EditarRolAD.cs" />
-    <Compile Include="Roles\ObtenerRolPorId\ObtenerRolPorIdAD.cs" />
-    <Compile Include="Roles\ObtenerTodosLosRoles\ObtenerTodosLosRolesAD.cs" />
-    <Compile Include="Roles\RegistrarRol\RegistrarRolAD.cs" />
     <Compile Include="Usuarios\CambiarEstadoUsuario\CambiarEstadoUsuarioAD.cs" />
     <Compile Include="Usuarios\CambiarRolUsuario\CambiarRolUsuarioAD.cs" />
     <Compile Include="Usuarios\EditarUsuario\EditarUsuarioAD.cs" />

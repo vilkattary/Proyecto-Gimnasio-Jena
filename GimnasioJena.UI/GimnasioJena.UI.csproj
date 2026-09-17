@@ -197,7 +197,6 @@
     <Compile Include="Controllers\RecepcionistasController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\ReservasController.cs" />
-    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SeccionesNosotrosController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Controllers\WebhookController.cs" />

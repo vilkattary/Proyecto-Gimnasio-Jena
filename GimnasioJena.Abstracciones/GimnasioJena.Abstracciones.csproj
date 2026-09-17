@@ -156,11 +156,6 @@
     <Compile Include="AccesoADatos\Reservas\ObtenerReservasPorUsuario\IObtenerReservasPorUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasAD.cs" />
     <Compile Include="AccesoADatos\Reservas\RegistrarReserva\IRegistrarReservaAD.cs" />
-    <Compile Include="AccesoADatos\Roles\CambiarEstadoRol\ICambiarEstadoRolAD.cs" />
-    <Compile Include="AccesoADatos\Roles\EditarRol\IEditarRolAD.cs" />
-    <Compile Include="AccesoADatos\Roles\ObtenerRolPorId\IObtenerRolPorIdAD.cs" />
-    <Compile Include="AccesoADatos\Roles\ObtenerTodosLosRoles\IObtenerTodosLosRolesAD.cs" />
-    <Compile Include="AccesoADatos\Roles\RegistrarRol\IRegistrarRolAD.cs" />
     <Compile Include="AccesoADatos\Usuarios\CambiarEstadoUsuario\ICambiarEstadoUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Usuarios\CambiarRolUsuario\ICambiarRolUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Usuarios\EditarUsuario\IEditarUsuarioAD.cs" />
@@ -255,11 +250,6 @@
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerReservasPorUsuario\IObtenerReservasPorUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\ObtenerTodasLasReservas\IObtenerTodasLasReservasLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\RegistrarReserva\IRegistrarReservaLN.cs" />
-    <Compile Include="LogicaDeNegocio\Roles\CambiarEstadoRol\ICambiarEstadoRolLN.cs" />
-    <Compile Include="LogicaDeNegocio\Roles\EditarRol\IEditarRolLN.cs" />
-    <Compile Include="LogicaDeNegocio\Roles\ObtenerRolPorId\IObtenerRolPorIdLN.cs" />
-    <Compile Include="LogicaDeNegocio\Roles\ObtenerTodosLosRoles\IObtenerTodosLosRolesLN.cs" />
-    <Compile Include="LogicaDeNegocio\Roles\RegistrarRol\IRegistrarRolLN.cs" />
     <Compile Include="LogicaDeNegocio\Usuarios\CambiarEstadoUsuario\ICambiarEstadoUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Usuarios\CambiarRolUsuario\ICambiarRolUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Usuarios\EditarUsuario\IEditarUsuarioLN.cs" />
@@ -356,11 +346,6 @@
     <Compile Include="Modelos\Reservas\ReservaDto.cs" />
     <Compile Include="Modelos\Reservas\ReservaListadoDto.cs" />
     <Compile Include="Modelos\Reservas\ResultadoReservaDto.cs" />
-    <Compile Include="Modelos\Roles\RolCambiarEstadoDto.cs" />
-    <Compile Include="Modelos\Roles\RolCrearDto.cs" />
-    <Compile Include="Modelos\Roles\RolDto.cs" />
-    <Compile Include="Modelos\Roles\RolEditarDto.cs" />
-    <Compile Include="Modelos\Roles\RolListadoDto.cs" />
     <Compile Include="Modelos\Usuarios\LoginDto.cs" />
     <Compile Include="Modelos\Usuarios\RecuperarContrasenaDto.cs" />
     <Compile Include="Modelos\Usuarios\UsuarioCambiarEstadoDto.cs" />

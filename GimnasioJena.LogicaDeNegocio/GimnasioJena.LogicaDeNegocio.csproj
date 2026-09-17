@@ -161,11 +161,6 @@
     <Compile Include="Reservas\ObtenerReservasPorUsuario\ObtenerReservasPorUsuarioLN.cs" />
     <Compile Include="Reservas\ObtenerTodasLasReservas\ObtenerTodasLasReservasLN.cs" />
     <Compile Include="Reservas\RegistrarReserva\RegistrarReservaLN.cs" />
-    <Compile Include="Roles\CambiarEstadoRol\CambiarEstadoRolLN.cs" />
-    <Compile Include="Roles\EditarRol\EditarRolLN.cs" />
-    <Compile Include="Roles\ObtenerRolPorId\ObtenerRolPorIdLN.cs" />
-    <Compile Include="Roles\ObtenerTodosLosRoles\ObtenerTodosLosRolesLN.cs" />
-    <Compile Include="Roles\RegistrarRol\RegistrarRolLN.cs" />
     <Compile Include="Usuarios\CambiarEstadoUsuario\CambiarEstadoUsuarioLN.cs" />
     <Compile Include="Usuarios\CambiarRolUsuario\CambiarRolUsuarioLN.cs" />
     <Compile Include="Usuarios\EditarUsuario\EditarUsuarioLN.cs" />
