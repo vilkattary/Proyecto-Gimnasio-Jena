@@ -16,6 +16,8 @@ namespace GimnasioJena.Abstracciones.Modelos.Clases
         public string ubicacion { get; set; }
         public string observaciones { get; set; }
 
+        public int? idPlantillaDia { get; set; }
+
         public DateTime fechaCreacion { get; set; }
     }
 }

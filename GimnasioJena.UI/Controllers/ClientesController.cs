@@ -8,6 +8,10 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenamientos.ObtenerWorkoutClase;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenamientos.GuardarRegistroEntrenamiento;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenamientos.ObtenerProgresoCliente;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenamientos.RegistrarBiometria;
 using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Membresias;
 using GimnasioJena.Abstracciones.Modelos.Pagos;
@@ -21,7 +25,12 @@ using GimnasioJena.LogicaDeNegocio.Pagos.RegistrarPago;
 using GimnasioJena.LogicaDeNegocio.Reservas.CancelarReserva;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservaPorId;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
+using GimnasioJena.LogicaDeNegocio.Entrenamientos.ObtenerWorkoutClase;
+using GimnasioJena.LogicaDeNegocio.Entrenamientos.GuardarRegistroEntrenamiento;
+using GimnasioJena.LogicaDeNegocio.Entrenamientos.ObtenerProgresoCliente;
+using GimnasioJena.LogicaDeNegocio.Entrenamientos.RegistrarBiometria;
 using Microsoft.AspNet.Identity;
+using GimnasioJena.Abstracciones.Modelos.Entrenamientos;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -50,6 +59,10 @@ namespace GimnasioJena.UI.Controllers
         private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
         private readonly IRegistrarPagoLN _registrarPagoLN;
         private readonly IRegistrarMembresiaLN _registrarMembresiaLN;
+        private readonly IObtenerWorkoutClaseLN _obtenerWorkoutClaseLN;
+        private readonly IGuardarRegistroEntrenamientoLN _guardarRegistroEntrenamientoLN;
+        private readonly IObtenerProgresoClienteLN _obtenerProgresoClienteLN;
+        private readonly IRegistrarBiometriaLN _registrarBiometriaLN;
 
         public ClientesController(IObtenerUsuarioPorIdLN obtenerUsuarioServicio)
         {
@@ -63,6 +76,10 @@ namespace GimnasioJena.UI.Controllers
             _registrarBitacoraLN = new RegistrarBitacoraLN();
             _registrarPagoLN = new RegistrarPagoLN();
             _registrarMembresiaLN = new RegistrarMembresiaLN();
+            _obtenerWorkoutClaseLN = new ObtenerWorkoutClaseLN();
+            _guardarRegistroEntrenamientoLN = new GuardarRegistroEntrenamientoLN();
+            _obtenerProgresoClienteLN = new ObtenerProgresoClienteLN();
+            _registrarBiometriaLN = new RegistrarBiometriaLN();
         }
 
         public async Task<ActionResult> MiPerfil()
@@ -988,6 +1005,163 @@ private static bool TryParseReferencia(
                 detalle = detalle,
                 ipUsuario = ObtenerIpUsuario()
             });
+        }
+
+        // ── Módulo Cliente: Logging de entrenamiento ──────────────────────────
+
+        [HttpGet]
+        public async Task<ActionResult> GetClassWorkoutPartial(int classId)
+        {
+            var identityUserId = User.Identity.GetUserId();
+            var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
+
+            if (perfil == null)
+            {
+                return new HttpStatusCodeResult(403, "Usuario no válido.");
+            }
+
+            var modelo = _obtenerWorkoutClaseLN.ObtenerWorkoutClase(classId, perfil.idUsuario);
+
+            if (modelo == null)
+            {
+                return PartialView("_SinRutinaCliente");
+            }
+
+            return PartialView("_RegistroEntrenamientoCliente", modelo);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveUserWorkoutLog(RegistrarEntrenamientoClienteDto modelo)
+        {
+            // La petición llega como JSON, por lo que el token antiforgery viaja en
+            // la cabecera "RequestVerificationToken" y no en el formulario. Se valida
+            // manualmente contra la cookie antiforgery.
+            try
+            {
+                var cookie = Request.Cookies[System.Web.Helpers.AntiForgeryConfig.CookieName];
+                System.Web.Helpers.AntiForgery.Validate(
+                    cookie != null ? cookie.Value : null,
+                    Request.Headers["RequestVerificationToken"]);
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Token de seguridad no válido." });
+            }
+
+            var identityUserId = User.Identity.GetUserId();
+            var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
+
+            if (perfil == null)
+            {
+                return Json(new { success = false, message = "Usuario no válido." });
+            }
+
+            if (modelo == null)
+            {
+                return Json(new { success = false, message = "No se recibieron datos del entrenamiento." });
+            }
+
+            // Seguridad: se ignora cualquier UserId enviado por el cliente y se
+            // fuerza el del usuario autenticado para evitar suplantación.
+            modelo.UserId = perfil.idUsuario;
+
+            var resultado = _guardarRegistroEntrenamientoLN.GuardarRegistroEntrenamiento(modelo);
+
+            if (!resultado.Exito)
+            {
+                return Json(new { success = false, message = resultado.Mensaje });
+            }
+
+            RegistrarBitacora(
+                "UserWorkoutLog",
+                "INSERT",
+                resultado.idWorkoutLog,
+                "El cliente registró su entrenamiento.",
+                perfil.idUsuario);
+
+            return Json(new
+            {
+                success = true,
+                newRecord = resultado.NuevoRecord,
+                message = resultado.Mensaje
+            });
+        }
+
+        // Vista de analítica de progreso del cliente.
+        public ActionResult MiProgreso()
+        {
+            return View();
+        }
+
+        // Devuelve los agregados de progreso en JSON para las gráficas (Etapa 3).
+        [HttpGet]
+        public async Task<ActionResult> GetProgresoData(int ultimosDias = 90)
+        {
+            var identityUserId = User.Identity.GetUserId();
+            var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
+
+            if (perfil == null)
+            {
+                return new HttpStatusCodeResult(403, "Usuario no válido.");
+            }
+
+            var progreso = _obtenerProgresoClienteLN.ObtenerProgreso(perfil.idUsuario, ultimosDias);
+
+            // Se serializa con Newtonsoft para emitir fechas en ISO 8601 (compatibles
+            // con new Date() en el cliente), en lugar del formato /Date(...)/ de MVC.
+            var json = JsonConvert.SerializeObject(progreso);
+            return Content(json, "application/json");
+        }
+
+        // Registra una medición de biometría del cliente (peso y composición).
+        [HttpPost]
+        public async Task<ActionResult> SaveBiometria(RegistrarBiometriaDto modelo)
+        {
+            // El cuerpo llega como JSON, por lo que el token antiforgery viaja en la
+            // cabecera "RequestVerificationToken" y se valida contra la cookie.
+            try
+            {
+                var cookie = Request.Cookies[System.Web.Helpers.AntiForgeryConfig.CookieName];
+                System.Web.Helpers.AntiForgery.Validate(
+                    cookie != null ? cookie.Value : null,
+                    Request.Headers["RequestVerificationToken"]);
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Token de seguridad no válido." });
+            }
+
+            var identityUserId = User.Identity.GetUserId();
+            var perfil = await _obtenerUsuarioServicio.ObtenerUsuarioPorId(identityUserId);
+
+            if (perfil == null)
+            {
+                return Json(new { success = false, message = "Usuario no válido." });
+            }
+
+            if (modelo == null)
+            {
+                return Json(new { success = false, message = "No se recibieron datos de la medición." });
+            }
+
+            // Seguridad: se fuerza el usuario autenticado.
+            modelo.UserId = perfil.idUsuario;
+
+            var resultado = _registrarBiometriaLN.RegistrarBiometria(modelo);
+
+            if (!resultado.Exito)
+            {
+                return Json(new { success = false, message = resultado.Mensaje });
+            }
+
+            RegistrarBitacora(
+                "UserBiometrics",
+                "INSERT",
+                resultado.idBiometria,
+                "El cliente registró una medición de biometría.",
+                perfil.idUsuario);
+
+            return Json(new { success = true, message = resultado.Mensaje });
         }
     }
 }

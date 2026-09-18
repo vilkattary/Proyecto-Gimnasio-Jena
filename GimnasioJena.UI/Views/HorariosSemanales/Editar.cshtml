@@ -320,6 +320,8 @@
 
                         </div>
 
+                        @Html.Partial("_AsignacionRutina", null, new ViewDataDictionary(ViewData) { { "idPlantillaDia", (int?)Model.idPlantillaDia } })
+
                         <div class="d-flex justify-content-end gap-2">
 
                             @Html.ActionLink(
@@ -355,4 +357,5 @@
 @section Scripts
 {
     @Scripts.Render("~/bundles/jqueryval")
+    @Html.Partial("_AsignacionRutinaScripts")
 }

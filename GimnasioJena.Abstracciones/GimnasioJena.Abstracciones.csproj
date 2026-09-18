@@ -107,6 +107,19 @@
     <Compile Include="AccesoADatos\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresAD.cs" />
     <Compile Include="AccesoADatos\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\EditarMesociclo\IEditarMesocicloAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\EliminarMesociclo\IEliminarMesocicloAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\GuardarPlantillaDiaEntrenamiento\IGuardarPlantillaDiaEntrenamientoAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\GuardarRegistroEntrenamiento\IGuardarRegistroEntrenamientoAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\ObtenerMesocicloPorId\IObtenerMesocicloPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\ObtenerMesociclos\IObtenerMesociclosAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\ObtenerPlantillaDiaPorId\IObtenerPlantillaDiaPorIdAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\ObtenerPlantillasDia\IObtenerPlantillasDiaAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\ObtenerProgresoCliente\IObtenerProgresoClienteAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\ObtenerWorkoutClase\IObtenerWorkoutClaseAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\RegistrarBiometria\IRegistrarBiometriaAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\RegistrarMesociclo\IRegistrarMesocicloAD.cs" />
+    <Compile Include="AccesoADatos\Entrenamientos\ResolverEntrenamientoDelDia\IResolverEntrenamientoDelDiaAD.cs" />
     <Compile Include="AccesoADatos\EstadoReservas\ObtenerEstadoReservas\IObtenerEstadoReservaAD.cs" />
     <Compile Include="AccesoADatos\Home\AgregarSeccionHome\IAgregarSeccionHomeAD.cs" />
     <Compile Include="AccesoADatos\Home\CambiarEstadoSeccionHome\ICambiarEstadoSeccionHomeAD.cs" />
@@ -134,6 +147,12 @@
     <Compile Include="AccesoADatos\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosAD.cs" />
     <Compile Include="AccesoADatos\Pagos\ObtenerTodosLosPagos\IObtenerTodosLosPagosAD.cs" />
     <Compile Include="AccesoADatos\Pagos\RegistrarPago\IRegistrarPagoAD.cs" />
+    <Compile Include="AccesoADatos\Progreso\IAsistenciaAD.cs" />
+    <Compile Include="AccesoADatos\Progreso\ICamposMedicionAD.cs" />
+    <Compile Include="AccesoADatos\Progreso\IEntrenamientoAD.cs" />
+    <Compile Include="AccesoADatos\Progreso\IMedicionesAD.cs" />
+    <Compile Include="AccesoADatos\Progreso\IProgresoAD.cs" />
+    <Compile Include="AccesoADatos\Progreso\IUsuarioActualAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaAD.cs" />
     <Compile Include="AccesoADatos\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdAD.cs" />
@@ -206,6 +225,19 @@
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerEntrenadorPorUsuario\IObtenerEntrenadorPorUsuarioLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\ObtenerTodosLosEntrenadores\IObtenerTodosLosEntrenadoresLN.cs" />
     <Compile Include="LogicaDeNegocio\Entrenadores\RegistrarEntrenador\IRegistrarEntrenadorLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\EditarMesociclo\IEditarMesocicloLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\EliminarMesociclo\IEliminarMesocicloLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\GuardarPlantillaDiaEntrenamiento\IGuardarPlantillaDiaEntrenamientoLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\GuardarRegistroEntrenamiento\IGuardarRegistroEntrenamientoLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\ObtenerMesocicloPorId\IObtenerMesocicloPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\ObtenerMesociclos\IObtenerMesociclosLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\ObtenerPlantillaDiaPorId\IObtenerPlantillaDiaPorIdLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\ObtenerPlantillasDia\IObtenerPlantillasDiaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\ObtenerProgresoCliente\IObtenerProgresoClienteLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\ObtenerWorkoutClase\IObtenerWorkoutClaseLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\RegistrarBiometria\IRegistrarBiometriaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\RegistrarMesociclo\IRegistrarMesocicloLN.cs" />
+    <Compile Include="LogicaDeNegocio\Entrenamientos\ResolverEntrenamientoDelDia\IResolverEntrenamientoDelDiaLN.cs" />
     <Compile Include="LogicaDeNegocio\EstadoReservas\ObtenerEstadoReservas\IObtenerEstadoReservasLN.CS" />
     <Compile Include="LogicaDeNegocio\Home\AgregarSeccionHome\IAgregarSeccionHomeLN.cs" />
     <Compile Include="LogicaDeNegocio\Home\CambiarEstadoSeccionHome\ICambiarEstadoSeccionHomeLN.cs" />
@@ -233,6 +265,11 @@
     <Compile Include="LogicaDeNegocio\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Pagos\ObtenerTodosLosPagos\IObtenerTodosLosPagosLN.cs" />
     <Compile Include="LogicaDeNegocio\Pagos\RegistrarPago\IRegistrarPagoLN.cs" />
+    <Compile Include="LogicaDeNegocio\Progreso\ICamposMedicionLN.cs" />
+    <Compile Include="LogicaDeNegocio\Progreso\IEntrenamientoLN.cs" />
+    <Compile Include="LogicaDeNegocio\Progreso\IEvolucionAvanzadaLN.cs" />
+    <Compile Include="LogicaDeNegocio\Progreso\IMedicionesLN.cs" />
+    <Compile Include="LogicaDeNegocio\Progreso\IProgresoLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\CambiarEstadoRecepcionista\ICambiarEstadoRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\EditarRecepcionista\IEditarRecepcionistaLN.cs" />
     <Compile Include="LogicaDeNegocio\Recepcionistas\ObtenerRecepcionistaPorId\IObtenerRecepcionistaPorIdLN.cs" />
@@ -304,6 +341,19 @@
     <Compile Include="Modelos\Entrenadores\EntrenadorEditarDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorListadoDto.cs" />
     <Compile Include="Modelos\Entrenadores\EntrenadorPerfilDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\ClaseWorkoutClienteDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\EjercicioDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\GuardarPlantillaDiaDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\MesocicloDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\MesocicloListadoDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\PlantillaDiaDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\ProgresionSemanaDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\ProgresoClienteDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\RegistrarBiometriaDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\RegistrarEntrenamientoClienteDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\ResultadoGuardarPlantillaDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\ResultadoRegistroEntrenamientoDto.cs" />
+    <Compile Include="Modelos\Entrenamientos\SerieRegistradaDto.cs" />
     <Compile Include="Modelos\Home\AgregarSeccionHomeDto.cs" />
     <Compile Include="Modelos\Home\ContenidoWebDto.cs" />
     <Compile Include="Modelos\HorariosSemanales\GenerarClasesProgramadasDto.cs" />
@@ -333,6 +383,24 @@
     <Compile Include="Modelos\Pagos\PagoDetalleDto.cs" />
     <Compile Include="Modelos\Pagos\PagoListadoDto.cs" />
     <Compile Include="Modelos\Pagos\PagoMembresiaValidacionDto.cs" />
+    <Compile Include="Modelos\Progreso\CampoMedicionDto.cs" />
+    <Compile Include="Modelos\Progreso\CrearEntrenamientoClaseDto.cs" />
+    <Compile Include="Modelos\Progreso\CrearEntrenamientoDto.cs" />
+    <Compile Include="Modelos\Progreso\EjercicioItemDto.cs" />
+    <Compile Include="Modelos\Progreso\EntrenamientoDto.cs" />
+    <Compile Include="Modelos\Progreso\GuardarRutinaManualDto.cs" />
+    <Compile Include="Modelos\Progreso\MedicionDinamicaDto.cs" />
+    <Compile Include="Modelos\Progreso\MetricasEvolucionAvanzadaDto.cs" />
+    <Compile Include="Modelos\Progreso\ProgresoDiaDto.cs" />
+    <Compile Include="Modelos\Progreso\ProgresoFilaDto.cs" />
+    <Compile Include="Modelos\Progreso\PuntoCardioDto.cs" />
+    <Compile Include="Modelos\Progreso\PuntoVolumenFuerzaDto.cs" />
+    <Compile Include="Modelos\Progreso\RegistrarProgresoClaseDto.cs" />
+    <Compile Include="Modelos\Progreso\RegistroMedicionMultipleDto.cs" />
+    <Compile Include="Modelos\Progreso\RegistroProgresoAvanzadoDto.cs" />
+    <Compile Include="Modelos\Progreso\ResumenEvolucionDto.cs" />
+    <Compile Include="Modelos\Progreso\RutinaBloqueDto.cs" />
+    <Compile Include="Modelos\Progreso\ValorMedicionDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaCambiarEstadoDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaCrearDto.cs" />
     <Compile Include="Modelos\Recepcionistas\RecepcionistaDto.cs" />
@@ -385,7 +453,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauraciï¿½n de paquetes NuGet para descargarlos. Para obtener mï¿½s informaciï¿½n, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.2\build\EntityFramework.targets'))" />

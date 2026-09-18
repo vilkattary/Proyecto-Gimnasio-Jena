@@ -1,0 +1,113 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Progreso.RegistrarProgresoClaseDto
+
+@{
+    ViewBag.Title = "Registrar Progreso en Clase";
+    var nombreCoach = (ViewBag.NombreCoach as string) ?? "Sin asignar";
+    var nombreRutina = (ViewBag.NombreRutina as string) ?? "Rutina del día";
+}
+
+<div class="page-mi-perfil">
+    <div class="container-jena">
+
+        <h1>Registrar Mi Progreso</h1>
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                No se pudo guardar tu progreso. Revisa los datos e intenta nuevamente.@* ANTES *@
+@Html.TextBoxFor(m => m.FilasEjercicios[i].PesoLogrado, new { @class = "form-control form-control-jena", type = "number", step = "0.01", min = "0", inputmode = "decimal", placeholder = "kg", style = "font-size: 1rem;" })
+
+@* DESPUÉS — sin style inline *@
+@Html.TextBoxFor(m => m.FilasEjercicios[i].PesoLogrado, new { @class = "form-control form-control-jena", type = "number", step = "0.01", min = "0", inputmode = "decimal", placeholder = "kg" })
+            </div>
+        }
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        <!-- Información de la clase -->
+        <section aria-label="Información de la clase">
+            <div class="info-card mb-4" style="border: 2px solid var(--jena-light-blue);">
+                <h2>@nombreRutina</h2>
+                <p class="mb-0" style="font-size: 1rem;">
+                    <strong>Entrenador:</strong> @nombreCoach
+                </p>
+            </div>
+        </section>
+
+        @if (Model.FilasEjercicios != null && Model.FilasEjercicios.Count > 0)
+        {
+            using (Html.BeginForm("RegistrarEnClase", "Progreso", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.IdClaseProgramada)
+                @Html.HiddenFor(m => m.idUsuario)
+
+                <section aria-label="Registro de ejercicios">
+                    <div class="info-card mb-4">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Ejercicio Prescrito</th>
+                                        <th scope="col">Series x Reps</th>
+                                        <th scope="col">Peso Logrado (kg)</th>
+                                        <th scope="col">Reps Reales</th>
+                                        <th scope="col">Series Reales</th>
+                                        <th scope="col">Notas Personales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.FilasEjercicios.Count; i++)
+                                    {
+                                        <tr>
+                                            <td style="font-size: 1rem;">
+                                                @Model.FilasEjercicios[i].NombreEjercicio
+                                                @Html.HiddenFor(m => m.FilasEjercicios[i].NombreEjercicio)
+                                            </td>
+                                            <td style="font-size: 1rem;">
+                                                @Model.FilasEjercicios[i].SeriesPrescritas x @Model.FilasEjercicios[i].RepeticionesPrescritas
+                                                @Html.HiddenFor(m => m.FilasEjercicios[i].SeriesPrescritas)
+                                                @Html.HiddenFor(m => m.FilasEjercicios[i].RepeticionesPrescritas)
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(m => m.FilasEjercicios[i].PesoLogrado, new { @class = "form-control form-control-jena", type = "number", step = "0.01", min = "0", inputmode = "decimal", placeholder = "kg" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(m => m.FilasEjercicios[i].RepeticionesLogradas, new { @class = "form-control form-control-jena", type = "number", min = "0", inputmode = "numeric", placeholder = "Reps" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(m => m.FilasEjercicios[i].SeriesLogradas, new { @class = "form-control form-control-jena", type = "number", min = "0", inputmode = "numeric", placeholder = "Series" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(m => m.FilasEjercicios[i].NotasCliente, new { @class = "form-control form-control-jena", placeholder = "Notas" })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="submit" class="btn"
+                            style="background-color: var(--jena-orange); color: #fff; min-height: 44px; font-size: 1rem;">
+                        Guardar Mi Progreso
+                    </button>
+                    <a href="@Url.Action("Evolucion", "Progreso")" class="btn btn-jena">Cancelar</a>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="info-card">
+                <p class="mb-0" style="font-size: 1rem;">No hay ejercicios prescritos para esta clase todavía.</p>
+            </div>
+        }
+
+    </div>
+</div>
