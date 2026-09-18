@@ -16,8 +16,6 @@ namespace GimnasioJena.AccesoADatos.Entidades.Asistencias
 
         public int idReserva { get; set; }
 
-        public int? idUsuarioRecepcionista { get; set; }
-
         public DateTime fechaRegistro { get; set; }
 
         public bool asistio { get; set; }

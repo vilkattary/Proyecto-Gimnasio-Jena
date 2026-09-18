@@ -194,7 +194,6 @@
     <Compile Include="Controllers\MembresiasController.cs" />
     <Compile Include="Controllers\NosotrosController.cs" />
     <Compile Include="Controllers\PagosController.cs" />
-    <Compile Include="Controllers\RecepcionistasController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\ReservasController.cs" />
     <Compile Include="Controllers\SeccionesNosotrosController.cs" />

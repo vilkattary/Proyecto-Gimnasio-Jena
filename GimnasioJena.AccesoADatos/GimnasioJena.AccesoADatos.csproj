@@ -157,12 +157,6 @@
     <Compile Include="Pagos\ObtenerTodosLosPagos\ObtenerTodosLosPagosAD.cs" />
     <Compile Include="Pagos\RegistrarPago\RegistrarPagoAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Recepcionistas\CambiarEstadoRecepcionista\CambiarEstadoRecepcionistaAD.cs" />
-    <Compile Include="Recepcionistas\EditarRecepcionista\EditarRecepcionistaAD.cs" />
-    <Compile Include="Recepcionistas\ObtenerRecepcionistaPorId\ObtenerRecepcionistaPorIdAD.cs" />
-    <Compile Include="Recepcionistas\ObtenerRecepcionistaPorUsuario\ObtenerRecepcionistaPorUsuarioAD.cs" />
-    <Compile Include="Recepcionistas\ObtenerTodosLosRecepcionistas\ObtenerTodosLosRecepcionistasAD.cs" />
-    <Compile Include="Recepcionistas\RegistrarRecepcionista\RegistrarRecepcionistaAD.cs" />
     <Compile Include="Reportes\ObtenerDashboardGeneral\ObtenerDashboardGeneralAD.cs" />
     <Compile Include="Reportes\ObtenerReporteAsistencias\ObtenerReporteAsistenciasAD.cs" />
     <Compile Include="Reportes\ObtenerReporteClases\ObtenerReporteClasesAD.cs" />

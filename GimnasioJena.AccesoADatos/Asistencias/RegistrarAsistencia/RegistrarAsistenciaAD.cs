@@ -36,14 +36,12 @@ namespace GimnasioJena.AccesoADatos.Asistencias.RegistrarAsistencia
                 asistenciaExistente.asistio = asistencia.asistio;
                 asistenciaExistente.observaciones = asistencia.observaciones;
                 asistenciaExistente.fechaRegistro = DateTime.Now;
-                asistenciaExistente.idUsuarioRecepcionista = asistencia.idUsuarioRecepcionista;
             }
             else
             {
                 var asistenciaNueva = new AsistenciaEntidad
                 {
                     idReserva = asistencia.idReserva,
-                    idUsuarioRecepcionista = asistencia.idUsuarioRecepcionista,
                     fechaRegistro = DateTime.Now,
                     asistio = asistencia.asistio,
                     observaciones = asistencia.observaciones
