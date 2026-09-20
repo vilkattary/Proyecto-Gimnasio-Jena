@@ -173,13 +173,9 @@
     <Compile Include="Reservas\ObtenerReservasPorUsuario\ObtenerReservasPorUsuarioAD.cs" />
     <Compile Include="Reservas\ObtenerTodasLasReservas\ObtenerTodasLasReservasAD.cs" />
     <Compile Include="Reservas\RegistrarReserva\RegistrarReservaAD.cs" />
-    <Compile Include="Usuarios\CambiarEstadoUsuario\CambiarEstadoUsuarioAD.cs" />
     <Compile Include="Usuarios\CambiarRolUsuario\CambiarRolUsuarioAD.cs" />
-    <Compile Include="Usuarios\EditarUsuario\EditarUsuarioAD.cs" />
     <Compile Include="Usuarios\ObtenerTodosLosUsuarios\ObtenerTodosLosUsuariosAD.cs" />
-    <Compile Include="Usuarios\ObtenerUsuarioPorCorreo\ObtenerUsuarioPorCorreoAD.cs" />
     <Compile Include="Usuarios\ObtenerUsuarioPorId\ObtenerUsuarioPorIdAD.cs" />
-    <Compile Include="Usuarios\RecuperarContrasena\RecuperarContrasenaAD.cs" />
     <Compile Include="Usuarios\RegistrarUsuario\RegistrarUsuarioAD.cs" />
     <Compile Include="Home\ObtenerSeccionesHome\ObtenerSeccionesHomeAD.cs" />
     <Compile Include="Home\ModificarSeccionHome\ModificarSeccionHomeAD.cs" />
