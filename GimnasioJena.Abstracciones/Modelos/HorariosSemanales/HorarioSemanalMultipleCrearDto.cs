@@ -36,6 +36,9 @@ namespace GimnasioJena.Abstracciones.Modelos.HorariosSemanales
         [Display(Name = "Ubicación")]
         public string ubicacion { get; set; }
 
+        [Display(Name = "Plan de entrenamiento")]
+        public int? idPlantillaDia { get; set; }
+
         public List<HorarioSemanalDetalleCrearDto> horarios { get; set; }
 
         // Toggle: clase única vs recurrente

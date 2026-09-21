@@ -53,6 +53,9 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales
             horario.ubicacion =
                 "Salón principal";
 
+            horario.idPlantillaDia =
+                modelo.idPlantillaDia;
+
             horario.estado =
                 modelo.estado;
 

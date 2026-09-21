@@ -1,0 +1,354 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Progreso.ResumenEvolucionDto
+
+@{
+    ViewBag.Title = "Mi Evolución JÉNA";
+    var filtroActual = (ViewBag.FiltroTiempo as string) ?? "1Mes";
+}
+
+<div class="page-mi-perfil">
+    <div class="container-jena">
+
+        <h1>Mi Evolución JÉNA</h1>
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                No se pudo cargar tu evolución en este momento. Intenta nuevamente.
+            </div>
+        }
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        <!-- Filtros de tiempo -->
+        <section aria-label="Filtrar historial por periodo de tiempo">
+            <h2>Periodo</h2>
+            <div class="d-flex flex-wrap gap-2 mb-4" role="group" aria-label="Filtros de tiempo">
+                @{
+                    var opcionesFiltro = new[]
+                    {
+                        new { Valor = "1Mes", Texto = "1 Mes" },
+                        new { Valor = "3Meses", Texto = "3 Meses" },
+                        new { Valor = "6Meses", Texto = "6 Meses" },
+                        new { Valor = "Anual", Texto = "1 Año" }
+                    };
+                }
+                @foreach (var opcion in opcionesFiltro)
+                {
+                    var esActivo = filtroActual == opcion.Valor;
+                    var estilo = esActivo
+                        ? "background-color: var(--jena-orange); color: #fff; border: 2px solid var(--jena-orange);"
+                        : "border: 2px solid var(--jena-light-blue); color: var(--jena-navy);";
+                    <a href="@Url.Action("Evolucion", "Progreso", new { filtroTiempo = opcion.Valor })"
+                       class="btn"
+                       style="@estilo min-height: 44px; min-width: 44px; padding: 0.5rem 1.25rem; font-size: 1rem;"
+                       aria-pressed="@(esActivo ? "true" : "false")">
+                        @opcion.Texto
+                    </a>
+                }
+            </div>
+        </section>
+
+        <!-- Estadísticas / Gamificación -->
+        <section aria-label="Resumen de estadísticas">
+            <h2>Tu resumen</h2>
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-md-4">
+                    <div class="stat-card stat-card-navy">
+                        <h3>@Model.AsistenciaUltimos30Dias</h3>
+                        <p>Asistencias en los últimos 30 días</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="stat-card stat-card-navy">
+                        <h3>@Model.HistorialProgreso.Count</h3>
+                        <p>Registros de progreso en el periodo</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="stat-card stat-card-navy">
+                        <h3>@Model.HistorialMediciones.Count</h3>
+                        <p>Mediciones registradas</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráfico de evolución -->
+        <section aria-label="Gráfico de evolución">
+            <h2>Evolución en el tiempo</h2>
+            <div class="info-card mb-4">
+                <div class="chart-container">
+                    <canvas id="evolucionChart"
+                            role="img"
+                            aria-label="Gráfico de línea con tu evolución de peso y mediciones"
+                            style="max-width: 100%; height: auto;"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Volumen de entrenamiento -->
+        <section aria-label="Progresión del volumen de entrenamiento">
+            <h2>Volumen de Entrenamiento</h2>
+            <div class="info-card mb-4">
+                <div class="chart-container" style="position: relative; height: 320px;">
+                    <canvas id="volumenChart" role="img"
+                            aria-label="Gráfico de línea con la progresión del volumen de entrenamiento"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Composición corporal -->
+        <section aria-label="Composición corporal">
+            <h2>Composición Corporal</h2>
+            <div class="info-card mb-4">
+                <div class="chart-container" style="position: relative; height: 320px;">
+                    <canvas id="composicionChart" role="img"
+                            aria-label="Gráfico de líneas con peso, porcentaje de grasa y porcentaje de músculo"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cardio -->
+        <section aria-label="Ritmo cardio y pulsaciones">
+            <h2>Cardio: Ritmo vs. Pulsaciones</h2>
+            <div class="info-card mb-4">
+                <div class="chart-container" style="position: relative; height: 320px;">
+                    <canvas id="cardioChart" role="img"
+                            aria-label="Gráfico comparando ritmo medio y pulsaciones"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Heatmap de asistencia -->
+        <section aria-label="Mapa de calor de asistencia">
+            <h2>Días de Entrenamiento Activos</h2>
+            <div class="info-card mb-4">
+                <div id="heatmapAsistencia" class="d-flex flex-wrap gap-1" aria-label="Cuadrícula de asistencia por día"></div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script>
+        (function () {
+            var historialProgreso = @Html.Raw(Json.Encode(Model.HistorialProgreso));
+            var historialMediciones = @Html.Raw(Json.Encode(Model.HistorialMediciones));
+
+            function formatFecha(valor) {
+                var fecha = new Date(valor);
+                if (isNaN(fecha.getTime())) {
+                    return valor;
+                }
+                return fecha.toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: 'short'
+                });
+            }
+
+            var labelsProgreso = historialProgreso.map(function (p) {
+                return formatFecha(p.FechaRegistro);
+            });
+
+            var datosPeso = historialProgreso.map(function (p) {
+                return p.PesoAlcanzado;
+            });
+
+            var datosMediciones = historialMediciones.map(function (m) {
+                return m.Valor;
+            });
+
+            var canvas = document.getElementById('evolucionChart');
+            if (!canvas) {
+                return;
+            }
+
+            var ctx = canvas.getContext('2d');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labelsProgreso,
+                    datasets: [
+                        {
+                            label: 'Peso alcanzado (kg)',
+                            data: datosPeso,
+                            borderColor: '#FF6B35',
+                            backgroundColor: 'rgba(255, 107, 53, 0.15)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Mediciones',
+                            data: datosMediciones,
+                            borderColor: '#2C3E50',
+                            backgroundColor: 'rgba(44, 62, 80, 0.15)',
+                            tension: 0.3,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+
+            // ===== Métricas avanzadas =====
+            var metricas = @Html.Raw(Json.Encode(Model.MetricasAvanzadas));
+            var historicoVolumen = metricas.HistoricoVolumen || [];
+            var historicoCardio = metricas.HistoricoCardio || [];
+            var historicoComposicion = metricas.HistoricoComposicionCorporal || [];
+            var asistenciaHeatmap = metricas.AsistenciaHeatmap || {};
+
+            // Chart: Volumen
+            var canvasVolumen = document.getElementById('volumenChart');
+            if (canvasVolumen) {
+                new Chart(canvasVolumen.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: historicoVolumen.map(function (p) { return formatFecha(p.Fecha); }),
+                        datasets: [{
+                            label: 'Volumen total (kg)',
+                            data: historicoVolumen.map(function (p) { return p.VolumenTotal; }),
+                            borderColor: '#FF6B35',
+                            backgroundColor: 'rgba(255, 107, 53, 0.15)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } },
+                        scales: { y: { beginAtZero: false } }
+                    }
+                });
+            }
+
+            // Chart: Composición corporal (agrupa por NombreCampo)
+            var canvasComposicion = document.getElementById('composicionChart');
+            if (canvasComposicion) {
+                var camposComposicion = {};
+                var etiquetasComp = [];
+                historicoComposicion.forEach(function (m) {
+                    var etiqueta = formatFecha(m.FechaRegistro);
+                    if (etiquetasComp.indexOf(etiqueta) === -1) {
+                        etiquetasComp.push(etiqueta);
+                    }
+                    if (!camposComposicion[m.NombreCampo]) {
+                        camposComposicion[m.NombreCampo] = [];
+                    }
+                    camposComposicion[m.NombreCampo].push(m.Valor);
+                });
+
+                var paleta = ['#2C3E50', '#FF6B35', '#5DADE2', '#27AE60', '#8E44AD'];
+                var indiceColor = 0;
+                var datasetsComp = Object.keys(camposComposicion).map(function (nombre) {
+                    var color = paleta[indiceColor % paleta.length];
+                    indiceColor++;
+                    return {
+                        label: nombre,
+                        data: camposComposicion[nombre],
+                        borderColor: color,
+                        backgroundColor: color,
+                        tension: 0.3,
+                        fill: false
+                    };
+                });
+
+                new Chart(canvasComposicion.getContext('2d'), {
+                    type: 'line',
+                    data: { labels: etiquetasComp, datasets: datasetsComp },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } },
+                        scales: { y: { beginAtZero: false } }
+                    }
+                });
+            }
+
+            // Chart: Cardio - Ritmo vs. Pulsaciones (doble eje)
+            var canvasCardio = document.getElementById('cardioChart');
+            if (canvasCardio) {
+                new Chart(canvasCardio.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: historicoCardio.map(function (p) { return formatFecha(p.Fecha); }),
+                        datasets: [
+                            {
+                                label: 'Ritmo medio (min/km)',
+                                data: historicoCardio.map(function (p) { return p.RitmoMedio; }),
+                                borderColor: '#FF6B35',
+                                backgroundColor: 'rgba(255, 107, 53, 0.15)',
+                                tension: 0.3,
+                                yAxisID: 'yRitmo',
+                                fill: false
+                            },
+                            {
+                                label: 'Pulsaciones (ppm)',
+                                data: historicoCardio.map(function (p) { return p.Pulsaciones; }),
+                                borderColor: '#2C3E50',
+                                backgroundColor: 'rgba(44, 62, 80, 0.15)',
+                                tension: 0.3,
+                                yAxisID: 'yPulso',
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } },
+                        scales: {
+                            yRitmo: { type: 'linear', position: 'left', beginAtZero: false, title: { display: true, text: 'Ritmo' } },
+                            yPulso: { type: 'linear', position: 'right', beginAtZero: false, grid: { drawOnChartArea: false }, title: { display: true, text: 'Pulsaciones' } }
+                        }
+                    }
+                });
+            }
+
+            // Heatmap de asistencia
+            var contenedorHeatmap = document.getElementById('heatmapAsistencia');
+            if (contenedorHeatmap) {
+                var fechas = Object.keys(asistenciaHeatmap);
+                if (fechas.length === 0) {
+                    contenedorHeatmap.innerHTML = '<p class="mb-0">Aún no hay registros de asistencia en este periodo.</p>';
+                } else {
+                    fechas.sort();
+                    fechas.forEach(function (fecha) {
+                        var intensidad = asistenciaHeatmap[fecha];
+                        var celda = document.createElement('div');
+                        var opacidad = Math.min(0.25 + (intensidad * 0.25), 1);
+                        celda.title = fecha + ' - ' + intensidad + ' actividad(es)';
+                        celda.setAttribute('role', 'img');
+                        celda.setAttribute('aria-label', fecha + ', ' + intensidad + ' actividades');
+                        celda.style.width = '18px';
+                        celda.style.height = '18px';
+                        celda.style.borderRadius = '3px';
+                        celda.style.backgroundColor = 'rgba(255, 107, 53, ' + opacidad + ')';
+                        celda.style.border = '1px solid var(--jena-light-blue)';
+                        contenedorHeatmap.appendChild(celda);
+                    });
+                }
+            }
+        })();
+    </script>
+}

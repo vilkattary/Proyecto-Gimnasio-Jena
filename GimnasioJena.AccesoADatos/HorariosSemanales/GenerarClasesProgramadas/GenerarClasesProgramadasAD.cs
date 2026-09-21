@@ -37,7 +37,7 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales.GenerarClasesProgramadas
                         contexto.EstadoClases
                             .Where(e =>
                                 e.estado &&
-                                e.nombreEstado == "Activo"
+                                e.nombreEstado == "Activa"
                             )
                             .Select(e =>
                                 (int?)e.idEstadoClase
