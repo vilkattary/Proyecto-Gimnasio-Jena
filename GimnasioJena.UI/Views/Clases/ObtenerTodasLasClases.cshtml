@@ -205,7 +205,7 @@
         </div>
     }
 
-    @if (esVistaCliente || esVistaPublica)
+    @if (esVistaPublica)
     {
         <div class="info-card mb-4">
 
@@ -214,18 +214,6 @@
                     <i class="bi bi-calendar-week text-accent me-1"></i>
                     Calendario de clases
                 </h5>
-
-                @if (esVistaCliente)
-                {
-                    <div class="btn-group" role="group" aria-label="Alternar vista">
-                        <button type="button" id="btnVerCalendario" class="btn btn-orange btn-sm">
-                            <i class="bi bi-calendar3 me-1"></i>Calendario
-                        </button>
-                        <button type="button" id="btnVerLista" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-list-ul me-1"></i>Lista
-                        </button>
-                    </div>
-                }
             </div>
 
             <div id="contenedorCalendario">
@@ -238,7 +226,7 @@
 
 
     <!-- Lista de clases -->
-    <div id="listaClases" class="@((esVistaCliente || esVistaPublica) ? "d-none" : "")">
+    <div id="listaClases" class="@(esVistaPublica ? "d-none" : "")">
 
         @if (Model == null || !Model.Any())
         {
@@ -513,6 +501,13 @@
                                                 Cancelar reserva
                                             </button>
                                         }
+
+                                        <button type="button"
+                                                class="btn btn-outline-success mt-2 w-100"
+                                                onclick="loadClassWorkout(@item.idClaseProgramada)">
+                                            <i class="bi bi-clipboard2-check me-1"></i>
+                                            Ver / Registrar Entrenamiento
+                                        </button>
                                     }
                                     else if (item.reservaHabilitada)
                                     {
@@ -1018,4 +1013,32 @@
             }
         });
     </script>
+
+    if (esVistaCliente)
+    {
+        <!-- Token antiforgery para las peticiones AJAX del logging de entrenamiento -->
+        @Html.AntiForgeryToken()
+
+        <!-- Modal de registro de entrenamiento del cliente -->
+        <div class="modal fade" id="workoutClientModal" tabindex="-1"
+             aria-labelledby="workoutClientModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="workoutClientModalLabel">Mi entrenamiento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body" id="workoutClientModalBody">
+                        <p class="text-muted">Cargando…</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="~/Scripts/cliente-workout.js"></script>
+        <script>
+            window.ClienteWorkout.partialUrl = '@Url.Action("GetClassWorkoutPartial", "Clientes")';
+            window.ClienteWorkout.saveUrl = '@Url.Action("SaveUserWorkoutLog", "Clientes")';
+        </script>
+    }
 }

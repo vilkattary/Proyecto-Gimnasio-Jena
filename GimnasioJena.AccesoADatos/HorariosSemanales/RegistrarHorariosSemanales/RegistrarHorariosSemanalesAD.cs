@@ -53,6 +53,9 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales.RegistrarHorariosSemanales
                                 ubicacion =
                                     modelo.ubicacion.Trim(),
 
+                                idPlantillaDia =
+                                    modelo.idPlantillaDia,
+
                                 estado = true,
 
                                 fechaCreacion =

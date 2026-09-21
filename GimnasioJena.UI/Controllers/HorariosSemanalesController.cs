@@ -7,6 +7,7 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.GenerarClases
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.ObtenerHorarioSemanalPorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.RegistrarHorariosSemanales;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenamientos.ObtenerPlantillasDia;
 using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.Abstracciones.Modelos.HorariosSemanales;
@@ -20,6 +21,7 @@ using GimnasioJena.LogicaDeNegocio.HorariosSemanales.GenerarClasesProgramadas;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.ObtenerHorarioSemanalPorId;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.RegistrarHorariosSemanales;
+using GimnasioJena.LogicaDeNegocio.Entrenamientos.ObtenerPlantillasDia;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -59,6 +61,9 @@ namespace GimnasioJena.UI.Controllers
         private readonly IObtenerTodasLasClasesLN
              _obtenerTodasLasClasesLN;
 
+        private readonly IObtenerPlantillasDiaLN
+             _obtenerPlantillasDiaLN;
+
         public HorariosSemanalesController()
         {
             _obtenerHorariosSemanalesLN =
@@ -87,6 +92,9 @@ namespace GimnasioJena.UI.Controllers
 
             _obtenerTodasLasClasesLN =
                 new ObtenerTodasLasClasesLN();
+
+            _obtenerPlantillasDiaLN =
+                new ObtenerPlantillasDiaLN();
         }
 
         // GET: HorariosSemanales
@@ -304,6 +312,7 @@ namespace GimnasioJena.UI.Controllers
                         horaFin              = modelo.horarios[0].horaFin,
                         cupoMaximo           = modelo.cupoMaximo,
                         ubicacion            = modelo.ubicacion,
+                        idPlantillaDia       = modelo.idPlantillaDia,
                         fechaCreacion        = DateTime.Now
                     };
 
@@ -783,6 +792,33 @@ namespace GimnasioJena.UI.Controllers
                         idUsuarioEntrenadorSeleccionado
                     );
             }
+
+            CargarCatalogoPlantillas();
+        }
+
+        private void CargarCatalogoPlantillas(int? idPlantillaSeleccionada = null)
+        {
+            string[] nombresDias =
+            {
+                "", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"
+            };
+
+            var plantillas = _obtenerPlantillasDiaLN.ObtenerPlantillasDia(null)
+                .Select(p => new
+                {
+                    p.idPlantillaDia,
+                    descripcion =
+                        (p.DiaSemana >= 1 && p.DiaSemana <= 7 ? nombresDias[p.DiaSemana] : "Día")
+                        + (string.IsNullOrWhiteSpace(p.AreaEnfoque) ? "" : " - " + p.AreaEnfoque)
+                })
+                .ToList();
+
+            ViewBag.PlantillasDia = new SelectList(
+                plantillas,
+                "idPlantillaDia",
+                "descripcion",
+                idPlantillaSeleccionada
+            );
         }
 
         private int? ObtenerIdUsuarioActual()

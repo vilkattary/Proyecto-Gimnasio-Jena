@@ -1,0 +1,110 @@
+﻿@model IEnumerable<GimnasioJena.Abstracciones.Modelos.Progreso.CampoMedicionDto>
+
+@{
+    ViewBag.Title = "Campos de Medición Médica";
+}
+
+<div class="page-mi-perfil">
+    <div class="container-jena">
+
+        <h1>Campos de Medición Médica</h1>
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                No se pudo completar la operación. Intenta nuevamente.
+            </div>
+        }
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        <!-- Formulario para agregar un nuevo campo -->
+        <section aria-label="Agregar campo de medición">
+            <h2>Agregar campo</h2>
+            <div class="info-card mb-4">
+                @using (Html.BeginForm("Crear", "CamposMedicion", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3 align-items-end">
+                        <div class="col-12 col-md-8">
+                            <label for="NombreCampo" class="form-label">Nombre del campo</label>
+                            <input type="text" id="NombreCampo" name="NombreCampo"
+                                   class="form-control form-control-jena" maxlength="50"
+                                   placeholder="Ej. Porcentaje de Grasa" required />
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <button type="submit" class="btn btn-jena active w-100">Agregar campo</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <!-- Listado de campos existentes -->
+        <section aria-label="Campos de medición existentes">
+            <h2>Campos existentes</h2>
+            @if (Model != null && Model.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var campo in Model)
+                    {
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="info-card h-100 @(campo.Activo ? "" : "card-inactiva")">
+                                <h3>@campo.NombreCampo</h3>
+                                <p>Estado: @(campo.Activo ? "Activo" : "Inactivo")</p>
+
+                                @using (Html.BeginForm("CambiarEstado", "CamposMedicion", FormMethod.Post, new { id = "form-estado-" + campo.IdCampo }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="idCampo" value="@campo.IdCampo" />
+
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input js-toggle-estado" type="checkbox"
+                                               role="switch"
+                                               id="switch-@campo.IdCampo"
+                                               data-form-id="form-estado-@campo.IdCampo"
+                                               @(campo.Activo ? "checked" : "") />
+                                        <label class="form-check-label" for="switch-@campo.IdCampo">
+                                            @(campo.Activo ? "Desactivar campo" : "Activar campo")
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="info-card">
+                    <p class="mb-0">Aún no hay campos de medición registrados. Agrega el primero con el formulario de arriba.</p>
+                </div>
+            }
+        </section>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        //<![CDATA[
+        (function () {
+            var toggles = document.querySelectorAll(".js-toggle-estado");
+            for (var i = 0; i < toggles.length; i++) {
+                toggles[i].addEventListener("change", function (evt) {
+                    var input = evt.currentTarget;
+                    var formId = input.getAttribute("data-form-id");
+                    var form = document.getElementById(formId);
+                    if (form) {
+                        form.submit();
+                    }
+                });
+            }
+        })();
+        //]]>
+    </script>
+}

@@ -6,6 +6,7 @@ using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.RegistrarClase;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Entrenamientos.ObtenerPlantillasDia;
 using GimnasioJena.Abstracciones.Modelos.Bitacora;
 using GimnasioJena.Abstracciones.Modelos.Clases;
 using GimnasioJena.Abstracciones.Modelos.HorariosSemanales;
@@ -18,6 +19,7 @@ using GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase;
 using GimnasioJena.LogicaDeNegocio.Bitacora;
 using GimnasioJena.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
 using GimnasioJena.LogicaDeNegocio.Reservas.ObtenerReservasPorUsuario;
+using GimnasioJena.LogicaDeNegocio.Entrenamientos.ObtenerPlantillasDia;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -36,6 +38,7 @@ namespace GimnasioJena.UI.Controllers
         private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
         private readonly IObtenerHorariosSemanalesLN _obtenerHorariosSemanales;
         private readonly IObtenerReservasPorUsuarioLN _obtenerReservasPorUsuario;
+        private readonly IObtenerPlantillasDiaLN _obtenerPlantillasDia;
 
         public ClasesController()
         {
@@ -47,6 +50,7 @@ namespace GimnasioJena.UI.Controllers
             _registrarBitacoraLN = new RegistrarBitacoraLN();
             _obtenerHorariosSemanales = new ObtenerHorariosSemanalesLN();
             _obtenerReservasPorUsuario = new ObtenerReservasPorUsuarioLN();
+            _obtenerPlantillasDia = new ObtenerPlantillasDiaLN();
         }
 
         public ActionResult ObtenerTodasLasClases()
@@ -250,7 +254,7 @@ namespace GimnasioJena.UI.Controllers
                     );
 
                     TempData["MensajeExito"] = "La clase se registró correctamente.";
-                    return RedirectToAction("ObtenerTodasLasClases");
+                    return RedirectToAction("Index", "HorariosSemanales");
                 }
 
                 TempData["MensajeError"] = "No se pudo registrar la clase.";
@@ -287,6 +291,7 @@ namespace GimnasioJena.UI.Controllers
                 cupoMaximo = claseListado.cupoMaximo,
                 ubicacion = claseListado.ubicacion,
                 observaciones = claseListado.observaciones,
+                idPlantillaDia = claseListado.idPlantillaDia,
                 fechaModificacion = DateTime.Now
             };
 
@@ -355,7 +360,7 @@ namespace GimnasioJena.UI.Controllers
                     );
 
                     TempData["MensajeExito"] = "La clase se actualizó correctamente.";
-                    return RedirectToAction("ObtenerTodasLasClases");
+                    return RedirectToAction("Index", "HorariosSemanales");
                 }
 
                 TempData["MensajeError"] = "No se pudo actualizar la clase.";
@@ -416,7 +421,7 @@ namespace GimnasioJena.UI.Controllers
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction("ObtenerTodasLasClases");
+            return RedirectToAction("Index", "HorariosSemanales");
         }
 
         public ActionResult ObtenerClasesDisponibles()
@@ -424,7 +429,7 @@ namespace GimnasioJena.UI.Controllers
             List<ClaseListadoDto> todasLasClases = _obtenerTodasLasClases.ObtenerTodasLasClases();
 
             List<ClaseListadoDto> disponibles = todasLasClases
-                .Where(c => c.estadoClase == "Activo" && c.cuposDisponibles > 0)
+                .Where(c => c.estadoClase == "Activa" && c.cuposDisponibles > 0)
                 .OrderBy(c => c.fechaClase)
                 .ThenBy(c => c.horaInicio)
                 .ToList();
@@ -478,6 +483,33 @@ namespace GimnasioJena.UI.Controllers
                     idEstadoClaseSeleccionado
                 );
             }
+
+            CargarCatalogoPlantillas();
+        }
+
+        private void CargarCatalogoPlantillas(int? idPlantillaSeleccionada = null)
+        {
+            string[] nombresDias =
+            {
+                "", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"
+            };
+
+            var plantillas = _obtenerPlantillasDia.ObtenerPlantillasDia(null)
+                .Select(p => new
+                {
+                    p.idPlantillaDia,
+                    descripcion =
+                        (p.DiaSemana >= 1 && p.DiaSemana <= 7 ? nombresDias[p.DiaSemana] : "Día")
+                        + (string.IsNullOrWhiteSpace(p.AreaEnfoque) ? "" : " - " + p.AreaEnfoque)
+                })
+                .ToList();
+
+            ViewBag.PlantillasDia = new SelectList(
+                plantillas,
+                "idPlantillaDia",
+                "descripcion",
+                idPlantillaSeleccionada
+            );
         }
         private int? ObtenerIdUsuarioActual()
         {

@@ -33,6 +33,7 @@ namespace GimnasioJena.AccesoADatos.Clases.EditarClase
             claseEnBaseDeDatos.cupoMaximo = claseAEditar.cupoMaximo;
             claseEnBaseDeDatos.ubicacion = claseAEditar.ubicacion;
             claseEnBaseDeDatos.observaciones = claseAEditar.observaciones;
+            claseEnBaseDeDatos.idPlantillaDia = claseAEditar.idPlantillaDia;
             claseEnBaseDeDatos.fechaModificacion = claseAEditar.fechaModificacion;
 
             return _elContexto.SaveChanges();

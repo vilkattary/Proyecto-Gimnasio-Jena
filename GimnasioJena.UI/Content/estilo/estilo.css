@@ -101,6 +101,14 @@ main .container {
     padding-right: 1rem !important;
 }
 
+/* La navbar de Bootstrap requiere layout flex en su contenedor directo */
+.navbar > .container-jena {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+}
+
 @media (min-width: 768px) {
     .container-jena,
     .navbar .container,
@@ -1229,8 +1237,87 @@ footer {
     }
 
 /* ============================================
-       RESPONSIVE (MÓVILES < 768px)
+       VARIANTE STAT-CARD NAVY (ALTO CONTRASTE ADA AA)
 ============================================ */
+
+.stat-card-navy {
+    background-color: var(--jena-navy);
+    border-color: var(--jena-light-blue);
+}
+
+    .stat-card-navy h3 {
+        color: var(--jena-white);
+        font-weight: 800;
+        font-size: clamp(2rem, 5vw, 2.75rem);
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .stat-card-navy p {
+        color: var(--jena-white);
+        font-weight: 600;
+        font-size: 1rem;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+    }
+
+/* ============================================
+       CONTENEDOR DE GRÁFICO (ALTURA FIJA PARA CHART.JS)
+============================================ */
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: clamp(280px, 45vh, 420px);
+}
+
+/* ============================================
+       INPUTS JÉNA (MÍNIMO 1REM ANTI-ZOOM iOS - WCAG 2.5.5)
+============================================ */
+
+.form-control-jena {
+    font-size: 1rem;
+    min-height: 44px; /* Touch target WCAG 2.5.5 */
+    border-color: var(--jena-light-blue);
+    padding: 0.6rem 0.9rem;
+}
+
+    .form-control-jena:focus {
+        border-color: var(--jena-orange);
+        box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.2);
+    }
+
+/* ============================================
+       TARJETA INACTIVA (SOFT DELETE) + SWITCH ADA
+============================================ */
+
+.card-inactiva {
+    opacity: 0.55;
+    background-color: var(--jena-light-gray);
+}
+
+.form-switch .form-check-input {
+    width: 2.75rem;
+    height: 1.5rem;
+    min-height: 44px;
+    cursor: pointer;
+}
+
+    .form-switch .form-check-input:checked {
+        background-color: var(--jena-orange);
+        border-color: var(--jena-orange);
+    }
+
+.form-switch .form-check-label {
+    font-size: 1rem;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+
+
 
 @media (max-width: 768px) {
     .logo-circular {
@@ -2629,6 +2716,7 @@ body {
     font-size: 0.95rem;
     letter-spacing: 0.5px;
     padding: 0.75rem 2rem;
+    min-height: 44px; /* Touch target WCAG 2.5.5 */
     border-radius: 50px;
     transition: all 0.3s ease;
     text-decoration: none;
@@ -2640,6 +2728,12 @@ body {
         color: var(--jena-white);
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-jena.active {
+        background-color: var(--jena-orange);
+        color: var(--jena-white);
+        border-color: var(--jena-orange);
     }
 
 /* ============================================
@@ -5979,7 +6073,8 @@ section.hero-apex a.btn.btn-apex-primary {
 
 .form-control-jena {
     font-family: var(--font-body);
-    font-size: 0.9rem;
+    font-size: 1rem; /* 16px — previene auto-zoom en iOS (WCAG / accesibilidad móvil) */
+    min-height: 44px; /* Touch target WCAG 2.5.5 */
     color: var(--jena-navy);
     background: var(--jena-white);
     border: 1.5px solid rgba(0, 45, 80, 0.25);
@@ -7154,4 +7249,31 @@ body.modal-jena-open {
     #calendarioClases .fc-event-reserved svg {
         color: inherit !important;
         fill: currentColor !important;
+    }
+
+/* ============================================
+   TOGGLE DE VISIBILIDAD DE CONTRASEÑA (JÉNA)
+============================================ */
+.toggle-password-btn {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-color: var(--jena-light-blue, #ced4da);
+}
+
+.toggle-password-btn:hover,
+.toggle-password-btn:focus {
+    background-color: var(--jena-orange, #f7801e);
+    border-color: var(--jena-orange, #f7801e);
+    color: #ffffff;
+}
+
+.toggle-password-btn i {
+    font-size: 1.1rem;
+    line-height: 1;
+}
     }

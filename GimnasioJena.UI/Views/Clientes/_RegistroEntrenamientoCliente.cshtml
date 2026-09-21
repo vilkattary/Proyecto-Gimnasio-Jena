@@ -1,0 +1,111 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Entrenamientos.ClaseWorkoutClienteDto
+
+@*
+    Parcial del modal de registro de entrenamiento del cliente.
+    Mobile-first y ADA: inputs numéricos con font-size 1rem (evita auto-zoom iOS),
+    controles táctiles >=44px y filas envueltas en table-responsive.
+*@
+
+<div id="workoutClientForm"
+     data-class-id="@Model.ClassInstanceId"
+     data-template-id="@Model.WorkoutDayTemplateId">
+
+    <div class="mb-3">
+        <h6 class="mb-1">
+            <i class="bi bi-clipboard2-pulse me-1"></i>
+            @(string.IsNullOrWhiteSpace(Model.AreaEnfoque) ? "Rutina del día" : Model.AreaEnfoque)
+        </h6>
+        <span class="badge bg-secondary">Semana @Model.NumeroSemana</span>
+    </div>
+
+    @if (!Model.Ejercicios.Any())
+    {
+        <div class="alert alert-info mb-0">Esta clase no tiene ejercicios prescritos.</div>
+    }
+    else
+    {
+        foreach (var ejercicio in Model.Ejercicios)
+        {
+            var meta = ejercicio.TipoMetrica == 2
+                ? (ejercicio.DuracionSegundosObjetivo.HasValue ? ejercicio.DuracionSegundosObjetivo + " seg" : "—")
+                : (string.IsNullOrWhiteSpace(ejercicio.RepeticionesObjetivo) ? "—" : ejercicio.RepeticionesObjetivo + " reps");
+            var seriesObjetivo = ejercicio.SeriesObjetivo ?? 3;
+
+            <div class="border rounded p-3 mb-3 wk-ejercicio-cliente"
+                 data-exercise-id="@ejercicio.WorkoutExerciseId"
+                 data-tipo-metrica="@ejercicio.TipoMetrica">
+
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <strong>@ejercicio.NombreEjercicio</strong>
+                        <div class="text-muted small">
+                            Meta: Semana @Model.NumeroSemana — @seriesObjetivo series x @meta
+                        </div>
+                    </div>
+                    @if (ejercicio.UltimoPesoKg.HasValue)
+                    {
+                        <span class="badge bg-light text-dark align-self-center">
+                            Tu marca anterior: @ejercicio.UltimoPesoKg.Value.ToString("0.##") kg
+                        </span>
+                    }
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 60px;">Serie</th>
+                                <th scope="col">Reps</th>
+                                <th scope="col">Kg</th>
+                                <th scope="col" class="text-center" style="width: 60px;">Hecho</th>
+                            </tr>
+                        </thead>
+                        <tbody class="wk-series-body">
+                            @for (int s = 1; s <= seriesObjetivo; s++)
+                            {
+                                <tr data-set="@s">
+                                    <th scope="row">@s</th>
+                                    <td>
+                                        <input type="number" inputmode="numeric" min="0"
+                                               class="form-control form-control-sm wk-reps"
+                                               style="font-size: 1rem;"
+                                               aria-label="Repeticiones serie @s"
+                                               value="@(string.IsNullOrWhiteSpace(ejercicio.RepeticionesObjetivo) ? "" : "")" />
+                                    </td>
+                                    <td>
+                                        <input type="number" inputmode="decimal" min="0" step="0.5"
+                                               class="form-control form-control-sm wk-peso"
+                                               style="font-size: 1rem;"
+                                               aria-label="Peso en kg serie @s"
+                                               value="@(ejercicio.UltimoPesoKg.HasValue ? ejercicio.UltimoPesoKg.Value.ToString("0.##") : "")" />
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox"
+                                               class="form-check-input wk-hecho"
+                                               style="width: 1.75rem; height: 1.75rem; margin: 0;"
+                                               aria-label="Serie @s completada" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+        <div class="mb-3">
+            <label class="form-label" for="wkNotasCliente">Notas (sensaciones, fatiga)</label>
+            <textarea id="wkNotasCliente" class="form-control" rows="2"
+                      style="font-size: 1rem;" maxlength="500"></textarea>
+        </div>
+
+        <div id="wkMensajeCliente" aria-live="polite"></div>
+
+        <button type="button" id="wkGuardarEntrenamiento"
+                class="btn btn-success w-100"
+                style="min-height: 44px; font-size: 1rem;">
+            <i class="bi bi-check-circle me-1"></i>
+            Guardar Resultados
+        </button>
+    }
+</div>

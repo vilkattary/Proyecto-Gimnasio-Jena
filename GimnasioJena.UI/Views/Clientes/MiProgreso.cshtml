@@ -1,0 +1,712 @@
+﻿@{
+    ViewBag.Title = "Mi Progreso";
+}
+
+<style>
+    #sparklinesGrid {
+        --bs-gutter-x: 0.5rem;
+        --bs-gutter-y: 0.5rem;
+    }
+
+    .spark-card {
+        transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+        border: 1px solid rgba(0,0,0,.1);
+        border-radius: .5rem;
+        cursor: pointer;
+    }
+
+        .spark-card .card-body {
+            padding: .45rem .55rem;
+            gap: .1rem;
+        }
+
+        .spark-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(13,110,253,.5);
+            box-shadow: 0 .25rem .6rem rgba(0,0,0,.1) !important;
+        }
+
+        /* Foco visible para navegación por teclado (WCAG 2.1 AA) */
+        .spark-card:focus-visible {
+            outline: 3px solid #0d6efd;
+            outline-offset: 2px;
+        }
+
+        .spark-card--active {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 2px rgba(13,110,253,.35) !important;
+            background-color: rgba(13,110,253,.04);
+        }
+
+    .spark-name {
+        font-size: .68rem;
+        font-weight: 600;
+        line-height: 1.1;
+        color: #212529;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        white-space: normal;
+        min-height: 1.5em;
+    }
+
+    .spark-value {
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1;
+        color: #0d6efd;
+    }
+
+    .spark-unit {
+        font-size: .6rem;
+        font-weight: 500;
+        color: #5c636a;
+        margin-left: 1px;
+    }
+
+    .spark-trend {
+        font-size: .62rem;
+        font-weight: 600;
+        white-space: nowrap;
+        line-height: 1;
+    }
+
+        .spark-trend .bi {
+            font-size: .78rem;
+            vertical-align: -1px;
+        }
+
+    /* Colores de tendencia con contraste AA sobre fondo blanco */
+    .spark-trend.text-success {
+        color: #146c43 !important;
+    }
+
+    .spark-trend.text-danger {
+        color: #b02a37 !important;
+    }
+
+    /* Evita el scroll interno de la leyenda del calendario de asistencia */
+    #chartAsistencia .apexcharts-legend {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+</style>
+
+<div class="container-fluid p-3 p-md-4 page-mi-progreso">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+        <h3 class="mb-0"><i class="bi bi-graph-up-arrow me-2"></i>Mi Progreso</h3>
+        <div>
+            <button type="button" class="btn btn-sm btn-outline-primary me-2"
+                    data-bs-toggle="modal" data-bs-target="#biometriaModal">
+                <i class="bi bi-plus-circle me-1"></i>Registrar medida
+            </button>
+            <label for="rangoProgreso" class="form-label me-2 mb-0 small">Rango</label>
+            <select id="rangoProgreso" class="form-select form-select-sm d-inline-block" style="width: auto;">
+                <option value="30">Últimos 30 días</option>
+                <option value="90" selected>Últimos 90 días</option>
+                <option value="180">Últimos 180 días</option>
+                <option value="0">Todo</option>
+            </select>
+        </div>
+    </div>
+
+    @* Tarjetas resumen *@
+    <div class="row g-3 mb-4" id="progresoResumen">
+        <div class="col-6 col-lg-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-muted small">Sesiones</div>
+                    <div class="fs-4 fw-bold" id="kpiSesiones">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-muted small">Volumen total (kg)</div>
+                    <div class="fs-4 fw-bold" id="kpiVolumen">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-muted small">Series registradas</div>
+                    <div class="fs-4 fw-bold" id="kpiSeries">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-muted small">Última sesión</div>
+                    <div class="fs-6 fw-bold" id="kpiUltima">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="progresoLoading" class="text-center text-muted py-4">Cargando datos…</div>
+    <div id="progresoVacio" class="alert alert-info d-none">
+        Aún no tienes entrenamientos registrados en este rango. ¡Registra tu primera sesión!
+    </div>
+
+    <div id="progresoGraficas" class="d-none">
+
+        @* Cuadrícula de minigráficos (Small Multiples / Sparklines) por ejercicio *@
+        <div id="sparklinesWrapper" class="mb-4 d-none">
+            <div class="d-flex align-items-center mb-2">
+                <h6 class="mb-0 fw-semibold"><i class="bi bi-grid-3x3-gap me-2"></i>Ejercicios (1RM estimado)</h6>
+                <span class="text-muted small ms-2">Toca una o varias tarjetas para compararlas en el gráfico principal</span>
+            </div>
+            <div id="sparklinesGrid" class="row g-3"></div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white fw-semibold" id="chart1RMHeader">Evolución de fuerza (1RM estimado)</div>
+                    <div class="card-body">
+                        <div id="chart1RM"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white fw-semibold">Volumen semanal (bloques de 4 semanas)</div>
+                    <div class="card-body">
+                        <div id="chartVolumen"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white fw-semibold">Biometría (peso y composición)</div>
+                    <div class="card-body">
+                        <div id="chartBiometria"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white fw-semibold">Calendario de asistencia</div>
+                    <div class="card-body">
+                        <div id="chartAsistencia"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.AntiForgeryToken()
+
+    @* Modal de registro de biometría *@
+    <div class="modal fade" id="biometriaModal" tabindex="-1"
+         aria-labelledby="biometriaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="biometriaModalLabel">Registrar medida</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="bioFecha" class="form-label">Fecha</label>
+                        <input type="date" id="bioFecha" class="form-control" style="font-size: 1rem;" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="bioPeso" class="form-label">Peso (kg) *</label>
+                        <input type="number" id="bioPeso" inputmode="decimal" min="0" step="0.1"
+                               class="form-control" style="font-size: 1rem;" />
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label for="bioGrasa" class="form-label">Grasa (%)</label>
+                            <input type="number" id="bioGrasa" inputmode="decimal" min="0" max="100" step="0.1"
+                                   class="form-control" style="font-size: 1rem;" />
+                        </div>
+                        <div class="col-6">
+                            <label for="bioMusculo" class="form-label">Músculo (%)</label>
+                            <input type="number" id="bioMusculo" inputmode="decimal" min="0" max="100" step="0.1"
+                                   class="form-control" style="font-size: 1rem;" />
+                        </div>
+                    </div>
+                    <div id="bioMensaje" aria-live="polite" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="bioGuardar" class="btn btn-primary" style="min-height: 44px;">
+                        <i class="bi bi-check-circle me-1"></i>Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.1/dist/apexcharts.min.js"></script>
+    <script>
+        (function () {
+            "use strict";
+
+            var dataUrl = '@Url.Action("GetProgresoData", "Clientes")';
+            var charts = {};
+            var sparkCharts = [];
+            var evolucion1RM = [];
+            var seleccionados = [];
+
+            function fmtFecha(iso) {
+                var d = new Date(iso);
+                return d.toLocaleDateString();
+            }
+
+            function fmtNumero(n) {
+                return (n || 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
+            }
+
+            function destruir() {
+                Object.keys(charts).forEach(function (k) {
+                    if (charts[k]) { charts[k].destroy(); charts[k] = null; }
+                });
+                sparkCharts.forEach(function (c) { if (c) { c.destroy(); } });
+                sparkCharts = [];
+            }
+
+            // Devuelve el lunes (inicio de semana ISO) de la fecha dada.
+            function inicioSemana(fecha) {
+                var d = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+                var dia = (d.getDay() + 6) % 7; // 0 = lunes
+                d.setDate(d.getDate() - dia);
+                return d;
+            }
+
+            function renderVolumen(puntos) {
+                // Agrega el volumen diario en total semanal (lunes a domingo).
+                var porSemana = {};
+                puntos.forEach(function (p) {
+                    var ini = inicioSemana(new Date(p.Fecha));
+                    var clave = ini.getTime();
+                    if (!porSemana[clave]) { porSemana[clave] = 0; }
+                    porSemana[clave] += (p.VolumenTotal || 0);
+                });
+
+                var semanas = Object.keys(porSemana)
+                    .map(function (k) { return parseInt(k, 10); })
+                    .sort(function (a, b) { return a - b; });
+
+                // Colorea en bloques de 4 semanas (olas del mesociclo).
+                var paleta = ["#0d6efd", "#6610f2", "#20c997", "#fd7e14"];
+                var data = semanas.map(function (ts, i) {
+                    return {
+                        x: ts,
+                        y: Math.round(porSemana[ts]),
+                        fillColor: paleta[Math.floor(i / 4) % paleta.length]
+                    };
+                });
+
+                var series = [{ name: "Volumen semanal (kg)", data: data }];
+
+                charts.volumen = new ApexCharts(document.querySelector("#chartVolumen"), {
+                    chart: { type: "bar", height: 300, toolbar: { show: false } },
+                    series: series,
+                    plotOptions: { bar: { borderRadius: 4, columnWidth: "60%", distributed: false } },
+                    dataLabels: { enabled: false },
+                    xaxis: {
+                        type: "datetime",
+                        labels: { format: "dd MMM" },
+                        title: { text: "Semana (inicio lunes)" }
+                    },
+                    yaxis: {
+                        title: { text: "Volumen (kg)" },
+                        labels: { formatter: function (v) { return fmtNumero(v); } }
+                    },
+                    legend: { show: false },
+                    tooltip: {
+                        x: { format: "'Semana del' dd MMM yyyy" },
+                        y: { formatter: function (v) { return fmtNumero(v) + " kg"; } }
+                    }
+                });
+                charts.volumen.render();
+            }
+
+            function render1RM(seriesEjercicio) {
+                var series = seriesEjercicio.map(function (e) {
+                    return {
+                        name: e.NombreEjercicio,
+                        data: e.Puntos.map(function (p) {
+                            return { x: new Date(p.Fecha).getTime(), y: p.Mejor1RM };
+                        })
+                    };
+                });
+                charts.rm = new ApexCharts(document.querySelector("#chart1RM"), {
+                    chart: { type: "line", height: 300, toolbar: { show: false } },
+                    series: series,
+                    xaxis: { type: "datetime" },
+                    dataLabels: { enabled: false },
+                    stroke: { curve: "straight", width: 2 },
+                    markers: { size: 4 },
+                    tooltip: { x: { format: "dd MMM yyyy" } }
+                });
+                charts.rm.render();
+            }
+
+            // ── Cuadrícula de minigráficos (sparklines) por ejercicio ──────────
+            function ultimo(puntos) {
+                return puntos.length ? puntos[puntos.length - 1].Mejor1RM : 0;
+            }
+
+            function mejor1RM(puntos) {
+                return puntos.reduce(function (m, p) {
+                    return p.Mejor1RM > m ? p.Mejor1RM : m;
+                }, 0);
+            }
+
+            function tendenciaUltimoMes(puntos) {
+                if (!puntos.length) { return null; }
+                var ultimoPunto = puntos[puntos.length - 1];
+                var refFecha = new Date(ultimoPunto.Fecha).getTime() - 30 * 24 * 60 * 60 * 1000;
+                var base = null;
+                for (var i = puntos.length - 1; i >= 0; i--) {
+                    if (new Date(puntos[i].Fecha).getTime() <= refFecha) { base = puntos[i]; break; }
+                }
+                if (base === null) { base = puntos[0]; }
+                return ultimoPunto.Mejor1RM - base.Mejor1RM;
+            }
+
+            function renderSparklines(seriesEjercicio) {
+                var grid = document.getElementById("sparklinesGrid");
+                var wrapper = document.getElementById("sparklinesWrapper");
+                grid.innerHTML = "";
+
+                if (!seriesEjercicio || !seriesEjercicio.length) {
+                    wrapper.classList.add("d-none");
+                    return;
+                }
+                wrapper.classList.remove("d-none");
+
+                seriesEjercicio.forEach(function (e, idx) {
+                    var actual = mejor1RM(e.Puntos);
+                    var delta = tendenciaUltimoMes(e.Puntos);
+                    var col = document.createElement("div");
+                    col.className = "col-4 col-sm-3 col-md-2";
+
+                    var tendenciaHtml = "";
+                    var tendenciaAria = "";
+                    if (delta !== null && Math.abs(delta) >= 0.5) {
+                        var subiendo = delta > 0;
+                        var kg = Math.round(Math.abs(delta) * 10) / 10;
+                        tendenciaAria = (subiendo ? "subió " : "bajó ") + kg + " kilos el último mes";
+                        tendenciaHtml =
+                            '<span class="spark-trend ' +
+                            (subiendo ? 'text-success' : 'text-danger') +
+                            '"><i class="bi ' + (subiendo ? 'bi-arrow-up-short' : 'bi-arrow-down-short') +
+                            '" aria-hidden="true"></i>' + (subiendo ? '+' : '−') + kg + ' kg</span>';
+                    } else {
+                        tendenciaAria = "sin cambios el último mes";
+                        tendenciaHtml = '<span class="spark-trend text-secondary"><i class="bi bi-dash" aria-hidden="true"></i>0 kg</span>';
+                    }
+
+                    col.innerHTML =
+                        '<div class="card h-100 spark-card" role="button" tabindex="0" data-idx="' + idx + '"' +
+                        ' aria-pressed="false"' +
+                        ' aria-label="' + e.NombreEjercicio + ', mejor marca ' + (Math.round(actual * 10) / 10) + ' kilos, ' + tendenciaAria + '. Pulsa para comparar en el gráfico principal.">' +
+                        '  <div class="card-body p-2 d-flex flex-column justify-content-between">' +
+                        '    <div class="spark-name" title="' + e.NombreEjercicio + '">' + e.NombreEjercicio + '</div>' +
+                        '    <div class="spark-value">' + (Math.round(actual * 10) / 10) + '<span class="spark-unit">kg</span></div>' +
+                        '    ' + tendenciaHtml +
+                        '  </div>' +
+                        '</div>';
+                    grid.appendChild(col);
+
+                    var card = col.querySelector(".spark-card");
+                    function activar() { toggleEjercicio(idx); }
+                    card.addEventListener("click", activar);
+                    card.addEventListener("keydown", function (ev) {
+                        if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); activar(); }
+                    });
+                });
+            }
+
+            function toggleEjercicio(idx) {
+                var pos = seleccionados.indexOf(idx);
+                if (pos === -1) {
+                    seleccionados.push(idx);
+                } else {
+                    seleccionados.splice(pos, 1);
+                }
+                actualizarSeleccion();
+            }
+
+            function actualizarSeleccion() {
+                if (charts.rm) { charts.rm.destroy(); charts.rm = null; }
+
+                var header = document.getElementById("chart1RMHeader");
+                if (!seleccionados.length) {
+                    render1RM(evolucion1RM);
+                    header.textContent = "Evolución de fuerza (1RM estimado)";
+                } else {
+                    var elegidos = seleccionados.map(function (i) { return evolucion1RM[i]; });
+                    render1RM(elegidos);
+                    var nombres = elegidos.map(function (e) { return e.NombreEjercicio; }).join(", ");
+                    header.innerHTML = 'Evolución de fuerza — <span class="text-primary">' + nombres + '</span>' +
+                        ' <button type="button" class="btn btn-sm btn-link p-0 ms-2" id="verTodos1RM">Ver todos</button>';
+                    var verTodos = document.getElementById("verTodos1RM");
+                    if (verTodos) {
+                        verTodos.addEventListener("click", function () {
+                            seleccionados = [];
+                            actualizarSeleccion();
+                        });
+                    }
+                }
+
+                document.querySelectorAll(".spark-card").forEach(function (c) {
+                    var i = parseInt(c.getAttribute("data-idx"), 10);
+                    var activo = seleccionados.indexOf(i) !== -1;
+                    c.classList.toggle("spark-card--active", activo);
+                    c.setAttribute("aria-pressed", activo ? "true" : "false");
+                });
+            }
+
+            function renderBiometria(puntos) {
+                var series = [
+                    { name: "Peso (kg)", data: puntos.map(function (p) { return { x: new Date(p.Fecha).getTime(), y: p.PesoKg }; }) },
+                    { name: "Grasa (%)", data: puntos.map(function (p) { return { x: new Date(p.Fecha).getTime(), y: p.GrasaPorcentaje }; }) },
+                    { name: "Músculo (%)", data: puntos.map(function (p) { return { x: new Date(p.Fecha).getTime(), y: p.MusculoPorcentaje }; }) }
+                ];
+                charts.bio = new ApexCharts(document.querySelector("#chartBiometria"), {
+                    chart: { type: "line", height: 300, toolbar: { show: false } },
+                    series: series,
+                    xaxis: { type: "datetime" },
+                    yaxis: [
+                        { seriesName: "Peso (kg)", title: { text: "kg" } },
+                        { seriesName: "Grasa (%)", opposite: true, title: { text: "%" }, max: 100, min: 0 },
+                        { seriesName: "Grasa (%)", show: false }
+                    ],
+                    dataLabels: { enabled: false },
+                    stroke: { curve: "smooth", width: 2 },
+                    markers: { size: 4 },
+                    tooltip: { x: { format: "dd MMM yyyy" } }
+                });
+                charts.bio.render();
+            }
+
+            function renderAsistencia(fechas) {
+                var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                var diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+                // Colores por día de la semana (0=Dom .. 6=Sáb). Contraste AA sobre blanco.
+                var colorDia = ["#dc3545", "#0d6efd", "#20c997", "#fd7e14", "#6f42c1", "#d63384", "#ffc107"];
+                var colorSinAsistir = "#eef1f4";
+
+                if (!fechas || !fechas.length) {
+                    document.getElementById("chartAsistencia").innerHTML =
+                        '<p class="text-muted mb-0 py-3 text-center">Aún no hay registros de asistencia en este periodo.</p>';
+                    return;
+                }
+
+                // Mapa "yyyy-m-d" -> día de la semana, y meses presentes.
+                var asistio = {};
+                var clavesMes = [];
+                fechas.forEach(function (iso) {
+                    var d = new Date(iso);
+                    var anio = d.getFullYear();
+                    var mes = d.getMonth();
+                    var dia = d.getDate();
+                    asistio[anio + "-" + mes + "-" + dia] = d.getDay();
+                    var claveMes = anio + "-" + mes;
+                    if (clavesMes.indexOf(claveMes) === -1) { clavesMes.push(claveMes); }
+                });
+
+                // Orden cronológico ascendente de los meses presentes.
+                clavesMes.sort(function (a, b) {
+                    var pa = a.split("-"), pb = b.split("-");
+                    return (pa[0] - pb[0]) || (pa[1] - pb[1]);
+                });
+
+                // Una serie (fila) por mes; 31 columnas (días).
+                var series = clavesMes.map(function (clave) {
+                    var partes = clave.split("-");
+                    var anio = parseInt(partes[0], 10);
+                    var mes = parseInt(partes[1], 10);
+                    var diasEnMes = new Date(anio, mes + 1, 0).getDate();
+                    var data = [];
+                    for (var dia = 1; dia <= 31; dia++) {
+                        var y;
+                        if (dia > diasEnMes) {
+                            y = -1; // fuera de mes
+                        } else if (asistio.hasOwnProperty(anio + "-" + mes + "-" + dia)) {
+                            y = asistio[anio + "-" + mes + "-" + dia]; // 0..6
+                        } else {
+                            y = 7; // sin asistir
+                        }
+                        data.push({ x: String(dia), y: y });
+                    }
+                    var etiqueta = meses[mes] + (clavesMes.length > 12 ? " " + anio : "");
+                    return { name: etiqueta, data: data };
+                });
+
+                charts.asistencia = new ApexCharts(document.querySelector("#chartAsistencia"), {
+                    chart: { type: "heatmap", height: Math.max(260, series.length * 42 + 100), toolbar: { show: false } },
+                    series: series,
+                    dataLabels: { enabled: false },
+                    stroke: { width: 1, colors: ["#ffffff"] },
+                    plotOptions: {
+                        heatmap: {
+                            radius: 3,
+                            enableShades: false,
+                            colorScale: {
+                                ranges: [
+                                    { from: -1, to: -1, color: "#ffffff", name: " " },
+                                    { from: 0, to: 0, color: colorDia[0], name: "Domingo" },
+                                    { from: 1, to: 1, color: colorDia[1], name: "Lunes" },
+                                    { from: 2, to: 2, color: colorDia[2], name: "Martes" },
+                                    { from: 3, to: 3, color: colorDia[3], name: "Miércoles" },
+                                    { from: 4, to: 4, color: colorDia[4], name: "Jueves" },
+                                    { from: 5, to: 5, color: colorDia[5], name: "Viernes" },
+                                    { from: 6, to: 6, color: colorDia[6], name: "Sábado" },
+                                    { from: 7, to: 7, color: colorSinAsistir, name: "Sin asistir" }
+                                ]
+                            }
+                        }
+                    },
+                    xaxis: {
+                        type: "category",
+                        tickAmount: 10,
+                        labels: { rotate: 0, hideOverlappingLabels: true }
+                    },
+                    legend: { show: true, position: "right" },
+                    tooltip: {
+                        custom: function (opts) {
+                            var fila = series[opts.seriesIndex];
+                            var dia = fila.data[opts.dataPointIndex].x;
+                            var val = fila.data[opts.dataPointIndex].y;
+                            if (val === -1) { return '<div class="p-1 small">—</div>'; }
+                            if (val === 7) {
+                                return '<div class="p-1 small">' + dia + ' ' + fila.name + ': sin asistir</div>';
+                            }
+                            return '<div class="p-1 small">' + dia + ' ' + fila.name +
+                                ' — ' + diasSemana[val] + ' ✓</div>';
+                        }
+                    }
+                });
+                charts.asistencia.render();
+            }
+
+            function cargar(ultimosDias) {
+                document.getElementById("progresoLoading").classList.remove("d-none");
+                document.getElementById("progresoGraficas").classList.add("d-none");
+                document.getElementById("progresoVacio").classList.add("d-none");
+                destruir();
+
+                fetch(dataUrl + "?ultimosDias=" + encodeURIComponent(ultimosDias), {
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (d) {
+                        document.getElementById("progresoLoading").classList.add("d-none");
+
+                        document.getElementById("kpiSesiones").textContent = d.TotalSesiones || 0;
+                        document.getElementById("kpiVolumen").textContent = fmtNumero(d.VolumenTotalAcumulado);
+                        document.getElementById("kpiSeries").textContent = d.TotalSeriesRegistradas || 0;
+                        document.getElementById("kpiUltima").textContent = d.UltimaSesion ? fmtFecha(d.UltimaSesion) : "—";
+
+                        if (!d.TotalSesiones) {
+                            document.getElementById("progresoVacio").classList.remove("d-none");
+                            return;
+                        }
+
+                        document.getElementById("progresoGraficas").classList.remove("d-none");
+                        renderVolumen(d.VolumenPorSesion || []);
+                        evolucion1RM = d.Evolucion1RM || [];
+                        seleccionados = [];
+                        renderSparklines(evolucion1RM);
+                        render1RM(evolucion1RM);
+                        renderBiometria(d.Biometria || []);
+                        renderAsistencia(d.FechasAsistencia || []);
+                    })
+                    .catch(function () {
+                        document.getElementById("progresoLoading").classList.add("d-none");
+                        document.getElementById("progresoVacio").textContent = "No se pudo cargar tu progreso.";
+                        document.getElementById("progresoVacio").classList.remove("d-none");
+                    });
+            }
+
+            document.getElementById("rangoProgreso").addEventListener("change", function () {
+                cargar(this.value);
+            });
+
+            cargar(document.getElementById("rangoProgreso").value);
+
+            // ── Registro de biometría ─────────────────────────────────────────
+            var saveBioUrl = '@Url.Action("SaveBiometria", "Clientes")';
+
+            function tokenAntiforgery() {
+                var input = document.querySelector('input[name="__RequestVerificationToken"]');
+                return input ? input.value : "";
+            }
+
+            var botonBio = document.getElementById("bioGuardar");
+            if (botonBio) {
+                botonBio.addEventListener("click", function () {
+                    var peso = document.getElementById("bioPeso").value;
+                    var msg = document.getElementById("bioMensaje");
+
+                    if (peso === "" || parseFloat(peso) <= 0) {
+                        msg.innerHTML = '<div class="alert alert-warning mb-0 py-2">Ingresa un peso válido.</div>';
+                        return;
+                    }
+
+                    var grasa = document.getElementById("bioGrasa").value;
+                    var musculo = document.getElementById("bioMusculo").value;
+
+                    var payload = {
+                        MeasurementDate: document.getElementById("bioFecha").value || null,
+                        WeightKg: parseFloat(peso),
+                        BodyFatPercentage: grasa !== "" ? parseFloat(grasa) : null,
+                        MuscleMassPercentage: musculo !== "" ? parseFloat(musculo) : null
+                    };
+
+                    botonBio.disabled = true;
+                    msg.innerHTML = '<div class="text-muted small">Guardando…</div>';
+
+                    fetch(saveBioUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8",
+                            "RequestVerificationToken": tokenAntiforgery()
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                        .then(function (r) { return r.json(); })
+                        .then(function (resp) {
+                            if (resp && resp.success) {
+                                msg.innerHTML = '<div class="alert alert-success mb-0 py-2">' + resp.message + '</div>';
+                                setTimeout(function () {
+                                    var modalEl = document.getElementById("biometriaModal");
+                                    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                                    modal.hide();
+                                    document.getElementById("bioPeso").value = "";
+                                    document.getElementById("bioGrasa").value = "";
+                                    document.getElementById("bioMusculo").value = "";
+                                    msg.innerHTML = "";
+                                    cargar(document.getElementById("rangoProgreso").value);
+                                }, 1200);
+                            } else {
+                                msg.innerHTML = '<div class="alert alert-danger mb-0 py-2">' +
+                                    ((resp && resp.message) || "No se pudo guardar.") + '</div>';
+                            }
+                        })
+                        .catch(function () {
+                            msg.innerHTML = '<div class="alert alert-danger mb-0 py-2">Ocurrió un error al guardar.</div>';
+                        })
+                        .finally(function () {
+                            botonBio.disabled = false;
+                        });
+                });
+            }
+        })();
+    </script>
+}

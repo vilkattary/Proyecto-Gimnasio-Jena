@@ -1,0 +1,86 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Progreso.ProgresoDiaDto
+
+@{
+    ViewBag.Title = "Registrar mi Progreso";
+    var nombreRutina = ViewBag.NombreRutina as string;
+    var ejerciciosDetalle = ViewBag.EjerciciosDetalle as string;
+    var diaSemana = ViewBag.DiaSemana as string;
+    var hayEntrenamiento = Model != null && Model.IdEntrenamiento > 0;
+}
+
+<div class="page-mi-perfil">
+    <div class="container-jena">
+
+        <h1>Registrar mi Progreso</h1>
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                No se pudo cargar el registro de progreso. Intenta nuevamente.
+            </div>
+        }
+
+        <!-- Entrenamiento del día (solo lectura) -->
+        <section aria-label="Entrenamiento del día">
+            <h2>Entrenamiento de hoy</h2>
+            @if (hayEntrenamiento)
+            {
+                <div class="info-card mb-4">
+                    <h3>@nombreRutina</h3>
+                    @if (!string.IsNullOrWhiteSpace(diaSemana))
+                    {
+                        <p><strong>Día:</strong> @diaSemana</p>
+                    }
+                    <p class="mb-0">@ejerciciosDetalle</p>
+                </div>
+            }
+            else
+            {
+                <div class="info-card mb-4">
+                    <p class="mb-0">Hoy no hay una rutina asignada. Aun así puedes registrar tu progreso.</p>
+                </div>
+            }
+        </section>
+
+        <!-- Formulario de registro -->
+        <section aria-label="Formulario para registrar progreso">
+            <h2>Tu logro de hoy</h2>
+            <div class="info-card">
+                @using (Html.BeginForm("GuardarProgreso", "Progreso", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="IdEntrenamiento" value="@Model.IdEntrenamiento" />
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label for="PesoAlcanzado" class="form-label">Peso alcanzado (kg)</label>
+                            <input type="number" id="PesoAlcanzado" name="PesoAlcanzado"
+                                   class="form-control form-control-jena" step="0.01" min="0"
+                                   inputmode="decimal" placeholder="Ej. 25.50" required />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="Repeticiones" class="form-label">Repeticiones</label>
+                            <input type="number" id="Repeticiones" name="Repeticiones"
+                                   class="form-control form-control-jena" min="0" step="1"
+                                   inputmode="numeric" placeholder="Ej. 12" required />
+                        </div>
+
+                        <div class="col-12">
+                            <label for="Notas" class="form-label">Notas</label>
+                            <textarea id="Notas" name="Notas" class="form-control form-control-jena"
+                                      rows="5" maxlength="1000"
+                                      placeholder="Comparte cómo te sentiste o comentarios para tu entrenador."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <button type="submit" class="btn btn-jena active">Guardar Logro</button>
+                        <a href="@Url.Action("Evolucion", "Progreso")" class="btn btn-jena">Cancelar</a>
+                    </div>
+                }
+            </div>
+        </section>
+
+    </div>
+</div>

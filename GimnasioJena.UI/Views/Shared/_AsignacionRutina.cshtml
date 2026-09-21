@@ -1,0 +1,51 @@
+﻿@*
+    Bloque reutilizable "Plan de Entrenamiento Asignado".
+    No usa modelo tipado: el valor seleccionado se resuelve automáticamente
+    desde ViewData["idPlantillaDia"] (propiedad del modelo de la vista contenedora).
+    Depende de ViewBag.PlantillasDia (SelectList) cargado desde el controlador.
+*@
+
+<div class="description-card mb-4">
+    <h5>
+        <i class="bi bi-clipboard2-pulse me-2 text-accent"></i>
+        Plan de Entrenamiento Asignado
+    </h5>
+
+    <div class="mt-3">
+        <label class="info-label" for="idPlantillaDia">Rutina del día (opcional)</label>
+        @Html.DropDownList(
+            "idPlantillaDia",
+            (SelectList)ViewBag.PlantillasDia,
+            "Sin rutina asignada",
+            new { @class = "form-control mt-1", id = "idPlantillaDia" }
+        )
+        <p class="text-muted small mt-2 mb-0">
+            Selecciona una plantilla de entrenamiento para vincularla a esta clase.
+        </p>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-3">
+        <button type="button" id="btnVerRutina" class="btn btn-outline-secondary btn-sm" disabled>
+            <i class="bi bi-eye me-1"></i> Ver rutina
+        </button>
+        <button type="button" id="btnConfigurarRutina" class="btn btn-outline-primary btn-sm" disabled>
+            <i class="bi bi-sliders me-1"></i> Configurar rutina
+        </button>
+    </div>
+
+    <div id="rutinaPreviewContenedor" class="mt-3"></div>
+</div>
+
+@* Offcanvas para el editor de rutina *@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRutina"
+     aria-labelledby="offcanvasRutinaLabel" style="width: min(680px, 100%);">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRutinaLabel">Configurar rutina del día</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div id="offcanvasRutinaContenido">
+            <p class="text-muted">Cargando editor…</p>
+        </div>
+    </div>
+</div>

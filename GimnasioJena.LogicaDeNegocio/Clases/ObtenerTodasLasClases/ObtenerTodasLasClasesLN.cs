@@ -37,7 +37,7 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases
             var clases = _obtenerTodasLasClasesAD
                 .ObtenerTodasLasClases()
                 .Where(c =>
-                    c.estadoClase == "Activo" &&
+                    c.estadoClase == "Activa" &&
                     c.fechaHoraInicio > ahora)
                 .OrderBy(c => c.fechaHoraInicio)
                 .ToList();

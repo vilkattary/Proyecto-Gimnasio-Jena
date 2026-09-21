@@ -102,6 +102,12 @@
 
                             @if (r.idEstadoReserva == 1)
                             {
+                                <a href="@Url.Action("RegistrarEnClase", "Progreso", new { idClaseProgramada = r.idClaseProgramada })"
+                                   class="btn-detail">
+                                    <i class="bi bi-clipboard-data"></i>
+                                    <span>Registrar mi progreso</span>
+                                </a>
+
                                 using (Html.BeginForm("CancelarReserva", "Clientes", FormMethod.Post, new { @class = "d-inline" }))
                                 {
                                     @Html.AntiForgeryToken()

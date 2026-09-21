@@ -31,5 +31,7 @@ namespace GimnasioJena.AccesoADatos.Entidades.HorariosSemanales
         public DateTime fechaCreacion { get; set; }
 
         public DateTime? fechaModificacion { get; set; }
+
+        public int? idPlantillaDia { get; set; }
     }
 }
