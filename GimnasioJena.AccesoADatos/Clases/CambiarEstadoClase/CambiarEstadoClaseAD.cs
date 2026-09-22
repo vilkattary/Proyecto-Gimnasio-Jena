@@ -30,13 +30,13 @@ namespace GimnasioJena.AccesoADatos.Clases.CambiarEstadoClase
 
             int idEstadoActivo =
                 _contexto.EstadoClases
-                    .Where(e => e.nombreEstado == "Activo")
+                    .Where(e => e.nombreEstado == "Activa")
                     .Select(e => e.idEstadoClase)
                     .FirstOrDefault();
 
             int idEstadoCancelado =
                 _contexto.EstadoClases
-                    .Where(e => e.nombreEstado == "Cancelado")
+                    .Where(e => e.nombreEstado == "Cancelada")
                     .Select(e => e.idEstadoClase)
                     .FirstOrDefault();
 

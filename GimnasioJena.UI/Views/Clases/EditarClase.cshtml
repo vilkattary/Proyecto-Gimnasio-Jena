@@ -135,6 +135,8 @@
                     </div>
                 </div>
 
+                @Html.Partial("_AsignacionRutina", null, new ViewDataDictionary(ViewData) { { "idPlantillaDia", (int?)Model.idPlantillaDia } })
+
                 <button type="submit" class="btn-orange w-100 btn-pill-lg">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     Guardar Cambios
@@ -160,4 +162,5 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Html.Partial("_AsignacionRutinaScripts")
 }

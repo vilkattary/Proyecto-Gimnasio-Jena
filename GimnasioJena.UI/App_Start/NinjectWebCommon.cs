@@ -2,11 +2,17 @@
 using GimnasioJena.Abstracciones.AccesoADatos.Usuarios.ObtenerUsuarioPorId;
 using GimnasioJena.Abstracciones.AccesoADatos.Usuarios.RegistrarUsuario;
 using GimnasioJena.Abstracciones.LogicaDeNegocio;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Progreso;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
 using GimnasioJena.AccesoADatos;
 using GimnasioJena.AccesoADatos.Usuarios.ObtenerUsuarioPorId;
 using GimnasioJena.AccesoADatos.Usuarios.RegistrarUsuario;
+using GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
+using GimnasioJena.LogicaDeNegocio.HorariosSemanales.ObtenerHorariosSemanales;
+using GimnasioJena.LogicaDeNegocio.Progreso;
 using GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerUsuarioPorId;
 using GimnasioJena.LogicaDeNegocio.Usuarios.RegistrarUsuario;
 using Microsoft.AspNet.Identity.Owin;
@@ -78,6 +84,28 @@ namespace GimnasioJena.UI.App_Start
 
             kernel.Bind<IObtenerUsuarioPorIdLN>()
                   .To<ObtenerUsuarioPorIdLN>()
+                  .InRequestScope();
+
+            // Progreso / Entrenamientos (asignación dual y seguimiento en clase)
+            kernel.Bind<IEntrenamientoLN>()
+                  .To<EntrenamientoLN>()
+                  .InRequestScope();
+
+            kernel.Bind<IProgresoLN>()
+                  .To<ProgresoLN>()
+                  .InRequestScope();
+
+            kernel.Bind<IEvolucionAvanzadaLN>()
+                  .To<EvolucionAvanzadaLN>()
+                  .InRequestScope();
+
+            // Servicios de búsqueda para poblar los selectores
+            kernel.Bind<IObtenerHorariosSemanalesLN>()
+                  .To<ObtenerHorariosSemanalesLN>()
+                  .InRequestScope();
+
+            kernel.Bind<IObtenerTodasLasClasesLN>()
+                  .To<ObtenerTodasLasClasesLN>()
                   .InRequestScope();
         }
     }
