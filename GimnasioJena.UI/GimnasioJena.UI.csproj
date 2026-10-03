@@ -180,12 +180,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\AsistenciasController.cs" />
     <Compile Include="Controllers\BitacorasController.cs" />
     <Compile Include="Controllers\CamposMedicionController.cs" />
     <Compile Include="Controllers\ClasesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
-    <Compile Include="Controllers\ComunicacionController.cs" />
     <Compile Include="Controllers\ContactoController.cs" />
     <Compile Include="Controllers\EntrenadoresController.cs" />
     <Compile Include="Controllers\EstadoReservasController.cs" />
@@ -198,10 +196,7 @@
     <Compile Include="Controllers\NosotrosController.cs" />
     <Compile Include="Controllers\PagosController.cs" />
     <Compile Include="Controllers\ProgresoController.cs" />
-    <Compile Include="Controllers\RecepcionistasController.cs" />
-    <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\ReservasController.cs" />
-    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SeccionesNosotrosController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Controllers\WebhookController.cs" />
@@ -368,13 +363,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Asistencias\" />
-    <Folder Include="Views\Comunicacion\" />
-    <Folder Include="Views\EstadoReservas\" />
-    <Folder Include="Views\PerfilUsuarioViewModel\" />
-    <Folder Include="Views\Recepcionistas\" />
-    <Folder Include="Views\Reportes\" />
-    <Folder Include="Views\Roles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GimnasioJena.Abstracciones\GimnasioJena.Abstracciones.csproj">

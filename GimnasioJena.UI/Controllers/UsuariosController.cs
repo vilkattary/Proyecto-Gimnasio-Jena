@@ -122,7 +122,6 @@ namespace GimnasioJena.UI.Controllers
                 "ADMINISTRADOR",
                 "CLIENTE",
                 "ENTRENADOR",
-                "RECEPCIONISTA"
             };
 
             ViewBag.Roles = new SelectList(roles, rolSeleccionado);
