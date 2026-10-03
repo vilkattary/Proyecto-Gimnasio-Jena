@@ -57,6 +57,11 @@ namespace GimnasioJena.UI.Controllers
         {
             List<ClaseListadoDto> listaDeClases;
 
+            if (!User.Identity.IsAuthenticated || User.IsInRole("CLIENTE"))
+            {
+                _obtenerTodasLasClases.SincronizarClasesRecurrentes();
+            }
+
             if (!User.Identity.IsAuthenticated)
             {
                 listaDeClases =
