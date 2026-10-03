@@ -1,8 +1,11 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Clases.ObtenerTodasLasClases;
 using GimnasioJena.Abstracciones.General.Fechas;
+using GimnasioJena.Abstracciones.AccesoADatos.HorariosSemanales.GenerarClasesProgramadas;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClases;
 using GimnasioJena.Abstracciones.Modelos.Clases;
+using GimnasioJena.Abstracciones.Modelos.HorariosSemanales;
 using GimnasioJena.AccesoADatos.Clases.ObtenerTodasLasClases;
+using GimnasioJena.AccesoADatos.HorariosSemanales.GenerarClasesProgramadas;
 using GimnasioJena.LogicaDeNegocio.General.Fechas;
 using System;
 using System.Collections.Generic;
@@ -14,11 +17,35 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.ObtenerTodasLasClases
     {
         private readonly IObtenerTodasLasClasesAD _obtenerTodasLasClasesAD;
         private readonly IFechasLN _fechasLN;
+        private readonly IGenerarClasesProgramadasAD _generarClasesProgramadasAD;
+
+        private const int DiasVentanaSincronizacion = 30;
 
         public ObtenerTodasLasClasesLN()
         {
             _obtenerTodasLasClasesAD = new ObtenerTodasLasClasesAD();
             _fechasLN = new FechasLN();
+            _generarClasesProgramadasAD = new GenerarClasesProgramadasAD();
+        }
+
+        public void SincronizarClasesRecurrentes()
+        {
+            try
+            {
+                DateTime hoy = _fechasLN.ObtenerFechaActual().Date;
+
+                _generarClasesProgramadasAD.GenerarClasesProgramadas(
+                    new GenerarClasesProgramadasDto
+                    {
+                        fechaInicio = hoy,
+                        fechaFin = hoy.AddDays(DiasVentanaSincronizacion)
+                    });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError(
+                    "Error al sincronizar clases recurrentes: " + ex);
+            }
         }
 
         public List<ClaseListadoDto> ObtenerTodasLasClases()
