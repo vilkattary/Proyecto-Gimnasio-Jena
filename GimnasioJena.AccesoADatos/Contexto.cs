@@ -8,7 +8,6 @@ using GimnasioJena.AccesoADatos.Entidades.Entrenadores;
 using GimnasioJena.AccesoADatos.Entidades.Membresias;
 using GimnasioJena.AccesoADatos.Entidades.Pagos;
 using GimnasioJena.AccesoADatos.Entidades.Reservas;
-using GimnasioJena.AccesoADatos.Entidades.Roles;
 using GimnasioJena.AccesoADatos.Entidades.Usuarios;
 using System.Data.Entity;
 using GimnasioJena.AccesoADatos.Entidades.HorariosSemanales;
@@ -24,7 +23,6 @@ namespace GimnasioJena.AccesoADatos
         {
 
         }
-        public DbSet<RolEntidad> Roles { get; set; }
         public DbSet<UsuarioEntidad> Usuarios { get; set; }
         public DbSet<EntrenadorEntidad> Entrenadores { get; set; }
         public DbSet<MembresiaEntidad> Membresias { get; set; }
