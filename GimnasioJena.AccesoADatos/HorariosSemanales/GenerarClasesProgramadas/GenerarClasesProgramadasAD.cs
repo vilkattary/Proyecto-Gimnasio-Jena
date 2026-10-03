@@ -49,7 +49,7 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales.GenerarClasesProgramadas
                         transaccion.Rollback();
 
                         return CrearResultadoError(
-                            "No existe un estado de clase activo con el nombre 'Activo'.",
+                            "No existe un estado de clase activo con el nombre 'Activa'.",
                             fechaInicio,
                             fechaFin,
                             diasProcesados

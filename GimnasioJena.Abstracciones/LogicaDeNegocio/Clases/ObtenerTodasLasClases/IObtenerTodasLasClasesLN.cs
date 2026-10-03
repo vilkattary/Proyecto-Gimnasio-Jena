@@ -8,5 +8,7 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.ObtenerTodasLasClase
         List<ClaseListadoDto> ObtenerTodasLasClases();
 
         List<ClaseListadoDto> ObtenerProximasClasesParaCliente();
+
+        void SincronizarClasesRecurrentes();
     }
 }
