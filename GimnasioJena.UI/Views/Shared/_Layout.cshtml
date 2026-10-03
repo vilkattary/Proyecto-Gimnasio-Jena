@@ -14,8 +14,8 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-apex fixed-top" id="mainNavbar">
-        
-        <div class="container">
+
+        <div class="container-jena">
             <a class="navbar-brand" href="@Url.Action("Index", "Home")">
                 <img src="@Url.Content("~/Content/imagenes/logo-jena.png")" alt="Jéna Training Methodology" class="navbar-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" />
                 <span class="navbar-brand-fallback" style="display:none;color:var(--jena-orange);font-family:'Audiowide',sans-serif;font-size:1.2rem;">JÉNA</span>
@@ -73,6 +73,18 @@
                                 <li>@Html.ActionLink("Secciones Nosotros", "Index", "SeccionesNosotros", new { area = "" }, new { @class = "dropdown-item" })</li>
                             </ul>
                         </li>
+
+                        @* Dropdown 4: Evolución y Gestión Médica *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-heart-pulse me-1"></i>Gestión Médica
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-admin">
+                                <li><a class="dropdown-item" href="/Mediciones/Registrar">Evaluar Cliente</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="/CamposMedicion/Index">Campos Médicos</a></li>
+                            </ul>
+                        </li>
                     }
                     else
                     {
@@ -93,6 +105,15 @@
                             <li class="nav-item">
                                 @Html.ActionLink("Entrenador", "Index", "Entrenadores",
                                     new { area = "" }, new { @class = "nav-link" })
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-heart-pulse me-1"></i>Gestión Médica
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-admin">
+                                    <li><a class="dropdown-item" href="/Mediciones/Registrar">Evaluar Cliente</a></li>
+                                </ul>
                             </li>
 
                         }
@@ -273,6 +294,74 @@
 
                     window.addEventListener('scroll', onScroll, { passive: true });
                     onScroll();
+                })();
+            </script>
+
+            @* ── Toggle de visibilidad para TODOS los campos de contraseña (actuales y futuros) ── *@
+            <script>
+                (function () {
+                    function crearToggle(input) {
+                        if (!input || input.getAttribute('data-toggle-password') === 'listo') {
+                            return;
+                        }
+                        input.setAttribute('data-toggle-password', 'listo');
+
+                        // Envolver el input en un input-group de Bootstrap 5.
+                        var grupo = document.createElement('div');
+                        grupo.className = 'input-group';
+                        input.parentNode.insertBefore(grupo, input);
+                        grupo.appendChild(input);
+
+                        // Botón con icono de ojo.
+                        var boton = document.createElement('button');
+                        boton.type = 'button';
+                        boton.className = 'btn btn-outline-secondary toggle-password-btn';
+                        boton.setAttribute('aria-label', 'Mostrar u ocultar la contraseña');
+                        boton.setAttribute('tabindex', '-1');
+                        boton.innerHTML = '<i class="bi bi-eye"></i>';
+                        grupo.appendChild(boton);
+
+                        boton.addEventListener('click', function () {
+                            var icono = boton.querySelector('i');
+                            if (input.type === 'password') {
+                                input.type = 'text';
+                                icono.className = 'bi bi-eye-slash';
+                            } else {
+                                input.type = 'password';
+                                icono.className = 'bi bi-eye';
+                            }
+                        });
+                    }
+
+                    function inicializar(contenedor) {
+                        var campos = (contenedor || document).querySelectorAll('input[type="password"]');
+                        for (var i = 0; i < campos.length; i++) {
+                            crearToggle(campos[i]);
+                        }
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        inicializar(document);
+
+                        // Detectar campos de contraseña agregados dinámicamente (modales, parciales, AJAX).
+                        if (window.MutationObserver) {
+                            var observer = new MutationObserver(function (mutaciones) {
+                                for (var i = 0; i < mutaciones.length; i++) {
+                                    var nodos = mutaciones[i].addedNodes;
+                                    for (var j = 0; j < nodos.length; j++) {
+                                        var nodo = nodos[j];
+                                        if (nodo.nodeType !== 1) { continue; }
+                                        if (nodo.matches && nodo.matches('input[type="password"]')) {
+                                            crearToggle(nodo);
+                                        } else if (nodo.querySelectorAll) {
+                                            inicializar(nodo);
+                                        }
+                                    }
+                                }
+                            });
+                            observer.observe(document.body, { childList: true, subtree: true });
+                        }
+                    });
                 })();
             </script>
         </body>

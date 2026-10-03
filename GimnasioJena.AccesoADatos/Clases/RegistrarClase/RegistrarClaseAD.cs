@@ -33,6 +33,7 @@ namespace GimnasioJena.AccesoADatos.Clases.RegistrarClase
                 cupoMaximo = laClase.cupoMaximo,
                 ubicacion = laClase.ubicacion,
                 observaciones = laClase.observaciones,
+                idPlantillaDia = laClase.idPlantillaDia,
                 fechaCreacion = laClase.fechaCreacion
             };
         }

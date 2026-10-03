@@ -182,6 +182,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AsistenciasController.cs" />
     <Compile Include="Controllers\BitacorasController.cs" />
+    <Compile Include="Controllers\CamposMedicionController.cs" />
     <Compile Include="Controllers\ClasesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\ComunicacionController.cs" />
@@ -191,9 +192,12 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HorariosSemanalesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MedicionesController.cs" />
     <Compile Include="Controllers\MembresiasController.cs" />
+    <Compile Include="Controllers\MesocicloController.cs" />
     <Compile Include="Controllers\NosotrosController.cs" />
     <Compile Include="Controllers\PagosController.cs" />
+    <Compile Include="Controllers\ProgresoController.cs" />
     <Compile Include="Controllers\RecepcionistasController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\ReservasController.cs" />
@@ -252,6 +256,7 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\cliente-workout.js" />
     <Content Include="Scripts\DataTable\dataTables.min.js" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
@@ -265,6 +270,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\SweetAlert\sweetalert2%4011.js" />
+    <Content Include="Scripts\workout-editor.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -347,6 +353,18 @@
     <Content Include="Views\Admin\EditarPrecioPlan.cshtml" />
     <Content Include="Views\Manage\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Clientes\ErrorPago.cshtml" />
+    <Content Include="Views\Progreso\Evolucion.cshtml" />
+    <Content Include="Views\Progreso\Registrar.cshtml" />
+    <Content Include="Views\CamposMedicion\Index.cshtml" />
+    <Content Include="Views\Mediciones\Registrar.cshtml" />
+    <Content Include="Views\Progreso\RegistrarEnClase.cshtml" />
+    <Content Include="Views\Mesociclo\_DayPreviewPartial.cshtml" />
+    <Content Include="Views\Mesociclo\_WorkoutDayEditorPartial.cshtml" />
+    <Content Include="Views\Shared\_AsignacionRutina.cshtml" />
+    <Content Include="Views\Shared\_AsignacionRutinaScripts.cshtml" />
+    <Content Include="Views\Clientes\_RegistroEntrenamientoCliente.cshtml" />
+    <Content Include="Views\Clientes\_SinRutinaCliente.cshtml" />
+    <Content Include="Views\Clientes\MiProgreso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

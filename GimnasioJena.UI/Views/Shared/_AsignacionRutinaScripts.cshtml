@@ -1,0 +1,83 @@
+﻿@* Scripts que activan el bloque de asignación de rutina (preview + Offcanvas + guardado AJAX). *@
+<script src="~/Scripts/workout-editor.js"></script>
+<script>
+    (function () {
+        var $ = window.jQuery;
+
+        var $select = $("#idPlantillaDia");
+        var $btnVer = $("#btnVerRutina");
+        var $btnConfig = $("#btnConfigurarRutina");
+        var $preview = $("#rutinaPreviewContenedor");
+        var offcanvasEl = document.getElementById("offcanvasRutina");
+        var offcanvas = offcanvasEl ? new bootstrap.Offcanvas(offcanvasEl) : null;
+
+        window.WorkoutEditor.saveUrl = "@Url.Action("SaveWorkoutDayTemplateAjax", "Mesociclo")";
+        var previewUrl = "@Url.Action("GetDayPreviewPartial", "Mesociclo")";
+        var editorUrl = "@Url.Action("GetWorkoutEditorPartial", "Mesociclo")";
+
+        function actualizarBotones() {
+            var tieneValor = ($select.val() || "") !== "";
+            $btnVer.prop("disabled", !tieneValor);
+            $btnConfig.prop("disabled", false); // configurar permite crear una rutina nueva
+        }
+
+        function cargarPreview() {
+            var id = $select.val();
+            if (!id) {
+                $preview.html("");
+                return;
+            }
+            $preview.html('<p class="text-muted small mb-0">Cargando vista previa…</p>');
+            $.get(previewUrl, { templateId: id })
+                .done(function (html) { $preview.html(html); })
+                .fail(function () {
+                    $preview.html('<div class="alert alert-warning mb-0">No se pudo cargar la vista previa.</div>');
+                });
+        }
+
+        $select.on("change", function () {
+            actualizarBotones();
+            cargarPreview();
+        });
+
+        $btnVer.on("click", function () {
+            cargarPreview();
+        });
+
+        $btnConfig.on("click", function () {
+            if (!offcanvas) { return; }
+            var id = parseInt($select.val(), 10) || 0;
+            var contenido = document.getElementById("offcanvasRutinaContenido");
+            contenido.innerHTML = '<p class="text-muted">Cargando editor…</p>';
+            offcanvas.show();
+
+            $.get(editorUrl, { templateId: id, dayOfWeek: 1, mesocicloId: 0 })
+                .done(function (html) {
+                    contenido.innerHTML = html;
+                    window.WorkoutEditor.onSaved = function (resp) {
+                        // Al guardar, seleccionar la plantilla recién creada/actualizada.
+                        if (resp.templateId) {
+                            var existe = $select.find('option[value="' + resp.templateId + '"]').length;
+                            if (!existe) {
+                                $select.append(
+                                    $("<option>").val(resp.templateId).text(resp.templateName || "Rutina")
+                                );
+                            }
+                            $select.val(resp.templateId);
+                            actualizarBotones();
+                            cargarPreview();
+                        }
+                        setTimeout(function () { offcanvas.hide(); }, 900);
+                    };
+                    window.WorkoutEditor.inicializar("#offcanvasRutinaContenido");
+                })
+                .fail(function () {
+                    contenido.innerHTML = '<div class="alert alert-danger">No se pudo cargar el editor.</div>';
+                });
+        });
+
+        // Estado inicial
+        actualizarBotones();
+        cargarPreview();
+    })();
+</script>

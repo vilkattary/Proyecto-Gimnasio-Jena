@@ -51,6 +51,9 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales
                         ubicacion =
                             h.ubicacion,
 
+                        idPlantillaDia =
+                            h.idPlantillaDia,
+
                         estado =
                             h.estado,
 

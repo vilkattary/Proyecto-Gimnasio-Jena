@@ -1,0 +1,69 @@
+﻿@model GimnasioJena.Abstracciones.Modelos.Progreso.RegistroMedicionMultipleDto
+
+@{
+    ViewBag.Title = "Registrar Medidas";
+}
+
+<div class="page-mi-perfil">
+    <div class="container-jena">
+
+        <h1>Registrar Medidas - @Model.NombreCliente</h1>
+
+        @if (TempData["MensajeError"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                No se pudieron guardar las mediciones. Revisa los datos e intenta nuevamente.
+            </div>
+        }
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        <section aria-label="Formulario de mediciones antropométricas">
+            <div class="info-card">
+                @if (Model.Valores != null && Model.Valores.Count > 0)
+                {
+                    using (Html.BeginForm("Registrar", "Mediciones", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="idUsuario" value="@Model.idUsuario" />
+                        <input type="hidden" name="NombreCliente" value="@Model.NombreCliente" />
+
+                        <div class="row g-3">
+                            @for (int i = 0; i < Model.Valores.Count; i++)
+                            {
+                                <div class="col-12 col-md-6">
+                                    <label for="Valores_@(i)__Valor" class="form-label">
+                                        @Model.Valores[i].NombreCampo
+                                    </label>
+                                    <input type="number"
+                                           id="Valores_@(i)__Valor"
+                                           name="Valores[@i].Valor"
+                                           class="form-control form-control-jena"
+                                           step="0.01" min="0" inputmode="decimal"
+                                           placeholder="Ingrese el valor" />
+
+                                    <input type="hidden" name="Valores[@i].IdCampo" value="@Model.Valores[i].IdCampo" />
+                                    <input type="hidden" name="Valores[@i].NombreCampo" value="@Model.Valores[i].NombreCampo" />
+                                </div>
+                            }
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-jena active">Guardar mediciones</button>
+                            <a href="@Url.Action("Evolucion", "Progreso")" class="btn btn-jena">Cancelar</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="mb-0">No hay campos de medición activos. El administrador debe configurarlos primero.</p>
+                }
+            </div>
+        </section>
+
+    </div>
+</div>

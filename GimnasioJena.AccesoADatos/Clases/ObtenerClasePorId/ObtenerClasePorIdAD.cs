@@ -52,6 +52,8 @@ namespace GimnasioJena.AccesoADatos.Clases.ObtenerClasePorId
                      ubicacion = clase.ubicacion,
                      observaciones = clase.observaciones,
 
+                     idPlantillaDia = clase.idPlantillaDia,
+
                      fechaCreacion = clase.fechaCreacion,
                      fechaModificacion = clase.fechaModificacion
                  }).FirstOrDefault();
