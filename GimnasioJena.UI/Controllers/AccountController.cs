@@ -63,6 +63,9 @@ namespace GimnasioJena.UI.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            // Expulsa cualquier identidad residual para obligar a re-autenticarse
+            LimpiarSesionYCookies();
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -501,8 +504,53 @@ namespace GimnasioJena.UI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            LimpiarSesionYCookies();
+            return RedirectToAction("Login", "Account");
+        }
+
+        private void LimpiarSesionYCookies()
+        {
+            var authManager = HttpContext.GetOwinContext().Authentication;
+            authManager.SignOut(
+                DefaultAuthenticationTypes.ApplicationCookie,
+                DefaultAuthenticationTypes.ExternalCookie,
+                DefaultAuthenticationTypes.TwoFactorCookie);
+
+            if (Session != null)
+            {
+                Session.Clear();
+                Session.Abandon();
+            }
+
+            if (Request.Cookies["ASP.NET_SessionId"] != null)
+            {
+                var sessionCookie = new HttpCookie("ASP.NET_SessionId", string.Empty)
+                {
+                    Expires = DateTime.UtcNow.AddYears(-1),
+                    HttpOnly = true
+                };
+                Response.Cookies.Add(sessionCookie);
+            }
+
+            if (Request.Cookies[".AspNet.ApplicationCookie"] != null)
+            {
+                var authCookie = new HttpCookie(".AspNet.ApplicationCookie", string.Empty)
+                {
+                    Expires = DateTime.UtcNow.AddYears(-1),
+                    HttpOnly = true
+                };
+                Response.Cookies.Add(authCookie);
+            }
+
+            // La cookie "__RequestVerificationToken" no se elimina: la vista de Login
+            // emite un token nuevo en la misma respuesta y expirarla provocaría
+            // HttpAntiForgeryException al enviar el formulario.
+
+            // SignOut solo surte efecto en la siguiente petición; se anonimiza el
+            // principal actual para que el layout no renderice el estado autenticado.
+            var anonimo = new ClaimsPrincipal(new ClaimsIdentity());
+            HttpContext.User = anonimo;
+            System.Threading.Thread.CurrentPrincipal = anonimo;
         }
 
         //

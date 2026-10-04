@@ -200,6 +200,7 @@
     <Compile Include="Controllers\SeccionesNosotrosController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Controllers\WebhookController.cs" />
+    <Compile Include="Filters\NoCacheAttribute.cs" />
     <Compile Include="Filters\SoloAdministradorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
