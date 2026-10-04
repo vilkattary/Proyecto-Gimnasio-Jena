@@ -2,6 +2,8 @@ using GimnasioJena.Abstracciones.AccesoADatos.Entrenamientos.GuardarPlantillaDia
 using GimnasioJena.Abstracciones.Modelos.Entrenamientos;
 using GimnasioJena.AccesoADatos.Entidades.Entrenamientos;
 using System;
+using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 
 namespace GimnasioJena.AccesoADatos.Entrenamientos.GuardarPlantillaDiaEntrenamiento
@@ -25,6 +27,8 @@ namespace GimnasioJena.AccesoADatos.Entrenamientos.GuardarPlantillaDiaEntrenamie
                 try
                 {
                     PlantillaDiaEntrenamientoEntidad plantilla;
+                    List<EjercicioEntrenamientoEntidad> ejerciciosPrevios =
+                        new List<EjercicioEntrenamientoEntidad>();
 
                     if (modelo.idPlantillaDia > 0)
                     {
@@ -37,21 +41,11 @@ namespace GimnasioJena.AccesoADatos.Entrenamientos.GuardarPlantillaDiaEntrenamie
                             return CrearError("No existe la plantilla de día indicada.");
                         }
 
-                        var ejerciciosPrevios = contexto.EjerciciosEntrenamiento
+                        ejerciciosPrevios = contexto.EjerciciosEntrenamiento
                             .Where(e => e.idPlantillaDia == plantilla.idPlantillaDia)
+                            .OrderBy(e => e.OrdenIndice)
+                            .ThenBy(e => e.idEjercicio)
                             .ToList();
-
-                        foreach (var ejercicioPrevio in ejerciciosPrevios)
-                        {
-                            var progresionesPrevias = contexto.ProgresionesEjercicio
-                                .Where(pr => pr.idEjercicio == ejercicioPrevio.idEjercicio)
-                                .ToList();
-
-                            contexto.ProgresionesEjercicio.RemoveRange(progresionesPrevias);
-                        }
-
-                        contexto.EjerciciosEntrenamiento.RemoveRange(ejerciciosPrevios);
-                        contexto.SaveChanges();
 
                         plantilla.DiaSemana = modelo.DiaSemana;
                         plantilla.AreaEnfoque = modelo.AreaEnfoque?.Trim();
@@ -59,6 +53,14 @@ namespace GimnasioJena.AccesoADatos.Entrenamientos.GuardarPlantillaDiaEntrenamie
                     }
                     else
                     {
+                        if (!contexto.Mesociclos.Any(m => m.idMesociclo == modelo.idMesociclo))
+                        {
+                            transaccion.Rollback();
+                            return CrearError(
+                                "No existe un mesociclo válido al cual asociar la rutina. "
+                                + "Cree un mesociclo antes de configurar la rutina.");
+                        }
+
                         plantilla = new PlantillaDiaEntrenamientoEntidad
                         {
                             idMesociclo = modelo.idMesociclo,
@@ -75,17 +77,36 @@ namespace GimnasioJena.AccesoADatos.Entrenamientos.GuardarPlantillaDiaEntrenamie
 
                     foreach (var ejercicioDto in modelo.Ejercicios)
                     {
+                        // Se reutilizan los ejercicios existentes para no romper las
+                        // referencias históricas (UserSetLog) que apuntan a idEjercicio.
                         EjercicioEntrenamientoEntidad ejercicio =
-                            new EjercicioEntrenamientoEntidad
+                            ordenEjercicio < ejerciciosPrevios.Count
+                                ? ejerciciosPrevios[ordenEjercicio]
+                                : null;
+
+                        if (ejercicio == null)
+                        {
+                            ejercicio = new EjercicioEntrenamientoEntidad
                             {
-                                idPlantillaDia = plantilla.idPlantillaDia,
-                                NombreEjercicio = ejercicioDto.NombreEjercicio?.Trim(),
-                                TipoMetrica = ejercicioDto.TipoMetrica,
-                                OrdenIndice = ordenEjercicio++,
-                                Notas = ejercicioDto.Notas?.Trim()
+                                idPlantillaDia = plantilla.idPlantillaDia
                             };
 
-                        contexto.EjerciciosEntrenamiento.Add(ejercicio);
+                            contexto.EjerciciosEntrenamiento.Add(ejercicio);
+                        }
+                        else
+                        {
+                            var progresionesPrevias = contexto.ProgresionesEjercicio
+                                .Where(pr => pr.idEjercicio == ejercicio.idEjercicio)
+                                .ToList();
+
+                            contexto.ProgresionesEjercicio.RemoveRange(progresionesPrevias);
+                        }
+
+                        ejercicio.NombreEjercicio = ejercicioDto.NombreEjercicio?.Trim();
+                        ejercicio.TipoMetrica = ejercicioDto.TipoMetrica;
+                        ejercicio.OrdenIndice = ordenEjercicio;
+                        ejercicio.Notas = ejercicioDto.Notas?.Trim();
+
                         contexto.SaveChanges();
 
                         foreach (var progresionDto in ejercicioDto.Progresiones)
@@ -105,8 +126,31 @@ namespace GimnasioJena.AccesoADatos.Entrenamientos.GuardarPlantillaDiaEntrenamie
                         }
 
                         contexto.SaveChanges();
+                        ordenEjercicio++;
                     }
 
+                    // Ejercicios sobrantes de la versión anterior de la rutina.
+                    for (int i = ordenEjercicio; i < ejerciciosPrevios.Count; i++)
+                    {
+                        EjercicioEntrenamientoEntidad sobrante = ejerciciosPrevios[i];
+
+                        if (contexto.UserSetLogs.Any(l => l.WorkoutExerciseId == sobrante.idEjercicio))
+                        {
+                            transaccion.Rollback();
+                            return CrearError(
+                                $"No se puede eliminar el ejercicio '{sobrante.NombreEjercicio}' "
+                                + "porque ya tiene registros de entrenamiento asociados.");
+                        }
+
+                        var progresionesSobrantes = contexto.ProgresionesEjercicio
+                            .Where(pr => pr.idEjercicio == sobrante.idEjercicio)
+                            .ToList();
+
+                        contexto.ProgresionesEjercicio.RemoveRange(progresionesSobrantes);
+                        contexto.EjerciciosEntrenamiento.Remove(sobrante);
+                    }
+
+                    contexto.SaveChanges();
                     transaccion.Commit();
 
                     return new ResultadoGuardarPlantillaDto
@@ -117,12 +161,34 @@ namespace GimnasioJena.AccesoADatos.Entrenamientos.GuardarPlantillaDiaEntrenamie
                         NombrePlantilla = ConstruirNombre(plantilla.DiaSemana, plantilla.AreaEnfoque)
                     };
                 }
+                catch (DbEntityValidationException ex)
+                {
+                    transaccion.Rollback();
+
+                    string detalle = string.Join(" ", ex.EntityValidationErrors
+                        .SelectMany(e => e.ValidationErrors)
+                        .Select(e => e.PropertyName + ": " + e.ErrorMessage));
+
+                    return CrearError("No se pudo guardar la rutina. " + detalle);
+                }
                 catch (Exception ex)
                 {
                     transaccion.Rollback();
-                    return CrearError("No se pudo guardar la rutina: " + ex.Message);
+                    return CrearError("No se pudo guardar la rutina: " + ObtenerMensajeDetallado(ex));
                 }
             }
+        }
+
+        private static string ObtenerMensajeDetallado(Exception ex)
+        {
+            Exception actual = ex;
+
+            while (actual.InnerException != null)
+            {
+                actual = actual.InnerException;
+            }
+
+            return actual.Message;
         }
 
         private static string ConstruirNombre(byte diaSemana, string areaEnfoque)
