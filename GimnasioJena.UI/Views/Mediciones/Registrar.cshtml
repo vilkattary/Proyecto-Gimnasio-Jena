@@ -58,9 +58,32 @@
                         </div>
                     }
                 }
-                else
+                else if (ViewBag.Clientes != null)
                 {
-                    <p class="mb-0">No hay campos de medición activos. El administrador debe configurarlos primero.</p>
+                    using (Html.BeginForm("Registrar", "Mediciones", FormMethod.Get))
+                    {
+                        <div class="mb-3">
+                            <label for="idUsuario" class="form-label">
+                                Seleccionar cliente
+                            </label>
+
+                            @Html.DropDownList(
+                                "idUsuario",
+                                (SelectList)ViewBag.Clientes,
+                                "Seleccione un cliente",
+                                new
+                                {
+                                    @class = "form-select form-control-jena",
+                                    id = "idUsuario",
+                                    required = "required"
+                                }
+                            )
+                        </div>
+
+                        <button type="submit" class="btn btn-jena active">
+                            Evaluar cliente
+                        </button>
+                    }
                 }
             </div>
         </section>
