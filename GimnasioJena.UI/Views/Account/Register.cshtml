@@ -60,6 +60,11 @@
                 <div class="mb-3">
                     @Html.LabelFor(m => m.Password, new { @class = "form-label fw-600" })
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Contraseña" })
+
+                    <div class="form-text">
+                        Mínimo 8 caracteres, incluyendo mayúscula, minúscula, número y carácter especial.
+                    </div>
+
                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
                 </div>
 
