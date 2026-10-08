@@ -543,7 +543,7 @@
 
     </div>
 
-    <div id="paginacionClases" class="mt-3 mb-2 @((esVistaCliente || esVistaPublica) ? "d-none" : "")"></div>
+    <div id="paginacionClases" class="mt-3 mb-2 @(esVistaPublica ? "d-none" : "")"></div>
 
 </div>
 
@@ -603,7 +603,7 @@
 <script>
     (function () {
         var ITEMS_DESKTOP = 5;
-        var ITEMS_MOBILE = 1;
+        var ITEMS_MOBILE = 5;
         var paginaActual = 1;
 
         function getItemsPorPagina() {
