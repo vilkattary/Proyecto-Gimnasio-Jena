@@ -763,7 +763,51 @@ public async Task<ActionResult> RespuestaTilopay(
                         Request?.UserHostAddress
                 });
 
-        TempData["MensajeExito"] =
+                /*
+         * Enviar comprobante únicamente cuando el pago
+         * de Tilopay se registró correctamente.
+         *
+         * Un error de correo no debe afectar el pago.
+         */
+                try
+                {
+                    if (!string.IsNullOrWhiteSpace(perfil.correo))
+                    {
+                        string nombreCompleto = string.Join(" ",
+                            new[]
+                            {
+                perfil.nombre,
+                perfil.apellido1,
+                perfil.apellido2
+                            }.Where(x => !string.IsNullOrWhiteSpace(x)));
+
+                        string comprobanteHtml =
+                            ConstruirCorreoComprobantePago(
+                                nombreCompleto,
+                                plan.nombrePlan,
+                                pagoDto.monto,
+                                pagoDto.fechaPago,
+                                referenciaPago,
+                                idPago
+                            );
+
+                        var servicioEmail =
+                            new GimnasioJena.LogicaDeNegocio.General.Email.ServicioEmail();
+
+                        await servicioEmail.EnviarAsync(
+                            perfil.correo,
+                            $"JÉNA | Comprobante de pago #{idPago}",
+                            comprobanteHtml
+                        );
+                    }
+                }
+                catch (Exception exCorreo)
+                {
+                    System.Diagnostics.Trace.TraceError(
+                        $"Error enviando comprobante del pago {idPago}: " +
+                        exCorreo);
+                }
+                TempData["MensajeExito"] =
             "Tu pago fue aprobado y tu membresía " +
             "fue activada correctamente.";
 
@@ -784,8 +828,248 @@ public async Task<ActionResult> RespuestaTilopay(
     }
 }
 
+        private static string ConstruirCorreoComprobantePago(
+            string nombreCliente,
+            string nombrePlan,
+            decimal monto,
+            DateTime fechaPago,
+            string referenciaPago,
+            int idPago)
+        {
+            string nombreSeguro = System.Net.WebUtility.HtmlEncode(
+                nombreCliente ?? "");
 
-private static int LeerEnteroConfig(
+            string planSeguro = System.Net.WebUtility.HtmlEncode(
+                nombrePlan ?? "");
+
+            string referenciaSegura = System.Net.WebUtility.HtmlEncode(
+                referenciaPago ?? "");
+
+            string montoFormateado = monto.ToString(
+                "N2",
+                new System.Globalization.CultureInfo("es-CR"));
+
+            string fechaFormateada = fechaPago.ToString(
+                "dd/MM/yyyy HH:mm");
+
+            return $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+</head>
+<body style='margin:0;padding:0;background-color:#F4F5F7;
+             font-family:Arial,Helvetica,sans-serif;'>
+
+    <table role='presentation' width='100%' cellpadding='0'
+           cellspacing='0' style='background-color:#F4F5F7;'>
+        <tr>
+            <td align='center' style='padding:35px 15px;'>
+
+                <table role='presentation' width='100%'
+                       cellpadding='0' cellspacing='0'
+                       style='max-width:600px;background-color:#FFFFFF;
+                              border-radius:12px;overflow:hidden;'>
+
+                    <!-- ENCABEZADO -->
+                    <tr>
+                        <td align='center'
+                            style='background-color:#1C2636;
+                                   padding:35px 20px;'>
+
+                            <h1 style='color:#FFFFFF;margin:0;
+                                       font-size:30px;letter-spacing:3px;'>
+                                JÉNA
+                            </h1>
+
+                            <p style='color:#FF6335;margin:8px 0 0;
+                                      font-size:12px;letter-spacing:2px;'>
+                                TRAINING METHODOLOGY
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- CONFIRMACIÓN -->
+                    <tr>
+                        <td style='padding:35px 35px 15px;'>
+
+                            <h2 style='color:#1C2636;margin:0 0 15px;
+                                       font-size:23px;'>
+                                ¡Pago confirmado!
+                            </h2>
+
+                            <p style='color:#555555;font-size:15px;
+                                      line-height:1.7;'>
+                                Hola, <strong>{nombreSeguro}</strong>.
+                            </p>
+
+                            <p style='color:#555555;font-size:15px;
+                                      line-height:1.7;'>
+                                Hemos recibido correctamente tu pago.
+                                Tu membresía de JÉNA ha sido activada.
+                                A continuación, encontrarás los detalles
+                                de tu transacción.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- MONTO -->
+                    <tr>
+                        <td style='padding:10px 35px 25px;'>
+
+                            <table role='presentation' width='100%'
+                                   cellpadding='0' cellspacing='0'
+                                   style='background-color:#FFF3EE;
+                                          border-radius:8px;'>
+                                <tr>
+                                    <td align='center'
+                                        style='padding:25px 15px;'>
+
+                                        <p style='color:#1C2636;
+                                                  margin:0 0 8px;
+                                                  font-size:13px;'>
+                                            TOTAL PAGADO
+                                        </p>
+
+                                        <p style='color:#FF6335;
+                                                  margin:0;
+                                                  font-size:32px;
+                                                  font-weight:bold;'>
+                                            ₡{montoFormateado}
+                                        </p>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- DETALLES -->
+                    <tr>
+                        <td style='padding:0 35px 30px;'>
+
+                            <h3 style='color:#1C2636;font-size:17px;
+                                       margin:0 0 18px;'>
+                                Detalles del comprobante
+                            </h3>
+
+                            <table role='presentation' width='100%'
+                                   cellpadding='0' cellspacing='0'
+                                   style='font-size:14px;color:#555555;'>
+
+                                <tr>
+                                    <td style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        Comprobante
+                                    </td>
+                                    <td align='right'
+                                        style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        #{idPago}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        Plan adquirido
+                                    </td>
+                                    <td align='right'
+                                        style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        <strong>{planSeguro}</strong>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        Fecha de pago
+                                    </td>
+                                    <td align='right'
+                                        style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        {fechaFormateada}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        Método de pago
+                                    </td>
+                                    <td align='right'
+                                        style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        Tilopay
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;'>
+                                        Referencia
+                                    </td>
+                                    <td align='right'
+                                        style='padding:10px 0;
+                                               border-bottom:1px solid #EEEEEE;
+                                               word-break:break-all;'>
+                                        {referenciaSegura}
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- MENSAJE FINAL -->
+                    <tr>
+                        <td style='padding:0 35px 35px;'>
+
+                            <p style='color:#555555;font-size:14px;
+                                      line-height:1.7;'>
+                                Gracias por confiar en JÉNA.
+                                ¡Nos vemos en tu próximo entrenamiento!
+                            </p>
+
+                            <p style='color:#888888;font-size:12px;
+                                      line-height:1.6;'>
+                                Este documento es un comprobante
+                                informativo de pago y no sustituye
+                                una factura electrónica.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- PIE -->
+                    <tr>
+                        <td align='center'
+                            style='background-color:#1C2636;
+                                   padding:22px 15px;'>
+
+                            <p style='color:#FFFFFF;font-size:12px;
+                                      margin:0;'>
+                                JÉNA TRAINING METHODOLOGY
+                            </p>
+
+                            <p style='color:#FF6335;font-size:11px;
+                                      margin:8px 0 0;'>
+                                Entrená con propósito.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>";
+        }
+
+
+        private static int LeerEnteroConfig(
     string clave,
     int valorPorDefecto)
 {
