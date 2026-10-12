@@ -325,8 +325,25 @@
                     },
                     legend: { show: false },
                     tooltip: {
-                        x: { format: "'Semana del' dd MMM yyyy" },
-                        y: { formatter: function (v) { return fmtNumero(v) + " kg"; } }
+                        x: {
+                            formatter: function (value, opts) {
+                                var fecha = new Date(value);
+
+                                var fechaTexto = fecha.toLocaleDateString("es-CR", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric"
+                                });
+
+                                return "Semana " + (opts.dataPointIndex + 1) +
+                                    ": " + fechaTexto;
+                            }
+                        },
+                        y: {
+                            formatter: function (v) {
+                                return fmtNumero(v) + " kg";
+                            }
+                        }
                     }
                 });
                 charts.volumen.render();
