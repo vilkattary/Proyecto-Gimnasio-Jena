@@ -293,12 +293,16 @@
                             : "var(--jena-light-blue)";
 
                 bool esActiva =
-                    item.estadoClase == "Activo";
+                    string.Equals(
+                        item.estadoClase,
+                        "Activa",
+                        StringComparison.OrdinalIgnoreCase
+                    );
 
                 string badgeTexto =
-                    !string.IsNullOrWhiteSpace(item.estadoClase)
-                        ? item.estadoClase
-                        : "Sin estado";
+                !string.IsNullOrWhiteSpace(item.estadoClase)
+                    ? item.estadoClase
+                    : "Sin estado";
 
                 string badgeIcono =
                     esActiva
