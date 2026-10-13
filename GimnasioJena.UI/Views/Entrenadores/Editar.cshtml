@@ -42,9 +42,19 @@
                             @Html.ValidationMessageFor(m => m.fechaContratacion, "", new { @class = "text-danger" })
                         </div>
 
-                        <div class="form-check mb-4">
-                            @Html.CheckBoxFor(m => m.estado, new { @class = "form-check-input" })
-                            @Html.LabelFor(m => m.estado, "Entrenador activo", new { @class = "form-check-label" })
+                        <div class="d-flex align-items-center gap-2 mb-4">
+                            @Html.CheckBoxFor(m => m.estado, new
+                       {
+                           @class = "form-check-input",
+                           style = "width: 18px !important; height: 18px !important; min-width: 18px; min-height: 18px; " +
+                           "max-height: 18px; padding: 0 !important; margin: 0; float: none; flex-shrink: 0;" +
+                           " box-sizing: border-box;"
+                       })
+
+                            @Html.LabelFor(m => m.estado, "Entrenador activo", new
+                            {
+                                @class = "form-check-label mb-0"
+                            })
                         </div>
 
                         <div class="d-flex gap-2">

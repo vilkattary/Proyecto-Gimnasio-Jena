@@ -1,8 +1,11 @@
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Progreso;
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
 using GimnasioJena.Abstracciones.Modelos.Progreso;
 using GimnasioJena.LogicaDeNegocio.Progreso;
+using GimnasioJena.LogicaDeNegocio.Usuarios.ObtenerTodosLosUsuarios;
 using Microsoft.AspNet.Identity;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -12,10 +15,12 @@ namespace GimnasioJena.UI.Controllers
     public class MedicionesController : Controller
     {
         private readonly IMedicionesLN _medicionesLN;
+        private readonly IObtenerTodosLosUsuariosLN _obtenerTodosLosUsuariosLN;
 
         public MedicionesController()
         {
             _medicionesLN = new MedicionesLN();
+            _obtenerTodosLosUsuariosLN = new ObtenerTodosLosUsuariosLN();
         }
 
         // GET: Mediciones/Registrar
@@ -32,7 +37,19 @@ namespace GimnasioJena.UI.Controllers
 
                 if (string.IsNullOrWhiteSpace(idUsuario))
                 {
-                    throw new ArgumentException("Debe indicar el usuario para registrar sus medidas.");
+                    var clientes = _obtenerTodosLosUsuariosLN
+                        .ObtenerTodosLosUsuarios()
+                        .Where(u => u.rol == "CLIENTE" && u.estado)
+                        .OrderBy(u => u.nombreCompleto)
+                        .ToList();
+
+                    ViewBag.Clientes = new SelectList(
+                        clientes,
+                        "identityUserId",
+                        "nombreCompleto"
+                    );
+
+                    return View(new RegistroMedicionMultipleDto());
                 }
 
                 var dto = await _medicionesLN.GenerarFormularioLN(idUsuario);

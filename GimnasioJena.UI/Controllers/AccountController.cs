@@ -222,6 +222,7 @@ namespace GimnasioJena.UI.Controllers
 
                 if (result.Succeeded)
                 {
+                    bool perfilGuardado = false;
                     try
                     {
                         await UserManager.AddToRoleAsync(user.Id, "CLIENTE");
@@ -244,27 +245,58 @@ namespace GimnasioJena.UI.Controllers
 
                             contexto.Usuarios.Add(usuario);
                             contexto.SaveChanges();
+                            perfilGuardado = true;
                         }
 
-                        await UserManager.SendEmailAsync(
-                            user.Id,
-                            "Bienvenido a Gimnasio Jéna",
-                            "Hola " + model.Nombre + ",<br/><br/>" +
-                            "Tu cuenta en <strong>Gimnasio Jéna Training Methodology</strong> ha sido creada correctamente.<br/><br/>" +
-                            "Desde ahora puedes ingresar al sistema para consultar tu perfil, actualizar tus datos personales y acceder a los servicios disponibles del gimnasio.<br/><br/>" +
-                            "Gracias por formar parte de nuestra comunidad.<br/><br/>" +
-                            "<strong>Gimnasio Jéna Training Methodology</strong>"
-                        );
+                        try
+                        {
+                            await UserManager.SendEmailAsync(
+                                user.Id,
+                                "¡Bienvenido a JÉNA Training Methodology!",
+                                ConstruirCorreoBienvenida(model.Nombre)
+                            );
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Trace.TraceError(
+                                "No se pudo enviar el correo de bienvenida al usuario {0}: {1}",
+                                user.Id,
+                                ex.ToString()
+                            );
+                        }
 
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                         return RedirectToAction("Index", "Home");
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        await UserManager.DeleteAsync(user);
+                        System.Diagnostics.Trace.TraceError(
+                            "Error durante el registro del usuario {0}: {1}",
+                            user.Id,
+                            ex.ToString()
+                        );
 
-                        ModelState.AddModelError("", "Ocurrió un error al guardar los datos del perfil. Intente registrarse nuevamente.");
+                        if (!perfilGuardado)
+                        {
+                            var resultadoEliminacion = await UserManager.DeleteAsync(user);
+
+                            if (!resultadoEliminacion.Succeeded)
+                            {
+                                System.Diagnostics.Trace.TraceError(
+                                    "No se pudo revertir la cuenta Identity del usuario {0}.",
+                                    user.Id
+                                );
+                            }
+                        }
+
+                        ModelState.AddModelError(
+                            "",
+                            perfilGuardado
+                                ? "Tu cuenta fue creada correctamente, pero ocurrió un problema al iniciar sesión. Intentá ingresar desde la página de inicio de sesión."
+                                : "Ocurrió un error al guardar los datos del perfil. Intentá registrarte nuevamente."
+                        );
+
                         return View(model);
                     }
                 }
@@ -273,6 +305,132 @@ namespace GimnasioJena.UI.Controllers
             }
 
             return View(model);
+        }
+
+        private static string ConstruirCorreoBienvenida(string nombre)
+        {
+            string nombreSeguro = System.Web.HttpUtility.HtmlEncode(nombre ?? "");
+
+            return $@"
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+</head>
+<body style='margin:0;padding:0;background-color:#F3F5F8;
+             font-family:Arial,Helvetica,sans-serif;'>
+
+<table role='presentation' width='100%' cellpadding='0'
+       cellspacing='0' style='background-color:#F3F5F8;'>
+<tr>
+<td align='center' style='padding:30px 15px;'>
+
+<table role='presentation' width='100%' cellpadding='0'
+       cellspacing='0'
+       style='max-width:600px;background-color:#FFFFFF;
+              border-collapse:collapse;'>
+
+    <tr>
+        <td align='center'
+            style='background-color:#1C2636;padding:32px 20px;'>
+            <div style='font-size:38px;font-weight:bold;
+                        letter-spacing:4px;color:#FF6335;'>
+                JÉNA
+            </div>
+            <div style='font-size:12px;letter-spacing:3px;
+                        color:#FFFFFF;margin-top:6px;'>
+                TRAINING METHODOLOGY
+            </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td style='padding:35px 30px;color:#1C2636;'>
+
+            <h1 style='font-size:26px;text-align:center;
+                       margin:0 0 12px;'>
+                ¡Bienvenido a JÉNA!
+            </h1>
+
+            <p style='text-align:center;color:#FF6335;
+                      font-weight:bold;font-size:13px;
+                      letter-spacing:1px;margin-bottom:30px;'>
+                TU ENTRENAMIENTO COMIENZA AQUÍ
+            </p>
+
+            <p style='font-size:16px;line-height:1.7;'>
+                ¡Hola, <strong>{nombreSeguro}</strong>!
+            </p>
+
+            <p style='font-size:15px;line-height:1.8;
+                      color:#394456;'>
+                Nos alegra darte la bienvenida a nuestra comunidad.
+                Tu cuenta ha sido creada correctamente y ya podés
+                comenzar tu experiencia con nosotros.
+            </p>
+
+            <table role='presentation' width='100%'
+                   cellpadding='0' cellspacing='0'
+                   style='background-color:#F3F5F8;
+                          margin:25px 0;'>
+                <tr>
+                    <td style='padding:22px;'>
+                        <p style='font-size:16px;font-weight:bold;
+                                  color:#1C2636;margin:0 0 10px;'>
+                            &#10004; Registro completado
+                        </p>
+
+                        <p style='font-size:14px;line-height:1.7;
+                                  color:#394456;margin:0;'>
+                            Desde tu cuenta podés consultar tu perfil,
+                            actualizar tus datos personales y acceder
+                            a los servicios disponibles del gimnasio.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+            <p style='background-color:#FF6335;
+                      color:#FFFFFF;text-align:center;
+                      padding:18px;font-weight:bold;
+                      font-size:16px;'>
+                ¡Nos vemos en tu próximo entrenamiento!
+            </p>
+
+            <p style='font-size:14px;line-height:1.7;
+                      text-align:center;color:#394456;
+                      margin-top:30px;'>
+                Gracias por confiar en nosotros.
+            </p>
+
+        </td>
+    </tr>
+
+    <tr>
+        <td align='center'
+            style='background-color:#1C2636;padding:25px 20px;'>
+
+            <p style='color:#FFFFFF;font-size:13px;
+                      font-weight:bold;margin:0 0 8px;'>
+                JÉNA TRAINING METHODOLOGY
+            </p>
+
+            <p style='color:#B8C0CC;font-size:11px;
+                      margin:0;'>
+                Este es un mensaje automático de bienvenida.
+            </p>
+
+        </td>
+    </tr>
+
+</table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>";
         }
 
         //

@@ -293,12 +293,16 @@
                             : "var(--jena-light-blue)";
 
                 bool esActiva =
-                    item.estadoClase == "Activo";
+                    string.Equals(
+                        item.estadoClase,
+                        "Activa",
+                        StringComparison.OrdinalIgnoreCase
+                    );
 
                 string badgeTexto =
-                    !string.IsNullOrWhiteSpace(item.estadoClase)
-                        ? item.estadoClase
-                        : "Sin estado";
+                !string.IsNullOrWhiteSpace(item.estadoClase)
+                    ? item.estadoClase
+                    : "Sin estado";
 
                 string badgeIcono =
                     esActiva
@@ -543,7 +547,7 @@
 
     </div>
 
-    <div id="paginacionClases" class="mt-3 mb-2 @((esVistaCliente || esVistaPublica) ? "d-none" : "")"></div>
+    <div id="paginacionClases" class="mt-3 mb-2 @(esVistaPublica ? "d-none" : "")"></div>
 
 </div>
 
@@ -603,7 +607,7 @@
 <script>
     (function () {
         var ITEMS_DESKTOP = 5;
-        var ITEMS_MOBILE = 1;
+        var ITEMS_MOBILE = 5;
         var paginaActual = 1;
 
         function getItemsPorPagina() {
