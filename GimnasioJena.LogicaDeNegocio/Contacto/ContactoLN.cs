@@ -56,24 +56,321 @@ namespace GimnasioJena.LogicaDeNegocio.Contacto
                 correoAdmin = ConfigurationManager.AppSettings["SmtpUser"];
 
             // 3. Correo al administrador con los datos del formulario
-            var cuerpoAdmin =
-                "<h2>Nuevo mensaje de contacto</h2>"                       +
-                $"<p><strong>Nombre:</strong>         {dto.Nombre}</p>"    +
-                $"<p><strong>Correo:</strong>         {dto.Correo}</p>"    +
-                $"<p><strong>Tel&eacute;fono:</strong>{dto.Telefono}</p>"  +
-                $"<p><strong>Asunto:</strong>         {dto.Asunto}</p>"    +
-                $"<p><strong>Mensaje:</strong>        {dto.Mensaje}</p>";
+            string nombreContacto = System.Net.WebUtility.HtmlEncode(dto.Nombre);
+            string correoContacto = System.Net.WebUtility.HtmlEncode(dto.Correo);
+            string telefonoContacto = System.Net.WebUtility.HtmlEncode(dto.Telefono);
+            string asuntoContacto = System.Net.WebUtility.HtmlEncode(dto.Asunto);
+            string mensajeContacto = System.Net.WebUtility.HtmlEncode(dto.Mensaje)
+                .Replace("\r\n", "\n")
+                .Replace("\n", "<br>");
+
+            var cuerpoAdmin = $@"
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+</head>
+<body style='margin:0; padding:0; background-color:#F3F5F7;
+             font-family:Arial,Helvetica,sans-serif;'>
+
+    <table role='presentation' width='100%' cellpadding='0'
+           cellspacing='0' style='background-color:#F3F5F7;'>
+        <tr>
+            <td align='center' style='padding:35px 15px;'>
+
+                <table role='presentation' width='100%' cellpadding='0'
+                       cellspacing='0'
+                       style='max-width:600px; background-color:#FFFFFF;
+                              border-radius:12px; overflow:hidden;'>
+
+                    <tr>
+                        <td align='center'
+                            style='background-color:#1C2636;
+                                   padding:35px 25px;'>
+                            <h1 style='margin:0; color:#FFFFFF;
+                                       font-size:27px; letter-spacing:2px;'>
+                                JÉNA
+                            </h1>
+                            <p style='margin:8px 0 0; color:#FF6335;
+                                      font-size:12px; letter-spacing:3px;
+                                      font-weight:bold;'>
+                                TRAINING METHODOLOGY
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style='height:5px; background-color:#FF6335;'></td>
+                    </tr>
+
+                    <tr>
+                        <td style='padding:38px 35px;'>
+
+                            <h2 style='margin:0 0 12px; color:#1C2636;
+                                       font-size:23px;'>
+                                Nuevo mensaje de contacto
+                            </h2>
+
+                            <p style='margin:0 0 28px; color:#555555;
+                                      font-size:15px; line-height:1.7;'>
+                                Se ha recibido una nueva consulta desde
+                                el formulario de contacto de JÉNA.
+                            </p>
+
+                            <table role='presentation' width='100%'
+                                   cellpadding='0' cellspacing='0'
+                                   style='border-collapse:collapse;
+                                          background-color:#F5F7FA;'>
+
+                                <tr>
+                                    <td style='padding:14px 18px;
+                                               border-bottom:1px solid #E1E5EA;'>
+                                        <p style='margin:0 0 6px;
+                                                  color:#FF6335;
+                                                  font-size:11px;
+                                                  font-weight:bold;
+                                                  letter-spacing:1px;'>
+                                            NOMBRE
+                                        </p>
+                                        <p style='margin:0; color:#1C2636;
+                                                  font-size:15px;'>
+                                            {nombreContacto}
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='padding:14px 18px;
+                                               border-bottom:1px solid #E1E5EA;'>
+                                        <p style='margin:0 0 6px;
+                                                  color:#FF6335;
+                                                  font-size:11px;
+                                                  font-weight:bold;
+                                                  letter-spacing:1px;'>
+                                            CORREO ELECTRÓNICO
+                                        </p>
+                                        <p style='margin:0; color:#1C2636;
+                                                  font-size:15px;'>
+                                            {correoContacto}
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='padding:14px 18px;
+                                               border-bottom:1px solid #E1E5EA;'>
+                                        <p style='margin:0 0 6px;
+                                                  color:#FF6335;
+                                                  font-size:11px;
+                                                  font-weight:bold;
+                                                  letter-spacing:1px;'>
+                                            TELÉFONO
+                                        </p>
+                                        <p style='margin:0; color:#1C2636;
+                                                  font-size:15px;'>
+                                            {telefonoContacto}
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='padding:14px 18px;'>
+                                        <p style='margin:0 0 6px;
+                                                  color:#FF6335;
+                                                  font-size:11px;
+                                                  font-weight:bold;
+                                                  letter-spacing:1px;'>
+                                            ASUNTO
+                                        </p>
+                                        <p style='margin:0; color:#1C2636;
+                                                  font-size:15px;'>
+                                            {asuntoContacto}
+                                        </p>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                            <table role='presentation' width='100%'
+                                   cellpadding='0' cellspacing='0'
+                                   style='margin-top:24px;
+                                          border-left:4px solid #FF6335;
+                                          background-color:#F5F7FA;'>
+                                <tr>
+                                    <td style='padding:20px;'>
+                                        <p style='margin:0 0 12px;
+                                                  color:#1C2636;
+                                                  font-size:13px;
+                                                  font-weight:bold;'>
+                                            MENSAJE RECIBIDO
+                                        </p>
+                                        <p style='margin:0; color:#444444;
+                                                  font-size:15px;
+                                                  line-height:1.8;
+                                                  overflow-wrap:break-word;'>
+                                            {mensajeContacto}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style='margin:28px 0 0; color:#666666;
+                                      font-size:13px; line-height:1.7;'>
+                                Podés utilizar el correo electrónico
+                                proporcionado para responder directamente
+                                a esta consulta.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align='center'
+                            style='background-color:#1C2636;
+                                   padding:24px 20px;'>
+                            <p style='margin:0; color:#FFFFFF;
+                                      font-size:12px;'>
+                                JÉNA TRAINING METHODOLOGY
+                            </p>
+                            <p style='margin:10px 0 0; color:#B9C0C9;
+                                      font-size:11px;'>
+                                Notificación automática del formulario de contacto.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>";
 
             await _email.EnviarAsync(
                 correoAdmin,
                 "Nuevo contacto: " + dto.Asunto,
                 cuerpoAdmin);
 
-            // 4. Confirmacion de recepcion al usuario
-            var cuerpoUsuario =
-                "<p>Hemos recibido tu mensaje correctamente.</p>"                  +
-                "<p>Nos pondremos en contacto contigo a la brevedad posible.</p>" +
-                "<p><strong>Gimnasio Jena</strong></p>";
+            // 4. Confirmación de recepción al usuario
+            string nombreCliente = System.Net.WebUtility.HtmlEncode(dto.Nombre);
+
+            var cuerpoUsuario = $@"
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+</head>
+<body style='margin:0; padding:0; background-color:#F3F5F7;
+             font-family:Arial,Helvetica,sans-serif;'>
+
+    <table role='presentation' width='100%' cellpadding='0'
+           cellspacing='0' style='background-color:#F3F5F7;'>
+        <tr>
+            <td align='center' style='padding:35px 15px;'>
+
+                <table role='presentation' width='100%' cellpadding='0'
+                       cellspacing='0'
+                       style='max-width:600px; background-color:#FFFFFF;
+                              border-radius:12px; overflow:hidden;'>
+
+                    <tr>
+                        <td align='center'
+                            style='background-color:#1C2636;
+                                   padding:35px 25px;'>
+                            <h1 style='margin:0; color:#FFFFFF;
+                                       font-size:27px; letter-spacing:2px;'>
+                                JÉNA
+                            </h1>
+                            <p style='margin:8px 0 0; color:#FF6335;
+                                      font-size:12px; letter-spacing:3px;
+                                      font-weight:bold;'>
+                                TRAINING METHODOLOGY
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style='height:5px; background-color:#FF6335;'></td>
+                    </tr>
+
+                    <tr>
+                        <td style='padding:38px 35px;'>
+
+                            <h2 style='margin:0 0 22px; color:#1C2636;
+                                       font-size:23px;'>
+                                ¡Mensaje recibido!
+                            </h2>
+
+                            <p style='color:#333333; font-size:16px;
+                                      line-height:1.7;'>
+                                Hola, <strong>{nombreCliente}</strong>.
+                            </p>
+
+                            <p style='color:#555555; font-size:15px;
+                                      line-height:1.8;'>
+                                Gracias por ponerte en contacto con
+                                <strong>JÉNA Training Methodology</strong>.
+                                Hemos recibido tu mensaje correctamente.
+                            </p>
+
+                            <table role='presentation' width='100%'
+                                   cellpadding='0' cellspacing='0'
+                                   style='margin:25px 0;
+                                          background-color:#F5F7FA;
+                                          border-left:4px solid #FF6335;'>
+                                <tr>
+                                    <td style='padding:20px;'>
+                                        <p style='margin:0; color:#1C2636;
+                                                  font-size:15px;
+                                                  line-height:1.7;'>
+                                            Nuestro equipo revisará tu consulta
+                                            y se pondrá en contacto contigo
+                                            a la brevedad posible.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style='color:#555555; font-size:15px;
+                                      line-height:1.8;'>
+                                Agradecemos tu interés y la confianza
+                                en nuestro equipo.
+                            </p>
+
+                            <p style='margin-top:30px; color:#1C2636;
+                                      font-size:15px; line-height:1.7;'>
+                                ¡Nos vemos pronto!<br>
+                                <strong>Equipo JÉNA</strong>
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align='center'
+                            style='background-color:#1C2636;
+                                   padding:24px 20px;'>
+                            <p style='margin:0; color:#FFFFFF;
+                                      font-size:12px;'>
+                                JÉNA TRAINING METHODOLOGY
+                            </p>
+                            <p style='margin:10px 0 0; color:#B9C0C9;
+                                      font-size:11px;'>
+                                Este es un correo automático de confirmación.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>";
 
             await _email.EnviarAsync(
                 dto.Correo,

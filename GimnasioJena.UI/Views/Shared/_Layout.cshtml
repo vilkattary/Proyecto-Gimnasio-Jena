@@ -74,17 +74,7 @@
                             </ul>
                         </li>
 
-                        @* Dropdown 4: Evolución y Gestión Médica *@
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-heart-pulse me-1"></i>Gestión Médica
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-admin">
-                                <li><a class="dropdown-item" href="/Mediciones/Registrar">Evaluar Cliente</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="/CamposMedicion/Index">Campos Médicos</a></li>
-                            </ul>
-                        </li>
+                        
                     }
                     else
                     {
@@ -100,23 +90,7 @@
                             </li>
                         }
 
-                        if (User.IsInRole("ENTRENADOR"))
-                        {
-                            <li class="nav-item">
-                                @Html.ActionLink("Entrenador", "Index", "Entrenadores",
-                                    new { area = "" }, new { @class = "nav-link" })
-                            </li>
-
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-heart-pulse me-1"></i>Gestión Médica
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-admin">
-                                    <li><a class="dropdown-item" href="/Mediciones/Registrar">Evaluar Cliente</a></li>
-                                </ul>
-                            </li>
-
-                        }
+                        
 
                         if (User.IsInRole("CLIENTE"))
                         {

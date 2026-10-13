@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace GimnasioJena.UI.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR,ENTRENADOR,CLIENTE")]
+    [Authorize(Roles = "CLIENTE")]
     public class MedicionesController : Controller
     {
         private readonly IMedicionesLN _medicionesLN;
