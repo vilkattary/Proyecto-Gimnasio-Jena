@@ -1,4 +1,5 @@
-﻿@model GimnasioJena.Abstracciones.Modelos.Entrenamientos.ClaseWorkoutClienteDto
+﻿
+@model GimnasioJena.Abstracciones.Modelos.Entrenamientos.ClaseWorkoutClienteDto
 
 @*
     Parcial del modal de registro de entrenamiento del cliente.
@@ -15,7 +16,7 @@
             <i class="bi bi-clipboard2-pulse me-1"></i>
             @(string.IsNullOrWhiteSpace(Model.AreaEnfoque) ? "Rutina del día" : Model.AreaEnfoque)
         </h6>
-        <span class="badge bg-secondary">Semana @Model.NumeroSemana</span>
+        <span class="badge wk-semana-badge">Semana @Model.NumeroSemana</span>
     </div>
 
     @if (!Model.Ejercicios.Any())
@@ -29,6 +30,7 @@
             var meta = ejercicio.TipoMetrica == 2
                 ? (ejercicio.DuracionSegundosObjetivo.HasValue ? ejercicio.DuracionSegundosObjetivo + " seg" : "—")
                 : (string.IsNullOrWhiteSpace(ejercicio.RepeticionesObjetivo) ? "—" : ejercicio.RepeticionesObjetivo + " reps");
+
             var seriesObjetivo = ejercicio.SeriesObjetivo ?? 3;
 
             <div class="border rounded p-3 mb-3 wk-ejercicio-cliente"
@@ -42,6 +44,7 @@
                             Meta: Semana @Model.NumeroSemana — @seriesObjetivo series x @meta
                         </div>
                     </div>
+
                     @if (ejercicio.UltimoPesoKg.HasValue)
                     {
                         <span class="badge bg-light text-dark align-self-center">
@@ -66,18 +69,23 @@
                                 <tr data-set="@s">
                                     <th scope="row">@s</th>
                                     <td>
-                                        <input type="number" inputmode="numeric" min="0"
+                                        <input type="number"
+                                               inputmode="numeric"
+                                               min="0"
                                                class="form-control form-control-sm wk-reps"
                                                style="font-size: 1rem;"
                                                aria-label="Repeticiones serie @s"
-                                               value="@(string.IsNullOrWhiteSpace(ejercicio.RepeticionesObjetivo) ? "" : "")" />
+                                               value="" />
                                     </td>
                                     <td>
-                                        <input type="number" inputmode="decimal" min="0" step="0.5"
+                                        <input type="number"
+                                               inputmode="decimal"
+                                               min="0"
+                                               step="0.5"
                                                class="form-control form-control-sm wk-peso"
                                                style="font-size: 1rem;"
                                                aria-label="Peso en kg serie @s"
-                                               value="@(ejercicio.UltimoPesoKg.HasValue ? ejercicio.UltimoPesoKg.Value.ToString("0.##") : "")" />
+                                               value="" />
                                     </td>
                                     <td class="text-center">
                                         <input type="checkbox"
@@ -94,14 +102,20 @@
         }
 
         <div class="mb-3">
-            <label class="form-label" for="wkNotasCliente">Notas (sensaciones, fatiga)</label>
-            <textarea id="wkNotasCliente" class="form-control" rows="2"
-                      style="font-size: 1rem;" maxlength="500"></textarea>
+            <label class="form-label" for="wkNotasCliente">
+                Notas (sensaciones, fatiga)
+            </label>
+            <textarea id="wkNotasCliente"
+                      class="form-control"
+                      rows="2"
+                      style="font-size: 1rem;"
+                      maxlength="500"></textarea>
         </div>
 
         <div id="wkMensajeCliente" aria-live="polite"></div>
 
-        <button type="button" id="wkGuardarEntrenamiento"
+        <button type="button"
+                id="wkGuardarEntrenamiento"
                 class="btn btn-success w-100"
                 style="min-height: 44px; font-size: 1rem;">
             <i class="bi bi-check-circle me-1"></i>
@@ -111,6 +125,17 @@
 </div>
 
 <style>
+    /* Badge de semana con los colores de JÉNA */
+    .wk-semana-badge {
+        background-color: var(--jena-navy);
+        color: #ffffff;
+    }
+
+    /* Bordes de los contenedores de ejercicios */
+    .wk-ejercicio-cliente {
+        border-color: var(--jena-light-blue) !important;
+    }
+
     @@media (max-width: 576px) {
         /* Restaurar la tabla solamente en el modal de entrenamiento */
         .wk-ejercicio-cliente .table thead {
