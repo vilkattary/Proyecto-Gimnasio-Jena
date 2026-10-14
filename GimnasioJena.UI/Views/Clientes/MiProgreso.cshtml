@@ -91,19 +91,53 @@
         max-height: none !important;
         overflow: visible !important;
     }
+
+    /* Botón de registro de medidas */
+    .page-mi-progreso .btn-registrar-medidas {
+        background-color: var(--jena-orange, #FF6335);
+        border: 1px solid var(--jena-orange, #FF6335);
+        color: #fff;
+        font-weight: 600;
+    }
+
+        .page-mi-progreso .btn-registrar-medidas:hover,
+        .page-mi-progreso .btn-registrar-medidas:focus-visible {
+            background-color: var(--jena-navy, #1C2636);
+            border-color: var(--jena-navy, #1C2636);
+            color: #fff;
+        }
+
+    /* Espacio para la flecha del selector de rango */
+    .page-mi-progreso #rangoProgreso {
+        width: auto;
+        min-width: 165px;
+        padding-right: 2.5rem;
+        border-color: var(--jena-light-blue, #8BA9C1);
+    }
 </style>
 
 <div class="container-fluid p-3 p-md-4 page-mi-progreso">
 
+
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-        <h3 class="mb-0"><i class="bi bi-graph-up-arrow me-2"></i>Mi Progreso</h3>
-        <div>
-            <button type="button" class="btn btn-sm btn-outline-primary me-2"
-                    data-bs-toggle="modal" data-bs-target="#biometriaModal">
-                <i class="bi bi-plus-circle me-1"></i>Registrar medida
+        <h3 class="mb-0">
+            <i class="bi bi-graph-up-arrow me-2"></i>Mi Progreso
+        </h3>
+
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <button type="button"
+                    class="btn btn-sm btn-registrar-medidas"
+                    data-bs-toggle="modal"
+                    data-bs-target="#biometriaModal">
+                <i class="bi bi-plus-circle me-1"></i>Registrar mis medidas
             </button>
-            <label for="rangoProgreso" class="form-label me-2 mb-0 small">Rango</label>
-            <select id="rangoProgreso" class="form-select form-select-sm d-inline-block" style="width: auto;">
+
+            <label for="rangoProgreso" class="form-label mb-0 small">
+                Rango
+            </label>
+
+            <select id="rangoProgreso"
+                    class="form-select form-select-sm">
                 <option value="30">Últimos 30 días</option>
                 <option value="90" selected>Últimos 90 días</option>
                 <option value="180">Últimos 180 días</option>
@@ -111,6 +145,7 @@
             </select>
         </div>
     </div>
+
 
     @* Tarjetas resumen *@
     <div class="row g-3 mb-4" id="progresoResumen">
