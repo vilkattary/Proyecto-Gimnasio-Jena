@@ -56,12 +56,13 @@
                         <div class="icon-wrapper">
                             @if (esImagenUrl)
                             {
-                                <img src="@item.UrlImagen" alt="@item.TextoPrincipal"
+                                <img src="@item.UrlImagen"
+                                     alt=""
                                      class="avatar-circle-full" />
                             }
                             else
                             {
-                                <i class="bi @iconClass"></i>
+                                <i class="bi @iconClass" aria-hidden="true"></i>
                             }
                         </div>
                         <h3>@item.TextoPrincipal</h3>
@@ -95,14 +96,15 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="testimonial-card">
                         <div class="quote-icon">
-                            <i class="bi bi-quote"></i>
+                            <i class="bi bi-quote" aria-hidden="true"></i>
                         </div>
                         <p>@item.TextoSecundario</p>
                         <div class="client-info">
                             <div class="client-avatar">
                                 @if (!string.IsNullOrEmpty(item.UrlImagen))
                                 {
-                                    <img src="@item.UrlImagen" alt="@item.TextoPrincipal"
+                                    <img src="@item.UrlImagen"
+                                         alt=""
                                          class="avatar-circle-sm" />
                                 }
                                 else
