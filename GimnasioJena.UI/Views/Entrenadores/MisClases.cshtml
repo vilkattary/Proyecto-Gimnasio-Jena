@@ -28,6 +28,7 @@
             }
             else
             {
+
                 <div class="table-responsive">
                     <table class="table-jena">
                         <thead>
@@ -38,7 +39,7 @@
                                 <th>Cupo</th>
                                 <th>Inscritos</th>
                                 <th>Ubicación</th>
-                                <th class="text-end">Acciones</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,7 +52,7 @@
                                     <td>@item.cupoMaximo</td>
                                     <td>@item.inscritos</td>
                                     <td>@item.ubicacion</td>
-                                    <td class="text-end">
+                                    <td class="text-center align-middle">
                                         <a href="@Url.Action("AsistenciaClase", "Entrenadores", new { id = item.idClaseProgramada })"
                                            class="btn btn-sm btn-action">
                                             Registrar asistencia
@@ -62,6 +63,7 @@
                         </tbody>
                     </table>
                 </div>
+
             }
 
         </div>
