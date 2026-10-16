@@ -33,8 +33,11 @@
     <div class="welcome-section">
         @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
         {
+
             <img src="@Url.Content(Model.fotoPerfil)"
+                 alt="Foto de perfil del cliente"
                  class="profile-avatar mx-auto img-cover" />
+
         }
         else
         {
@@ -123,8 +126,11 @@
                     <div class="col-md-4 profile-section mb-3 mb-md-0">
                         @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
                         {
+
                             <img src="@Url.Content(Model.fotoPerfil)"
+                                 alt="Foto de perfil del cliente"
                                  class="profile-avatar mx-auto img-cover" />
+
                         }
                         else
                         {
