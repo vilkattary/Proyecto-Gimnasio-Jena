@@ -13,5 +13,9 @@ namespace GimnasioJena.Abstracciones.Modelos.Clases
         public int cupoMaximo { get; set; }
         public int inscritos { get; set; }
         public string ubicacion { get; set; }
+
+        // Estado de la clase
+        public int idEstadoClase { get; set; }
+        public string nombreEstado { get; set; }
     }
 }
