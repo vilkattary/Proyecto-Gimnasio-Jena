@@ -39,6 +39,7 @@
                                 <th>Cupo</th>
                                 <th>Inscritos</th>
                                 <th>Ubicación</th>
+                                <th class="text-center">Estado</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -51,13 +52,41 @@
                                     <td>@item.horaInicio.ToString(@"hh\:mm") - @item.horaFin.ToString(@"hh\:mm")</td>
                                     <td>@item.cupoMaximo</td>
                                     <td>@item.inscritos</td>
+
                                     <td>@item.ubicacion</td>
+
                                     <td class="text-center align-middle">
-                                        <a href="@Url.Action("AsistenciaClase", "Entrenadores", new { id = item.idClaseProgramada })"
-                                           class="btn btn-sm btn-action">
-                                            Registrar asistencia
-                                        </a>
+                                        @switch (item.idEstadoClase)
+                                        {
+                                            case 1:
+                                                <span class="badge bg-success">Activa</span>
+                                                break;
+                                            case 2:
+                                                <span class="badge bg-danger">Cancelada</span>
+                                                break;
+                                            case 3:
+                                                <span class="badge bg-secondary">Finalizada</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@item.nombreEstado</span>
+                                                break;
+                                        }
                                     </td>
+
+                                    <td class="text-center align-middle">
+                                        @if (item.idEstadoClase == 1)
+                                        {
+                                            <a href="@Url.Action("AsistenciaClase", "Entrenadores", new { id = item.idClaseProgramada })"
+                                               class="btn btn-sm btn-action">
+                                                Registrar asistencia
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No disponible</span>
+                                        }
+                                    </td>
+
                                 </tr>
                             }
                         </tbody>
