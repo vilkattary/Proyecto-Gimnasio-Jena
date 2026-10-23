@@ -13,6 +13,7 @@ namespace GimnasioJena.LogicaDeNegocio.Home.ModificarSeccionHome
     public class ModificarContenidoWebLN : IModificarContenidoWebLN
     {
         private readonly IModificarContenidoWebAD _repositorio;
+        private const int TamanoMaximoImagen = 5 * 1024 * 1024;
 
         public ModificarContenidoWebLN()
         {
@@ -37,7 +38,16 @@ namespace GimnasioJena.LogicaDeNegocio.Home.ModificarSeccionHome
                 };
 
                 if (!extensionesPermitidas.Contains(extension))
-                    return false;
+                {
+                    throw new ArgumentException(
+                        "Formato no permitido. Solo se aceptan imágenes JPG, PNG y WEBP.");
+                }
+
+                if (dto.ArchivoImagen.ContentLength > TamanoMaximoImagen)
+                {
+                    throw new ArgumentException(
+                        "La imagen supera el tamaño máximo permitido de 5 MB.");
+                }
 
                 string carpeta = HostingEnvironment.MapPath("~/images/uploads/");
 
