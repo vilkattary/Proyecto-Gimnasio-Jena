@@ -245,8 +245,6 @@ namespace GimnasioJena.UI.Controllers
                     return View(claseAGuardar);
                 }
 
-                claseAGuardar.fechaCreacion = DateTime.Now;
-
                 bool seAgrego = _registrarClase.RegistrarClase(claseAGuardar);
 
                 if (seAgrego)
@@ -266,9 +264,22 @@ namespace GimnasioJena.UI.Controllers
                 CargarCatalogos();
                 return View(claseAGuardar);
             }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+
+                CargarCatalogos();
+                return View(claseAGuardar);
+            }
             catch (Exception ex)
             {
-                TempData["MensajeError"] = "Ocurrió un error al registrar la clase: " + ex.Message;
+                System.Diagnostics.Debug.WriteLine(ex);
+
+                ModelState.AddModelError(
+                    "",
+                    "Ocurrió un error inesperado al registrar la clase."
+                );
+
                 CargarCatalogos();
                 return View(claseAGuardar);
             }

@@ -22,11 +22,30 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.RegistrarClase
         public bool RegistrarClase(ClaseCrearDto registrarClaseAGuardar)
         {
             if (registrarClaseAGuardar == null)
+            {
                 return false;
+            }
 
-            registrarClaseAGuardar.fechaCreacion = _fechasLN.ObtenerFechaActual();
+            DateTime fechaActual =
+                _fechasLN.ObtenerFechaActual();
 
-            int cantidadDeDatosAlmacenados = _registrarClaseAD.RegistrarClase(registrarClaseAGuardar);
+            DateTime fechaHoraClase =
+                registrarClaseAGuardar.fechaClase.Date
+                .Add(registrarClaseAGuardar.horaInicio);
+
+            if (fechaHoraClase <= fechaActual)
+            {
+                throw new ArgumentException(
+                    "No se puede programar una clase en una fecha " +
+                    "u hora que ya pasó. Seleccione un horario futuro."
+                );
+            }
+
+            registrarClaseAGuardar.fechaCreacion =
+                fechaActual;
+
+            int cantidadDeDatosAlmacenados =
+                _registrarClaseAD.RegistrarClase(registrarClaseAGuardar);
 
             return cantidadDeDatosAlmacenados > 0;
         }

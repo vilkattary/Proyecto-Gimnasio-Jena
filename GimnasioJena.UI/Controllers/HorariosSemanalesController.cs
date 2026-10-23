@@ -500,6 +500,17 @@ namespace GimnasioJena.UI.Controllers
 
                 return RedirectToAction("Index");
             }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+
+                CargarCatalogos(
+                    modelo.idTipoClase,
+                    modelo.idUsuarioEntrenador
+                );
+
+                return View(modelo);
+            }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
@@ -511,17 +522,12 @@ namespace GimnasioJena.UI.Controllers
                     excepcionReal = excepcionReal.InnerException;
                 }
 
-                string mensajeError =
-                    excepcionReal.Message;
+                string mensajeError = excepcionReal.Message;
 
                 if (
-                    mensajeError.Contains(
-                        "UQ_HorarioSemanal"
-                    )
+                    mensajeError.Contains("UQ_HorarioSemanal")
                     ||
-                    mensajeError.Contains(
-                        "duplicate key"
-                    )
+                    mensajeError.Contains("duplicate key")
                 )
                 {
                     ModelState.AddModelError(
