@@ -6,6 +6,8 @@ namespace GimnasioJena.Abstracciones.Modelos.Contacto
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [StringLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres.")]
+        [RegularExpression(@"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ -][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$",
+        ErrorMessage = "El nombre solo puede contener letras, espacios y guiones.")]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
@@ -15,6 +17,7 @@ namespace GimnasioJena.Abstracciones.Modelos.Contacto
 
         [Required(ErrorMessage = "El teléfono es obligatorio.")]
         [StringLength(20, ErrorMessage = "El teléfono no puede superar los 20 caracteres.")]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "El teléfono debe contener únicamente números.")]
         public string Telefono { get; set; }
 
         [Required(ErrorMessage = "El asunto es obligatorio.")]
