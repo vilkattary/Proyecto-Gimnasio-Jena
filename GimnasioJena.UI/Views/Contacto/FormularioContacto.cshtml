@@ -162,7 +162,7 @@
                                 <label class="form-label fw-bold small text-uppercase text-navy">
                                     Tel&eacute;fono <span class="text-danger">*</span>
                                 </label>
-                                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "000 000-0000", type = "tel" })
+                                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "Ejemplo: 88888888", type = "tel", inputmode = "numeric" })
                                 @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger small d-block mt-1" })
                             </div>
 
