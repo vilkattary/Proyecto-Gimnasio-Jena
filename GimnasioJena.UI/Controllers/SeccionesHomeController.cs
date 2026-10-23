@@ -59,9 +59,14 @@ namespace GimnasioJena.UI.Controllers
                 else
                     TempData["MensajeError"] = "No se encontró la sección a actualizar.";
             }
-            catch (System.Exception ex)
+            catch (ArgumentException ex)
             {
-                TempData["MensajeError"] = "Error al guardar: " + ex.Message;
+                TempData["MensajeError"] = ex.Message;
+            }
+            catch (Exception)
+            {
+                TempData["MensajeError"] =
+                    "Ocurrió un error inesperado al guardar la sección. Inténtelo nuevamente.";
             }
 
             return RedirectToAction("Index");
