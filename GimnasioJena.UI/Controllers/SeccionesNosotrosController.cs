@@ -1,8 +1,10 @@
+using GimnasioJena.Abstracciones.LogicaDeNegocio.Bitacora;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Home.ModificarSeccionHome;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Home.ObtenerSeccionesHome;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Nosotros.AgregarSeccionNosotros;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Nosotros.CambiarEstadoSeccionNosotros;
 using GimnasioJena.Abstracciones.Modelos.Home;
+using GimnasioJena.LogicaDeNegocio.Bitacora;
 using GimnasioJena.LogicaDeNegocio.Nosotros.AgregarSeccionNosotros;
 using GimnasioJena.LogicaDeNegocio.Nosotros.CambiarEstadoSeccionNosotros;
 using GimnasioJena.LogicaDeNegocio.Nosotros.ModificarSeccionNosotros;
@@ -11,6 +13,11 @@ using GimnasioJena.UI.Filters;
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using GimnasioJena.Abstracciones.Modelos.Bitacora;
+using GimnasioJena.AccesoADatos;
+using Microsoft.AspNet.Identity;
+using System.Diagnostics;
+using System.Linq;
 
 namespace GimnasioJena.UI.Controllers
 {
@@ -21,6 +28,7 @@ namespace GimnasioJena.UI.Controllers
         private readonly IModificarContenidoWebLN       _modificarContenidoWeb;
         private readonly IAgregarSeccionNosotrosLN      _agregarSeccion;
         private readonly ICambiarEstadoSeccionNosotrosLN _cambiarEstado;
+        private readonly IRegistrarBitacoraLN _registrarBitacoraLN;
 
         public SeccionesNosotrosController()
         {
@@ -28,6 +36,7 @@ namespace GimnasioJena.UI.Controllers
             _modificarContenidoWeb = new ModificarContenidoNosotrosLN();
             _agregarSeccion        = new AgregarSeccionNosotrosLN();
             _cambiarEstado         = new CambiarEstadoSeccionNosotrosLN();
+            _registrarBitacoraLN   = new RegistrarBitacoraLN();
         }
 
         public async Task<ActionResult> Index()
@@ -51,9 +60,22 @@ namespace GimnasioJena.UI.Controllers
                 bool resultado = await _modificarContenidoWeb.EjecutarAsync(dto);
 
                 if (resultado)
-                    TempData["MensajeExito"] = "La sección se actualizó correctamente.";
+                {
+                    RegistrarBitacoraSegura(
+                        "ContenidoWeb",
+                        "UPDATE",
+                        dto.Id,
+                        "Se modificó una sección de Nosotros."
+                    );
+
+                    TempData["MensajeExito"] =
+                        "La sección se actualizó correctamente.";
+                }
                 else
-                    TempData["MensajeError"] = "No se encontró la sección a actualizar.";
+                {
+                    TempData["MensajeError"] =
+                        "No se encontró la sección a actualizar.";
+                }
             }
             catch (ArgumentException ex)
             {
@@ -84,9 +106,22 @@ namespace GimnasioJena.UI.Controllers
                 bool resultado = await _agregarSeccion.AgregarSeccionNosotros(dto);
 
                 if (resultado)
-                    TempData["MensajeExito"] = "Nueva tarjeta agregada. Complete los datos y guarde.";
+                {
+                    RegistrarBitacoraSegura(
+                        "ContenidoWeb",
+                        "INSERT",
+                        null,
+                        "Se agregó una tarjeta a Nosotros."
+                    );
+
+                    TempData["MensajeExito"] =
+                        "Nueva tarjeta agregada. Complete los datos y guarde.";
+                }
                 else
-                    TempData["MensajeError"] = "No se puede agregar más tarjetas en esta sección (límite alcanzado).";
+                {
+                    TempData["MensajeError"] =
+                        "No se puede agregar más tarjetas en esta sección (límite alcanzado).";
+                }
             }
             catch (Exception ex)
             {
@@ -105,9 +140,22 @@ namespace GimnasioJena.UI.Controllers
                 bool resultado = await _cambiarEstado.EjecutarAsync(id);
 
                 if (resultado)
-                    TempData["MensajeExito"] = "Estado de la tarjeta actualizado correctamente.";
+                {
+                    RegistrarBitacoraSegura(
+                        "ContenidoWeb",
+                        "CAMBIO_ESTADO",
+                        id,
+                        "Se cambió el estado de una tarjeta de Nosotros."
+                    );
+
+                    TempData["MensajeExito"] =
+                        "Estado de la tarjeta actualizado correctamente.";
+                }
                 else
-                    TempData["MensajeError"] = "No se pudo cambiar el estado de la tarjeta.";
+                {
+                    TempData["MensajeError"] =
+                        "No se pudo cambiar el estado de la tarjeta.";
+                }
             }
             catch (Exception ex)
             {
@@ -115,6 +163,60 @@ namespace GimnasioJena.UI.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+        private int? ObtenerIdUsuarioActual()
+        {
+            string identityUserId = User.Identity.GetUserId();
+
+            using (Contexto contexto = new Contexto())
+            {
+                var usuario = contexto.Usuarios
+                    .FirstOrDefault(u => u.identityUserId == identityUserId);
+
+                return usuario?.idUsuario;
+            }
+        }
+
+        private string ObtenerIpUsuario()
+        {
+            return Request.UserHostAddress;
+        }
+
+        private void RegistrarBitacora(
+            string tabla,
+            string accion,
+            int? idRegistro,
+            string detalle)
+        {
+            _registrarBitacoraLN.RegistrarBitacora(
+                new BitacoraDto
+                {
+                    idUsuario = ObtenerIdUsuarioActual(),
+                    tablaAfectada = tabla,
+                    accionRealizada = accion,
+                    idRegistroAfectado = idRegistro,
+                    detalle = detalle,
+                    ipUsuario = ObtenerIpUsuario()
+                }
+            );
+        }
+
+        private void RegistrarBitacoraSegura(
+            string tabla,
+            string accion,
+            int? idRegistro,
+            string detalle)
+        {
+            try
+            {
+                RegistrarBitacora(tabla, accion, idRegistro, detalle);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(
+                    "No fue posible registrar la bitácora del CMS Nosotros: " + ex
+                );
+            }
         }
     }
 }
