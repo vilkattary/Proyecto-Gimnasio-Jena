@@ -323,7 +323,7 @@ namespace GimnasioJena.UI.Controllers
                         RegistrarBitacoraSegura(
                             "ClaseProgramada",
                             "INSERT",
-                            null,
+                            claseUnica.idClaseProgramada,
                             "Se registró una clase única programada."
                         );
 

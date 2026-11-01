@@ -1,6 +1,9 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Clases.CambiarEstadoClase;
+using GimnasioJena.Abstracciones.General.Fechas;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Clases.CambiarEstadoClase;
 using GimnasioJena.AccesoADatos.Clases.CambiarEstadoClase;
+using GimnasioJena.LogicaDeNegocio.General.Fechas;
+using System;
 
 namespace GimnasioJena.LogicaDeNegocio.Clases.CambiarEstadoClase
 {
@@ -8,17 +11,23 @@ namespace GimnasioJena.LogicaDeNegocio.Clases.CambiarEstadoClase
     {
         private readonly ICambiarEstadoClaseAD
             _cambiarEstadoClaseAD;
+        private readonly IFechasLN _fechasLN;
 
         public CambiarEstadoClaseLN()
         {
             _cambiarEstadoClaseAD =
                 new CambiarEstadoClaseAD();
+            _fechasLN = new FechasLN();
         }
 
         public bool CambiarEstadoClase(int idClaseProgramada)
         {
-            return _cambiarEstadoClaseAD
-                .CambiarEstadoClase(idClaseProgramada);
+            DateTime fechaActual = _fechasLN.ObtenerFechaActual();
+
+            return _cambiarEstadoClaseAD.CambiarEstadoClase(
+                idClaseProgramada,
+                fechaActual
+            );
         }
     }
 }

@@ -16,8 +16,17 @@ namespace GimnasioJena.AccesoADatos.Clases.RegistrarClase
         public int RegistrarClase(ClaseCrearDto laClase)
         {
             ClaseEntidad laClaseAGuardar = ConvertirObjetoEntidad(laClase);
+
             _elContexto.Clases.Add(laClaseAGuardar);
-            return _elContexto.SaveChanges();
+
+            int registrosAfectados = _elContexto.SaveChanges();
+
+            if (registrosAfectados > 0)
+            {
+                laClase.idClaseProgramada = laClaseAGuardar.idClaseProgramada;
+            }
+
+            return registrosAfectados;
         }
 
         private ClaseEntidad ConvertirObjetoEntidad(ClaseCrearDto laClase)

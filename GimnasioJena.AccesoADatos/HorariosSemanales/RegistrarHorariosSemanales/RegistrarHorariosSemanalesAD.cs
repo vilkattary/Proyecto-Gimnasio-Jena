@@ -16,7 +16,7 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales.RegistrarHorariosSemanales
         }
 
         public int RegistrarHorariosSemanales(
-            HorarioSemanalMultipleCrearDto modelo
+            HorarioSemanalMultipleCrearDto modelo, DateTime fechaCreacion
         )
         {
             using (var transaccion =
@@ -25,7 +25,6 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales.RegistrarHorariosSemanales
                 try
                 {
                     int cantidadRegistrada = 0;
-                    DateTime fechaActual = DateTime.Now;
 
                     foreach (var detalle in modelo.horarios)
                     {
@@ -59,7 +58,7 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales.RegistrarHorariosSemanales
                                 estado = true,
 
                                 fechaCreacion =
-                                    fechaActual,
+                                    fechaCreacion,
 
                                 fechaModificacion =
                                     null
