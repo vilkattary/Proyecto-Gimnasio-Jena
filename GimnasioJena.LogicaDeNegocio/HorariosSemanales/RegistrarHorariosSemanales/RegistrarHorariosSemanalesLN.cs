@@ -1,12 +1,15 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.HorariosSemanales.ObtenerHorariosSemanales;
 using GimnasioJena.Abstracciones.AccesoADatos.HorariosSemanales.RegistrarHorariosSemanales;
+using GimnasioJena.Abstracciones.General.Fechas;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.HorariosSemanales.RegistrarHorariosSemanales;
 using GimnasioJena.Abstracciones.Modelos.HorariosSemanales;
 using GimnasioJena.AccesoADatos.HorariosSemanales.ObtenerHorariosSemanales;
 using GimnasioJena.AccesoADatos.HorariosSemanales.RegistrarHorariosSemanales;
+using GimnasioJena.LogicaDeNegocio.General.Fechas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace GimnasioJena.LogicaDeNegocio.HorariosSemanales.RegistrarHorariosSemanales
 {
@@ -18,6 +21,7 @@ namespace GimnasioJena.LogicaDeNegocio.HorariosSemanales.RegistrarHorariosSemana
 
         private readonly IObtenerHorariosSemanalesAD
             _obtenerHorariosSemanalesAD;
+        private readonly IFechasLN _fechasLN;
 
         public RegistrarHorariosSemanalesLN()
         {
@@ -26,6 +30,7 @@ namespace GimnasioJena.LogicaDeNegocio.HorariosSemanales.RegistrarHorariosSemana
 
             _obtenerHorariosSemanalesAD =
                 new ObtenerHorariosSemanalesAD();
+            _fechasLN = new FechasLN();
         }
 
         public ResultadoRegistroHorariosDto
@@ -63,9 +68,14 @@ namespace GimnasioJena.LogicaDeNegocio.HorariosSemanales.RegistrarHorariosSemana
 
                 modelo.horarios = horariosOrdenados;
 
+                DateTime fechaActual = _fechasLN.ObtenerFechaActual();
+
                 int cantidadRegistrada =
                     _registrarHorariosSemanalesAD
-                        .RegistrarHorariosSemanales(modelo);
+                        .RegistrarHorariosSemanales(
+                            modelo,
+                            fechaActual
+                        );
 
                 resultado.fueExitoso = true;
                 resultado.cantidadRegistrada =

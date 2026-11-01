@@ -16,7 +16,7 @@ namespace GimnasioJena.AccesoADatos.Clases.CambiarEstadoClase
             _contexto = new Contexto();
         }
 
-        public bool CambiarEstadoClase(int idClaseProgramada)
+        public bool CambiarEstadoClase(int idClaseProgramada, DateTime fechaModificacion)
         {
             ClaseEntidad clase =
                 _contexto.Clases.Find(idClaseProgramada);
@@ -53,7 +53,7 @@ namespace GimnasioJena.AccesoADatos.Clases.CambiarEstadoClase
             clase.idEstadoClase =
                 estabaActiva ? idEstadoCancelado : idEstadoActivo;
 
-            clase.fechaModificacion = DateTime.Now;
+            clase.fechaModificacion = fechaModificacion;
 
             try
             {
