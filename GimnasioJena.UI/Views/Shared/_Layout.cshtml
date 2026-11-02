@@ -74,7 +74,7 @@
                             </ul>
                         </li>
 
-                        
+
                     }
                     else
                     {
@@ -82,7 +82,14 @@
                         <li class="nav-item">
                             @Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
                         </li>
+                        if (User.IsInRole("ENTRENADOR"))
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Mi Panel", "Index", "Entrenadores",
+                                    new { area = "" }, new { @class = "nav-link" })
+                            </li>
 
+                        }
                         if (Request.IsAuthenticated && !User.IsInRole("ENTRENADOR") && !User.IsInRole("CLIENTE"))
                         {
                             <li class="nav-item">
@@ -90,7 +97,7 @@
                             </li>
                         }
 
-                        
+
 
                         if (User.IsInRole("CLIENTE"))
                         {

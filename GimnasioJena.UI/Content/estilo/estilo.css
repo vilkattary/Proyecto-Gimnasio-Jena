@@ -7277,3 +7277,161 @@ body.modal-jena-open {
     line-height: 1;
 }
     }
+/* ==========================================
+   MIS CLASES ENTRENADOR - RESPONSIVE
+   ========================================== */
+
+@media (max-width: 767.98px) {
+
+    /* Aprovechar mejor el espacio del celular */
+    .mis-clases-entrenador {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .mis-clases-entrenador > .card-jena-info > .card-body {
+        padding: 12px !important;
+    }
+
+    /* Tarjeta de filtros */
+    .mis-clases-entrenador .card-jena-info .card-jena-info {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    /* Contenido de filtros */
+    .mis-clases-entrenador .card-jena-info .card-jena-info .card-body {
+        padding: 15px !important;
+    }
+
+    /* Selectores y fecha */
+    .mis-clases-entrenador #filtroPeriodo,
+    .mis-clases-entrenador #filtroEstado,
+    .mis-clases-entrenador #filtroFecha {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    /* Espacio para la flecha del select */
+    .mis-clases-entrenador #filtroPeriodo,
+    .mis-clases-entrenador #filtroEstado {
+        padding-right: 36px;
+        background-position: right 12px center;
+        text-overflow: ellipsis;
+    }
+
+    /* Botones de búsqueda */
+    .mis-clases-entrenador #btnBuscarClases,
+    .mis-clases-entrenador #btnLimpiarClases {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* ==========================================
+   MIS CLASES ENTRENADOR - RESPONSIVE
+   ========================================== */
+
+@media (max-width: 767.98px) {
+
+    /* Aprovechar mejor el espacio del celular */
+    .mis-clases-entrenador {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+        .mis-clases-entrenador > .card-jena-info > .card-body {
+            padding: 12px !important;
+        }
+
+        /* Tarjeta de filtros */
+        .mis-clases-entrenador .card-jena-info .card-jena-info {
+            width: 100%;
+            max-width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+            /* Contenido de filtros */
+            .mis-clases-entrenador .card-jena-info .card-jena-info .card-body {
+                padding: 15px !important;
+            }
+
+        /* Selectores y fecha */
+        .mis-clases-entrenador #filtroPeriodo,
+        .mis-clases-entrenador #filtroEstado,
+        .mis-clases-entrenador #filtroFecha {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        /* Espacio para la flecha del select */
+        .mis-clases-entrenador #filtroPeriodo,
+        .mis-clases-entrenador #filtroEstado {
+            padding-right: 36px;
+            background-position: right 12px center;
+            text-overflow: ellipsis;
+        }
+
+        /* Botones de búsqueda */
+        .mis-clases-entrenador #btnBuscarClases,
+        .mis-clases-entrenador #btnLimpiarClases {
+            width: 100%;
+            max-width: 100%;
+        }
+}
+
+/* ==========================================
+   MIS CLASES - BOTÓN RESPONSIVE
+   ========================================== */
+
+@media (max-width: 767.98px) {
+
+    /* Celda de acciones */
+    .mis-clases-entrenador .table-jena td[data-label="Acciones"] {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        text-align: right !important;
+        min-width: 0;
+    }
+
+        /* Etiqueta de la celda */
+        .mis-clases-entrenador .table-jena td[data-label="Acciones"]::before {
+            position: static;
+            flex: 0 0 auto;
+        }
+
+        /* Botón Registrar asistencia */
+        .mis-clases-entrenador .table-jena td[data-label="Acciones"] .btn-action {
+            width: auto;
+            max-width: 100%;
+            min-width: 0;
+            padding: 8px 10px;
+            font-size: 11px;
+            line-height: 1.3;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            text-align: center;
+            flex: 0 1 150px;
+        }
+}
+
+@media (max-width: 767.98px) {
+    .mis-clases-entrenador .table-jena td[data-label="Clase"] {
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+}
