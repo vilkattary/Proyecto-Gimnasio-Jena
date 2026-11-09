@@ -6,6 +6,8 @@ namespace GimnasioJena.Abstracciones.LogicaDeNegocio.Pagos.RegistrarPago
     {
         int RegistrarPago(PagoCrearDto pago);
 
+        int RegistrarPrimerPagoManual(PagoCrearDto pago);
+
         bool ExisteReferenciaPago(string referenciaPago);
     }
 }
