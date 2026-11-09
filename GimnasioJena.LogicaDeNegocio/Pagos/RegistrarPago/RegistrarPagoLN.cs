@@ -139,6 +139,70 @@ namespace GimnasioJena.LogicaDeNegocio.Pagos.RegistrarPago
                 );
         }
 
+        public int RegistrarPrimerPagoManual(PagoCrearDto pago)
+        {
+            if (pago == null)
+                return 0;
+
+            // Validar los datos necesarios.
+            if (pago.idUsuarioNuevo <= 0 ||
+                pago.idPlanNuevo <= 0 ||
+                pago.idMetodoPago <= 0)
+            {
+                return 0;
+            }
+
+            // El primer pago manual siempre debe quedar como PAGADO.
+            pago.idEstadoPago = ESTADO_PAGO_PAGADO;
+
+            // Verificar que el método de pago esté activo.
+            if (!_registrarPagoAD.ExisteMetodoPago(pago.idMetodoPago))
+                return 0;
+
+            // Verificar que el estado PAGADO esté disponible.
+            if (!_registrarPagoAD.ExisteEstadoPago(pago.idEstadoPago))
+                return 0;
+
+            // Obtener los datos oficiales del plan seleccionado.
+            var plan = _registrarPagoAD.ObtenerDatosPlanActivo(
+                pago.idPlanNuevo);
+
+            if (plan == null)
+                return 0;
+
+            if (plan.precioPlan <= 0 || plan.duracionDiasPlan <= 0)
+                return 0;
+
+            // No confiar en el monto enviado desde la vista.
+            pago.monto = plan.precioPlan;
+
+            // Validar la fecha del pago.
+            if (pago.fechaPago == default(DateTime))
+                pago.fechaPago = DateTime.Now;
+
+            if (pago.fechaPago > DateTime.Now.AddMinutes(1))
+                return 0;
+
+            /*
+             * La membresía comienza el día en que el administrador
+             * registra el pago en el sistema.
+             */
+            DateTime fechaInicio = DateTime.Today;
+
+            // La fecha de vencimiento es inclusiva.
+            DateTime fechaFin = fechaInicio.AddDays(
+                plan.duracionDiasPlan - 1);
+
+            // NULL representa clases ilimitadas.
+            int? clasesDisponibles = plan.cantidadClasesPlan;
+
+            // Crear membresía y pago en una misma transacción.
+            return _registrarPagoAD.RegistrarPrimerPagoManual(
+                pago,
+                fechaInicio,
+                fechaFin,
+                clasesDisponibles);
+        }
         public bool ExisteReferenciaPago(string referenciaPago)
         {
             if (string.IsNullOrWhiteSpace(referenciaPago))
