@@ -13,7 +13,10 @@ using GimnasioJena.AccesoADatos;
 using GimnasioJena.AccesoADatos.Entidades.Usuarios;
 using GimnasioJena.Abstracciones.Modelos.Usuarios;
 using GimnasioJena.Abstracciones.LogicaDeNegocio.Usuarios.RegistrarUsuario;
-
+using System.Configuration;
+using System.Collections.Generic;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
 
 namespace GimnasioJena.UI.Controllers
 { 
@@ -77,8 +80,22 @@ namespace GimnasioJena.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            // Validar Cloudflare Turnstile antes de autenticar al usuario
+            string tokenTurnstile = Request.Form["cf-turnstile-response"];
+
+            bool captchaValido = await ValidarTurnstileAsync(tokenTurnstile);
+
+            if (!captchaValido)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "No se pudo verificar la seguridad del formulario. Por favor, inténtalo nuevamente."
+                );
+            }
+
             if (!ModelState.IsValid)
             {
+                ViewBag.ReturnUrl = returnUrl;
                 return View(model);
             }
 
@@ -173,6 +190,55 @@ namespace GimnasioJena.UI.Controllers
             }
         }
 
+        // CLOUDFLARE TURNSTILE - VALIDACION DEL CAPTCHA
+        private async Task<bool> ValidarTurnstileAsync(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                return false;
+
+            string secretKey = ConfigurationManager.AppSettings["TurnstileSecretKey"];
+
+            if (string.IsNullOrWhiteSpace(secretKey))
+                return false;
+
+            try
+            {
+                using (var cliente = new HttpClient())
+                {
+                    cliente.Timeout = TimeSpan.FromSeconds(10);
+
+                    var datos = new FormUrlEncodedContent(
+                        new Dictionary<string, string>
+                        {
+                    { "secret", secretKey },
+                    { "response", token }
+                        });
+
+                    var respuesta = await cliente.PostAsync(
+                        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+                        datos
+                    );
+
+                    if (!respuesta.IsSuccessStatusCode)
+                        return false;
+
+                    string contenido = await respuesta.Content.ReadAsStringAsync();
+
+                    JObject resultado = JObject.Parse(contenido);
+
+                    return resultado.Value<bool>("success");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError(
+                    "Error al validar Cloudflare Turnstile: {0}",
+                    ex.Message
+                );
+
+                return false;
+            }
+        }
         //
         // GET: /Account/Register
         [AllowAnonymous]
@@ -189,6 +255,19 @@ namespace GimnasioJena.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            // Validar Cloudflare Turnstile antes de crear el usuario
+            string tokenTurnstile = Request.Form["cf-turnstile-response"];
+
+            bool captchaValido = await ValidarTurnstileAsync(tokenTurnstile);
+
+            if (!captchaValido)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "No se pudo verificar la seguridad del formulario. Por favor, inténtalo nuevamente."
+                );
+            }
+
             if (ModelState.IsValid)
             {
                 using (var contexto = new Contexto())
@@ -461,6 +540,19 @@ namespace GimnasioJena.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
+            // Validar Cloudflare Turnstile antes de procesar la recuperación
+            string tokenTurnstile = Request.Form["cf-turnstile-response"];
+
+            bool captchaValido = await ValidarTurnstileAsync(tokenTurnstile);
+
+            if (!captchaValido)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "No se pudo verificar la seguridad del formulario. Por favor, inténtalo nuevamente."
+                );
+            }
+
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
