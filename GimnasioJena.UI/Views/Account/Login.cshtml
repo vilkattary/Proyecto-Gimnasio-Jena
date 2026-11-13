@@ -73,6 +73,16 @@
                             </a>
                         </div>
 
+                        <!-- CLOUDFLARE TURNSTILE -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-center">
+                                <div class="cf-turnstile"
+                                     data-sitekey="@System.Configuration.ConfigurationManager.AppSettings["TurnstileSiteKey"]"
+                                     data-theme="light">
+                                </div>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-action w-100 py-2">
                             Entrar
                         </button>
@@ -97,6 +107,10 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <!-- CLOUDFLARE TURNSTILE -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            async defer></script>
 }
 
 
