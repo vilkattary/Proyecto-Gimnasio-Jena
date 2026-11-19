@@ -19,6 +19,63 @@
         .OrderBy(c => c)
         .ToList();
 }
+
+<style>
+    /* Acciones de la tabla de membresías */
+
+    .acciones-membresias {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        min-width: 115px;
+    }
+
+    .btn-membresia {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 115px;
+        max-width: 100%;
+        padding: 7px 8px;
+        border: none;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.3;
+        text-decoration: none;
+        color: #fff;
+        transition: background-color .2s ease;
+    }
+
+    .btn-membresia-detalle {
+        background-color: #263C52;
+    }
+
+        .btn-membresia-detalle:hover {
+            background-color: #172A3C;
+            color: #fff;
+        }
+
+
+    .btn-membresia-renovar {
+        background-color: #198754;
+    }
+
+        .btn-membresia-renovar:hover {
+            background-color: #146C43;
+            color: #fff;
+        }
+
+    .btn-membresia-vigente,
+    .btn-membresia-vigente:disabled {
+        background-color: #E9ECEF;
+        color: #7A8590;
+        opacity: 1;
+        cursor: not-allowed;
+    }
+</style>
+
 <div class="container py-5">
     <div class="text-center mb-5">
         <h1 class="page-title">Membresías</h1>
@@ -210,56 +267,48 @@
 
                                 <td class="text-center col-mobile-oculto">
 
-                                    <a href="@Url.Action(
-                 "Details",
-                 "Membresias",
-                 new { id = m.idMembresiaCliente })"
-                                       class="btn btn-sm btn-outline-info">
-                                        <i class="bi bi-eye"></i>
-                                        Detalle
-                                    </a>
+                                    <div class="acciones-membresias">
 
-                                    <a href="@Url.Action(
-                 "Edit",
-                 "Membresias",
-                 new { id = m.idMembresiaCliente })"
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-pencil-square"></i>
-                                        Editar
-                                    </a>
+                                        <a href="@Url.Action("Details", "Membresias", new { id = m.idMembresiaCliente })"
+                                           class="btn btn-sm btn-membresia btn-membresia-detalle">
+                                            <i class="bi bi-eye me-1"></i>
+                                            Detalle
+                                        </a>
 
-                                    @if (m.fechaFin.Date <= DateTime.Today)
-                                    {
-                                        using (Html.BeginForm(
-                                            "Renovar",
-                                            "Membresias",
-                                            FormMethod.Post,
-                                            new { @class = "d-inline" }))
+                                        @if (m.fechaFin.Date <= DateTime.Today)
                                         {
-                                            @Html.AntiForgeryToken()
+                                            using (Html.BeginForm(
+                                                "Renovar",
+                                                "Membresias",
+                                                FormMethod.Post,
+                                                new { @class = "d-inline" }))
+                                            {
+                                                @Html.AntiForgeryToken()
 
-                                            <input type="hidden"
-                                                   name="id"
-                                                   value="@m.idMembresiaCliente" />
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@m.idMembresiaCliente" />
 
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-outline-success"
-                                                    onclick="return confirm('¿Deseas renovar esta membresía? Al confirmar, el nuevo periodo iniciará hoy y se restablecerán las clases disponibles según el plan.')">
-                                                <i class="bi bi-arrow-clockwise"></i>
-                                                Renovar
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-membresia btn-membresia-renovar"
+                                                        onclick="return confirm('¿Deseas renovar esta membresía? Al confirmar, el nuevo periodo iniciará hoy y se restablecerán las clases disponibles según el plan.')">
+                                                    <i class="bi bi-arrow-clockwise me-1"></i>
+                                                    Renovar
+                                                </button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-sm btn-membresia btn-membresia-vigente"
+                                                    disabled
+                                                    title="La membresía podrá renovarse el día de su vencimiento">
+                                                <i class="bi bi-clock me-1"></i>
+                                                Vigente
                                             </button>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-secondary"
-                                                disabled
-                                                title="La membresía podrá renovarse el día de su vencimiento">
-                                            <i class="bi bi-clock"></i>
-                                            Vigente
-                                        </button>
-                                    }
+
+                                    </div>
 
                                 </td>
 
