@@ -20,7 +20,14 @@
         @Html.HiddenFor(m => m.idUsuario)
         @Html.HiddenFor(m => m.identityUserId)
         @Html.HiddenFor(m => m.fotoPerfil)
-        @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+        if (ViewData.ModelState.ContainsKey("") &&
+            ViewData.ModelState[""].Errors.Count > 0)
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+        }
+
+
 
         <div class="row g-4 justify-content-center">
 
@@ -37,6 +44,7 @@
                             {
                                 <img id="avatar-preview"
                                      src="@Url.Content(Model.fotoPerfil)"
+                                     alt="Foto de perfil actual"
                                      class="profile-avatar mx-auto img-cover" />
                             }
                             else
@@ -212,7 +220,7 @@
             var reader = new FileReader();
             reader.onload = function (ev) {
                 var wrapper = document.getElementById('avatar-preview-wrapper');
-                wrapper.innerHTML = '<img id="avatar-preview" src="' + ev.target.result + '" class="profile-avatar mx-auto img-cover" />';
+                wrapper.innerHTML = '<img id="avatar-preview" src="' + ev.target.result + '" alt="Vista previa de la nueva foto de perfil" class="profile-avatar mx-auto img-cover" />';
             };
             reader.readAsDataURL(file);
         });

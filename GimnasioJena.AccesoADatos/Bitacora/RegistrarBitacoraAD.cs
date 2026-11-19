@@ -22,7 +22,7 @@ namespace GimnasioJena.AccesoADatos.Bitacora
                 tablaAfectada = bitacora.tablaAfectada,
                 accionRealizada = bitacora.accionRealizada,
                 idRegistroAfectado = bitacora.idRegistroAfectado,
-                fechaAccion = DateTime.Now,
+                fechaAccion = bitacora.fechaAccion,
                 detalle = bitacora.detalle,
                 ipUsuario = bitacora.ipUsuario
             };

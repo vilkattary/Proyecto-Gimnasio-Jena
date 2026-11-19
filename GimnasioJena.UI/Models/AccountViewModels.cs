@@ -64,23 +64,37 @@ namespace GimnasioJena.UI.Models
 
     public class RegisterViewModel
     {
-        [Required]
+
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
+        [RegularExpression(@"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ -][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$",
+            ErrorMessage = "El nombre solo puede contener letras, espacios y guiones.")]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El primer apellido es obligatorio.")]
+        [RegularExpression(@"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ -][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$",
+            ErrorMessage = "El primer apellido solo puede contener letras, espacios y guiones.")]
         [Display(Name = "Primer apellido")]
         public string Apellido1 { get; set; }
 
+        [RegularExpression(@"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ -][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$",
+            ErrorMessage = "El segundo apellido solo puede contener letras, espacios y guiones.")]
         [Display(Name = "Segundo apellido")]
         public string Apellido2 { get; set; }
 
-        [Required]
+
+        [Required(ErrorMessage = "La identificación es obligatoria.")]
+        [RegularExpression(@"^[0-9]+$",
+            ErrorMessage = "La identificación debe contener únicamente números.")]
         [Display(Name = "Identificación")]
         public string Identificacion { get; set; }
 
+
+        [RegularExpression(@"^[0-9]+$",
+            ErrorMessage = "El teléfono debe contener únicamente números.")]
         [Display(Name = "Teléfono")]
         public string Telefono { get; set; }
+
 
         [Required]
         [EmailAddress]

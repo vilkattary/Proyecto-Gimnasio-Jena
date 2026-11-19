@@ -181,7 +181,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BitacorasController.cs" />
-    <Compile Include="Controllers\CamposMedicionController.cs" />
     <Compile Include="Controllers\ClasesController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\ContactoController.cs" />
@@ -190,7 +189,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HorariosSemanalesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\MedicionesController.cs" />
     <Compile Include="Controllers\MembresiasController.cs" />
     <Compile Include="Controllers\MesocicloController.cs" />
     <Compile Include="Controllers\NosotrosController.cs" />
@@ -351,8 +349,6 @@
     <Content Include="Views\Clientes\ErrorPago.cshtml" />
     <Content Include="Views\Progreso\Evolucion.cshtml" />
     <Content Include="Views\Progreso\Registrar.cshtml" />
-    <Content Include="Views\CamposMedicion\Index.cshtml" />
-    <Content Include="Views\Mediciones\Registrar.cshtml" />
     <Content Include="Views\Progreso\RegistrarEnClase.cshtml" />
     <Content Include="Views\Mesociclo\_DayPreviewPartial.cshtml" />
     <Content Include="Views\Mesociclo\_WorkoutDayEditorPartial.cshtml" />
@@ -364,6 +360,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\CamposMedicion\" />
+    <Folder Include="Views\Mediciones\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GimnasioJena.Abstracciones\GimnasioJena.Abstracciones.csproj">

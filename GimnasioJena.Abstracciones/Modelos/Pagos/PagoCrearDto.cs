@@ -5,16 +5,29 @@ namespace GimnasioJena.Abstracciones.Modelos.Pagos
 {
     public class PagoCrearDto
     {
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una membresía.")]
+        // "existente" o "nuevo"
+        public string tipoPago { get; set; } = "existente";
+
+        // Membresía existente.
+        // Para clientes nuevos será 0 hasta crear la membresía.
+        [Range(0, int.MaxValue)]
         public int idMembresiaCliente { get; set; }
 
+        // Datos necesarios únicamente para el primer pago.
+        [Range(0, int.MaxValue)]
+        public int idUsuarioNuevo { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int idPlanNuevo { get; set; }
+
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un método de pago.")]
+        [Range(1, int.MaxValue,
+            ErrorMessage = "Debe seleccionar un método de pago.")]
         public int idMetodoPago { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un estado.")]
+        [Range(1, int.MaxValue,
+            ErrorMessage = "Debe seleccionar un estado.")]
         public int idEstadoPago { get; set; }
 
         [Required]

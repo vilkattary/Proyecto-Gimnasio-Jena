@@ -22,7 +22,7 @@
             </a>
 
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarApex"
-                    aria-controls="navbarApex" aria-expanded="false" aria-label="Toggle navigation">
+                    aria-controls="navbarApex" aria-expanded="false" aria-label="Abrir o cerrar menú de navegación">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -74,17 +74,7 @@
                             </ul>
                         </li>
 
-                        @* Dropdown 4: Evolución y Gestión Médica *@
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-heart-pulse me-1"></i>Gestión Médica
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-admin">
-                                <li><a class="dropdown-item" href="/Mediciones/Registrar">Evaluar Cliente</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="/CamposMedicion/Index">Campos Médicos</a></li>
-                            </ul>
-                        </li>
+
                     }
                     else
                     {
@@ -92,7 +82,14 @@
                         <li class="nav-item">
                             @Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
                         </li>
+                        if (User.IsInRole("ENTRENADOR"))
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Mi Panel", "Index", "Entrenadores",
+                                    new { area = "" }, new { @class = "nav-link" })
+                            </li>
 
+                        }
                         if (Request.IsAuthenticated && !User.IsInRole("ENTRENADOR") && !User.IsInRole("CLIENTE"))
                         {
                             <li class="nav-item">
@@ -100,23 +97,7 @@
                             </li>
                         }
 
-                        if (User.IsInRole("ENTRENADOR"))
-                        {
-                            <li class="nav-item">
-                                @Html.ActionLink("Entrenador", "Index", "Entrenadores",
-                                    new { area = "" }, new { @class = "nav-link" })
-                            </li>
 
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-heart-pulse me-1"></i>Gestión Médica
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-admin">
-                                    <li><a class="dropdown-item" href="/Mediciones/Registrar">Evaluar Cliente</a></li>
-                                </ul>
-                            </li>
-
-                        }
 
                         if (User.IsInRole("CLIENTE"))
                         {

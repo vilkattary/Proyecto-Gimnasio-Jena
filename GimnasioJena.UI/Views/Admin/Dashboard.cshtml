@@ -9,26 +9,38 @@
         : User.Identity.Name;
 }
 
+
 <section class="dashboard-hero">
     <div class="container-jena">
-        <div class="d-flex align-items-center gap-3 flex-wrap">
-            <div class="dashboard-avatar">
+        <div class="d-flex align-items-center gap-3">
+
+            <div class="dashboard-avatar flex-shrink-0">
                 <i class="bi bi-person-fill"></i>
             </div>
-            <div>
-                <p class="dashboard-saludo mb-0">Bienvenido de nuevo,</p>
-                <h2 class="dashboard-nombre">@nombreAdmin</h2>
+
+            <div class="d-flex flex-column justify-content-center">
+                <p class="dashboard-saludo mb-0">
+                    Bienvenido de nuevo,
+                </p>
+
+                <h2 class="dashboard-nombre mb-1">
+                    @nombreAdmin
+                </h2>
+
+                <p class="dashboard-fecha mb-0">
+                    <i class="bi bi-calendar3 me-2"></i>
+                    @DateTime.Now.ToString("dddd, d 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"))
+                </p>
             </div>
+
         </div>
-        <p class="dashboard-fecha mt-3 mb-0">
-            <i class="bi bi-calendar3 me-2"></i>@DateTime.Now.ToString("dddd, d 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"))
-        </p>
     </div>
 </section>
 
+
 <section class="dashboard-modules py-5">
 
-    
+
     <div class="container-jena">
         <a href="javascript:history.back()" class="btn btn-volver" aria-label="Volver">
             <i class="bi bi-arrow-left"></i> Atrás

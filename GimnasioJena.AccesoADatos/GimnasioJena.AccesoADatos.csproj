@@ -161,7 +161,6 @@
     <Compile Include="Pagos\ObtenerTodosLosPagos\ObtenerTodosLosPagosAD.cs" />
     <Compile Include="Pagos\RegistrarPago\RegistrarPagoAD.cs" />
     <Compile Include="Progreso\AsistenciaAD.cs" />
-    <Compile Include="Progreso\CamposMedicionAD.cs" />
     <Compile Include="Progreso\EntrenamientoAD.cs" />
     <Compile Include="Progreso\EntrenamientoAvanzadoAD.cs" />
     <Compile Include="Progreso\IEntrenamientoAvanzadoAD.cs" />

@@ -29,12 +29,13 @@
                         @if (!string.IsNullOrWhiteSpace(Model.fotoPerfil))
                         {
                             <img src="@Url.Content(Model.fotoPerfil)"
+                                 alt="Foto de perfil del usuario"
                                  class="rounded-circle avatar-profile-lg" />
                         }
                         else
                         {
                             <div class="rounded-circle d-flex align-items-center justify-content-center avatar-initials-lg">
-                                <i class="bi bi-person-fill"></i>
+                                <i class="bi bi-person-fill" aria-hidden="true"></i>
                             </div>
                         }
 

@@ -7,6 +7,7 @@ using GimnasioJena.AccesoADatos;
 using GimnasioJena.LogicaDeNegocio.Bitacora;
 using GimnasioJena.LogicaDeNegocio.Pagos.ObtenerTodosLosPagos;
 using GimnasioJena.LogicaDeNegocio.Pagos.RegistrarPago;
+using GimnasioJena.UI.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Globalization;
@@ -54,24 +55,59 @@ namespace GimnasioJena.UI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(PagoCrearDto modelo)
         {
+            if (modelo == null)
+                return new HttpStatusCodeResult(400);
+
             /*
-             * Los pagos administrativos solamente se registran
-             * cuando el dinero ya fue recibido y verificado.
+             * Los pagos administrativos se registran
+             * únicamente cuando el dinero fue recibido.
              */
             modelo.idEstadoPago = ESTADO_PAGO_PAGADO;
 
-            /*
-             * Como idEstadoPago ya no aparece en el formulario,
-             * eliminamos cualquier validación previa asociada
-             * al valor recibido desde el navegador.
-             */
             ModelState.Remove("idEstadoPago");
 
             /*
-             * Volvemos a validar el modelo después de asignar
-             * el estado oficial en el servidor.
+             * Determinar qué tipo de pago se está registrando.
              */
-            TryValidateModel(modelo);
+            bool esClienteNuevo = modelo.tipoPago == "nuevo";
+            bool esMembresiaExistente = modelo.tipoPago == "existente";
+
+            if (!esClienteNuevo && !esMembresiaExistente)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Debe seleccionar un tipo de pago válido.");
+            }
+
+            /*
+             * Validar los campos correspondientes
+             * al tipo de pago seleccionado.
+             */
+            if (esClienteNuevo)
+            {
+                if (modelo.idUsuarioNuevo <= 0)
+                {
+                    ModelState.AddModelError(
+                        "idUsuarioNuevo",
+                        "Debe seleccionar un cliente.");
+                }
+
+                if (modelo.idPlanNuevo <= 0)
+                {
+                    ModelState.AddModelError(
+                        "idPlanNuevo",
+                        "Debe seleccionar un plan de membresía.");
+                }
+            }
+            else if (esMembresiaExistente)
+            {
+                if (modelo.idMembresiaCliente <= 0)
+                {
+                    ModelState.AddModelError(
+                        "idMembresiaCliente",
+                        "Debe seleccionar una membresía.");
+                }
+            }
 
             if (!ModelState.IsValid)
             {
@@ -79,8 +115,21 @@ namespace GimnasioJena.UI.Controllers
                 return View(modelo);
             }
 
-            int idPagoRegistrado =
-                _registrarPagoLN.RegistrarPago(modelo);
+            /*
+             * Ejecutar el proceso correspondiente.
+             */
+            int idPagoRegistrado;
+
+            if (esClienteNuevo)
+            {
+                idPagoRegistrado =
+                    _registrarPagoLN.RegistrarPrimerPagoManual(modelo);
+            }
+            else
+            {
+                idPagoRegistrado =
+                    _registrarPagoLN.RegistrarPago(modelo);
+            }
 
             if (idPagoRegistrado > 0)
             {
@@ -93,14 +142,16 @@ namespace GimnasioJena.UI.Controllers
                     nombreEstadoPago
                 );
 
-                TempData["MensajeExito"] =
-                    "Pago registrado correctamente y membresía actualizada.";
+                TempData["MensajeExito"] = esClienteNuevo
+                    ? "Pago registrado correctamente. La nueva membresía fue creada y activada."
+                    : "Pago registrado correctamente y membresía actualizada.";
 
                 return RedirectToAction("Index");
             }
 
-            TempData["MensajeError"] =
-                "No se pudo registrar el pago. La membresía puede seguir vigente o la información ingresada no es válida.";
+            TempData["MensajeError"] = esClienteNuevo
+                ? "No se pudo registrar el primer pago. Verifique que el cliente no tenga una membresía y que los datos sean válidos."
+                : "No se pudo registrar el pago. La membresía puede seguir vigente o la información ingresada no es válida.";
 
             CargarCombos();
             return View(modelo);
@@ -147,6 +198,36 @@ namespace GimnasioJena.UI.Controllers
                 );
             }
         }
+
+        [HttpGet]
+        public JsonResult ObtenerPrecioPlan(int idPlanMembresia)
+        {
+            using (var contexto = new Contexto())
+            {
+                var precio = contexto.PlanesMembresia
+                    .Where(p => p.idPlanMembresia == idPlanMembresia
+                             && p.estado)
+                    .Select(p => (decimal?)p.precio)
+                    .FirstOrDefault();
+
+                if (!precio.HasValue)
+                {
+                    return Json(new
+                    {
+                        exito = false,
+                        mensaje = "El plan seleccionado no está disponible."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new
+                {
+                    exito = true,
+                    precio = precio.Value.ToString(
+                        "0.00",
+                        System.Globalization.CultureInfo.InvariantCulture)
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
         private void CargarCombos()
         {
             using (var contexto = new Contexto())
@@ -190,8 +271,58 @@ namespace GimnasioJena.UI.Controllers
                         Text = m.nombreMetodo
                     })
                     .ToList();
+                // Clientes activos que todavía no tienen membresía.
+                using (var contextoIdentity = new ApplicationDbContext())
+                {
+                    // Obtener los IDs de usuarios con rol CLIENTE.
+                    var idsClientes = (
+                        from usuarioIdentity in contextoIdentity.Users
+                        from rolUsuario in usuarioIdentity.Roles
+                        join rol in contextoIdentity.Roles
+                            on rolUsuario.RoleId equals rol.Id
+                        where rol.Name == "CLIENTE"
+                        select usuarioIdentity.Id
+                    ).Distinct().ToList();
 
-                
+                    // Mostrar únicamente clientes sin membresía.
+                    ViewBag.ClientesSinMembresia = contexto.Usuarios
+                        .Where(u =>
+                            u.estado &&
+                            u.identityUserId != null &&
+                            idsClientes.Contains(u.identityUserId) &&
+                            !contexto.Membresias.Any(m =>
+                                m.idUsuario == u.idUsuario))
+                        .OrderBy(u => u.nombre)
+                        .ThenBy(u => u.apellido1)
+                        .Select(u => new
+                        {
+                            u.idUsuario,
+                            nombreCompleto =
+                                u.nombre + " " +
+                                u.apellido1 + " " +
+                                u.apellido2
+                        })
+                        .ToList()
+                        .Select(u => new SelectListItem
+                        {
+                            Value = u.idUsuario.ToString(),
+                            Text = u.nombreCompleto
+                        })
+                        .ToList();
+                }
+
+                // Planes de membresía activos.
+                ViewBag.PlanesDisponibles = contexto.PlanesMembresia
+                    .Where(p => p.estado)
+                    .OrderBy(p => p.nombrePlan)
+                    .ToList()
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.idPlanMembresia.ToString(),
+                        Text = p.nombrePlan
+                    })
+                    .ToList();
+
             }
         }
         private int? ObtenerIdUsuarioActual()
@@ -231,19 +362,44 @@ namespace GimnasioJena.UI.Controllers
         }
 
         private void RegistrarBitacoraPago(
-            int idPago,
-            PagoCrearDto modelo,
-            string nombreEstadoPago)
+    int idPago,
+    PagoCrearDto modelo,
+    string nombreEstadoPago)
         {
-            string detalle =
-                "Se registró el pago con id " + idPago +
-                " para la membresía " + modelo.idMembresiaCliente +
-                ". Monto: ₡" + modelo.monto.ToString("N2") +
-                ". Estado: " + nombreEstadoPago + ".";
+            string detalle;
+
+            if (modelo.tipoPago == "nuevo")
+            {
+                // Primer pago manual de un cliente sin membresía.
+                detalle =
+                    "Se registró el primer pago manual con id " + idPago +
+                    " para el cliente " + modelo.idUsuarioNuevo +
+                    ", plan " + modelo.idPlanNuevo +
+                    ". Monto: ₡" + modelo.monto.ToString("N2") +
+                    ". Estado: " + nombreEstadoPago + ".";
+            }
+            else
+            {
+                // Pago de una membresía existente.
+                detalle =
+                    "Se registró el pago con id " + idPago +
+                    " para la membresía " + modelo.idMembresiaCliente +
+                    ". Monto: ₡" + modelo.monto.ToString("N2") +
+                    ". Estado: " + nombreEstadoPago + ".";
+            }
 
             if (modelo.idEstadoPago == 2)
             {
-                detalle += " La membresía fue activada o renovada automáticamente.";
+                if (modelo.tipoPago == "nuevo")
+                {
+                    detalle +=
+                        " Se creó y activó automáticamente una nueva membresía.";
+                }
+                else
+                {
+                    detalle +=
+                        " La membresía fue activada o renovada automáticamente.";
+                }
             }
 
             try

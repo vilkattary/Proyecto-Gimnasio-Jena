@@ -1,5 +1,6 @@
 ﻿using GimnasioJena.Abstracciones.AccesoADatos.Pagos.RegistrarPago;
 using GimnasioJena.Abstracciones.Modelos.Pagos;
+using GimnasioJena.AccesoADatos.Entidades.Membresias;
 using GimnasioJena.AccesoADatos.Entidades.Pagos;
 using System;
 using System.Data.Entity;
@@ -52,6 +53,23 @@ namespace GimnasioJena.AccesoADatos.Pagos.RegistrarPago
                      precioPlan =
                          plan.precio
                  })
+                .FirstOrDefault();
+        }
+
+        public PagoMembresiaValidacionDto ObtenerDatosPlanActivo(
+               int idPlanMembresia)
+        {
+            return _contexto.PlanesMembresia
+                .Where(p =>
+                    p.idPlanMembresia == idPlanMembresia &&
+                    p.estado)
+                .Select(p => new PagoMembresiaValidacionDto
+                {
+                    idPlanMembresia = p.idPlanMembresia,
+                    cantidadClasesPlan = p.cantidadClases,
+                    duracionDiasPlan = p.duracionDias,
+                    precioPlan = p.precio
+                })
                 .FirstOrDefault();
         }
 
@@ -143,6 +161,107 @@ namespace GimnasioJena.AccesoADatos.Pagos.RegistrarPago
                     }
 
                     _contexto.SaveChanges();
+                    transaccion.Commit();
+
+                    return pagoEntidad.idPago;
+                }
+                catch
+                {
+                    transaccion.Rollback();
+                    return 0;
+                }
+            }
+        }
+
+        public int RegistrarPrimerPagoManual(
+            PagoCrearDto pago,
+            DateTime fechaInicio,
+            DateTime fechaFin,
+            int? clasesDisponibles)
+        {
+            using (var contexto = new Contexto())
+            using (DbContextTransaction transaccion =
+                contexto.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Evitar crear otra membresía para el mismo cliente.
+                    bool tieneMembresia = contexto.Membresias.Any(m =>
+                        m.idUsuario == pago.idUsuarioNuevo);
+
+                    if (tieneMembresia)
+                    {
+                        transaccion.Rollback();
+                        return 0;
+                    }
+
+                    // Validar que el usuario exista y esté activo.
+                    bool usuarioValido = contexto.Usuarios.Any(u =>
+                        u.idUsuario == pago.idUsuarioNuevo &&
+                        u.estado);
+
+                    if (!usuarioValido)
+                    {
+                        transaccion.Rollback();
+                        return 0;
+                    }
+
+                    // Obtener el plan activo y su precio oficial.
+                    var plan = contexto.PlanesMembresia
+                        .FirstOrDefault(p =>
+                            p.idPlanMembresia == pago.idPlanNuevo &&
+                            p.estado);
+
+                    if (plan == null || plan.precio <= 0 ||
+                        plan.duracionDias <= 0)
+                    {
+                        transaccion.Rollback();
+                        return 0;
+                    }
+
+                    // Validar el método de pago.
+                    bool metodoValido = contexto.MetodoPagos.Any(m =>
+                        m.idMetodoPago == pago.idMetodoPago &&
+                        m.estado);
+
+                    if (!metodoValido)
+                    {
+                        transaccion.Rollback();
+                        return 0;
+                    }
+
+                    // Crear la primera membresía activa.
+                    var membresia = new MembresiaEntidad
+                    {
+                        idUsuario = pago.idUsuarioNuevo,
+                        idPlanMembresia = plan.idPlanMembresia,
+                        idEstadoMembresia = 1,
+                        fechaInicio = fechaInicio,
+                        fechaFin = fechaFin,
+                        clasesDisponibles = clasesDisponibles,
+                        fechaCreacion = DateTime.Now,
+                        observaciones = "Membresía activada mediante pago manual."
+                    };
+
+                    contexto.Membresias.Add(membresia);
+                    contexto.SaveChanges();
+
+                    // Registrar el pago asociado a la membresía creada.
+                    var pagoEntidad = new PagoEntidad
+                    {
+                        idMembresiaCliente = membresia.idMembresiaCliente,
+                        idMetodoPago = pago.idMetodoPago,
+                        idEstadoPago = 2,
+                        monto = plan.precio,
+                        fechaPago = pago.fechaPago,
+                        referenciaPago =
+                            TruncarReferenciaPago(pago.referenciaPago),
+                        observaciones = pago.observaciones
+                    };
+
+                    contexto.Pagos.Add(pagoEntidad);
+                    contexto.SaveChanges();
+
                     transaccion.Commit();
 
                     return pagoEntidad.idPago;

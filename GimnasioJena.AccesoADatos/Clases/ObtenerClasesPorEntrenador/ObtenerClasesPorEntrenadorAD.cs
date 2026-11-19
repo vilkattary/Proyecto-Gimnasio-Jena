@@ -22,6 +22,8 @@ namespace GimnasioJena.AccesoADatos.Clases.ObtenerClasesPorEntrenador
                     on clase.idUsuarioEntrenador equals usuario.idUsuario
                  join tipoClase in _elContexto.TiposClase
                     on clase.idTipoClase equals tipoClase.idTipoClase
+                 join estadoClase in _elContexto.EstadoClases
+                     on clase.idEstadoClase equals estadoClase.idEstadoClase
                  where usuario.identityUserId == identityUserId
                  select new ClaseEntrenadorDto
                  {
@@ -41,7 +43,10 @@ namespace GimnasioJena.AccesoADatos.Clases.ObtenerClasesPorEntrenador
                             r.idClaseProgramada == clase.idClaseProgramada &&
                             r.idEstadoReserva == 1),
 
-                     ubicacion = clase.ubicacion
+                     ubicacion = clase.ubicacion,
+
+                     idEstadoClase = clase.idEstadoClase,
+                     nombreEstado = estadoClase.nombreEstado
                  })
                  .OrderBy(c => c.fechaClase)
                  .ThenBy(c => c.horaInicio)

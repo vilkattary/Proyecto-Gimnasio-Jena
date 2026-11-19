@@ -127,7 +127,6 @@
     <Compile Include="AccesoADatos\Pagos\ObtenerTodosLosPagos\IObtenerTodosLosPagosAD.cs" />
     <Compile Include="AccesoADatos\Pagos\RegistrarPago\IRegistrarPagoAD.cs" />
     <Compile Include="AccesoADatos\Progreso\IAsistenciaAD.cs" />
-    <Compile Include="AccesoADatos\Progreso\ICamposMedicionAD.cs" />
     <Compile Include="AccesoADatos\Progreso\IEntrenamientoAD.cs" />
     <Compile Include="AccesoADatos\Progreso\IMedicionesAD.cs" />
     <Compile Include="AccesoADatos\Progreso\IProgresoAD.cs" />
@@ -199,10 +198,8 @@
     <Compile Include="LogicaDeNegocio\Nosotros\EliminarSeccionNosotros\IEliminarSeccionNosotrosLN.cs" />
     <Compile Include="LogicaDeNegocio\Pagos\ObtenerTodosLosPagos\IObtenerTodosLosPagosLN.cs" />
     <Compile Include="LogicaDeNegocio\Pagos\RegistrarPago\IRegistrarPagoLN.cs" />
-    <Compile Include="LogicaDeNegocio\Progreso\ICamposMedicionLN.cs" />
     <Compile Include="LogicaDeNegocio\Progreso\IEntrenamientoLN.cs" />
     <Compile Include="LogicaDeNegocio\Progreso\IEvolucionAvanzadaLN.cs" />
-    <Compile Include="LogicaDeNegocio\Progreso\IMedicionesLN.cs" />
     <Compile Include="LogicaDeNegocio\Progreso\IProgresoLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\CancelarReserva\ICancelarReservaLN.cs" />
     <Compile Include="LogicaDeNegocio\Reservas\EditarReserva\IEditarReservaLN.cs" />

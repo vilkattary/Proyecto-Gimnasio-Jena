@@ -126,10 +126,13 @@
                                 <label class="form-label fw-semibold form-label-jena">
                                     <i class="bi bi-upload me-1 text-accent"></i>Reemplazar imagen de fondo
                                 </label>
+
                                 <input type="file"
                                        name="ArchivoImagen"
-                                       accept="image/*"
-                                       class="form-control" />
+                                       accept=".jpg,.jpeg,.png,.webp"
+                                       class="form-control"
+                                       onchange="validarImagenCMS(this)" />
+
                                 <div class="form-text">
                                     Formatos admitidos: JPG, PNG, WEBP. Recomendado: 1920×1080 px.
                                 </div>
@@ -395,6 +398,7 @@
 
 </div>
 
+
 @section scripts {
     <script>
         function actualizarIconoBI(itemId, iconClass) {
@@ -403,5 +407,30 @@
                 el.className = 'bi ' + iconClass + ' text-white';
             }
         }
+
+        function validarImagenCMS(input) {
+            const archivo = input.files[0];
+
+            if (!archivo) return;
+
+            const maximoBytes = 5 * 1024 * 1024;
+            const extensionesPermitidas = [".jpg", ".jpeg", ".png", ".webp"];
+
+            const nombre = archivo.name.toLowerCase();
+            const extension = nombre.substring(nombre.lastIndexOf("."));
+
+            if (!extensionesPermitidas.includes(extension)) {
+                alert("Formato no permitido. Solo se aceptan imágenes JPG, PNG y WEBP.");
+                input.value = "";
+                return;
+            }
+
+            if (archivo.size > maximoBytes) {
+                alert("La imagen supera el tamaño máximo permitido de 5 MB.");
+                input.value = "";
+                return;
+            }
+        }
     </script>
 }
+

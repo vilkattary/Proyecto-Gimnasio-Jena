@@ -9,12 +9,23 @@ namespace GimnasioJena.Abstracciones.AccesoADatos.Pagos.RegistrarPago
             int idMembresiaCliente
         );
 
+        PagoMembresiaValidacionDto ObtenerDatosPlanActivo(
+            int idPlanMembresia
+        );
+
         int RegistrarPagoYActualizarMembresia(
             PagoCrearDto pago,
             DateTime? nuevaFechaInicio,
             DateTime? nuevaFechaFin,
             int? nuevasClasesDisponibles,
             int? nuevoEstadoMembresia
+        );
+
+        int RegistrarPrimerPagoManual(
+            PagoCrearDto pago,
+            DateTime fechaInicio,
+            DateTime fechaFin,
+            int? clasesDisponibles
         );
 
         bool ExisteMetodoPago(int idMetodoPago);

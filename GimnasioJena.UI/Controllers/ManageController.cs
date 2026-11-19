@@ -135,10 +135,29 @@ namespace GimnasioJena.UI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditarPerfil(EditarPerfilViewModel modelo)
         {
+
             if (!ModelState.IsValid)
             {
+                var identityUserIdValidacion = User.Identity.GetUserId();
+
+                using (var contexto = new Contexto())
+                {
+                    var usuario = contexto.Usuarios
+                        .FirstOrDefault(u => u.identityUserId == identityUserIdValidacion);
+
+                    if (usuario == null)
+                    {
+                        return View("Error");
+                    }
+
+                    modelo.correo = usuario.correo;
+                    modelo.identificacion = usuario.identificacion;
+                    modelo.fotoPerfil = usuario.fotoPerfil;
+                }
+
                 return View(modelo);
             }
+
 
             var identityUserId = User.Identity.GetUserId();
 

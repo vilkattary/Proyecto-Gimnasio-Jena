@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimnasioJena.Abstracciones.AccesoADatos.Clases.CambiarEstadoClase
 {
     public interface ICambiarEstadoClaseAD
     {
-        bool CambiarEstadoClase(int idClaseProgramada);
+        bool CambiarEstadoClase(int idClaseProgramada, DateTime fechaModificacion);
     }
 }

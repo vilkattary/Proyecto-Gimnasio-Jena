@@ -26,28 +26,104 @@
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+            <div class="mb-4">
+                <label class="form-label fw-bold">Tipo de pago</label>
 
-            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="tipoPago"
+                           id="pagoExistente"
+                           value="existente"
+                           @(Model.tipoPago != "nuevo" ? "checked" : "")
+                           onchange="cambiarTipoPago()" />
+
+                    <label class="form-check-label" for="pagoExistente">
+                        Pago de membresía existente
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="tipoPago"
+                           id="pagoNuevo"
+                           value="nuevo"
+                           @(Model.tipoPago == "nuevo" ? "checked" : "")
+                           onchange="cambiarTipoPago()" />
+
+                    <label class="form-check-label" for="pagoNuevo">
+                        Primer pago de cliente nuevo
+                    </label>
+                </div>
+            </div>
+            <div class="mb-3" id="bloqueMembresiaExistente">
                 @Html.LabelFor(
                     m => m.idMembresiaCliente,
                     "Membresía del cliente",
                     new { @class = "form-label fw-bold" })
 
                 @Html.DropDownListFor(
-        m => m.idMembresiaCliente,
-        (IEnumerable<SelectListItem>)ViewBag.Membresias,
-        "Seleccione una membresía",
-        new
-        {
-        @class = "form-select",
-        id = "idMembresiaCliente",
-        onchange = "cargarPrecioMembresia(this.value)"
-        })
+                    m => m.idMembresiaCliente,
+                    (IEnumerable<SelectListItem>)ViewBag.Membresias,
+                    "Seleccione una membresía",
+                    new
+                    {
+                    @class = "form-select",
+                    id = "idMembresiaCliente",
+                    onchange = "cargarPrecioMembresia(this.value)"
+                    })
 
                 @Html.ValidationMessageFor(
                     m => m.idMembresiaCliente,
                     "",
                     new { @class = "text-danger" })
+            </div>
+            <div id="bloqueClienteNuevo" style="display: none;">
+
+                <div class="mb-3">
+                    <label for="idUsuarioNuevo" class="form-label fw-bold">
+                        Cliente nuevo
+                    </label>
+
+                    @Html.DropDownList(
+                        "idUsuarioNuevo",
+                        (IEnumerable<SelectListItem>)ViewBag.ClientesSinMembresia,
+                        "Seleccione un cliente",
+                        new
+                        {
+                            @class = "form-select",
+                            id = "idUsuarioNuevo",
+                            disabled = "disabled"
+                        })
+                    @Html.ValidationMessageFor(
+                        m => m.idUsuarioNuevo,
+                        "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <div class="mb-3">
+                    <label for="idPlanNuevo" class="form-label fw-bold">
+                        Plan de membresía
+                    </label>
+
+                    @Html.DropDownList(
+                        "idPlanNuevo",
+                        (IEnumerable<SelectListItem>)ViewBag.PlanesDisponibles,
+                        "Seleccione un plan",
+                        new
+                        {
+                            @class = "form-select",
+                            id = "idPlanNuevo",
+                            disabled = "disabled",
+                            onchange = "cargarPrecioPlan(this.value)"
+                        })
+                    @Html.ValidationMessageFor(
+                        m => m.idPlanNuevo,
+                        "",
+                        new { @class = "text-danger" })
+                </div>
+
             </div>
 
             <div class="mb-3">
@@ -68,7 +144,7 @@
                     new { @class = "text-danger" })
             </div>
 
-            
+
 
             <div class="row">
                 <div class="col-md-6 mb-3">
@@ -78,16 +154,16 @@
                         new { @class = "form-label fw-bold" })
 
                     @Html.TextBoxFor(
-    m => m.monto,
-    new
-    {
-        @class = "form-control",
-        type = "number",
-        min = "0.01",
-        step = "0.01",
-        id = "monto",
-        @readonly = "readonly"
-    })
+                        m => m.monto,
+                        new
+                        {
+                            @class = "form-control",
+                            type = "number",
+                            min = "0.01",
+                            step = "0.01",
+                            id = "monto",
+                            @readonly = "readonly"
+                        })
 
                     @Html.ValidationMessageFor(
                         m => m.monto,
@@ -176,7 +252,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
+<script>
         function cargarPrecioMembresia(idMembresiaCliente) {
 
             var montoInput = document.getElementById("monto");
@@ -225,14 +301,92 @@
             });
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
+            function cargarPrecioPlan(idPlanMembresia) {
+
+                var montoInput = document.getElementById("monto");
+
+                if (!idPlanMembresia) {
+                    montoInput.value = "";
+                    return;
+                }
+
+                var url = '@Url.Action("ObtenerPrecioPlan", "Pagos")'
+                    + '?idPlanMembresia='
+                    + encodeURIComponent(idPlanMembresia);
+
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                })
+                .then(function (respuestaHttp) {
+
+                    if (!respuestaHttp.ok) {
+                        throw new Error("Error HTTP: " + respuestaHttp.status);
+                    }
+
+                    return respuestaHttp.json();
+                })
+                .then(function (respuesta) {
+
+                    if (respuesta.exito) {
+                        montoInput.value = respuesta.precio;
+                    } else {
+                        montoInput.value = "";
+                        alert(respuesta.mensaje);
+                    }
+                })
+                .catch(function (error) {
+                    montoInput.value = "";
+                    console.error("Error obteniendo el precio del plan:", error);
+                    alert("No se pudo obtener el precio del plan.");
+                });
+            }
+
+        function cambiarTipoPago() {
+
+            var esNuevo =
+                document.getElementById("pagoNuevo").checked;
+
+            var bloqueExistente =
+                document.getElementById("bloqueMembresiaExistente");
+
+            var bloqueNuevo =
+                document.getElementById("bloqueClienteNuevo");
 
             var membresiaSelect =
                 document.getElementById("idMembresiaCliente");
 
-            if (membresiaSelect && membresiaSelect.value) {
+            var clienteSelect =
+                document.getElementById("idUsuarioNuevo");
+
+            var planSelect =
+                document.getElementById("idPlanNuevo");
+
+            var montoInput =
+                document.getElementById("monto");
+
+            bloqueExistente.style.display = esNuevo ? "none" : "block";
+            bloqueNuevo.style.display = esNuevo ? "block" : "none";
+
+            membresiaSelect.disabled = esNuevo;
+            clienteSelect.disabled = !esNuevo;
+            planSelect.disabled = !esNuevo;
+
+            montoInput.value = "";
+
+            if (esNuevo && planSelect.value) {
+                cargarPrecioPlan(planSelect.value);
+            } else if (!esNuevo && membresiaSelect.value) {
                 cargarPrecioMembresia(membresiaSelect.value);
             }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            cambiarTipoPago();
+
         });
-    </script>
+</script>
 }

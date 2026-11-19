@@ -20,7 +20,7 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales
         }
 
         public bool CambiarEstadoHorarioSemanal(
-            int idHorario
+            int idHorario, DateTime fechaModificacion
         )
         {
             HorarioSemanalEntidad horario =
@@ -38,7 +38,7 @@ namespace GimnasioJena.AccesoADatos.HorariosSemanales
                 !horario.estado;
 
             horario.fechaModificacion =
-                DateTime.Now;
+                fechaModificacion;
 
             try
             {
