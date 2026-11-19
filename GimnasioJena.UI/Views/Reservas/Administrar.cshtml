@@ -20,6 +20,56 @@
         }
         else
         {
+            <!-- FILTROS -->
+            <div class="row g-2 mb-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Cliente</label>
+                    <select id="filterCliente" class="form-select">
+                        <option value="">Todos</option>
+                        @{
+                            var clientes = Model.Select(x => x.nombreCliente ?? "").Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderBy(s => s);
+                            foreach (var c in clientes)
+                            {
+                                <option value="@c">@c</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Estado</label>
+                    <select id="filterEstado" class="form-select">
+                        <option value="">Todos</option>
+                        @{
+                            var estados = Model.Select(x => x.estadoReserva ?? "").Where(s => !string.IsNullOrEmpty(s)).Distinct().OrderBy(s => s);
+                            foreach (var e in estados)
+                            {
+                                <option value="@e">@e</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Fecha clase (desde / hasta)</label>
+
+                    <!-- Fechas -->
+                    <div class="d-flex gap-2 mb-2">
+                        <input id="filterFechaDesde" type="date" class="form-control" />
+                        <input id="filterFechaHasta" type="date" class="form-control" />
+                    </div>
+                </div>
+                <!-- Botones -->
+                <div class="d-flex justify-content-end gap-2 mt-2">
+                    <button id="btnFilterApply" class="btn-orange w-100">
+                        Aplicar
+                    </button>
+                    <button id="btnFilterReset" class="btn-orange w-100">
+                        Limpiar
+                    </button>
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table class="table-jena">
                     <thead>
@@ -37,7 +87,7 @@
                     <tbody id="cuerpoTablaReservas">
                         @foreach (var r in Model)
                         {
-                            <tr>
+                            <tr data-cliente="@(r.nombreCliente ?? "")" data-estado="@(r.estadoReserva ?? "")" data-fecha="@r.fechaClase.ToString("yyyy-MM-dd")" data-filtered="false">
                                 <td>@r.idReserva</td>
                                 <td>@r.nombreCliente</td>
                                 <td>@r.nombreClase</td>
@@ -73,15 +123,23 @@
 
 @section Scripts {
     <script>
-        /* ── Paginación mobile – Reservas ───────────────────────── */
+        /* ── Paginación + Filtros – Reservas ───────────────────────── */
         (function () {
-            var POR_PAGINA = 5;
+            var REGISTROS_MOBILE = 5;
+            var REGISTROS_DESKTOP = 15;
             var paginaActual = 1;
 
             function esMobile() { return window.innerWidth < 768; }
 
+            function obtenerRegistrosPorPagina() {
+                return esMobile() ? REGISTROS_MOBILE : REGISTROS_DESKTOP;
+            }
+
+            // filas consideradas por paginación: solo aquellas que no están filtradas
             function filas() {
-                return Array.from(document.querySelectorAll('#cuerpoTablaReservas tr'));
+                return Array.from(document.querySelectorAll('#cuerpoTablaReservas tr')).filter(function (r) {
+                    return r.dataset.filtered !== 'true';
+                });
             }
 
             function renderPaginacion(totalPaginas) {
@@ -89,15 +147,16 @@
                 var info = document.getElementById('paginacionInfoReservas');
                 if (!container) return;
 
-                if (!esMobile() || totalPaginas <= 1) {
+                if (totalPaginas <= 1) {
                     container.style.display = 'none';
                     if (info) info.style.display = 'none';
                     return;
                 }
 
                 if (info) {
-                    var desde = (paginaActual - 1) * POR_PAGINA + 1;
-                    var hasta = Math.min(paginaActual * POR_PAGINA, filas().length);
+                    var porPagina = obtenerRegistrosPorPagina();
+                    var desde = (paginaActual - 1) * porPagina + 1;
+                    var hasta = Math.min(paginaActual * porPagina, filas().length);
                     info.textContent = 'Mostrando ' + desde + '–' + hasta + ' de ' + filas().length + ' reservas';
                     info.style.display = 'block';
                 }
@@ -129,31 +188,101 @@
             }
 
             function irAPagina(p) {
-                var total = Math.ceil(filas().length / POR_PAGINA);
+                var total = Math.ceil(filas().length / obtenerRegistrosPorPagina()) || 1;
                 if (p < 1 || p > total) return;
                 paginaActual = p;
                 aplicar();
             }
 
             function aplicar() {
-                var rows = filas();
-                var total = Math.ceil(rows.length / POR_PAGINA);
+                var allRows = Array.from(document.querySelectorAll('#cuerpoTablaReservas tr'));
+                var visibleRows = filas();
+                var porPagina = obtenerRegistrosPorPagina();
+                var total = Math.ceil(visibleRows.length / porPagina) || 1;
 
-                if (!esMobile()) {
-                    rows.forEach(function (r) { r.style.display = ''; });
-                    var c = document.getElementById('paginacion-mobile-reservas');
-                    var i = document.getElementById('paginacionInfoReservas');
-                    if (c) c.style.display = 'none';
-                    if (i) i.style.display = 'none';
-                    return;
+                // Evitar que la página actual quede fuera del rango.
+                if (paginaActual > total) {
+                    paginaActual = total;
                 }
 
-                var desde = (paginaActual - 1) * POR_PAGINA;
-                var hasta = desde + POR_PAGINA;
-                rows.forEach(function (r, idx) {
-                    r.style.display = (idx >= desde && idx < hasta) ? '' : 'none';
+                var desde = (paginaActual - 1) * porPagina;
+                var hasta = desde + porPagina;
+
+                // Ocultar todas las filas inicialmente.
+                allRows.forEach(function (r) {
+                    r.style.display = 'none';
                 });
+
+                // Mostrar únicamente los registros de la página actual.
+                visibleRows.forEach(function (r, idx) {
+                    if (idx >= desde && idx < hasta) {
+                        r.style.display = '';
+                    }
+                });
+
                 renderPaginacion(total);
+            }
+
+            /* ── Filtrado ───────────────────────── */
+            function aplicarFiltros() {
+                var cliente = document.getElementById('filterCliente').value;
+                var estado = document.getElementById('filterEstado').value;
+                var desdeVal = document.getElementById('filterFechaDesde').value;
+                var hastaVal = document.getElementById('filterFechaHasta').value;
+
+                var rows = Array.from(document.querySelectorAll('#cuerpoTablaReservas tr'));
+                rows.forEach(function (r) {
+                    var rc = (r.dataset.cliente || '').trim();
+                    var re = (r.dataset.estado || '').trim();
+                    var rf = r.dataset.fecha ? r.dataset.fecha.substring(0, 10) : '';
+
+                    var ocultar = false;
+
+                    if (cliente && rc !== cliente) ocultar = true;
+                    if (estado && re !== estado) ocultar = true;
+                    if (desdeVal && (!rf || rf < desdeVal)) ocultar = true;
+                    if (hastaVal && (!rf || rf > hastaVal)) ocultar = true;
+
+                    r.dataset.filtered = ocultar ? 'true' : 'false';
+                    r.style.display = ocultar ? 'none' : '';
+                });
+
+                paginaActual = 1;
+                aplicar();
+            }
+
+            function limpiarFiltros() {
+                document.getElementById('filterCliente').value = '';
+                document.getElementById('filterEstado').value = '';
+                document.getElementById('filterFechaDesde').value = '';
+                document.getElementById('filterFechaHasta').value = '';
+
+                var rows = Array.from(document.querySelectorAll('#cuerpoTablaReservas tr'));
+                rows.forEach(function (r) {
+                    r.dataset.filtered = 'false';
+                    r.style.display = '';
+                });
+
+                paginaActual = 1;
+                aplicar();
+            }
+
+            // enlazar eventos
+            var btnApply = document.getElementById('btnFilterApply');
+            var btnReset = document.getElementById('btnFilterReset');
+
+            if (btnApply) {
+                btnApply.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    aplicarFiltros();
+                });
+            }
+
+            if (btnReset) {
+                btnReset.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    limpiarFiltros();
+                });
             }
 
             aplicar();
