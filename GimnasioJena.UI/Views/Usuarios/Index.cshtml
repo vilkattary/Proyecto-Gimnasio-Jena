@@ -124,18 +124,25 @@
                                 </td>
                                 <td data-label="Fecha registro">@usuario.fechaRegistro.ToString("dd/MM/yyyy")</td>
                                 <td class="td-acciones">
-                                    <div class="d-flex gap-1 flex-wrap justify-content-center">
-                                        <button type="button" class="btn btn-sm btn-action-jena"
+                                    <div class="d-flex flex-column align-items-center gap-2">
+
+                                        <button type="button"
+                                                class="btn btn-jena-outline"
                                                 onclick="cargarVistaModalRol('@usuario.identityUserId')">
-                                            <i class="bi bi-shield-lock me-1"></i>Cambiar rol
+                                            <i class="bi bi-shield-check me-1"></i>
+                                            Cambiar rol
                                         </button>
+
                                         @if (entrenador != null)
                                         {
-                                            <button type="button" class="btn btn-sm btn-action-jena"
+                                            <button type="button"
+                                                    class="btn btn-jena-outline"
                                                     onclick="cargarVistaModalEntrenador(@entrenador.idEntrenador)">
-                                                <i class="bi bi-person-badge me-1"></i>Editar entrenador
+                                                <i class="bi bi-person-badge me-1"></i>
+                                                Editar entrenador
                                             </button>
                                         }
+
                                     </div>
                                 </td>
                             </tr>
